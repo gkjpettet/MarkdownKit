@@ -8,6 +8,9 @@ Protected Module MarkdownKit
 		  // This will automatically sanitise the passed Markdown for us.
 		  Document = New MarkdownKit.DocumentBlock(markdown)
 		  
+		  // Phase 1: Create the block structure.
+		  Document.ConstructBlockStructure
+		  
 		  #Pragma Warning "TODO"
 		End Function
 	#tag EndMethod
@@ -62,6 +65,22 @@ Protected Module MarkdownKit
 
 	#tag Constant, Name = kCommonMarkSpecVersion, Type = Text, Dynamic = False, Default = \"0.29", Scope = Protected, Description = 54686520436F6D6D6F6E4D61726B2073706563696669636174696F6E2076657273696F6E2074686174204D61726B646F776E4B697420636F6E666F726D7320746F
 	#tag EndConstant
+
+
+	#tag Enum, Name = BlockType, Type = Integer, Flags = &h1
+		Document
+		  BlockQuote
+		  List
+		  ListItem
+		  FencedCode
+		  IndentedCode
+		  HtmlBlock
+		  Paragraph
+		  AtxHeading
+		  SetextHeading
+		  ThematicBreak
+		ReferenceDefinition
+	#tag EndEnum
 
 
 	#tag ViewBehavior

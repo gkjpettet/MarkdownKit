@@ -1,15 +1,85 @@
 #tag Class
 Protected Class Block
 	#tag Method, Flags = &h0
-		Sub Constructor()
-		  // Create a new open block with no parent or children.
-		  // Uses the default property values.
+		Function AcceptsLines() As Boolean
+		  Raise New MarkdownKit.MarkdownException("Subclasses must override this method")
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub AddLine(theLine As MarkdownKit.LineInfo, startPos As Integer)
+		  // Get the remaining characters from `startPos` on this line until the end.
+		  
+		  Dim tmp() As Text
+		  
+		  Dim i As Integer
+		  For i = startPos To theLine.CharsUbound
+		    tmp.Append(theLine.Chars(i))
+		  Next i
+		  
+		  TextContent = TextContent + Text.Join(tmp, "")
+		  
+		  Exception e As OutOfBoundsException
+		    Raise New MarkdownKit.MarkdownException("An out of bounds error " + _
+		    "occurred whilst adding a line of text")
+		    
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function CanContain(childType As MarkdownKit.BlockType) As Boolean
+		  Raise New MarkdownKit.MarkdownException("Subclasses should override this method")
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Constructor(theLine As MarkdownKit.LineInfo, charPos As Integer, charCol As Integer)
+		  Self.Line = theLine
+		  Self.FirstCharPos = charPos
+		  Self.FirstCharCol = charcol
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Finalise()
+		  // Close this block correctly.
+		  
+		  // Nothing to do if this block is already closed.
+		  If Not Self.IsOpen Then Return
+		  
+		  Select Case Self.Type
+		  Case MarkdownKit.BlockType.Paragraph
+		    If Self.TextContent.BeginsWith("[") Then
+		      // Link.
+		      #Pragma Warning "TODO"
+		    End If
+		  End Select
+		  
+		  // Mark the block as closed.
+		  Self.IsOpen = False
+		  
+		  
 		End Sub
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h0
 		Children() As MarkdownKit.Block
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		FirstCharCol As Integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		FirstCharPos As Integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		IsLastLineBlank As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 496E646963617465732077686574686572207468697320626C6F636B20656C656D656E7420686173206265656E20636F6D706C657465642028616E642074687573206E6577206C696E65732063616E6E6F7420626520616464656420746F20697429206F72206974206973207374696C6C206F70656E2E2042792064656661756C7420616C6C20656C656D656E7473206172652063726561746564206173206F70656E20616E642061726520636C6F736564207768656E20746865207061727365722064657465637473206974
@@ -41,7 +111,15 @@ Protected Class Block
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0
+		Line As MarkdownKit.LineInfo
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		Parent As MarkdownKit.Block
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		TextContent As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

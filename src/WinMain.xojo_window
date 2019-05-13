@@ -32,20 +32,20 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Open()
-		  // Dim f As Xojo.IO.FolderItem = New Xojo.IO.FolderItem("/Users/garry/Desktop/test.md")
-		  // 
-		  // Dim tin As Xojo.IO.TextInputStream
-		  // Dim md As Text
-		  // Try
-		  // tin = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
-		  // md = tin.ReadAll
-		  // tin.Close
-		  // Catch e
-		  // MsgBox("An error occurred: " + e.Reason)
-		  // Quit
-		  // End Try
-		  // 
-		  // Dim html As Text = MarkdownKit.ToHTML(md)
+		  Dim f As Xojo.IO.FolderItem = New Xojo.IO.FolderItem("/Users/garry/Desktop/test.md")
+		  
+		  Dim tin As Xojo.IO.TextInputStream
+		  Dim md As Text
+		  Try
+		    tin = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		    md = tin.ReadAll
+		    tin.Close
+		  Catch e
+		    MsgBox("An error occurred: " + e.Reason)
+		    Quit
+		  End Try
+		  
+		  Dim html As Text = MarkdownKit.ToHTML(md)
 		  
 		End Sub
 	#tag EndEvent

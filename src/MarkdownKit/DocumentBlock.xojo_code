@@ -1,6 +1,29 @@
 #tag Class
 Protected Class DocumentBlock
 Inherits MarkdownKit.Block
+	#tag Method, Flags = &h0
+		Function AcceptsLines() As Boolean
+		  // Document blocks do not accept lines.
+		  
+		  Return False
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub AdvanceOptionalSpace(line As MarkdownKit.LineInfo, ByRef charPos As Integer, ByRef charCol As Integer, ByRef char As Text)
+		  // This method advances the character pointer and updates the passed ByRef parameters by 
+		  // one place if (and only if) this character is a space.
+		  
+		  If char <> &u0020 Then Return
+		  
+		  If charPos >= line.CharsUbound Then Return
+		  
+		  AdvancePos(line, 1, charPos, charCol, char)
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Sub AdvancePos(line As MarkdownKit.LineInfo, places As Integer, ByRef charPos As Integer, ByRef charCol As Integer, ByRef char As Text)
 		  // Advances the position of the character pointer on the passed line by `places` number of places.
@@ -40,11 +63,25 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function CanContain(childType As MarkdownKit.BlockType) As Boolean
+		  // Document blocks can contain all blocks except for document blocks.
+		  
+		  If childType = MarkdownKit.BlockType.Document Then
+		    Return False
+		  Else
+		    Return True
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub ConstructBlockStructure()
 		  Dim i, limit As Integer
 		  limit = Lines.Ubound
+		  Dim currentBlock As MarkdownKit.Block = Self
 		  For i = 0 To limit
-		    ProcessLine(New MarkdownKit.LineInfo(Lines(i), i), Self)
+		    ProcessLine(New MarkdownKit.LineInfo(Lines(i), i), currentBlock)
 		  Next i
 		  
 		End Sub
@@ -67,6 +104,42 @@ Inherits MarkdownKit.Block
 		  
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, charPos As Integer, charCol As Integer) As MarkdownKit.Block
+		  // Creates a new block of the specified type and adds it as a child of `container`.
+		  // Returns the newly created child.
+		  
+		  // If `theParent` isn't the kind of block that can accept this child, 
+		  // back up until we hit a block that can.
+		  While Not CanContain(childType) 
+		    theParent.Finalise
+		    theParent = theParent.Parent
+		  Wend
+		  
+		  // Create the child block.
+		  Dim child As MarkdownKit.Block
+		  Select Case childType
+		  Case MarkdownKit.BlockType.BlockQuote
+		    child = New MarkdownKit.BlockQuoteBlock(line, charPos, charCol)
+		  Case MarkdownKit.BlockType.Paragraph
+		    child = New MarkdownKit.ParagraphBlock(line, charPos, charCol)
+		  Else
+		    Dim err As New Xojo.Core.UnsupportedOperationException
+		    err.Reason = childType.ToText + " blocks are not yet supported"
+		    Raise err
+		  End Select
+		  
+		  child.Parent = theParent
+		  
+		  // Insert the child into the parent's tree.
+		  theParent.Children.Append(child)
+		  
+		  // Return the new child block.
+		  Return child
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -117,7 +190,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ProcessLine(line As MarkdownKit.LineInfo, currentBlock As MarkdownKit.Block)
+		Sub ProcessLine(line As MarkdownKit.LineInfo, ByRef currentBlock As MarkdownKit.Block)
 		  Dim container As MarkdownKit.Block
 		  
 		  // Start at the root.
@@ -133,13 +206,15 @@ Inherits MarkdownKit.Block
 		  Dim currentChar As Text = "" // The current character on this line to handle.
 		  Dim currentCharPos As Integer = 0 // Zero-based index of the current character on this line.
 		  Dim currentCharCol As Integer = 1 // The one-based column that currentChar is in. Note a tab = 4 columns.
+		  Dim blank As Boolean = False // Whether there are no more characters on the line.
 		  While container.LastChild <> Nil And container.LastChild.IsOpen
 		    
 		    container = container.LastChild
 		    
 		    // Get the first non-whitespace (NWS) character, starting from the zero-based 
 		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `CurrentCharCol`.
-		    FindFirstNonWhitespace(line, currentCharPos, CurrentCharCol, currentChar)
+		    FindFirstNonWhitespace(line, currentCharPos, currentCharCol, currentChar)
+		    blank = If(currentChar = "", True, False)
 		    
 		    Select Case container.Type
 		    Case MarkdownKit.BlockType.BlockQuote
@@ -147,16 +222,29 @@ Inherits MarkdownKit.Block
 		        // Continue this open blockquote.
 		        // Advance one position along the line (past the ">" character we've just handled).
 		        AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
+		        // An optional space is permitted after the ">". Handle this scenario.
+		        AdvanceOptionalSpace(line, currentCharPos, currentCharCol, currentChar)
 		      Else
 		        allMatched = False
 		      End If
+		      
+		    Case MarkdownKit.BlockType.Paragraph
+		      If blank Then
+		        container.IsLastLineBlank = True
+		        allMatched = False
+		      End If
+		      Exit
 		    End Select
 		    
-		    #Pragma Warning "TODO"
-		    
+		    If Not allMatched Then
+		      container = container.Parent // Back up to last matching block.
+		      Exit
+		    End If
 		  Wend
 		  
 		  Dim lastMatchedContainer As MarkdownKit.Block = container
+		  
+		  Dim maybeLazy As Boolean = If(currentBlock.Type = MarkdownKit.BlockType.Paragraph, True, False)
 		  
 		  // Step 2:
 		  // Now that we've consumed the continuation markers for existing blocks, 
@@ -164,16 +252,94 @@ Inherits MarkdownKit.Block
 		  // encounter a new block start, we close any blocks unmatched in step 1 
 		  // before creating the new block as a child of the last matcheed block.
 		  
-		  // Some container blocks can't open new blocks (e.g. code blocks)
+		  Dim indented As Boolean
+		  // Remember, some container blocks can't open new blocks (e.g. code blocks)
 		  While container.Type <> MarkdownKit.BlockType.FencedCode And _
 		    container.Type <> MarkdownKit.BlockType.IndentedCode And _ 
 		    container.Type <> MarkdownKit.BlockType.HtmlBlock
 		    
 		    // Get the first non-whitespace (NWS) character, starting from the zero-based 
 		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `CurrentCharCol`.
-		    #Pragma Warning "TODO"
+		    FindFirstNonWhitespace(line, currentCharPos, CurrentCharCol, currentChar)
 		    
+		    // Is the first NWS character indented?
+		    indented = If(currentCharCol > 4, True, False)
+		    
+		    // Blank remaining line?
+		    blank = If(currentChar = "", True, False)
+		    
+		    If Not indented And currentChar = ">" Then
+		      // New blockquote.
+		      // Advance one position along the line (past the ">" character we've just handled).
+		      AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
+		      // An optional space is permitted after the ">". Handle this scenario.
+		      AdvanceOptionalSpace(line, currentCharPos, currentCharCol, currentChar)
+		      // Create the new blockquote block.
+		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.BlockQuote, _
+		      currentCharPos, currentCharCol)
+		    Else
+		      Exit
+		    End If
+		    
+		    If container.AcceptsLines Then
+		      // Containers that accept lines can't contain other containers.
+		      Exit
+		    End If
+		    
+		    maybeLazy = False
 		  Wend
+		  
+		  // What remains at the currentCharPos is a text line. Add this text to the 
+		  // appropriate container.
+		  FindFirstNonWhitespace(line, currentCharPos, CurrentCharCol, currentChar)
+		  indented = If(currentCharCol > 4, True, False)
+		  blank = If(currentChar = "", True, False)
+		  
+		  // We don't set the IsLastLineBlank property on certain blocks...
+		  // Blockquote lines are never blank as they start with ">".
+		  container.IsLastLineBlank = blank And container.Type <> MarkdownKit.BlockType.BlockQuote
+		  
+		  // The `IsLastLineBlank` property must be False for all nodes leading to this container.
+		  Dim tmp As MarkdownKit.Block = container
+		  While tmp.Parent <> Nil
+		    tmp.Parent.IsLastLineBlank = False
+		    tmp = tmp.Parent
+		  Wend
+		  
+		  If currentBlock <> lastMatchedContainer And _
+		    container = lastMatchedContainer And _
+		    Not blank And currentBlock.Type = MarkdownKit.BlockType.Paragraph And _
+		    currentBlock.TextContent.Length > 0 Then
+		    currentBlock.AddLine(line, currentCharPos)
+		  Else
+		    // Not a lazy continuation.
+		    
+		    // Finalise any blocks that were not matched and set currentBlock to container.
+		    While currentBlock <> lastMatchedContainer
+		      currentBlock.Finalise
+		      currentBlock = currentBlock.Parent
+		      If currentBlock = Nil Then
+		        Raise New MarkdownKit.MarkdownException(_
+		        "Cannot finalise container block. Last matched container type = " + _
+		        lastMatchedContainer.Type.ToText)
+		      End If
+		    Wend
+		    
+		    If container.AcceptsLines Then
+		      container.AddLine(line, currentCharPos)
+		    ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
+		      container.Type <> MarkdownKit.BlockType.SetextHeading Then
+		      // Create a paragraph container for the line.
+		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, currentCharCol)
+		      container.AddLine(line, currentCharPos)
+		    Else
+		      Raise New MarkdownKit.MarkdownException(_
+		      "Line " + line.Number.ToText + " with container type " + container.Type.ToText + " did not " + _
+		      "match any condition")
+		    End If
+		    
+		    currentBlock = container
+		  End If
 		End Sub
 	#tag EndMethod
 

@@ -6,7 +6,6 @@ Protected Class LineInfo
 		  Self.Index = lineIndex
 		  Self.Number = lineIndex + 1
 		  Self.CharsUbound = Self.Chars.Ubound
-		  IsBlank = If(CharsUbound < 0 Or Chars(0) = MarkdownKit.kLF, True, False)
 		End Sub
 	#tag EndMethod
 
@@ -21,10 +20,6 @@ Protected Class LineInfo
 
 	#tag Property, Flags = &h0
 		Index As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		IsBlank As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -67,6 +62,18 @@ Protected Class LineInfo
 			Visible=true
 			Group="Position"
 			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Number"
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="CharsUbound"
+			Group="Behavior"
+			InitialValue="-1"
 			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior

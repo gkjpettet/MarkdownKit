@@ -187,14 +187,16 @@ Inherits MarkdownKit.Block
 		  // If there are no NWS on this line (searching only from `startPos` onwards) then set 
 		  // `startPos` and `charCol` to -1 and `char` to "".
 		  
-		  // Blank line?
-		  If line.Chars.Ubound < 0 Then
+		  // Is the entire line blank?
+		  If line.IsBlank Then
 		    startPos = -1
 		    charCol = -1
 		    char = ""
 		    Return
-		  ElseIf line.CharsUbound = 0 And line.Chars(0) = MarkdownKit.kLF Then
-		    startPos = -1
+		  End If
+		  
+		  // Is the remainder of the line blank?
+		  If startPos = -1 Then
 		    charCol = -1
 		    char = ""
 		    Return
@@ -333,7 +335,7 @@ Inherits MarkdownKit.Block
 		    container = lastMatchedContainer And _
 		    Not blank And currentBlock.Type = MarkdownKit.BlockType.Paragraph And _
 		    currentBlock.Children.Ubound >= 0 Then
-		    currentBlock.AddLine(line, currentCharPos)
+		    currentBlock.AddLine(line, currentCharPos, currentCharCol)
 		  Else
 		    // Not a lazy continuation.
 		    
@@ -350,12 +352,12 @@ Inherits MarkdownKit.Block
 		    
 		    If Not blank Then
 		      If container.AcceptsLines Then
-		        container.AddLine(line, currentCharPos)
+		        container.AddLine(line, currentCharPos, currentCharCol)
 		      ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
 		        container.Type <> MarkdownKit.BlockType.SetextHeading Then
 		        // Create a paragraph container for the line.
 		        container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, currentCharCol)
-		        container.AddLine(line, currentCharPos)
+		        container.AddLine(line, currentCharPos, currentCharCol)
 		      Else
 		        Raise New MarkdownKit.MarkdownException(_
 		        "Line " + line.Number.ToText + " with container type " + container.Type.ToText + " did not " + _

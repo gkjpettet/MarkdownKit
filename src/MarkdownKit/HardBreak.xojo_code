@@ -1,29 +1,18 @@
 #tag Class
-Protected Class RawText
+Protected Class HardBreak
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
 		Sub Accept(visitor As MarkdownKit.Walker)
-		  visitor.VisitRawText(Self)
+		  visitor.VisitHardBreak(Self)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(chars() As Text, theLine As MarkdownKit.LineInfo, startPos As Integer, startCol As Integer)
-		  Super.Constructor(theLine, startPos, startCol)
-		  Self.Chars = chars
-		  Self.CharsUbound = chars.Ubound
+		Sub Constructor(theLine As MarkdownKit.LineInfo)
+		  Super.Constructor(theLine, 0, 1)
 		  IsOpen = False
 		End Sub
 	#tag EndMethod
-
-
-	#tag Property, Flags = &h0
-		Chars() As Text
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		CharsUbound As Integer = -1
-	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -101,11 +90,6 @@ Inherits MarkdownKit.Block
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Chars()"
-			Group="Behavior"
-			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

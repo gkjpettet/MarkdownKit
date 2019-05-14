@@ -85,6 +85,16 @@ Implements Global.MarkdownKit.Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitHardBreak(hb As MarkdownKit.HardBreak)
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  mOutput.Append(CurrentIndent + "<HardBreak />")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitParagraph(p As MarkdownKit.Paragraph)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
@@ -107,7 +117,7 @@ Implements Global.MarkdownKit.Walker
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
 		  mOutput.Append(CurrentIndent + "<RawText>")
-		  mOutput.Append(rt.Value)
+		  mOutput.Append(Text.Join(rt.Chars, ""))
 		  mOutput.Append("</RawText>")
 		  mOutput.Append(EOL)
 		End Sub

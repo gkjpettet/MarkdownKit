@@ -9,7 +9,6 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub Constructor(theLine As MarkdownKit.LineInfo)
-		  // Calling the overridden superclass constructor.
 		  Super.Constructor(theLine, 0, 1)
 		  IsOpen = False
 		End Sub
@@ -17,6 +16,48 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsOpen"
+			Group="Behavior"
+			InitialValue="True"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Type"
+			Group="Behavior"
+			Type="MarkdownKit.BlockType"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Document"
+				"1 - BlockQuote"
+				"2 - List"
+				"3 - ListItem"
+				"4 - FencedCode"
+				"5 - IndentedCode"
+				"6 - HtmlBlock"
+				"7 - Paragraph"
+				"8 - AtxHeading"
+				"9 - SetextHeading"
+				"10 - ThematicBreak"
+				"11 - ReferenceDefinition"
+			#tag EndEnumValues
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastLineBlank"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FirstCharPos"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FirstCharCol"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true

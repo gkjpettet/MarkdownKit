@@ -14,7 +14,7 @@ Protected Class Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub AddLine(theLine As MarkdownKit.LineInfo, startPos As Integer)
+		Sub AddLine(theLine As MarkdownKit.LineInfo, startPos As Integer, startCol As Integer)
 		  // Get the remaining characters from `startPos` on this line until the end.
 		  
 		  If Not Self.IsOpen Then
@@ -29,14 +29,30 @@ Protected Class Block
 		    tmp.Append(theLine.Chars(i))
 		  Next i
 		  
-		  #Pragma Warning "TODO: Determine if this line is preceded by a hard or soft break"
-		  If Children.Ubound >=0 Then Children.Append(New SoftBreak(theLine))
-		  Children.Append(New RawText(Text.Join(tmp, "")))
+		  // Hard or soft break?
+		  If Children.Ubound >=0 Then
+		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
+		    If rt.CharsUbound > 2 And rt.Chars(rt.CharsUbound) = " " And _
+		      rt.Chars(rt.CharsUbound - 1) = " " Then
+		      // The preceding raw text line ended with two spaces. This should be interpreted as a hard line break.
+		      Children.Append(New MarkdownKit.HardBreak(theLine))
+		      // Strip the trailing spaces from the end of the preceding line.
+		      For i = rt.Chars.Ubound DownTo 0
+		        If rt.Chars(i) = &u0020 Or rt.Chars(i) = &u0009 Then
+		          rt.Chars.Remove(i)
+		        Else
+		          Exit
+		        End If
+		      Next i
+		      rt.CharsUbound = rt.CharsUbound
+		    Else
+		      // Soft line break
+		      Children.Append(New MarkdownKit.SoftBreak(theLine))
+		    End If
+		  End If
+		  Children.Append(New MarkdownKit.RawText(tmp, theLine, startPos, startCol))
 		  
-		  Exception e As OutOfBoundsException
-		    Raise New MarkdownKit.MarkdownException("An out of bounds error " + _
-		    "occurred whilst adding a line of text")
-		    
+		  
 		End Sub
 	#tag EndMethod
 

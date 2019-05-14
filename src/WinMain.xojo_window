@@ -27,7 +27,7 @@ Begin Window WinMain
    Visible         =   True
    Width           =   1200
    Begin BetterTextArea Source
-      AcceptTabs      =   False
+      AcceptTabs      =   True
       Alignment       =   0
       AutoDeactivate  =   True
       AutomaticallyCheckSpelling=   False

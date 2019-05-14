@@ -14,6 +14,7 @@ Class=BlockQuote;MarkdownKit/BlockQuote.xojo_code;&h0000000064AE67FF;&h000000002
 Class=Paragraph;MarkdownKit/Paragraph.xojo_code;&h00000000486E17FF;&h0000000023D9CFFF;false
 Class=RawText;MarkdownKit/RawText.xojo_code;&h00000000317EAFFF;&h0000000023D9CFFF;false
 Class=SoftBreak;MarkdownKit/SoftBreak.xojo_code;&h0000000072E8FFFF;&h0000000023D9CFFF;false
+Class=HardBreak;MarkdownKit/HardBreak.xojo_code;&h000000001B7BEFFF;&h0000000023D9CFFF;false
 Class=BetterTextArea;BetterTextArea.xojo_code;&h000000002DD8BFFF;&h0000000000000000;false
 Interface=Walker;MarkdownKit/Walker.xojo_code;&h0000000043C017FF;&h0000000023D9CFFF;false
 Class=DebugWalker;DebugWalker.xojo_code;&h00000000571247FF;&h0000000000000000;false

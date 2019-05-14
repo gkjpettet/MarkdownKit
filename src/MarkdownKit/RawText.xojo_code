@@ -11,7 +11,6 @@ Inherits MarkdownKit.Block
 		Sub Constructor(chars() As Text, theLine As MarkdownKit.LineInfo, startPos As Integer, startCol As Integer)
 		  Super.Constructor(theLine, startPos, startCol)
 		  Self.Chars = chars
-		  Self.CharsUbound = chars.Ubound
 		  IsOpen = False
 		End Sub
 	#tag EndMethod
@@ -19,10 +18,6 @@ Inherits MarkdownKit.Block
 
 	#tag Property, Flags = &h0
 		Chars() As Text
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		CharsUbound As Integer = -1
 	#tag EndProperty
 
 
@@ -101,11 +96,6 @@ Inherits MarkdownKit.Block
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Chars()"
-			Group="Behavior"
-			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

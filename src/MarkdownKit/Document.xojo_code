@@ -90,6 +90,12 @@ Inherits MarkdownKit.Block
 		    ProcessLine(Lines(i), currentBlock)
 		  Next i
 		  
+		  // Finalise all blocks.
+		  While currentBlock <> Nil
+		    currentBlock.Finalise
+		    currentBlock = currentBlock.Parent
+		  Wend
+		  
 		End Sub
 	#tag EndMethod
 
@@ -267,8 +273,11 @@ Inherits MarkdownKit.Block
 		        allMatched = False
 		      End If
 		      
+		    Case MarkdownKit.BlockType.AtxHeading, MarkdownKit.BlockType.SetextHeading
+		      // A heading can never contain more than one line.
+		      allMatched = False
+		      
 		    Case MarkdownKit.BlockType.Paragraph
-		      #Pragma Warning "Is this correct?"
 		      If blank Then allMatched = False
 		    End Select
 		    
@@ -289,6 +298,7 @@ Inherits MarkdownKit.Block
 		  // before creating the new block as a child of the last matched block.
 		  
 		  Dim indented As Boolean
+		  Dim tmpInt As Integer
 		  // Remember, some container blocks can't open new blocks (e.g. code blocks)
 		  While container.Type <> MarkdownKit.BlockType.FencedCode And _
 		    container.Type <> MarkdownKit.BlockType.IndentedCode And _ 

@@ -239,9 +239,10 @@ End
 		  Dim doc As New MarkdownKit.Document(Source.Text.ToText)
 		  doc.ConstructBlockStructure
 		  
-		  // clear out the old AST.
+		  // Clear out the old AST.
 		  Output.Text = ""
 		  
+		  // Remove any earlier warnings.
 		  Info.Text = ""
 		  
 		  // Traverse the document tree.
@@ -250,9 +251,11 @@ End
 		  walker.VisitDocument(doc)
 		  Output.Text = walker.Output
 		  
+		  // If an exception occurs, display the error message.
 		  Exception e As MarkdownKit.MarkdownException
 		    Info.Text = e.Reason
 		    Output.Text = ""
+		    
 		End Sub
 	#tag EndEvent
 #tag EndEvents

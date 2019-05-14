@@ -32,8 +32,8 @@ Protected Class Block
 		  // Hard or soft break?
 		  If Children.Ubound >=0 Then
 		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
-		    If rt.CharsUbound > 2 And rt.Chars(rt.CharsUbound) = " " And _
-		      rt.Chars(rt.CharsUbound - 1) = " " Then
+		    If rt.Chars.Ubound > 2 And rt.Chars(rt.Chars.Ubound) = " " And _
+		      rt.Chars(rt.Chars.Ubound - 1) = " " Then
 		      // The preceding raw text line ended with two spaces. This should be interpreted as a hard line break.
 		      Children.Append(New MarkdownKit.HardBreak(theLine))
 		      // Strip the trailing spaces from the end of the preceding line.
@@ -44,7 +44,6 @@ Protected Class Block
 		          Exit
 		        End If
 		      Next i
-		      rt.CharsUbound = rt.CharsUbound
 		    Else
 		      // Soft line break
 		      Children.Append(New MarkdownKit.SoftBreak(theLine))
@@ -81,10 +80,18 @@ Protected Class Block
 		  
 		  Select Case Self.Type
 		  Case MarkdownKit.BlockType.Paragraph
-		    // If Self.TextContent.BeginsWith("[") Then
-		    // // Link.
-		    // #Pragma Warning "TODO"
-		    // End If
+		    // Final spaces are stripped before inline parsing, so a 
+		    // paragraph that ends with two or more spaces will not end with
+		    // a hard line break.
+		    If Children.Ubound >= 0 And Children(Children.Ubound) IsA MarkdownKit.RawText Then
+		      // Stip trailing whitespace from this last child.
+		      Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
+		      For i As Integer = rt.Chars.Ubound DownTo 0
+		        If rt.Chars(rt.Chars.Ubound) = &u0020 Or rt.Chars(rt.Chars.Ubound) = &u0009 Then
+		          rt.Chars.Remove(i)
+		        End If
+		      Next i
+		    End If
 		  End Select
 		  
 		  // Mark the block as closed.

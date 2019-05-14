@@ -9,7 +9,7 @@ Begin Window WinMain
    FullScreen      =   False
    FullScreenButton=   False
    HasBackColor    =   False
-   Height          =   400
+   Height          =   658
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -25,34 +25,237 @@ Begin Window WinMain
    Resizeable      =   True
    Title           =   "MarkdownKit"
    Visible         =   True
-   Width           =   600
+   Width           =   1200
+   Begin BetterTextArea Source
+      AcceptTabs      =   False
+      Alignment       =   0
+      AutoDeactivate  =   True
+      AutomaticallyCheckSpelling=   False
+      BackColor       =   &cFFFFFF00
+      Bold            =   False
+      Border          =   True
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Format          =   ""
+      Height          =   561
+      HelpTag         =   ""
+      HideSelection   =   True
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   20
+      LimitText       =   0
+      LineHeight      =   0.0
+      LineSpacing     =   1.0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      Mask            =   ""
+      Multiline       =   True
+      ReadOnly        =   False
+      Scope           =   0
+      ScrollbarHorizontal=   False
+      ScrollbarVertical=   True
+      Styled          =   True
+      TabIndex        =   0
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextColor       =   &c00000000
+      TextFont        =   "System"
+      TextSize        =   0.0
+      TextUnit        =   0
+      Top             =   13
+      Transparent     =   False
+      Underline       =   False
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   570
+   End
+   Begin PushButton ButtonParse
+      AutoDeactivate  =   True
+      Bold            =   False
+      ButtonStyle     =   "0"
+      Cancel          =   False
+      Caption         =   "Parse"
+      Default         =   False
+      Enabled         =   False
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      Scope           =   0
+      TabIndex        =   1
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   0.0
+      TextUnit        =   0
+      Top             =   618
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   80
+   End
+   Begin TextArea Output
+      AcceptTabs      =   False
+      Alignment       =   0
+      AutoDeactivate  =   True
+      AutomaticallyCheckSpelling=   False
+      BackColor       =   &cFFFFFF00
+      Bold            =   False
+      Border          =   True
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Format          =   ""
+      Height          =   561
+      HelpTag         =   ""
+      HideSelection   =   True
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   610
+      LimitText       =   0
+      LineHeight      =   0.0
+      LineSpacing     =   1.0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   True
+      Mask            =   ""
+      Multiline       =   True
+      ReadOnly        =   True
+      Scope           =   2
+      ScrollbarHorizontal=   False
+      ScrollbarVertical=   True
+      Styled          =   True
+      TabIndex        =   2
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextColor       =   &c00000000
+      TextFont        =   "System"
+      TextSize        =   0.0
+      TextUnit        =   0
+      Top             =   13
+      Transparent     =   False
+      Underline       =   False
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   570
+   End
+   Begin Label Info
+      AutoDeactivate  =   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   20
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      Multiline       =   False
+      Scope           =   2
+      Selectable      =   False
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Info"
+      TextAlign       =   0
+      TextColor       =   &c00000000
+      TextFont        =   "System"
+      TextSize        =   0.0
+      TextUnit        =   0
+      Top             =   586
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   1160
+   End
 End
 #tag EndWindow
 
 #tag WindowCode
 	#tag Event
 		Sub Open()
-		  Dim f As Xojo.IO.FolderItem = New Xojo.IO.FolderItem("/Users/garry/Desktop/test.md")
+		  // Dim f As Xojo.IO.FolderItem = New Xojo.IO.FolderItem("/Users/garry/Repos/MarkdownKit/tests/189.md")
+		  // 
+		  // Dim tin As Xojo.IO.TextInputStream
+		  // Dim md As Text
+		  // Try
+		  // tin = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		  // md = tin.ReadAll
+		  // tin.Close
+		  // Catch e
+		  // MsgBox("An error occurred: " + e.Reason)
+		  // Quit
+		  // End Try
+		  // 
+		  // Dim html As Text = MarkdownKit.ToHTML(md)
 		  
-		  Dim tin As Xojo.IO.TextInputStream
-		  Dim md As Text
-		  Try
-		    tin = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
-		    md = tin.ReadAll
-		    tin.Close
-		  Catch e
-		    MsgBox("An error occurred: " + e.Reason)
-		    Quit
-		  End Try
+		  // Disable smart quotes.
+		  Source.SmartQuotes = False
 		  
-		  Dim html As Text = MarkdownKit.ToHTML(md)
-		  
+		  Info.Text = ""
 		End Sub
 	#tag EndEvent
 
 
 #tag EndWindowCode
 
+#tag Events Source
+	#tag Event
+		Sub TextChange()
+		  If Me.Text.Len > 0 Then
+		    ButtonParse.Enabled = True
+		  Else
+		    ButtonParse.Enabled = False
+		  End If
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ButtonParse
+	#tag Event
+		Sub Action()
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(Source.Text.ToText)
+		  doc.ConstructBlockStructure
+		  
+		  // clear out the old AST.
+		  Output.Text = ""
+		  
+		  Info.Text = ""
+		  
+		  // Traverse the document tree.
+		  Dim walker As New DebugWalker
+		  walker.Pretty = True
+		  walker.VisitDocument(doc)
+		  Output.Text = walker.Output
+		  
+		  Exception e As MarkdownKit.MarkdownException
+		    Info.Text = e.Reason
+		    Output.Text = ""
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Name"

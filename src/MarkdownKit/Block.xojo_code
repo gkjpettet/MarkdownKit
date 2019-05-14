@@ -1,6 +1,12 @@
 #tag Class
 Protected Class Block
 	#tag Method, Flags = &h0
+		Sub Accept(visitor As MarkdownKit.Walker)
+		  visitor.VisitBlock(Self)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function AcceptsLines() As Boolean
 		  Raise New MarkdownKit.MarkdownException("Subclasses must override this method")
 		  
@@ -11,6 +17,11 @@ Protected Class Block
 		Sub AddLine(theLine As MarkdownKit.LineInfo, startPos As Integer)
 		  // Get the remaining characters from `startPos` on this line until the end.
 		  
+		  If Not Self.IsOpen Then
+		    Raise New MarkdownKit.MarkdownException("Attempted to add line " + theLine.Number.ToText + _
+		    " to closed container " + Self.Type.ToText)
+		  End If
+		  
 		  Dim tmp() As Text
 		  
 		  Dim i As Integer
@@ -18,7 +29,9 @@ Protected Class Block
 		    tmp.Append(theLine.Chars(i))
 		  Next i
 		  
-		  TextContent = TextContent + Text.Join(tmp, "")
+		  #Pragma Warning "TODO: Determine if this line is preceded by a hard or soft break"
+		  If Children.Ubound >=0 Then Children.Append(New SoftBreak(theLine))
+		  Children.Append(New RawText(Text.Join(tmp, "")))
 		  
 		  Exception e As OutOfBoundsException
 		    Raise New MarkdownKit.MarkdownException("An out of bounds error " + _
@@ -52,10 +65,10 @@ Protected Class Block
 		  
 		  Select Case Self.Type
 		  Case MarkdownKit.BlockType.Paragraph
-		    If Self.TextContent.BeginsWith("[") Then
-		      // Link.
-		      #Pragma Warning "TODO"
-		    End If
+		    // If Self.TextContent.BeginsWith("[") Then
+		    // // Link.
+		    // #Pragma Warning "TODO"
+		    // End If
 		  End Select
 		  
 		  // Mark the block as closed.
@@ -63,6 +76,13 @@ Protected Class Block
 		  
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TextContent() As Text
+		  #Pragma Warning "TODO"
+		  
+		End Function
 	#tag EndMethod
 
 
@@ -116,10 +136,6 @@ Protected Class Block
 
 	#tag Property, Flags = &h0
 		Parent As MarkdownKit.Block
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		TextContent As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -186,6 +202,22 @@ Protected Class Block
 				"10 - ThematicBreak"
 				"11 - ReferenceDefinition"
 			#tag EndEnumValues
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastLineBlank"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FirstCharPos"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FirstCharCol"
+			Group="Behavior"
+			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

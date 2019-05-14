@@ -1,21 +1,5 @@
 #tag Module
 Protected Module MarkdownKit
-	#tag Method, Flags = &h1
-		Protected Function ToHTML(markdown As Text) As Text
-		  // Takes Markdown text as input and returns it as HTML.
-		  
-		  // Create a new document root block.
-		  // This will automatically sanitise the passed Markdown for us.
-		  Document = New MarkdownKit.DocumentBlock(markdown)
-		  
-		  // Phase 1: Create the block structure.
-		  Document.ConstructBlockStructure
-		  
-		  #Pragma Warning "TODO"
-		  Break
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0
 		Function ToText(Extends type As MarkdownKit.BlockType) As Text
 		  Select Case type
@@ -50,10 +34,6 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-
-	#tag Property, Flags = &h21
-		Private Document As MarkdownKit.DocumentBlock
-	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h1
 		#tag Getter

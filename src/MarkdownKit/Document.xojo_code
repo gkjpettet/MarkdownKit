@@ -1,6 +1,12 @@
 #tag Class
-Protected Class DocumentBlock
+Protected Class Document
 Inherits MarkdownKit.Block
+	#tag Method, Flags = &h0
+		Sub Accept(visitor As MarkdownKit.Walker)
+		  visitor.VisitDocument(Self)
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function AcceptsLines() As Boolean
 		  // Document blocks do not accept lines.
@@ -81,7 +87,7 @@ Inherits MarkdownKit.Block
 		  limit = Lines.Ubound
 		  Dim currentBlock As MarkdownKit.Block = Self
 		  For i = 0 To limit
-		    ProcessLine(New MarkdownKit.LineInfo(Lines(i), i), currentBlock)
+		    ProcessLine(Lines(i), currentBlock)
 		  Next i
 		  
 		End Sub
@@ -95,13 +101,42 @@ Inherits MarkdownKit.Block
 		  // Replace insecure characters (spec 0.29 2.3).
 		  markdown = markdown.ReplaceAll(&u0000, &uFFFD)
 		  
-		  // Split the Markdown into lines.
-		  Lines = markdown.Split(MarkdownKit.kLF)
+		  // Split the Markdown into lines of Text.
+		  Dim tmp() As Text = markdown.Split(MarkdownKit.kLF)
+		  
+		  // Cache the upperbounds of the temporary Text array.
+		  Dim tmpUbound As Integer = tmp.Ubound
+		  
+		  // Convert each line of text in the temporary array to a LineInfo object.
+		  For i As Integer = 0 To tmpUbound
+		    Lines.Append(New MarkdownKit.LineInfo(tmp(i), i))
+		  Next i
+		  
+		  // Remove contiguous blank lines at the beginning of the array.
+		  Dim count As Integer = 0
+		  While count <= tmpUbound
+		    If Lines(0).IsBlank Then
+		      Lines.Remove(0)
+		    Else
+		      Exit
+		    End If
+		    count = count + 1
+		  Wend
+		  
+		  // Remove contiguous blank lines from the end of the array.
+		  For i As Integer = Lines.Ubound DownTo 0
+		    If Lines(i).IsBlank Then
+		      Lines.Remove(i)
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  
+		  // Cache the upper bounds of the Lines array.
+		  LinesUbound = Lines.Ubound
 		  
 		  // The root starts open.
 		  IsOpen = True
-		  
-		  
 		  
 		End Sub
 	#tag EndMethod
@@ -122,9 +157,9 @@ Inherits MarkdownKit.Block
 		  Dim child As MarkdownKit.Block
 		  Select Case childType
 		  Case MarkdownKit.BlockType.BlockQuote
-		    child = New MarkdownKit.BlockQuoteBlock(line, charPos, charCol)
+		    child = New MarkdownKit.BlockQuote(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.Paragraph
-		    child = New MarkdownKit.ParagraphBlock(line, charPos, charCol)
+		    child = New MarkdownKit.Paragraph(line, charPos, charCol)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -157,10 +192,12 @@ Inherits MarkdownKit.Block
 		    startPos = -1
 		    charCol = -1
 		    char = ""
+		    Return
 		  ElseIf line.CharsUbound = 0 And line.Chars(0) = MarkdownKit.kLF Then
 		    startPos = -1
 		    charCol = -1
 		    char = ""
+		    Return
 		  End If
 		  
 		  // Check each character.
@@ -229,11 +266,8 @@ Inherits MarkdownKit.Block
 		      End If
 		      
 		    Case MarkdownKit.BlockType.Paragraph
-		      If blank Then
-		        container.IsLastLineBlank = True
-		        allMatched = False
-		      End If
-		      Exit
+		      #Pragma Warning "Is this correct?"
+		      If blank Then allMatched = False
 		    End Select
 		    
 		    If Not allMatched Then
@@ -250,7 +284,7 @@ Inherits MarkdownKit.Block
 		  // Now that we've consumed the continuation markers for existing blocks, 
 		  // we look look for new block starts (e.g: ">" for a blockquote). If we 
 		  // encounter a new block start, we close any blocks unmatched in step 1 
-		  // before creating the new block as a child of the last matcheed block.
+		  // before creating the new block as a child of the last matched block.
 		  
 		  Dim indented As Boolean
 		  // Remember, some container blocks can't open new blocks (e.g. code blocks)
@@ -295,21 +329,10 @@ Inherits MarkdownKit.Block
 		  indented = If(currentCharCol > 4, True, False)
 		  blank = If(currentChar = "", True, False)
 		  
-		  // We don't set the IsLastLineBlank property on certain blocks...
-		  // Blockquote lines are never blank as they start with ">".
-		  container.IsLastLineBlank = blank And container.Type <> MarkdownKit.BlockType.BlockQuote
-		  
-		  // The `IsLastLineBlank` property must be False for all nodes leading to this container.
-		  Dim tmp As MarkdownKit.Block = container
-		  While tmp.Parent <> Nil
-		    tmp.Parent.IsLastLineBlank = False
-		    tmp = tmp.Parent
-		  Wend
-		  
 		  If currentBlock <> lastMatchedContainer And _
 		    container = lastMatchedContainer And _
 		    Not blank And currentBlock.Type = MarkdownKit.BlockType.Paragraph And _
-		    currentBlock.TextContent.Length > 0 Then
+		    currentBlock.Children.Ubound >= 0 Then
 		    currentBlock.AddLine(line, currentCharPos)
 		  Else
 		    // Not a lazy continuation.
@@ -325,17 +348,19 @@ Inherits MarkdownKit.Block
 		      End If
 		    Wend
 		    
-		    If container.AcceptsLines Then
-		      container.AddLine(line, currentCharPos)
-		    ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
-		      container.Type <> MarkdownKit.BlockType.SetextHeading Then
-		      // Create a paragraph container for the line.
-		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, currentCharCol)
-		      container.AddLine(line, currentCharPos)
-		    Else
-		      Raise New MarkdownKit.MarkdownException(_
-		      "Line " + line.Number.ToText + " with container type " + container.Type.ToText + " did not " + _
-		      "match any condition")
+		    If Not blank Then
+		      If container.AcceptsLines Then
+		        container.AddLine(line, currentCharPos)
+		      ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
+		        container.Type <> MarkdownKit.BlockType.SetextHeading Then
+		        // Create a paragraph container for the line.
+		        container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, currentCharCol)
+		        container.AddLine(line, currentCharPos)
+		      Else
+		        Raise New MarkdownKit.MarkdownException(_
+		        "Line " + line.Number.ToText + " with container type " + container.Type.ToText + " did not " + _
+		        "match any condition")
+		      End If
 		    End If
 		    
 		    currentBlock = container
@@ -359,11 +384,51 @@ Inherits MarkdownKit.Block
 
 
 	#tag Property, Flags = &h21
-		Private Lines() As Text
+		Private Lines() As MarkdownKit.LineInfo
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private LinesUbound As Integer = -1
 	#tag EndProperty
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="Type"
+			Group="Behavior"
+			Type="MarkdownKit.BlockType"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Document"
+				"1 - BlockQuote"
+				"2 - List"
+				"3 - ListItem"
+				"4 - FencedCode"
+				"5 - IndentedCode"
+				"6 - HtmlBlock"
+				"7 - Paragraph"
+				"8 - AtxHeading"
+				"9 - SetextHeading"
+				"10 - ThematicBreak"
+				"11 - ReferenceDefinition"
+			#tag EndEnumValues
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastLineBlank"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FirstCharPos"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FirstCharCol"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true

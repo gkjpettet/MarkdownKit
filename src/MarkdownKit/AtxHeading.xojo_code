@@ -1,25 +1,19 @@
 #tag Class
-Protected Class Paragraph
+Protected Class AtxHeading
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
 		Sub Accept(visitor As MarkdownKit.Walker)
-		  visitor.VisitParagraph(Self)
+		  visitor.VisitAtxHeading(Self)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function AcceptsLines() As Boolean
-		  // Paragraph blocks can contain lines.
+		  // AtxHeading blocks can accept lines.
 		  
 		  Return True
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function CanContain(childType As MarkdownKit.BlockType) As Boolean
-		  // Paragraph blocks are NOT container blocks.
-		  Return False
+		  
 		End Function
 	#tag EndMethod
 
@@ -27,7 +21,9 @@ Inherits MarkdownKit.Block
 		Sub Constructor(theLine As MarkdownKit.LineInfo, charPos As Integer, charCol As Integer)
 		  // Calling the overridden superclass constructor.
 		  Super.Constructor(theLine, charPos, charCol)
-		  Self.Type = MarkdownKit.BlockType.Paragraph
+		  Self.Type = MarkdownKit.BlockType.AtxHeading
+		  
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -37,20 +33,19 @@ Inherits MarkdownKit.Block
 		  // Nothing to do if this block is already closed.
 		  If Not Self.IsOpen Then Return
 		  
-		  // Final spaces are stripped before inline parsing, so a 
-		  // paragraph that ends with two or more spaces will not end with
-		  // a hard line break.
-		  If Children.Ubound >= 0 And Children(Children.Ubound) IsA MarkdownKit.RawText Then
-		    // Stip trailing whitespace from this last child.
-		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
-		    StripTrailingWhitespace(rt.Chars)
-		  End If
+		  #Pragma Error "TODO"
+		  
+		  
 		  
 		  // Mark the block as closed.
 		  Self.IsOpen = False
-		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		Level As Integer = 0
+	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -126,6 +121,11 @@ Inherits MarkdownKit.Block
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FirstCharCol"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Level"
 			Group="Behavior"
 			Type="Integer"
 		#tag EndViewProperty

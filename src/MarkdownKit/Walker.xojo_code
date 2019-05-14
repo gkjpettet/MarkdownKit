@@ -1,6 +1,12 @@
 #tag Interface
 Protected Interface Walker
 	#tag Method, Flags = &h0
+		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitBlock(b As MarkdownKit.Block)
 		  
 		End Sub

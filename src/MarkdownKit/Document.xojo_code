@@ -101,6 +101,8 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub Constructor(markdown As Text)
+		  MyScanner = New MarkdownKit.Scanner
+		  
 		  // Standardise the line endings in the passed Markdown to line feeds.
 		  markdown = ReplaceLineEndings(markdown, MarkdownKit.kLF)
 		  
@@ -162,6 +164,8 @@ Inherits MarkdownKit.Block
 		  // Create the child block.
 		  Dim child As MarkdownKit.Block
 		  Select Case childType
+		  Case MarkdownKit.BlockType.AtxHeading
+		    child = New MarkdownKit.AtxHeading(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.BlockQuote
 		    child = New MarkdownKit.BlockQuote(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.Paragraph
@@ -323,6 +327,14 @@ Inherits MarkdownKit.Block
 		      // Create the new blockquote block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.BlockQuote, _
 		      currentCharPos, currentCharCol)
+		    ElseIf Not indented And currentChar = "#" And _
+		      MyScanner.ValidAtxHeadingStart(line, currentCharPos, tmpInt) Then
+		      // New ATX heading.
+		      // Create the new ATX heading block.
+		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.AtxHeading, _
+		      currentCharPos, currentCharCol)
+		      // Assign the heading's level.
+		      MarkdownKit.AtxHeading(container).Level = tmpInt
 		    Else
 		      Exit
 		    End If
@@ -363,6 +375,11 @@ Inherits MarkdownKit.Block
 		    If Not blank Then
 		      If container.AcceptsLines Then
 		        container.AddLine(line, currentCharPos, currentCharCol)
+		      ElseIf container.Type = MarkdownKit.BlockType.AtxHeading Then
+		        // ATX heading.
+		        currentBlock.AddLine(line, currentCharPos, currentCharCol)
+		        container.Finalise
+		        container = container.Parent
 		      ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
 		        container.Type <> MarkdownKit.BlockType.SetextHeading Then
 		        // Create a paragraph container for the line.
@@ -401,6 +418,10 @@ Inherits MarkdownKit.Block
 
 	#tag Property, Flags = &h21
 		Private LinesUbound As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private MyScanner As MarkdownKit.Scanner
 	#tag EndProperty
 
 

@@ -69,25 +69,14 @@ Protected Class Block
 	#tag Method, Flags = &h0
 		Sub Finalise()
 		  // Close this block correctly.
+		  // If subclasses have specific requirements before closing, 
+		  // override this method.
 		  
 		  // Nothing to do if this block is already closed.
 		  If Not Self.IsOpen Then Return
 		  
-		  Select Case Self.Type
-		  Case MarkdownKit.BlockType.Paragraph
-		    // Final spaces are stripped before inline parsing, so a 
-		    // paragraph that ends with two or more spaces will not end with
-		    // a hard line break.
-		    If Children.Ubound >= 0 And Children(Children.Ubound) IsA MarkdownKit.RawText Then
-		      // Stip trailing whitespace from this last child.
-		      Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
-		      StripTrailingWhitespace(rt.Chars)
-		    End If
-		  End Select
-		  
 		  // Mark the block as closed.
 		  Self.IsOpen = False
-		  
 		  
 		End Sub
 	#tag EndMethod

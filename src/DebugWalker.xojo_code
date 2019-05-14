@@ -31,6 +31,24 @@ Implements Global.MarkdownKit.Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  mOutput.Append(CurrentIndent + "<ATXHeading level=" + atx.Level.ToText + ">")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In atx.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</ATXHeading>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitBlock(block As MarkdownKit.Block)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
@@ -213,6 +231,17 @@ Implements Global.MarkdownKit.Walker
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Output"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Pretty"
+			Group="Behavior"
+			InitialValue="True"
+			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

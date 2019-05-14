@@ -29,28 +29,23 @@ Protected Class Block
 		    tmp.Append(theLine.Chars(i))
 		  Next i
 		  
-		  // Hard or soft break?
+		  // Determine if there is a prepending hard or a soft break?
 		  If Children.Ubound >=0 Then
 		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
 		    If rt.Chars.Ubound > 2 And rt.Chars(rt.Chars.Ubound) = " " And _
 		      rt.Chars(rt.Chars.Ubound - 1) = " " Then
 		      // The preceding raw text line ended with two spaces. This should be interpreted as a hard line break.
 		      Children.Append(New MarkdownKit.HardBreak(theLine))
-		      // Strip the trailing spaces from the end of the preceding line.
-		      For i = rt.Chars.Ubound DownTo 0
-		        If rt.Chars(i) = &u0020 Or rt.Chars(i) = &u0009 Then
-		          rt.Chars.Remove(i)
-		        Else
-		          Exit
-		        End If
-		      Next i
 		    Else
 		      // Soft line break
 		      Children.Append(New MarkdownKit.SoftBreak(theLine))
 		    End If
+		    // Strip the trailing whitespace from the end of the preceding line.
+		    StripTrailingWhitespace(rt.Chars)
 		  End If
-		  Children.Append(New MarkdownKit.RawText(tmp, theLine, startPos, startCol))
 		  
+		  // Add the raw text as the last child of this block.
+		  Children.Append(New MarkdownKit.RawText(tmp, theLine, startPos, startCol))
 		  
 		End Sub
 	#tag EndMethod
@@ -86,11 +81,7 @@ Protected Class Block
 		    If Children.Ubound >= 0 And Children(Children.Ubound) IsA MarkdownKit.RawText Then
 		      // Stip trailing whitespace from this last child.
 		      Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
-		      For i As Integer = rt.Chars.Ubound DownTo 0
-		        If rt.Chars(rt.Chars.Ubound) = &u0020 Or rt.Chars(rt.Chars.Ubound) = &u0009 Then
-		          rt.Chars.Remove(i)
-		        End If
-		      Next i
+		      StripTrailingWhitespace(rt.Chars)
 		    End If
 		  End Select
 		  

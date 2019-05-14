@@ -1,5 +1,24 @@
 #tag Module
 Protected Module MarkdownKit
+	#tag Method, Flags = &h1
+		Protected Sub StripTrailingWhitespace(chars() As Text)
+		  // Takes a ByRef array of characters and removes contiguous whitespace 
+		  // characters from the end of it.
+		  // Whitespace characters are &u0020, &u0009.
+		  
+		  Dim i, tmp As Integer
+		  For i = chars.Ubound DownTo 0
+		    tmp = chars.Ubound
+		    If chars(tmp) = &u0020 Or chars(tmp) = &u0009 Then
+		      chars.Remove(tmp)
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function ToText(Extends type As MarkdownKit.BlockType) As Text
 		  Select Case type

@@ -1,16 +1,112 @@
 #tag Module
 Protected Module MarkdownKit
 	#tag Method, Flags = &h1
+		Protected Sub Initialise()
+		  If mInitialised Then Return
+		  
+		  InitialiseEscapableCharactersDictionary
+		  
+		  mInitialised = True
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub InitialiseEscapableCharactersDictionary()
+		  // This Dictionary provides fast lookup for characters that can be 
+		  // escaped with a preceding backslash.
+		  
+		  mEscapableCharacters = New Xojo.Core.Dictionary
+		  
+		  mEscapableCharacters.Value("!") = 0
+		  mEscapableCharacters.Value("""") = 0
+		  mEscapableCharacters.Value("#") = 0
+		  mEscapableCharacters.Value("$") = 0
+		  mEscapableCharacters.Value("%") = 0
+		  mEscapableCharacters.Value("&") = 0
+		  mEscapableCharacters.Value("'") = 0
+		  mEscapableCharacters.Value("(") = 0
+		  mEscapableCharacters.Value(")") = 0
+		  mEscapableCharacters.Value("*") = 0
+		  mEscapableCharacters.Value("+") = 0
+		  mEscapableCharacters.Value(",") = 0
+		  mEscapableCharacters.Value("-") = 0
+		  mEscapableCharacters.Value(".") = 0
+		  mEscapableCharacters.Value("/") = 0
+		  mEscapableCharacters.Value(":") = 0
+		  mEscapableCharacters.Value(";") = 0
+		  mEscapableCharacters.Value("<") = 0
+		  mEscapableCharacters.Value("=") = 0
+		  mEscapableCharacters.Value(">") = 0
+		  mEscapableCharacters.Value("?") = 0
+		  mEscapableCharacters.Value("@") = 0
+		  mEscapableCharacters.Value("[") = 0
+		  mEscapableCharacters.Value("]") = 0
+		  mEscapableCharacters.Value("^") = 0
+		  mEscapableCharacters.Value("_") = 0
+		  mEscapableCharacters.Value("`") = 0
+		  mEscapableCharacters.Value("{") = 0
+		  mEscapableCharacters.Value("|") = 0
+		  mEscapableCharacters.Value("}") = 0
+		  mEscapableCharacters.Value("~") = 0
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function IsEscaped(chars() As Text, charPos As Integer) As Boolean
+		  // Takes an array of characters and the zero-based index (`charPos`) of a particular 
+		  // character within that array. If the referenced character in the array is escaped 
+		  // then we return True, otherwise we return False.
+		  // A character is escaped if it is immediately preceded by the backslash (\) character 
+		  // and the character in question is escapable.
+		  // The following characters are escapable (CommonMark 0.29 6.1):
+		  // !"#$%&'()*+,-./:;<=>?@[]^_`{|}~
+		  
+		  If charPos <= 0 Then Return False // First character.
+		  
+		  If chars(charPos - 1) = "\" Then
+		    If mEscapableCharacters.HasKey(chars(charPos - 1)) Then
+		      Return True
+		    Else
+		      // Not an escapable character, even though it's preceded by a backslash.
+		      Return False
+		    End If
+		  Else
+		    // No preceding backslash.
+		    Return False
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Sub StripLeadingWhitespace(chars() As Text)
+		  // Takes a ByRef array of characters and removes contiguous whitespace 
+		  // characters from the beginning of it.
+		  // Whitespace characters are &u0020, &u0009.
+		  
+		  Dim i As Integer
+		  For i = 0 To chars.Ubound
+		    If chars(0) = &u0020 Or chars(0) = &u0009 Then
+		      chars.Remove(0)
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Sub StripTrailingWhitespace(chars() As Text)
 		  // Takes a ByRef array of characters and removes contiguous whitespace 
 		  // characters from the end of it.
 		  // Whitespace characters are &u0020, &u0009.
 		  
-		  Dim i, tmp As Integer
+		  Dim i As Integer
 		  For i = chars.Ubound DownTo 0
-		    tmp = chars.Ubound
-		    If chars(tmp) = &u0020 Or chars(tmp) = &u0009 Then
-		      chars.Remove(tmp)
+		    If chars(chars.Ubound) = &u0020 Or chars(chars.Ubound) = &u0009 Then
+		      chars.Remove(chars.Ubound)
 		    Else
 		      Exit
 		    End If
@@ -95,6 +191,14 @@ Protected Module MarkdownKit
 		#tag EndSetter
 		Protected kLF As Text
 	#tag EndComputedProperty
+
+	#tag Property, Flags = &h21, Description = 412064696374696F6E617279206F6620746865206368617261637465727320746861742061726520657363617061626C65206279206120707265636564696E67206261636B736C617368
+		Private mEscapableCharacters As Xojo.Core.Dictionary
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private mInitialised As Boolean = False
+	#tag EndProperty
 
 
 	#tag Constant, Name = kCommonMarkSpecVersion, Type = Text, Dynamic = False, Default = \"0.29", Scope = Protected, Description = 54686520436F6D6D6F6E4D61726B2073706563696669636174696F6E2076657273696F6E2074686174204D61726B646F776E4B697420636F6E666F726D7320746F

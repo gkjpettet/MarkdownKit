@@ -101,6 +101,9 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub Constructor(markdown As Text)
+		  // Make sure that the MarkdownKit module has been initialised.
+		  MarkdownKit.Initialise
+		  
 		  MyScanner = New MarkdownKit.Scanner
 		  
 		  // Standardise the line endings in the passed Markdown to line feeds.
@@ -267,7 +270,7 @@ Inherits MarkdownKit.Block
 		    
 		    Select Case container.Type
 		    Case MarkdownKit.BlockType.BlockQuote
-		      If currentChar = ">" And currentCharCol <= 4 Then
+		      If currentChar = ">" And currentCharCol <= 4 And Not IsEscaped(line.Chars, currentCharPos) Then
 		        // Continue this open blockquote.
 		        // Advance one position along the line (past the ">" character we've just handled).
 		        AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
@@ -318,7 +321,7 @@ Inherits MarkdownKit.Block
 		    // Blank remaining line?
 		    blank = If(currentChar = "", True, False)
 		    
-		    If Not indented And currentChar = ">" Then
+		    If Not indented And currentChar = ">" And Not IsEscaped(line.Chars, currentCharPos) Then
 		      // New blockquote.
 		      // Advance one position along the line (past the ">" character we've just handled).
 		      AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
@@ -328,6 +331,7 @@ Inherits MarkdownKit.Block
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.BlockQuote, _
 		      currentCharPos, currentCharCol)
 		    ElseIf Not indented And currentChar = "#" And _
+		      Not IsEscaped(line.Chars, currentCharPos) And _
 		      MyScanner.ValidAtxHeadingStart(line, currentCharPos, tmpInt) Then
 		      // New ATX heading.
 		      // Create the new ATX heading block.

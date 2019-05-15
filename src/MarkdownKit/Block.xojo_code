@@ -52,6 +52,8 @@ Protected Class Block
 
 	#tag Method, Flags = &h0
 		Function CanContain(childType As MarkdownKit.BlockType) As Boolean
+		  #Pragma Unused childType
+		  
 		  Raise New MarkdownKit.MarkdownException("Subclasses should override this method")
 		  
 		End Function
@@ -79,13 +81,6 @@ Protected Class Block
 		  Self.IsOpen = False
 		  
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function TextContent() As Text
-		  #Pragma Warning "TODO"
-		  
-		End Function
 	#tag EndMethod
 
 

@@ -33,9 +33,38 @@ Inherits MarkdownKit.Block
 		  // Nothing to do if this block is already closed.
 		  If Not Self.IsOpen Then Return
 		  
-		  #Pragma Error "TODO"
+		  // Sanity check.
+		  If Children.Ubound <> 0 Then
+		    Raise New MarkdownKit.MarkdownException(_ 
+		    "A single block of raw text was expected in the AST node for the ATX heading " + _
+		    "on line " + Self.Line.Number.ToText + ". Instead got " + Integer(Children.Ubound + 1).ToText)
+		  End If
 		  
+		  // At this point, Self.Children contains a single RawText block representing 
+		  // the raw text of the header (including prefixing # characters and optional 
+		  // trailing # characters. We need to remove these superfluous characters.
+		  // Remove the prefixing # characters.
+		  Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(0))
+		  For i As Integer = 1 To Self.Level
+		    rt.Chars.Remove(0)
+		  Next i
 		  
+		  // Remove prefixing and trailing whitespace from the raw text.
+		  StripLeadingWhitespace(rt.Chars)
+		  StripTrailingWhitespace(rt.Chars)
+		  
+		  // Remove any trailing # characters from the end of the raw text.
+		  Dim i As Integer
+		  For i = rt.Chars.Ubound DownTo 0
+		    If rt.Chars(rt.Chars.Ubound) = "#" Then
+		      rt.Chars.Remove(rt.Chars.Ubound)
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  
+		  // Having removed trailing # characters, remove any more trailing whitespace.
+		  StripTrailingWhitespace(rt.Chars)
 		  
 		  // Mark the block as closed.
 		  Self.IsOpen = False
@@ -127,6 +156,7 @@ Inherits MarkdownKit.Block
 		#tag ViewProperty
 			Name="Level"
 			Group="Behavior"
+			InitialValue="0"
 			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior

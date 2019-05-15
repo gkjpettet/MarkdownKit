@@ -18,7 +18,10 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Function CanContain(childType As MarkdownKit.BlockType) As Boolean
+		  #Pragma Unused childType
+		  
 		  // Paragraph blocks are NOT container blocks.
+		  
 		  Return False
 		End Function
 	#tag EndMethod

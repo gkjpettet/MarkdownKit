@@ -104,6 +104,8 @@ Implements Global.MarkdownKit.Walker
 
 	#tag Method, Flags = &h0
 		Sub VisitHardBreak(hb As MarkdownKit.HardBreak)
+		  #Pragma Unused hb
+		  
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
 		  mOutput.Append(CurrentIndent + "<HardBreak />")
@@ -143,6 +145,8 @@ Implements Global.MarkdownKit.Walker
 
 	#tag Method, Flags = &h0
 		Sub VisitSoftBreak(sb As MarkdownKit.SoftBreak)
+		  #Pragma Unused sb
+		  
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
 		  mOutput.Append(CurrentIndent + "<SoftBreak />")

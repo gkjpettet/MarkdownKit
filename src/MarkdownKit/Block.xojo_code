@@ -23,26 +23,10 @@ Protected Class Block
 		  End If
 		  
 		  Dim tmp() As Text
-		  
 		  Dim i As Integer
 		  For i = startPos To theLine.CharsUbound
 		    tmp.Append(theLine.Chars(i))
 		  Next i
-		  
-		  // Determine if there is a prepending hard or a soft break?
-		  If Children.Ubound >=0 Then
-		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
-		    If rt.Chars.Ubound > 2 And rt.Chars(rt.Chars.Ubound) = " " And _
-		      rt.Chars(rt.Chars.Ubound - 1) = " " Then
-		      // The preceding raw text line ended with two spaces. This should be interpreted as a hard line break.
-		      Children.Append(New MarkdownKit.HardBreak(theLine))
-		    Else
-		      // Soft line break
-		      Children.Append(New MarkdownKit.SoftBreak(theLine))
-		    End If
-		    // Strip the trailing whitespace from the end of the preceding line.
-		    StripTrailingWhitespace(rt.Chars)
-		  End If
 		  
 		  // Add the raw text as the last child of this block.
 		  Children.Append(New MarkdownKit.RawText(tmp, theLine, startPos, startCol))

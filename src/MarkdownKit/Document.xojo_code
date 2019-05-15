@@ -210,14 +210,17 @@ Inherits MarkdownKit.Block
 		  
 		  // Is the remainder of the line blank?
 		  If startPos = -1 Then
+		    startPos = -1
 		    charCol = -1
 		    char = ""
 		    Return
 		  End If
 		  
-		  // Check each character.
-		  Dim i, column As Integer
+		  // Check each character for the first NWS character
+		  Dim foundNWS As Boolean = False
+		  Dim i, column As Integer = 0
 		  Dim tmpChar As Text
+		  Dim originalStartPos As Integer = startPos
 		  For i = startPos To line.CharsUbound
 		    tmpChar = line.Chars(i)
 		    Select Case tmpChar
@@ -226,17 +229,37 @@ Inherits MarkdownKit.Block
 		    Case &u0009 // Tab.
 		      column = column + 4
 		    Else // Non-whitespace character.
-		      charCol = column + 1
+		      column = column + 1
 		      startPos = i
 		      char = tmpChar
-		      Return
+		      foundNWS = True
+		      Exit
 		    End Select
 		  Next i
 		  
-		  // Didn't find a NWS character starting from `startPos` (inclusive) onwards.
-		  startPos = -1
-		  charCol = -1
-		  char = ""
+		  If foundNWS Then
+		    // Found a NWS character. Calculate the column it's in.
+		    // Remember, we've only thus far counted the number of columns from the current 
+		    // position on the line to the first NWS character, we've neglected characters 
+		    // preceding the current position.
+		    If originalStartPos > 0 Then
+		      For i = 0 To (originalStartPos - 1)
+		        Select Case line.Chars(i)
+		        Case &u0009 // Tab.
+		          column = column + 4
+		        Else
+		          column = column + 1
+		        End Select
+		      Next i
+		    End If
+		    charCol = column
+		  Else
+		    // Reset the ByRef parameters.
+		    startPos = -1
+		    charCol = -1
+		    char = ""
+		  End If
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -313,7 +336,7 @@ Inherits MarkdownKit.Block
 		    
 		    // Get the first non-whitespace (NWS) character, starting from the zero-based 
 		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `CurrentCharCol`.
-		    FindFirstNonWhitespace(line, currentCharPos, CurrentCharCol, currentChar)
+		    FindFirstNonWhitespace(line, currentCharPos, currentCharCol, currentChar)
 		    
 		    // Is the first NWS character indented?
 		    indented = If(currentCharCol > 4, True, False)

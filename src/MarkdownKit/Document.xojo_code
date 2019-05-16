@@ -193,19 +193,22 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub FindFirstNonWhitespace(line As MarkdownKit.LineInfo, ByRef startPos As Integer, ByRef charCol As Integer, ByRef char As Text)
+		Private Sub FindFirstNonWhitespace(line As MarkdownKit.LineInfo, ByRef startPos As Integer, ByRef absoluteCol As Integer, ByRef relativeCol As Integer, ByRef char As Text)
 		  // Starting at `startPos`, step through the contents of the passed line, character-by-character 
 		  // until we find a non-whitespace character (NWS). 
 		  // Set the passed ByRef `startPos` parameter to the zero-based index of this first NWS character.
-		  // Set the passed ByRef `charCol` to the one-based column of this first NWS character.
+		  // Set the passed ByRef `absoluteCol` to the one-based column of this first NWS character.
 		  // Set the passed ByRef `char` to the first NWS character.
 		  // If there are no NWS on this line (searching only from `startPos` onwards) then set 
 		  // `startPos` and `charCol` to -1 and `char` to "".
+		  // Set the passed ByRef `relativeCol` to the column that this first NEW character occurs 
+		  // on, relative to the start position on the line.
 		  
 		  // Is the entire line blank?
 		  If line.IsBlank Then
 		    startPos = -1
-		    charCol = -1
+		    absoluteCol = -1
+		    relativeCol = -1
 		    char = ""
 		    Return
 		  End If
@@ -213,7 +216,8 @@ Inherits MarkdownKit.Block
 		  // Is the remainder of the line blank?
 		  If startPos = -1 Then
 		    startPos = -1
-		    charCol = -1
+		    absoluteCol = -1
+		    relativeCol = -1
 		    char = ""
 		    Return
 		  End If
@@ -233,6 +237,7 @@ Inherits MarkdownKit.Block
 		    Else // Non-whitespace character.
 		      column = column + 1
 		      startPos = i
+		      relativeCol = column
 		      char = tmpChar
 		      foundNWS = True
 		      Exit
@@ -240,8 +245,8 @@ Inherits MarkdownKit.Block
 		  Next i
 		  
 		  If foundNWS Then
-		    // Found a NWS character. Calculate the column it's in.
-		    // Remember, we've only thus far counted the number of columns from the current 
+		    // Found a NWS character. Calculate the absolute column it's in.
+		    // Remember, we've only thus far calculated the relative number columns from the current 
 		    // position on the line to the first NWS character, we've neglected characters 
 		    // preceding the current position.
 		    If originalStartPos > 1 Then
@@ -255,11 +260,12 @@ Inherits MarkdownKit.Block
 		        End Select
 		      Next i
 		    End If
-		    charCol = column
+		    absoluteCol = column
 		  Else
 		    // Reset the ByRef parameters.
 		    startPos = -1
-		    charCol = -1
+		    absoluteCol = -1
+		    relativeCol = -1
 		    char = ""
 		  End If
 		  
@@ -283,21 +289,32 @@ Inherits MarkdownKit.Block
 		  Dim allMatched As Boolean  = True
 		  Dim currentChar As Text = "" // The current character on this line to handle.
 		  Dim currentCharPos As Integer = 0 // Zero-based index of the current character on this line.
-		  Dim currentCharCol As Integer = 1 // The one-based column that currentChar is in. Note a tab = 4 columns.
+		  
+		  // The one-based column that currentChar is in. Note a tab = 4 columns.
+		  // This is the absolute column (i.e. the number of columns from the start of the line to 
+		  // the current character).
+		  Dim absoluteCol As Integer = 1
+		  
+		  // This is the (one-based) relative column that the current character is in. Often this will 
+		  // be the same as `absoluteCol` but if we are in a partially matched line then the "start" of 
+		  // that line may well not be the beginning of the line and therefore, the column that the 
+		  // current character is needs to be adjusted.
+		  Dim relativeCol As Integer = 1
+		  
 		  Dim blank As Boolean = False // Whether there are no more characters on the line.
 		  Dim indented As Boolean
-		  Dim tmpInt As Integer
+		  Dim tmpInt1, tmpInt2 As Integer
 		  Dim tmpText1, tmpText2 As Text
 		  While container.LastChild <> Nil And container.LastChild.IsOpen
 		    
 		    container = container.LastChild
 		    
 		    // Get the first non-whitespace (NWS) character, starting from the zero-based 
-		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `CurrentCharCol`.
-		    FindFirstNonWhitespace(line, currentCharPos, currentCharCol, currentChar)
+		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `absoluteCol`.
+		    FindFirstNonWhitespace(line, currentCharPos, absoluteCol, relativeCol, currentChar)
 		    
 		    // Is the first NWS character indented?
-		    indented = If(currentCharCol > 4, True, False)
+		    indented = If(absoluteCol > 4, True, False)
 		    
 		    // Blank remaining line?
 		    blank = If(currentChar = "", True, False)
@@ -307,9 +324,9 @@ Inherits MarkdownKit.Block
 		      If currentChar = ">" And Not indented And Not IsEscaped(line.Chars, currentCharPos) Then
 		        // Continue this open blockquote.
 		        // Advance one position along the line (past the ">" character we've just handled).
-		        AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
+		        AdvancePos(line, 1, currentCharPos, absoluteCol, currentChar)
 		        // An optional space is permitted after the ">". Handle this scenario.
-		        AdvanceOptionalSpace(line, currentCharPos, currentCharCol, currentChar)
+		        AdvanceOptionalSpace(line, currentCharPos, absoluteCol, currentChar)
 		      Else
 		        allMatched = False
 		      End If
@@ -350,11 +367,11 @@ Inherits MarkdownKit.Block
 		    container.Type <> MarkdownKit.BlockType.HtmlBlock
 		    
 		    // Get the first non-whitespace (NWS) character, starting from the zero-based 
-		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `CurrentCharCol`.
-		    FindFirstNonWhitespace(line, currentCharPos, currentCharCol, currentChar)
+		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `absoluteCol`.
+		    FindFirstNonWhitespace(line, currentCharPos, absoluteCol, relativeCol, currentChar)
 		    
 		    // Is the first NWS character indented?
-		    indented = If(currentCharCol > 4, True, False)
+		    indented = If(relativeCol > 4, True, False)
 		    
 		    // Blank remaining line?
 		    blank = If(currentChar = "", True, False)
@@ -362,36 +379,38 @@ Inherits MarkdownKit.Block
 		    If Not indented And currentChar = ">" And Not IsEscaped(line.Chars, currentCharPos) Then
 		      // ======= NEW BLOCKQUOTE =======
 		      // Advance one position along the line (past the ">" character we've just handled).
-		      AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
+		      AdvancePos(line, 1, currentCharPos, absoluteCol, currentChar)
 		      // An optional space is permitted after the ">". Handle this scenario.
-		      AdvanceOptionalSpace(line, currentCharPos, currentCharCol, currentChar)
+		      AdvanceOptionalSpace(line, currentCharPos, absoluteCol, currentChar)
 		      // Create the new blockquote block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.BlockQuote, _
-		      currentCharPos, currentCharCol)
+		      currentCharPos, absoluteCol)
 		      
 		    ElseIf Not indented And currentChar = "#" And _
 		      Not IsEscaped(line.Chars, currentCharPos) And _
-		      MyScanner.ValidAtxHeadingStart(line, currentCharPos, tmpInt) Then
+		      MyScanner.ValidAtxHeadingStart(line, currentCharPos, tmpInt1) Then
 		      // ======= NEW ATX HEADING =======
 		      // Create the new ATX heading block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.AtxHeading, _
-		      currentCharPos, currentCharCol)
+		      currentCharPos, absoluteCol)
 		      // Assign the heading's level.
-		      MarkdownKit.AtxHeading(container).Level = tmpInt
+		      MarkdownKit.AtxHeading(container).Level = tmpInt1
 		      
 		    ElseIf Not indented And (currentChar = "`" Or currentChar = "~") And _
-		      MyScanner.ValidCodeFenceStart(line, currentCharPos, tmpText1, tmpText2, tmpInt) Then
+		      MyScanner.ValidCodeFenceStart(line, currentCharPos, tmpText1, tmpText2, tmpInt1, tmpInt2) Then
 		      // ======= NEW FENCED CODE BLOCK =======
 		      // Create the new fenced code block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.FencedCode, _
-		      currentCharPos, currentCharCol)
+		      currentCharPos, absoluteCol)
 		      // Set the code block's info string, opening character and offset.
 		      MarkdownKit.FencedCode(container).InfoString = tmpText1
 		      MarkdownKit.FencedCode(container).OpeningChar = tmpText2
-		      MarkdownKit.FencedCode(container).Offset = tmpInt
+		      MarkdownKit.FencedCode(container).Offset = tmpInt1
+		      MarkdownKit.FencedCode(container).OpeningLength = tmpInt2
 		      // Advance past the opening sequence.
 		      currentChar = ""
-		      currentCharCol = -1
+		      absoluteCol = -1
+		      relativeCol = -1
 		      currentCharPos = -1
 		    Else
 		      Exit
@@ -407,9 +426,10 @@ Inherits MarkdownKit.Block
 		  
 		  // What remains at the currentCharPos is a text line. Add this text to the 
 		  // appropriate container.
-		  FindFirstNonWhitespace(line, currentCharPos, CurrentCharCol, currentChar)
-		  indented = If(currentCharCol > 4, True, False)
-		  blank = If(currentChar = "", True, False)
+		  #Pragma Warning "May need to uncomment the following three lines. Not sure if needed."
+		  // FindFirstNonWhitespace(line, currentCharPos, absoluteCol, relativeCol, currentChar)
+		  // indented = If(relativeCol > 4, True, False)
+		  // blank = If(currentChar = "", True, False)
 		  
 		  // If the last line processed belonged to a paragraph block,
 		  // and we didn't match all of the line prefixes for the open containers,
@@ -421,7 +441,7 @@ Inherits MarkdownKit.Block
 		    container = lastMatchedContainer And _
 		    Not blank And currentBlock.Type = MarkdownKit.BlockType.Paragraph And _
 		    currentBlock.Children.Ubound >= 0 Then
-		    currentBlock.AddLine(line, currentCharPos, currentCharCol)
+		    currentBlock.AddLine(line, currentCharPos, absoluteCol)
 		  Else
 		    // Not a lazy continuation.
 		    
@@ -436,39 +456,42 @@ Inherits MarkdownKit.Block
 		      End If
 		    Wend
 		    
-		    If Not blank Then
-		      If container.Type = MarkdownKit.BlockType.AtxHeading Then
-		        // ATX heading.
-		        currentBlock.AddLine(line, currentCharPos, currentCharCol)
-		        container.Finalise
-		        container = container.Parent
-		        
-		      ElseIf container.Type = MarkdownKit.BlockType.FencedCode Then
-		        If currentChar = MarkdownKit.FencedCode(container).OpeningChar And Not indented And _
-		          Not IsEscaped(line.Chars, currentCharPos) And _
-		          MyScanner.ValidCodeFenceEnd(line, currentCharPos, MarkdownKit.FencedCode(container)) Then
-		          // Mark this fenced code block as requiring closing when the next line is processed.
-		          MarkdownKit.FencedCode(container).NeedsClosing = True
-		        Else
-		          // Add the whole line (including prefixing whitespace) to this fenced code block.
-		          container.AddLine(line, 0, 1)
-		        End If
-		        
-		      ElseIf container.AcceptsLines Then
-		        container.AddLine(line, currentCharPos, currentCharCol)
-		        
-		      ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
-		        container.Type <> MarkdownKit.BlockType.SetextHeading Then
-		        // Create a paragraph container for the line.
-		        container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, _
-		        currentCharCol)
-		        container.AddLine(line, currentCharPos, currentCharCol)
-		        
+		    If container.Type = MarkdownKit.BlockType.FencedCode Then
+		      If currentChar = MarkdownKit.FencedCode(container).OpeningChar And Not indented And _
+		        Not IsEscaped(line.Chars, currentCharPos) And _
+		        MyScanner.ValidCodeFenceEnd(line, currentCharPos, MarkdownKit.FencedCode(container)) Then
+		        // Mark this fenced code block as requiring closing when the next line is processed.
+		        MarkdownKit.FencedCode(container).NeedsClosing = True
 		      Else
-		        Raise New MarkdownKit.MarkdownException(_
-		        "Line " + line.Number.ToText + " with container type " + container.Type.ToText + " did not " + _
-		        "match any condition")
+		        // Add the whole line (including prefixing whitespace) to this fenced code block.
+		        container.AddLine(line, 0, 1)
 		      End If
+		    Else
+		      // Only fenced code blocks can contain blank lines.
+		      If Not blank Then
+		        If container.Type = MarkdownKit.BlockType.AtxHeading Then
+		          // ATX heading.
+		          currentBlock.AddLine(line, currentCharPos, absoluteCol)
+		          container.Finalise
+		          container = container.Parent
+		          
+		        ElseIf container.AcceptsLines Then
+		          container.AddLine(line, currentCharPos, absoluteCol)
+		          
+		        ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
+		          container.Type <> MarkdownKit.BlockType.SetextHeading Then
+		          // Create a paragraph container for the line.
+		          container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, _
+		          absoluteCol)
+		          container.AddLine(line, currentCharPos, absoluteCol)
+		          
+		        Else
+		          Raise New MarkdownKit.MarkdownException(_
+		          "Line " + line.Number.ToText + " with container type " + container.Type.ToText + " did not " + _
+		          "match any condition")
+		        End If
+		      End If
+		      
 		    End If
 		    
 		    currentBlock = container

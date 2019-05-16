@@ -52,21 +52,34 @@ Protected Class Scanner
 		  
 		  // Simple checks.
 		  If startPos < 0 Or startPos > line.CharsUbound Or _
-		  startPos + 2 > line.CharsUbound Then Return False
+		  startPos + (f.OpeningLength - 1) > line.CharsUbound Then Return False
 		  
-		  // make sure the first three characters beginning at `startPos` match the passed 
+		  // make sure the first `f.OpeningLength` characters beginning at `startPos` match the passed 
 		  // fenced code block's opening character.
 		  Dim i As Integer
-		  Dim thirdChar As Integer = startPos + 2
-		  For i = startPos To thirdChar
+		  Dim limit As Integer = startPos + (f.OpeningLength - 1)
+		  For i = startPos To limit
 		    If line.Chars(i) <> f.OpeningChar Then Return False
 		  Next i
 		  
 		  // If there's nothing else on the line, we're done.
-		  If line.CharsUbound = thirdChar then Return True
+		  If line.CharsUbound = limit then Return True
+		  
+		  // Since closing sequences can be any number of "`" or "~", we need to skip to the 
+		  // position after the last "`" or "~" (if any).
+		  Dim lastClosingSequenceCharPos As Integer
+		  For i = startPos To line.CharsUbound
+		    If line.Chars(i) = f.OpeningChar Then
+		      lastClosingSequenceCharPos = i
+		    Else
+		      Exit
+		    End If
+		  Next i
 		  
 		  // Make sure that the only characters left after the closing sequence are spaces.
-		  Dim begin As Integer = thirdChar + 1
+		  Dim begin As Integer = lastClosingSequenceCharPos + 1
+		  If begin > line.CharsUbound Then Return True
+		  
 		  For i = begin To line.CharsUbound
 		    If line.Chars(i) <> " " Then Return False
 		  Next i
@@ -78,7 +91,7 @@ Protected Class Scanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ValidCodeFenceStart(line As MarkdownKit.LineInfo, startPos As Integer, ByRef infoString As Text, ByRef openingChar As Text, ByRef fenceOffset As Integer) As Boolean
+		Function ValidCodeFenceStart(line As MarkdownKit.LineInfo, startPos As Integer, ByRef infoString As Text, ByRef openingChar As Text, ByRef fenceOffset As Integer, ByRef openingLength As Integer) As Boolean
 		  // Returns True if there is a valid code fence start in the passed line 
 		  // beginning at startPos (zero-based).
 		  // Returns False if there's not.
@@ -90,11 +103,15 @@ Protected Class Scanner
 		  // sequence that triggered the opening so we can subsequently figure out when to close it.
 		  // Is passeed (ByRef) an integer variable to store the number of spaces offsetting 
 		  // the fence's opening sequence (maximum of 3).
+		  // Is passed (ByRef) an integer variable to store the number of "`" or "~" characters 
+		  // that make up the opening sequence. This is required because a valid closing sequence 
+		  // must contain at least the same number.
 		  
 		  // Reset the passed ByRef parameters.
 		  infoString = ""
 		  openingChar = ""
 		  fenceOffset = 0
+		  openingLength = 0
 		  
 		  // Simple checks.
 		  If startPos > line.CharsUbound Or startPos < 0 Or _
@@ -102,14 +119,23 @@ Protected Class Scanner
 		  openingChar = line.Chars(startPos)
 		  If openingChar <> "`" And openingChar <> "~" Then Return False
 		  
-		  // Check the next two characters are the same as the first.
-		  If line.Chars(startPos + 1) <> openingChar And line.Chars(startPos + 2) <> openingChar Then Return False
+		  // Check that at least the next two characters are the same as the first.
+		  // Keep scanning the available characters to determine the number of contiguous 
+		  // matching characters.
+		  Dim i As Integer
+		  For i = startPos To line.CharsUbound
+		    If line.Chars(i) = openingChar Then
+		      openingLength = openingLength + 1
+		    Else
+		      If openingLength < 3 Then Return False
+		      Exit
+		    End If
+		  Next i
 		  
-		  // OK. We have three matching consecutive opening characters.
+		  // OK. We have `openingLength` matching consecutive opening characters.
 		  // Is there an offset to the opening sequence? Up to 3 spaces are allowed to 
 		  // prefix the opening sequence. We need to know this as this number of spaces 
 		  // will subsequently be removed from all lines of code in the fenced code block.
-		  Dim i As Integer
 		  For i = 0 To 2
 		    If line.Chars(i) = " " Then
 		      fenceOffset = fenceOffset + 1
@@ -118,13 +144,13 @@ Protected Class Scanner
 		  
 		  // Is there an info string?
 		  infoString = ""
-		  If line.CharsUbound = startPos + 2 Then
+		  If line.CharsUbound = startPos + (openingLength - 1) Then
 		    // No info string so we're done.
 		    Return True
 		  End If
 		  
 		  // Get the info string.
-		  Dim begin As Integer = startPos + 3
+		  Dim begin As Integer = startPos + openingLength
 		  Dim tmpText() As Text
 		  For i = begin To line.CharsUbound
 		    tmpText.Append(line.Chars(i))
@@ -134,12 +160,14 @@ Protected Class Scanner
 		  StripLeadingWhiteSpace(tmpText)
 		  StripTrailingWhiteSpace(tmpText)
 		  
-		  // Backticks are not permitted in info strings. If one is present then this is 
-		  // not a valid code fence opening.
-		  Dim tmpTextUbound As Integer = tmpText.Ubound
-		  For i = 0 To tmpTextUbound
-		    If tmpText(i) = "`" Then Return False
-		  Next i
+		  // Backticks are not permitted in info strings unless the opening character is a "~".
+		  // If one is present then this is not a valid code fence opening.
+		  If openingChar = "`" Then
+		    Dim tmpTextUbound As Integer = tmpText.Ubound
+		    For i = 0 To tmpTextUbound
+		      If tmpText(i) = "`" Then Return False
+		    Next i
+		  End If
 		  
 		  // Valid.
 		  infoString = Text.Join(tmpText, "")

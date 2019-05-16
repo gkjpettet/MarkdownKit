@@ -17,6 +17,35 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub AddLine(theLine As MarkdownKit.LineInfo, startPos As Integer, startCol As Integer)
+		  // Overriding Block.AddLine
+		  // Get the remaining characters from `startPos` on this line until the end.
+		  
+		  If Not Self.IsOpen Then
+		    Raise New MarkdownKit.MarkdownException("Attempted to add line " + theLine.Number.ToText + _
+		    " to closed container " + Self.Type.ToText)
+		  End If
+		  
+		  If Self.JustOpened Then
+		    // We can't add a line to this fenced code block on the same line that it was 
+		    // opened because the line will be the opening sequence +/- the info string.
+		    Self.JustOpened = False
+		    Return
+		  End If
+		  
+		  Dim tmp() As Text
+		  Dim i As Integer
+		  For i = startPos To theLine.CharsUbound
+		    tmp.Append(theLine.Chars(i))
+		  Next i
+		  
+		  // Add the raw text as the last child of this block.
+		  Children.Append(New MarkdownKit.RawText(tmp, theLine, startPos, startCol))
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function CanContain(childType As MarkdownKit.BlockType) As Boolean
 		  #Pragma Unused childType
 		  
@@ -33,6 +62,7 @@ Inherits MarkdownKit.Block
 		  Super.Constructor(theLine, charPos, charCol)
 		  Self.Type = MarkdownKit.BlockType.FencedCode
 		  Self.NeedsClosing = False
+		  Self.JustOpened = True
 		End Sub
 	#tag EndMethod
 
@@ -76,6 +106,10 @@ Inherits MarkdownKit.Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		JustOpened As Boolean = True
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		NeedsClosing As Boolean = False
 	#tag EndProperty
 
@@ -85,6 +119,10 @@ Inherits MarkdownKit.Block
 
 	#tag Property, Flags = &h0, Description = 54686520636861726163746572207573656420746F206F70656E207468697320636F64652066656E63652E2045697468657220226022206F7220227E22
 		OpeningChar As Text
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206E756D626572206F662060206F72207E2063686172616374657273207468617420636F6E737469747574657320746869732066656E63656420636F646520626C6F636B2773206F70656E696E672073657175656E6365
+		OpeningLength As Integer = 0
 	#tag EndProperty
 
 

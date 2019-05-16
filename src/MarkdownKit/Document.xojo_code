@@ -159,7 +159,7 @@ Inherits MarkdownKit.Block
 		  
 		  // If `theParent` isn't the kind of block that can accept this child, 
 		  // back up until we hit a block that can.
-		  While Not CanContain(childType) 
+		  While Not theparent.CanContain(childType) 
 		    theParent.Finalise
 		    theParent = theParent.Parent
 		  Wend
@@ -242,8 +242,9 @@ Inherits MarkdownKit.Block
 		    // Remember, we've only thus far counted the number of columns from the current 
 		    // position on the line to the first NWS character, we've neglected characters 
 		    // preceding the current position.
-		    If originalStartPos > 0 Then
-		      For i = 0 To (originalStartPos - 1)
+		    If originalStartPos > 1 Then
+		      Dim tmpInt As Integer = originalStartPos - 1
+		      For i = 0 To tmpInt
 		        Select Case line.Chars(i)
 		        Case &u0009 // Tab.
 		          column = column + 4
@@ -282,6 +283,8 @@ Inherits MarkdownKit.Block
 		  Dim currentCharPos As Integer = 0 // Zero-based index of the current character on this line.
 		  Dim currentCharCol As Integer = 1 // The one-based column that currentChar is in. Note a tab = 4 columns.
 		  Dim blank As Boolean = False // Whether there are no more characters on the line.
+		  Dim indented As Boolean
+		  Dim tmpInt As Integer
 		  While container.LastChild <> Nil And container.LastChild.IsOpen
 		    
 		    container = container.LastChild
@@ -289,11 +292,16 @@ Inherits MarkdownKit.Block
 		    // Get the first non-whitespace (NWS) character, starting from the zero-based 
 		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `CurrentCharCol`.
 		    FindFirstNonWhitespace(line, currentCharPos, currentCharCol, currentChar)
+		    
+		    // Is the first NWS character indented?
+		    indented = If(currentCharCol > 4, True, False)
+		    
+		    // Blank remaining line?
 		    blank = If(currentChar = "", True, False)
 		    
 		    Select Case container.Type
 		    Case MarkdownKit.BlockType.BlockQuote
-		      If currentChar = ">" And currentCharCol <= 4 And Not IsEscaped(line.Chars, currentCharPos) Then
+		      If currentChar = ">" And Not indented And Not IsEscaped(line.Chars, currentCharPos) Then
 		        // Continue this open blockquote.
 		        // Advance one position along the line (past the ">" character we've just handled).
 		        AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
@@ -308,6 +316,7 @@ Inherits MarkdownKit.Block
 		      allMatched = False
 		      
 		    Case MarkdownKit.BlockType.Paragraph
+		      // Blank lines interrupt paragraphs.
 		      If blank Then allMatched = False
 		    End Select
 		    
@@ -327,8 +336,6 @@ Inherits MarkdownKit.Block
 		  // encounter a new block start, we close any blocks unmatched in step 1 
 		  // before creating the new block as a child of the last matched block.
 		  
-		  Dim indented As Boolean
-		  Dim tmpInt As Integer
 		  // Remember, some container blocks can't open new blocks (e.g. code blocks)
 		  While container.Type <> MarkdownKit.BlockType.FencedCode And _
 		    container.Type <> MarkdownKit.BlockType.IndentedCode And _ 
@@ -380,6 +387,12 @@ Inherits MarkdownKit.Block
 		  indented = If(currentCharCol > 4, True, False)
 		  blank = If(currentChar = "", True, False)
 		  
+		  // If the last line processed belonged to a paragraph block,
+		  // and we didn't match all of the line prefixes for the open containers,
+		  // and we didn't start any new containers,
+		  // and the line isn't blank,
+		  // then treat this as a "lazy continuation line" and add it to
+		  // the open paragraph.
 		  If currentBlock <> lastMatchedContainer And _
 		    container = lastMatchedContainer And _
 		    Not blank And currentBlock.Type = MarkdownKit.BlockType.Paragraph And _

@@ -42,32 +42,58 @@ Inherits MarkdownKit.Block
 		  
 		  // At this point, Self.Children contains a single RawText block representing 
 		  // the raw text of the header (including prefixing # characters and optional 
-		  // trailing # characters. We need to remove these superfluous characters.
-		  // Remove the prefixing # characters.
+		  // trailing # characters). We need to remove these superfluous characters.
+		  // First remove the prefixing # characters.
 		  Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(0))
-		  For i As Integer = 1 To Self.Level
+		  Dim i As Integer
+		  For i = 1 To Self.Level
 		    rt.Chars.Remove(0)
 		  Next i
+		  
+		  If rt.Chars.Ubound = -1 Then
+		    // This is an empty heading. All that's left to do is close the block and go.
+		    Self.IsOpen = False
+		    Return
+		  End If
+		  
+		  // Remove any trailing whitespace.
+		  StripTrailingWhitespace(rt.Chars)
+		  
+		  // Is there an optional closing sequence to this heading?
+		  Dim isClosingSequence As Boolean = False
+		  Dim closingSequenceStartIndex As Integer
+		  Dim charsUbound As Integer = rt.Chars.Ubound
+		  For i = charsUbound DownTo 0
+		    If rt.Chars(i) = "#" Then
+		      isClosingSequence = True
+		      closingSequenceStartIndex = i
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  If isClosingSequence Then
+		    // There's a closing sequence which begins at index `closingSequenceStartIndex`.
+		    // For this to be valid, the character immediately before the closing sequence 
+		    // must be a space.
+		    If closingSequenceStartIndex > 0 And rt.Chars(closingSequenceStartIndex - 1) = " " Then
+		      // We have found a valid closing sequence. Remove it.
+		      For i = rt.Chars.Ubound DownTo 0
+		        If rt.Chars(rt.Chars.Ubound) = "#" Then
+		          rt.Chars.Remove(rt.Chars.Ubound)
+		        Else
+		          Exit
+		        End If
+		      Next i
+		    End If
+		  End If
 		  
 		  // Remove prefixing and trailing whitespace from the raw text.
 		  StripLeadingWhitespace(rt.Chars)
 		  StripTrailingWhitespace(rt.Chars)
 		  
-		  // Remove any trailing # characters from the end of the raw text.
-		  Dim i As Integer
-		  For i = rt.Chars.Ubound DownTo 0
-		    If rt.Chars(rt.Chars.Ubound) = "#" Then
-		      rt.Chars.Remove(rt.Chars.Ubound)
-		    Else
-		      Exit
-		    End If
-		  Next i
-		  
-		  // Having removed trailing # characters, remove any more trailing whitespace.
-		  StripTrailingWhitespace(rt.Chars)
-		  
 		  // Mark the block as closed.
 		  Self.IsOpen = False
+		  
 		End Sub
 	#tag EndMethod
 

@@ -290,7 +290,7 @@ Protected Class Assert
 		  // This is a case-insensitive comparison
 		  
 		  If expected.Compare(actual) = 0 Then
-		    Pass()
+		    PassCustom(actual)
 		  Else
 		    FailCustom(expected, actual)
 		  End If
@@ -860,6 +860,17 @@ Protected Class Assert
 		    Message(message)
 		  End If
 		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub PassCustom(actual As Text)
+		  Failed = False
+		  If Group.CurrentTestResult.Result <> TestResult.Failed Then
+		    Group.CurrentTestResult.Result = TestResult.Passed
+		    Group.CurrentTestResult.Actual = actual
+		  End If
 		  
 		End Sub
 	#tag EndMethod

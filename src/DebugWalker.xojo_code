@@ -136,6 +136,25 @@ Implements Global.MarkdownKit.Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitIndentedCode(i As MarkdownKit.IndentedCode)
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  mOutput.Append(CurrentIndent + "<IndentedCodeBlock>")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In i.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</IndentedCodeBlock>")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitParagraph(p As MarkdownKit.Paragraph)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
@@ -158,7 +177,24 @@ Implements Global.MarkdownKit.Walker
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
 		  mOutput.Append(CurrentIndent + "<RawText>")
-		  mOutput.Append(Text.Join(rt.Chars, ""))
+		  
+		  // For readability, we will replace spaces with a bullet (•), tabs with an arrow (→) 
+		  // and blank lines with the return arrow (⮐).
+		  Dim tmp() As Text
+		  Dim i As Integer
+		  Dim charsUbound As Integer = rt.Chars.Ubound
+		  For i = 0 To charsUbound
+		    If rt.Chars(i) = " " Then
+		      tmp.Append("•")
+		    ElseIf rt.Chars(i) = &u0009 Then
+		      tmp.Append("→")
+		    Else
+		      tmp.Append(rt.Chars(i))
+		    End If
+		  Next i
+		  If tmp.Ubound = -1 Then tmp.Append("⮐") // Blank line.
+		  
+		  mOutput.Append(Text.Join(tmp, ""))
 		  mOutput.Append("</RawText>")
 		  mOutput.Append(EOL)
 		End Sub

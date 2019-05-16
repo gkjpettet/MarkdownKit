@@ -37,6 +37,12 @@ Protected Interface Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitIndentedCode(i As MarkdownKit.IndentedCode)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitParagraph(p As MarkdownKit.Paragraph)
 		  
 		End Sub

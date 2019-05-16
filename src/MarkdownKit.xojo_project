@@ -21,6 +21,7 @@ Interface=Walker;MarkdownKit/Walker.xojo_code;&h0000000043C017FF;&h0000000023D9C
 Class=DebugWalker;DebugWalker.xojo_code;&h00000000571247FF;&h0000000000000000;false
 Class=Scanner;MarkdownKit/Scanner.xojo_code;&h0000000012BF37FF;&h0000000023D9CFFF;false
 Class=AtxHeading;MarkdownKit/AtxHeading.xojo_code;&h00000000096A8FFF;&h0000000023D9CFFF;false
+Class=IndentedCode;MarkdownKit/IndentedCode.xojo_code;&h000000004936E7FF;&h0000000023D9CFFF;false
 DefaultWindow=WinMain
 AppMenuBar=MainMenuBar
 MajorVersion=1

@@ -175,6 +175,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.Paragraph(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.FencedCode
 		    child = New MarkdownKit.FencedCode(line, charPos, charCol)
+		  Case MarkdownKit.BlockType.IndentedCode
+		    child = New MarkdownKit.IndentedCode(line, charPos, charCol)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -331,14 +333,15 @@ Inherits MarkdownKit.Block
 		        allMatched = False
 		      End If
 		      
+		    Case MarkdownKit.BlockType.IndentedCode
+		      If Not indented And Not blank Then allMatched = False
+		      
 		    Case MarkdownKit.BlockType.AtxHeading, MarkdownKit.BlockType.SetextHeading
 		      // A heading can never contain more than one line.
 		      allMatched = False
 		      
 		    Case MarkdownKit.BlockType.FencedCode
-		      If MarkdownKit.FencedCode(container).NeedsClosing Then
-		        allMatched = False
-		      End If
+		      If MarkdownKit.FencedCode(container).NeedsClosing Then allMatched = False
 		      
 		    Case MarkdownKit.BlockType.Paragraph
 		      // Blank lines interrupt paragraphs.
@@ -412,6 +415,14 @@ Inherits MarkdownKit.Block
 		      absoluteCol = -1
 		      relativeCol = -1
 		      currentCharPos = -1
+		      
+		    ElseIf indented And Not blank And Not maybeLazy Then
+		      // ======= NEW INDENTED CODE BLOCK =======
+		      // // Advance past the indent.
+		      // AdvancePos(line, 4, currentCharPos, absoluteCol, currentChar)
+		      // Create the new indented code block.
+		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.IndentedCode, _
+		      currentCharPos, absoluteCol)
 		    Else
 		      Exit
 		    End If
@@ -466,8 +477,13 @@ Inherits MarkdownKit.Block
 		        // Add the whole line (including prefixing whitespace) to this fenced code block.
 		        container.AddLine(line, 0, 1)
 		      End If
+		      
+		    ElseIf container.Type = MarkdownKit.BlockType.IndentedCode Then
+		      // Add the whole line (including prefixing whitespace) to this fenced code block.
+		      container.AddLine(line, 0, 1)
+		      
 		    Else
-		      // Only fenced code blocks can contain blank lines.
+		      // Only fenced and indented code blocks can contain blank lines.
 		      If Not blank Then
 		        If container.Type = MarkdownKit.BlockType.AtxHeading Then
 		          // ATX heading.

@@ -1,20 +1,53 @@
 #tag Class
-Protected Class MarkdownKitTests
+Protected Class MarkdownPhase1ATXTests
 Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example32Test()
+		  Const mdName = "32.md"
+		  Const astName = "32-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim mdFile As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(mdName)
+		  
+		  // Read the Markdown source.
+		  Dim md As Text
+		  Try
+		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(mdFile, Xojo.Core.TextEncoding.UTF8)
+		    md = tin.ReadAll
+		    tin.Close
+		  Catch e
+		    // This shouldn't happen.
+		    MsgBox("Unable to read the contents of " + mdName)
+		    Assert.AreEqual(0, 1) // Cause a fail.
+		  End Try
+		  
+		  // Get the example Markdown file.
+		  Dim astFile As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(astName)
+		  
+		  // Read the expected output.
+		  Dim truth As Text
+		  Try
+		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(astFile, Xojo.Core.TextEncoding.UTF8)
+		    truth = tin.ReadAll
+		    tin.Close
+		  Catch e
+		    // This shouldn't happen.
+		    MsgBox("Unable to read the contents of " + astName)
+		    Assert.AreEqual(0, 1) // Cause a fail.
+		  End Try
+		  
 		  // Create a new Markdown document.
-		  Dim doc As New MarkdownKit.Document("> Test")
+		  Dim doc As New MarkdownKit.Document(md)
 		  doc.ConstructBlockStructure
 		  
-		  // Print out the document "phase 1" block structure.
+		  // Convert the phase 1 block structure to Text.
 		  Dim printer As New Phase1Printer
 		  printer.Pretty = True
 		  printer.VisitDocument(doc)
 		  Dim result As Text = printer.Output
 		  
-		  Dim truth As Text = "The actual answer"
 		  Assert.AreEqual(result, truth)
+		  
 		End Sub
 	#tag EndMethod
 

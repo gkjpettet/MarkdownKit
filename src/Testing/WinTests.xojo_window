@@ -1,5 +1,5 @@
 #tag Window
-Begin Window WinMarkdownKitTests
+Begin Window WinTests
    BackColor       =   &cFFFFFF00
    Backdrop        =   0
    CloseButton     =   True
@@ -23,7 +23,7 @@ Begin Window WinMarkdownKitTests
    MinWidth        =   64
    Placement       =   0
    Resizeable      =   True
-   Title           =   "MarkdownKit Tests"
+   Title           =   "Tests"
    Visible         =   True
    Width           =   1090
    Begin Listbox TestGroupList

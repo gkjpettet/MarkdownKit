@@ -487,7 +487,7 @@ Inherits MarkdownKit.Block
 		      If Not blank Then
 		        If container.Type = MarkdownKit.BlockType.AtxHeading Then
 		          // ATX heading.
-		          currentBlock.AddLine(line, currentCharPos, absoluteCol)
+		          container.AddLine(line, currentCharPos, absoluteCol)
 		          container.Finalise
 		          container = container.Parent
 		          

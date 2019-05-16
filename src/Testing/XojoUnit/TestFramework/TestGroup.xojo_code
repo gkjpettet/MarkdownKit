@@ -466,7 +466,7 @@ Protected Class TestGroup
 		Protected Assert As Assert
 	#tag EndComputedProperty
 
-	#tag ComputedProperty, Flags = &h21
+	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
 			  If mController Is Nil Then
@@ -487,7 +487,7 @@ Protected Class TestGroup
 			  
 			End Set
 		#tag EndSetter
-		Private Controller As TestController
+		Controller As TestController
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21

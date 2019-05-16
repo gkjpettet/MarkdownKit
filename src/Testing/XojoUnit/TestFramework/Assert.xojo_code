@@ -285,6 +285,8 @@ Protected Class Assert
 
 	#tag Method, Flags = &h0
 		Sub AreEqual(expected As Text, actual As Text, message As Text = "")
+		  #Pragma Unused message
+		  
 		  // This is a case-insensitive comparison
 		  
 		  If expected.Compare(actual) = 0 Then

@@ -10,7 +10,7 @@ Implements Global.MarkdownKit.Walker
 		  
 		  Dim numSpaces As Integer = mCurrentIndent * kSpacesPerIndent
 		  Dim tmp() As Text
-		  For i As Integer = 0 To numSpaces
+		  For i As Integer = 1 To numSpaces
 		    tmp.Append(" ")
 		  Next i
 		  Return Text.Join(tmp, "")
@@ -34,7 +34,7 @@ Implements Global.MarkdownKit.Walker
 		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<ATXHeading level=" + atx.Level.ToText + ">")
+		  mOutput.Append(CurrentIndent + "<heading level=" + """" + atx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
 		  For Each b As MarkdownKit.Block In atx.Children
@@ -43,7 +43,7 @@ Implements Global.MarkdownKit.Walker
 		    DecreaseIndent
 		  Next b
 		  
-		  mOutput.Append(CurrentIndent + "</ATXHeading>")
+		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod
@@ -88,7 +88,7 @@ Implements Global.MarkdownKit.Walker
 		Sub VisitDocument(d As MarkdownKit.Document)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<Document>")
+		  mOutput.Append(CurrentIndent + "<document>")
 		  mOutput.Append(EOL)
 		  
 		  For Each b As MarkdownKit.Block In d.Children
@@ -97,7 +97,7 @@ Implements Global.MarkdownKit.Walker
 		    DecreaseIndent
 		  Next b
 		  
-		  mOutput.Append(CurrentIndent + "</Document>")
+		  mOutput.Append(CurrentIndent + "</document>")
 		  
 		End Sub
 	#tag EndMethod
@@ -176,7 +176,7 @@ Implements Global.MarkdownKit.Walker
 		Sub VisitRawText(rt As MarkdownKit.RawText)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<RawText>")
+		  mOutput.Append(CurrentIndent + "<raw_text>")
 		  
 		  // For readability, we will replace spaces with a bullet (•), tabs with an arrow (→) 
 		  // and blank lines with the return arrow (⮐).
@@ -195,7 +195,7 @@ Implements Global.MarkdownKit.Walker
 		  If tmp.Ubound = -1 Then tmp.Append("⮐") // Blank line.
 		  
 		  mOutput.Append(Text.Join(tmp, ""))
-		  mOutput.Append("</RawText>")
+		  mOutput.Append("</raw_text>")
 		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod

@@ -3,11 +3,11 @@ Protected Class MarkdownKitTestController
 Inherits TestController
 	#tag Event
 		Sub InitializeTestGroups()
-		  // Instantiate TestGroup subclasses here so that they can be run
+		  // Instantiate TestGroup subclasses here so that they can be run.
 		  
 		  Dim group As TestGroup
 		  
-		  group = New MarkdownKitTests(Self, "ATX Headings")
+		  group = New MarkdownPhase1ATXTests(Self, "ATX Headings")
 		  
 		  
 		End Sub

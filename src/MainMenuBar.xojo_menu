@@ -94,5 +94,32 @@ Begin Menu MainMenuBar
          Visible = True
       End
    End
+   Begin MenuItem WindowMenu
+      SpecialMenu = 0
+      Text = "Window"
+      Index = -2147483648
+      AutoEnable = True
+      Visible = True
+      Begin MenuItem WindowMain
+         SpecialMenu = 0
+         Text = "Main"
+         Index = -2147483648
+         ShortcutKey = "1"
+         Shortcut = "Cmd+1"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin MenuItem WindowTests
+         SpecialMenu = 0
+         Text = "Tests"
+         Index = -2147483648
+         ShortcutKey = "2"
+         Shortcut = "Cmd+2"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
+   End
 End
 #tag EndMenu

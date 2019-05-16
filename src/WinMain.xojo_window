@@ -195,21 +195,6 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Open()
-		  // Dim f As Xojo.IO.FolderItem = New Xojo.IO.FolderItem("/Users/garry/Repos/MarkdownKit/tests/189.md")
-		  // 
-		  // Dim tin As Xojo.IO.TextInputStream
-		  // Dim md As Text
-		  // Try
-		  // tin = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
-		  // md = tin.ReadAll
-		  // tin.Close
-		  // Catch e
-		  // MsgBox("An error occurred: " + e.Reason)
-		  // Quit
-		  // End Try
-		  // 
-		  // Dim html As Text = MarkdownKit.ToHTML(md)
-		  
 		  // Disable smart quotes.
 		  Source.SmartQuotes = False
 		  
@@ -245,11 +230,11 @@ End
 		  // Remove any earlier warnings.
 		  Info.Text = ""
 		  
-		  // Traverse the document tree.
-		  Dim walker As New DebugWalker
-		  walker.Pretty = True
-		  walker.VisitDocument(doc)
-		  Output.Text = walker.Output
+		  // Print out the document "phase 1" block structure.
+		  Dim printer As New Phase1Printer
+		  printer.Pretty = True
+		  printer.VisitDocument(doc)
+		  Output.Text = printer.Output
 		  
 		  // If an exception occurs, display the error message.
 		  Exception e As MarkdownKit.MarkdownException

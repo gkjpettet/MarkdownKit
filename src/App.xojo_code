@@ -16,5 +16,7 @@ Inherits Application
 	#tag EndConstant
 
 
+	#tag ViewBehavior
+	#tag EndViewBehavior
 End Class
 #tag EndClass

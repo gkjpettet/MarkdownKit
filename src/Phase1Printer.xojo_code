@@ -1,5 +1,5 @@
 #tag Class
-Protected Class DebugWalker
+Protected Class Phase1Printer
 Implements Global.MarkdownKit.Walker
 	#tag Method, Flags = &h21
 		Private Function CurrentIndent() As Text

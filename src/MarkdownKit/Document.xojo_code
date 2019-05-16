@@ -321,10 +321,6 @@ Inherits MarkdownKit.Block
 		    Case MarkdownKit.BlockType.FencedCode
 		      If MarkdownKit.FencedCode(container).NeedsClosing Then
 		        allMatched = False
-		      Else
-		        // Skip past the (optional) spaces of this fence's offset.
-		        tmpInt = MarkdownKit.FencedCode(container).Offset
-		        If tmpInt > 0 Then AdvancePos(line, tmpInt, currentCharPos, currentCharCol, currentChar)
 		      End If
 		      
 		    Case MarkdownKit.BlockType.Paragraph
@@ -454,7 +450,8 @@ Inherits MarkdownKit.Block
 		          // Mark this fenced code block as requiring closing when the next line is processed.
 		          MarkdownKit.FencedCode(container).NeedsClosing = True
 		        Else
-		          container.AddLine(line, currentCharPos, currentCharCol)
+		          // Add the whole line (including prefixing whitespace) to this fenced code block.
+		          container.AddLine(line, 0, 1)
 		        End If
 		        
 		      ElseIf container.AcceptsLines Then

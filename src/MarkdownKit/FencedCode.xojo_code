@@ -38,10 +38,31 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub Finalise()
-		  #Pragma Warning "TODO: Finish"
-		  
 		  // Nothing to do if this block is already closed.
 		  If Not Self.IsOpen Then Return
+		  
+		  // If the code fence is indented `Offset` spaces, then up to `Offset` spaces 
+		  // of indentation are removed from each line of the content (if present).
+		  // If a content line is not indented, it is preserved unchanged. 
+		  // If it is indented less than `Offset` spaces, all of the indentation is removed.
+		  If Self.Children.Ubound >= 0 And Self.Offset > 0 Then
+		    Dim i, j, jLimit As Integer
+		    Dim childrenUbound As Integer = Self.Children.Ubound
+		    Dim rt As MarkdownKit.RawText
+		    For i = 0 to childrenUbound
+		      // For each line of raw text in the code fence...
+		      rt = MarkdownKit.RawText(Self.Children(i))
+		      // Remove a maximum of `Offset` contiguous spaces.
+		      jLimit = Xojo.Math.Min(rt.Chars.Ubound, Self.Offset - 1)
+		      For j = 0 To jLimit
+		        If rt.Chars(0) = " " Then
+		          rt.Chars.Remove(0)
+		        Else
+		          Exit
+		        End If
+		      Next j
+		    Next i
+		  End If
 		  
 		  // Mark the block as closed.
 		  Self.IsOpen = False

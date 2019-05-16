@@ -446,6 +446,7 @@ Inherits MarkdownKit.Block
 		        currentBlock.AddLine(line, currentCharPos, currentCharCol)
 		        container.Finalise
 		        container = container.Parent
+		        
 		      ElseIf container.Type = MarkdownKit.BlockType.FencedCode Then
 		        If currentChar = MarkdownKit.FencedCode(container).OpeningChar And Not indented And _
 		          Not IsEscaped(line.Chars, currentCharPos) And _
@@ -455,6 +456,10 @@ Inherits MarkdownKit.Block
 		        Else
 		          container.AddLine(line, currentCharPos, currentCharCol)
 		        End If
+		        
+		      ElseIf container.AcceptsLines Then
+		        container.AddLine(line, currentCharPos, currentCharCol)
+		        
 		      ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
 		        container.Type <> MarkdownKit.BlockType.SetextHeading Then
 		        // Create a paragraph container for the line.
@@ -462,8 +467,6 @@ Inherits MarkdownKit.Block
 		        currentCharCol)
 		        container.AddLine(line, currentCharPos, currentCharCol)
 		        
-		      ElseIf container.AcceptsLines Then
-		        container.AddLine(line, currentCharPos, currentCharCol)
 		      Else
 		        Raise New MarkdownKit.MarkdownException(_
 		        "Line " + line.Number.ToText + " with container type " + container.Type.ToText + " did not " + _

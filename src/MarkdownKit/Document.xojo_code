@@ -173,6 +173,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.BlockQuote(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.Paragraph
 		    child = New MarkdownKit.Paragraph(line, charPos, charCol)
+		  Case MarkdownKit.BlockType.FencedCode
+		    child = New MarkdownKit.FencedCode(line, charPos, charCol)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -285,6 +287,7 @@ Inherits MarkdownKit.Block
 		  Dim blank As Boolean = False // Whether there are no more characters on the line.
 		  Dim indented As Boolean
 		  Dim tmpInt As Integer
+		  Dim tmpText1, tmpText2 As Text
 		  While container.LastChild <> Nil And container.LastChild.IsOpen
 		    
 		    container = container.LastChild
@@ -314,6 +317,15 @@ Inherits MarkdownKit.Block
 		    Case MarkdownKit.BlockType.AtxHeading, MarkdownKit.BlockType.SetextHeading
 		      // A heading can never contain more than one line.
 		      allMatched = False
+		      
+		    Case MarkdownKit.BlockType.FencedCode
+		      If MarkdownKit.FencedCode(container).NeedsClosing Then
+		        allMatched = False
+		      Else
+		        // Skip past the (optional) spaces of this fence's offset.
+		        tmpInt = MarkdownKit.FencedCode(container).Offset
+		        If tmpInt > 0 Then AdvancePos(line, tmpInt, currentCharPos, currentCharCol, currentChar)
+		      End If
 		      
 		    Case MarkdownKit.BlockType.Paragraph
 		      // Blank lines interrupt paragraphs.
@@ -352,7 +364,7 @@ Inherits MarkdownKit.Block
 		    blank = If(currentChar = "", True, False)
 		    
 		    If Not indented And currentChar = ">" And Not IsEscaped(line.Chars, currentCharPos) Then
-		      // New blockquote.
+		      // ======= NEW BLOCKQUOTE =======
 		      // Advance one position along the line (past the ">" character we've just handled).
 		      AdvancePos(line, 1, currentCharPos, currentCharCol, currentChar)
 		      // An optional space is permitted after the ">". Handle this scenario.
@@ -360,15 +372,31 @@ Inherits MarkdownKit.Block
 		      // Create the new blockquote block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.BlockQuote, _
 		      currentCharPos, currentCharCol)
+		      
 		    ElseIf Not indented And currentChar = "#" And _
 		      Not IsEscaped(line.Chars, currentCharPos) And _
 		      MyScanner.ValidAtxHeadingStart(line, currentCharPos, tmpInt) Then
-		      // New ATX heading.
+		      // ======= NEW ATX HEADING =======
 		      // Create the new ATX heading block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.AtxHeading, _
 		      currentCharPos, currentCharCol)
 		      // Assign the heading's level.
 		      MarkdownKit.AtxHeading(container).Level = tmpInt
+		      
+		    ElseIf Not indented And (currentChar = "`" Or currentChar = "~") And _
+		      MyScanner.ValidCodeFenceStart(line, currentCharPos, tmpText1, tmpText2, tmpInt) Then
+		      // ======= NEW FENCED CODE BLOCK =======
+		      // Create the new fenced code block.
+		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.FencedCode, _
+		      currentCharPos, currentCharCol)
+		      // Set the code block's info string, opening character and offset.
+		      MarkdownKit.FencedCode(container).InfoString = tmpText1
+		      MarkdownKit.FencedCode(container).OpeningChar = tmpText2
+		      MarkdownKit.FencedCode(container).Offset = tmpInt
+		      // Advance past the opening sequence.
+		      currentChar = ""
+		      currentCharCol = -1
+		      currentCharPos = -1
 		    Else
 		      Exit
 		    End If
@@ -413,17 +441,28 @@ Inherits MarkdownKit.Block
 		    Wend
 		    
 		    If Not blank Then
-		      If container.AcceptsLines Then
-		        container.AddLine(line, currentCharPos, currentCharCol)
-		      ElseIf container.Type = MarkdownKit.BlockType.AtxHeading Then
+		      If container.Type = MarkdownKit.BlockType.AtxHeading Then
 		        // ATX heading.
 		        currentBlock.AddLine(line, currentCharPos, currentCharCol)
 		        container.Finalise
 		        container = container.Parent
+		      ElseIf container.Type = MarkdownKit.BlockType.FencedCode Then
+		        If currentChar = MarkdownKit.FencedCode(container).OpeningChar And Not indented And _
+		          Not IsEscaped(line.Chars, currentCharPos) And _
+		          MyScanner.ValidCodeFenceEnd(line, currentCharPos, MarkdownKit.FencedCode(container)) Then
+		          // Mark this fenced code block as requiring closing when the next line is processed.
+		          MarkdownKit.FencedCode(container).NeedsClosing = True
+		        Else
+		          container.AddLine(line, currentCharPos, currentCharCol)
+		        End If
 		      ElseIf container.Type <> MarkdownKit.BlockType.ThematicBreak And _
 		        container.Type <> MarkdownKit.BlockType.SetextHeading Then
 		        // Create a paragraph container for the line.
-		        container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, currentCharCol)
+		        container = CreateChildBlock(container, line, MarkdownKit.BlockType.Paragraph, currentCharPos, _
+		        currentCharCol)
+		        container.AddLine(line, currentCharPos, currentCharCol)
+		        
+		      ElseIf container.AcceptsLines Then
 		        container.AddLine(line, currentCharPos, currentCharCol)
 		      Else
 		        Raise New MarkdownKit.MarkdownException(_

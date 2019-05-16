@@ -103,6 +103,27 @@ Implements Global.MarkdownKit.Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitFencedCode(f As MarkdownKit.FencedCode)
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  Dim info As Text = If(f.InfoString <> "", " info=" + """" + f.InfoString + """", "")
+		  
+		  mOutput.Append(CurrentIndent + "<FencedCodeBlock" + If(info <> "", info, "") + ">")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In f.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</FencedCodeBlock>")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitHardBreak(hb As MarkdownKit.HardBreak)
 		  #Pragma Unused hb
 		  

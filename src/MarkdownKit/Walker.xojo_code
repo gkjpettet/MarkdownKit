@@ -25,6 +25,12 @@ Protected Interface Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitFencedCode(f As MarkdownKit.FencedCode)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitHardBreak(hb As MarkdownKit.HardBreak)
 		  
 		End Sub

@@ -11,7 +11,7 @@ Implements Global.MarkdownKit.Walker
 		  Dim numSpaces As Integer = mCurrentIndent * kSpacesPerIndent
 		  Dim tmp() As Text
 		  For i As Integer = 1 To numSpaces
-		    tmp.Append("•")
+		    tmp.Append(" ")
 		  Next i
 		  Return Text.Join(tmp, "")
 		  
@@ -34,7 +34,7 @@ Implements Global.MarkdownKit.Walker
 		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<heading•level=" + """" + atx.Level.ToText + """" +  ">")
+		  mOutput.Append(CurrentIndent + "<heading level=" + """" + atx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
 		  For Each b As MarkdownKit.Block In atx.Children
@@ -107,7 +107,7 @@ Implements Global.MarkdownKit.Walker
 		Sub VisitFencedCode(f As MarkdownKit.FencedCode)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  Dim info As Text = If(f.InfoString <> "", "•info=" + """" + f.InfoString + """", "")
+		  Dim info As Text = If(f.InfoString <> "", " info=" + """" + f.InfoString + """", "")
 		  
 		  mOutput.Append(CurrentIndent + "<FencedCodeBlock" + If(info <> "", info, "") + ">")
 		  mOutput.Append(EOL)
@@ -130,7 +130,7 @@ Implements Global.MarkdownKit.Walker
 		  
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<HardBreak•/>")
+		  mOutput.Append(CurrentIndent + "<HardBreak />")
 		  mOutput.Append(EOL)
 		  
 		End Sub
@@ -181,21 +181,17 @@ Implements Global.MarkdownKit.Walker
 		  
 		  // For readability, we will replace spaces with a bullet (•), tabs with an arrow (→) 
 		  // and blank lines with the return arrow (⮐).
-		  Dim tmp() As Text
-		  Dim i As Integer
-		  Dim charsUbound As Integer = rt.Chars.Ubound
-		  For i = 0 To charsUbound
-		    If rt.Chars(i) = " " Then
-		      tmp.Append("•")
-		    ElseIf rt.Chars(i) = &u0009 Then
-		      tmp.Append("→")
-		    Else
-		      tmp.Append(rt.Chars(i))
-		    End If
-		  Next i
-		  If tmp.Ubound = -1 Then tmp.Append("⮐") // Blank line.
+		  Dim tmp As Text
+		  If rt.Chars.Ubound = -1 Then
+		    tmp = "⮐"
+		  Else
+		    tmp = Text.Join(rt.Chars, "")
+		    tmp = tmp.ReplaceAll(" " , "•")
+		    tmp = tmp.ReplaceAll(&u0009, "→")
+		    tmp = tmp.ReplaceAll(Text.EndOfLine, "⮐")
+		  End If
 		  
-		  mOutput.Append(Text.Join(tmp, ""))
+		  mOutput.Append(tmp)
 		  mOutput.Append("</raw_text>")
 		  mOutput.Append(EOL)
 		End Sub
@@ -207,7 +203,7 @@ Implements Global.MarkdownKit.Walker
 		  
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<SoftBreak•/>")
+		  mOutput.Append(CurrentIndent + "<SoftBreak />")
 		  mOutput.Append(EOL)
 		  
 		End Sub

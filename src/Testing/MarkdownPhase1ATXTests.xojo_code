@@ -22,6 +22,9 @@ Inherits TestGroup
 		  printer.VisitDocument(doc)
 		  Dim result As Text = printer.Output
 		  
+		  // Convert whitespace to more easliy visible characters.
+		  TransformWhitespace(result)
+		  
 		  Assert.AreEqual(result, truth)
 		  
 		End Sub
@@ -47,6 +50,9 @@ Inherits TestGroup
 		  printer.Pretty = True
 		  printer.VisitDocument(doc)
 		  Dim result As Text = printer.Output
+		  
+		  // Convert whitespace to more easliy visible characters.
+		  TransformWhitespace(result)
 		  
 		  Assert.AreEqual(result, truth)
 		  
@@ -99,23 +105,27 @@ Inherits TestGroup
 		  End Try
 		  
 		  // Convert invisible characters to make them easier to see.
-		  Dim chars() As Text = truth.Split
-		  Dim i As Integer
-		  Dim charsUbound As Integer = chars.Ubound
-		  For i = 0 to charsUbound
-		    Select Case chars(i)
-		    Case " "
-		      chars(i) = "•"
-		    Case &u0009
-		      chars(i) = "→"
-		    End Select
-		  Next i
+		  TransformWhitespace(truth)
 		  
-		  If chars.Ubound = -1 Then chars.Append("⮐")
-		  
-		  Return Text.Join(chars, "")
+		  Return truth
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub TransformWhitespace(ByRef t As Text)
+		  // Converts any spaces, tabs or carriage returns in the referenced Text with 
+		  // easier to see characters. 
+		  
+		  If t = "" Then
+		    t = "⮐"
+		  Else
+		    t = t.ReplaceAll(" " , "•")
+		    t = t.ReplaceAll(&u0009, "→")
+		    t = t.ReplaceAll(Text.EndOfLine, "⮐")
+		  End If
+		  
+		End Sub
 	#tag EndMethod
 
 

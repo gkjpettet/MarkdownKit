@@ -67,6 +67,39 @@ Inherits TestGroup
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example34Test()
+		  Const mdName = "34.md"
+		  Const astName = "34-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not GetTestMarkdown(mdName, md) Then Return // Error loading resource.
+		  
+		  // Get the expected AST output.
+		  Dim truth As Text
+		  If Not GetTestAST(astName, truth) Then Return // Error loading resource.
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim result As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  TransformWhitespace(result)
+		  TransformWhitespace(truth)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(result, truth)
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Function GetTestAST(fileName As Text, ByRef ast As Text) As Boolean
 		  // Takes the name of an example AST output file copied to the 

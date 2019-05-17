@@ -86,14 +86,13 @@ Protected Module MarkdownKit
 		  // Whitespace characters are &u0020, &u0009.
 		  
 		  Dim i As Integer
-		  For i = 0 To chars.Ubound
+		  For i = chars.Ubound DownTo 0
 		    If chars(0) = &u0020 Or chars(0) = &u0009 Then
 		      chars.Remove(0)
 		    Else
 		      Exit
 		    End If
 		  Next i
-		  
 		End Sub
 	#tag EndMethod
 

@@ -11,8 +11,8 @@ Inherits TestGroup
 		  If Not GetTestMarkdown(mdName, md) Then Return // Error loading resource.
 		  
 		  // Get the expected AST output.
-		  Dim truth As Text
-		  If Not GetTestAST(astName, truth) Then Return // Error loading resource.
+		  Dim expected As Text
+		  If Not GetTestAST(astName, expected) Then Return // Error loading resource.
 		  
 		  // Create a new Markdown document.
 		  Dim doc As New MarkdownKit.Document(md)
@@ -21,15 +21,15 @@ Inherits TestGroup
 		  // Convert the phase 1 block structure to Text.
 		  Dim printer As New Phase1TestPrinter
 		  printer.VisitDocument(doc)
-		  Dim result As Text = printer.Output
+		  Dim actual As Text = printer.Output
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
-		  TransformWhitespace(result)
-		  TransformWhitespace(truth)
+		  TransformWhitespace(actual)
+		  TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
-		  Assert.AreEqual(result, truth)
+		  Assert.AreEqual(expected, actual)
 		  
 		End Sub
 	#tag EndMethod
@@ -62,7 +62,7 @@ Inherits TestGroup
 		  TransformWhitespace(truth)
 		  
 		  // Check the result matches the truth.
-		  Assert.AreEqual(result, truth)
+		  Assert.AreEqual(truth, result)
 		  
 		End Sub
 	#tag EndMethod
@@ -95,7 +95,106 @@ Inherits TestGroup
 		  TransformWhitespace(truth)
 		  
 		  // Check the result matches the truth.
-		  Assert.AreEqual(result, truth)
+		  Assert.AreEqual(truth, result)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example35Test()
+		  Const mdName = "35.md"
+		  Const astName = "35-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not GetTestMarkdown(mdName, md) Then Return // Error loading resource.
+		  
+		  // Get the expected AST output.
+		  Dim truth As Text
+		  If Not GetTestAST(astName, truth) Then Return // Error loading resource.
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim result As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  TransformWhitespace(result)
+		  TransformWhitespace(truth)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(truth, result)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example36Test()
+		  Const mdName = "36.md"
+		  Const astName = "36-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not GetTestMarkdown(mdName, md) Then Return // Error loading resource.
+		  
+		  // Get the expected AST output.
+		  Dim truth As Text
+		  If Not GetTestAST(astName, truth) Then Return // Error loading resource.
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim result As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  TransformWhitespace(result)
+		  TransformWhitespace(truth)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(truth, result)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example37Test()
+		  Const mdName = "37.md"
+		  Const astName = "37-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not GetTestMarkdown(mdName, md) Then Return // Error loading resource.
+		  
+		  // Get the expected AST output.
+		  Dim truth As Text
+		  If Not GetTestAST(astName, truth) Then Return // Error loading resource.
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim result As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  TransformWhitespace(result)
+		  TransformWhitespace(truth)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(truth, result)
 		  
 		End Sub
 	#tag EndMethod
@@ -149,6 +248,14 @@ Inherits TestGroup
 		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag Note, Name = About
+		These tests validate the first phase (document block construction) of the parsing process.
+		Inline parsing does not occur until phase 2 which is why the expected AST is 
+		different than that output by commonmark.js.
+		
+	#tag EndNote
 
 
 	#tag ViewBehavior

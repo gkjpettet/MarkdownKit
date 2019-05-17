@@ -34,7 +34,7 @@ Implements Global.MarkdownKit.Walker
 		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<heading level=" + """" + atx.Level.ToText + """" +  ">")
+		  mOutput.Append(CurrentIndent + "<heading•level=" + """" + atx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
 		  For Each b As MarkdownKit.Block In atx.Children
@@ -106,7 +106,7 @@ Implements Global.MarkdownKit.Walker
 		Sub VisitFencedCode(f As MarkdownKit.FencedCode)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  Dim info As Text = If(f.InfoString <> "", " info=" + """" + f.InfoString + """", "")
+		  Dim info As Text = If(f.InfoString <> "", "•info=" + """" + f.InfoString + """", "")
 		  
 		  mOutput.Append(CurrentIndent + "<FencedCodeBlock" + If(info <> "", info, "") + ">")
 		  mOutput.Append(EOL)
@@ -129,7 +129,7 @@ Implements Global.MarkdownKit.Walker
 		  
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<HardBreak />")
+		  mOutput.Append(CurrentIndent + "<HardBreak•/>")
 		  mOutput.Append(EOL)
 		  
 		End Sub
@@ -202,7 +202,7 @@ Implements Global.MarkdownKit.Walker
 		  
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
-		  mOutput.Append(CurrentIndent + "<SoftBreak />")
+		  mOutput.Append(CurrentIndent + "<SoftBreak•/>")
 		  mOutput.Append(EOL)
 		  
 		End Sub

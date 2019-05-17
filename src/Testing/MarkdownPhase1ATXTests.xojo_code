@@ -7,34 +7,12 @@ Inherits TestGroup
 		  Const astName = "32-phase1.ast"
 		  
 		  // Get the example Markdown file.
-		  Dim mdFile As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(mdName)
-		  
-		  // Read the Markdown source.
 		  Dim md As Text
-		  Try
-		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(mdFile, Xojo.Core.TextEncoding.UTF8)
-		    md = tin.ReadAll
-		    tin.Close
-		  Catch e
-		    // This shouldn't happen.
-		    MsgBox("Unable to read the contents of " + mdName)
-		    Assert.AreEqual(0, 1) // Cause a fail.
-		  End Try
+		  If Not GetTestMarkdown(mdName, md) Then Return // Error loading resource.
 		  
-		  // Get the example Markdown file.
-		  Dim astFile As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(astName)
-		  
-		  // Read the expected output.
+		  // Get the expected AST output.
 		  Dim truth As Text
-		  Try
-		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(astFile, Xojo.Core.TextEncoding.UTF8)
-		    truth = tin.ReadAll
-		    tin.Close
-		  Catch e
-		    // This shouldn't happen.
-		    MsgBox("Unable to read the contents of " + astName)
-		    Assert.AreEqual(0, 1) // Cause a fail.
-		  End Try
+		  If Not GetTestAST(astName, truth) Then Return // Error loading resource.
 		  
 		  // Create a new Markdown document.
 		  Dim doc As New MarkdownKit.Document(md)
@@ -46,7 +24,97 @@ Inherits TestGroup
 		  printer.VisitDocument(doc)
 		  Dim result As Text = printer.Output
 		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  TransformWhitespace(result)
+		  TransformWhitespace(truth)
+		  
+		  // Check the result matches the truth.
 		  Assert.AreEqual(result, truth)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example33Test()
+		  Const mdName = "33.md"
+		  Const astName = "33-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not GetTestMarkdown(mdName, md) Then Return // Error loading resource.
+		  
+		  // Get the expected AST output.
+		  Dim truth As Text
+		  If Not GetTestAST(astName, truth) Then Return // Error loading resource.
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1Printer
+		  printer.Pretty = True
+		  printer.VisitDocument(doc)
+		  Dim result As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  TransformWhitespace(result)
+		  TransformWhitespace(truth)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(result, truth)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function GetTestAST(fileName As Text, ByRef ast As Text) As Boolean
+		  // Takes the name of an example AST output file copied to the 
+		  // app's resources folder and returns the contents.
+		  
+		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  
+		  Try
+		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		    ast = tin.ReadAll
+		    tin.Close
+		    Return True
+		  Catch e
+		    MsgBox("Unable to find the AST example file `" + fileName + "`")
+		    Assert.AreEqual(0, 1) // Force a fail.
+		    Return False
+		  End Try
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function GetTestMarkdown(fileName As Text, ByRef md As Text) As Boolean
+		  // Takes the name of a Markdown example test file copied to the 
+		  // app's resources folder and returns the contents.
+		  
+		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  
+		  Try
+		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		    md = tin.ReadAll
+		    tin.Close
+		    Return True
+		  Catch e
+		    MsgBox("Unable to find the Markdown example file `" + fileName + "`")
+		    Assert.AreEqual(0, 1) // Force a fail.
+		    Return False
+		  End Try
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub TransformWhitespace(ByRef t As Text)
+		  t = t.ReplaceAll(" ", "•")
+		  t = t.ReplaceAll(&u0009, "→")
 		  
 		End Sub
 	#tag EndMethod

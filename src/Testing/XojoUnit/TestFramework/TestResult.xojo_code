@@ -109,6 +109,16 @@ Protected Class TestResult
 			InitialValue="0"
 			Type="Integer"
 		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Actual"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Expected"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
 #tag EndClass

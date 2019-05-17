@@ -19,8 +19,7 @@ Inherits TestGroup
 		  doc.ConstructBlockStructure
 		  
 		  // Convert the phase 1 block structure to Text.
-		  Dim printer As New Phase1Printer
-		  printer.Pretty = True
+		  Dim printer As New Phase1TestPrinter
 		  printer.VisitDocument(doc)
 		  Dim result As Text = printer.Output
 		  
@@ -53,8 +52,7 @@ Inherits TestGroup
 		  doc.ConstructBlockStructure
 		  
 		  // Convert the phase 1 block structure to Text.
-		  Dim printer As New Phase1Printer
-		  printer.Pretty = True
+		  Dim printer As New Phase1TestPrinter
 		  printer.VisitDocument(doc)
 		  Dim result As Text = printer.Output
 		  

@@ -45,7 +45,6 @@ Implements Global.MarkdownKit.Walker
 		  
 		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
-		  
 		End Sub
 	#tag EndMethod
 

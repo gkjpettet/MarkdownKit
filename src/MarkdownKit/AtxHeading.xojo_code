@@ -31,7 +31,11 @@ Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
 		Sub Finalise()
 		  // Nothing to do if this block is already closed.
-		  If Not Self.IsOpen Then Return
+		  If Not Self.IsOpen Then
+		    Return
+		  Else
+		    Self.IsOpen = False
+		  End If
 		  
 		  // Sanity check.
 		  If Children.Ubound <> 0 Then
@@ -40,24 +44,26 @@ Inherits MarkdownKit.Block
 		    "on line " + Self.Line.Number.ToText + ". Instead got " + Integer(Children.Ubound + 1).ToText)
 		  End If
 		  
+		  // Get a reference to the text representing this heading.
+		  Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(0))
+		  
 		  // At this point, Self.Children contains a single RawText block representing 
 		  // the raw text of the header (including prefixing # characters and optional 
 		  // trailing # characters). We need to remove these superfluous characters.
 		  // First remove the prefixing # characters.
-		  Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(0))
 		  Dim i As Integer
 		  For i = 1 To Self.Level
 		    rt.Chars.Remove(0)
 		  Next i
 		  
-		  If rt.Chars.Ubound = -1 Then
-		    // This is an empty heading. All that's left to do is close the block and go.
-		    Self.IsOpen = False
-		    Return
-		  End If
-		  
 		  // Remove any trailing whitespace.
 		  StripTrailingWhitespace(rt.Chars)
+		  
+		  // Empty heading?
+		  If rt.Chars.Ubound = -1 Then
+		    Call Children.Pop
+		    Return
+		  End If
 		  
 		  // Is there an optional closing sequence to this heading?
 		  Dim isClosingSequence As Boolean = False
@@ -87,12 +93,18 @@ Inherits MarkdownKit.Block
 		    End If
 		  End If
 		  
+		  // Empty heading?
+		  If rt.Chars.Ubound = -1 Then
+		    Call Children.Pop
+		    Return
+		  End If
+		  
 		  // Remove prefixing and trailing whitespace from the raw text.
 		  StripLeadingWhitespace(rt.Chars)
 		  StripTrailingWhitespace(rt.Chars)
 		  
-		  // Mark the block as closed.
-		  Self.IsOpen = False
+		  // Empty heading?
+		  If rt.Chars.Ubound = -1 Then Call Children.Pop
 		  
 		End Sub
 	#tag EndMethod

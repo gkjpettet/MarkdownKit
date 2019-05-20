@@ -802,7 +802,7 @@ Begin Window WinTests
          TabIndex        =   4
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "Expected:"
+         Text            =   "Expected AST (""truth""):"
          TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
@@ -812,7 +812,7 @@ Begin Window WinTests
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   100
+         Width           =   362
       End
       Begin Label TestResultLabel
          AutoDeactivate  =   True
@@ -921,7 +921,7 @@ Begin Window WinTests
          TabIndex        =   8
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "Actual:"
+         Text            =   "AST produced by MarkdownKit (""actual""):"
          TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
@@ -931,7 +931,7 @@ Begin Window WinTests
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   100
+         Width           =   360
       End
       Begin TextArea TestInputMarkdown
          AcceptTabs      =   False
@@ -1553,8 +1553,8 @@ End
 		    // Read the contents of the file containing the input Markdown for this test 
 		    // and assign it to the relevant text area.
 		    Dim md As Text
-		    Call MarkdownPhase1ATXTests.GetTestMarkdown(testNumber + ".md", md)
-		    MarkdownPhase1ATXTests.TransformWhitespace(md)
+		    Call MarkdownKitTestController.GetTestMarkdown(testNumber + ".md", md)
+		    MarkdownKitTestController.TransformWhitespace(md)
 		    TestInputMarkdown.Text = md
 		  Catch e
 		    // Ignore.

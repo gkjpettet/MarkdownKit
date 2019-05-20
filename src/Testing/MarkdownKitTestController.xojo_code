@@ -14,6 +14,56 @@ Inherits TestController
 	#tag EndEvent
 
 
+	#tag Method, Flags = &h0
+		Shared Function GetTestAST(fileName As Text, ByRef ast As Text) As Boolean
+		  // Takes the name of an example AST output file copied to the 
+		  // app's resources folder and returns the contents.
+		  
+		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  
+		  Try
+		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		    ast = tin.ReadAll
+		    tin.Close
+		    Return True
+		  Catch e
+		    MsgBox("Unable to find the AST example file `" + fileName + "`")
+		    
+		    Return False
+		  End Try
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function GetTestMarkdown(fileName As Text, ByRef md As Text) As Boolean
+		  // Takes the name of a Markdown example test file copied to the 
+		  // app's resources folder and returns the contents.
+		  
+		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  
+		  Try
+		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		    md = tin.ReadAll
+		    tin.Close
+		    Return True
+		  Catch e
+		    MsgBox("Unable to find the Markdown example file `" + fileName + "`")
+		    Return False
+		  End Try
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Sub TransformWhitespace(ByRef t As Text)
+		  t = t.ReplaceAll(" ", "•")
+		  t = t.ReplaceAll(&u0009, "→")
+		  
+		End Sub
+	#tag EndMethod
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="AllTestCount"

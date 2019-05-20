@@ -9,14 +9,14 @@ Inherits TestGroup
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
-		  If Not GetTestMarkdown(mdName, md) Then
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected AST output.
 		  Dim expected As Text
-		  If Not GetTestAST(astName, expected) Then
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
 		    Assert.Fail("Unable to load test AST file `" + astName + "`")
 		    Return
 		  End If
@@ -32,8 +32,8 @@ Inherits TestGroup
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
-		  TransformWhitespace(actual)
-		  TransformWhitespace(expected)
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
 		  Assert.AreEqual(expected, actual)
@@ -49,14 +49,14 @@ Inherits TestGroup
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
-		  If Not GetTestMarkdown(mdName, md) Then
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected AST output.
 		  Dim expected As Text
-		  If Not GetTestAST(astName, expected) Then
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
 		    Assert.Fail("Unable to load test AST file `" + astName + "`")
 		    Return
 		  End If
@@ -72,8 +72,8 @@ Inherits TestGroup
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
-		  TransformWhitespace(actual)
-		  TransformWhitespace(expected)
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
 		  Assert.AreEqual(expected, actual)
@@ -89,14 +89,14 @@ Inherits TestGroup
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
-		  If Not GetTestMarkdown(mdName, md) Then
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected AST output.
 		  Dim expected As Text
-		  If Not GetTestAST(astName, expected) Then
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
 		    Assert.Fail("Unable to load test AST file `" + astName + "`")
 		    Return
 		  End If
@@ -112,8 +112,8 @@ Inherits TestGroup
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
-		  TransformWhitespace(actual)
-		  TransformWhitespace(expected)
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
 		  Assert.AreEqual(expected, actual)
@@ -121,45 +121,244 @@ Inherits TestGroup
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Shared Function GetTestAST(fileName As Text, ByRef ast As Text) As Boolean
-		  // Takes the name of an example AST output file copied to the 
-		  // app's resources folder and returns the contents.
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example82Test()
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
-		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
 		  
-		  Try
-		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
-		    ast = tin.ReadAll
-		    tin.Close
-		    Return True
-		  Catch e
-		    MsgBox("Unable to find the AST example file `" + fileName + "`")
-		    
-		    Return False
-		  End Try
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
 		  
-		End Function
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Shared Function GetTestMarkdown(fileName As Text, ByRef md As Text) As Boolean
-		  // Takes the name of a Markdown example test file copied to the 
-		  // app's resources folder and returns the contents.
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example83Test()
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
-		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
 		  
-		  Try
-		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
-		    md = tin.ReadAll
-		    tin.Close
-		    Return True
-		  Catch e
-		    MsgBox("Unable to find the Markdown example file `" + fileName + "`")
-		    Return False
-		  End Try
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
 		  
-		End Function
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example84Test()
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
+		  
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example86Test()
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
+		  
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example87Test()
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
+		  
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example88Test()
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
+		  
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ConstructBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1TestPrinter
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -198,14 +397,6 @@ Inherits TestGroup
 		  Return result
 		  
 		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Sub TransformWhitespace(ByRef t As Text)
-		  t = t.ReplaceAll(" ", "•")
-		  t = t.ReplaceAll(&u0009, "→")
-		  
-		End Sub
 	#tag EndMethod
 
 

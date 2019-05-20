@@ -8,7 +8,7 @@ Inherits TestController
 		  Dim group As TestGroup
 		  
 		  group = New MarkdownPhase1ATXTests(Self, "ATX Headings")
-		  
+		  group = New MarkdownPhase1IndentedCodeFenceTests(Self, "Indented Code Fences")
 		  
 		End Sub
 	#tag EndEvent

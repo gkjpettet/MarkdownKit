@@ -374,7 +374,8 @@ Inherits MarkdownKit.Block
 		    FindFirstNonWhitespace(line, currentCharPos, absoluteCol, relativeCol, currentChar)
 		    
 		    // Is the first NWS character indented?
-		    indented = If(relativeCol > 4, True, False)
+		    #Pragma Warning "NOTE: Changed from relativeCol to fix test 40"
+		    indented = If(absoluteCol > 4, True, False)
 		    
 		    // Blank remaining line?
 		    blank = If(currentChar = "", True, False)

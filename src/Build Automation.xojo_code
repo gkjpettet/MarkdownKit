@@ -62,6 +62,8 @@
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzg3Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzg4LXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzg4Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzg5LXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzg5Lm1k
 				End
 			End
 			Begin BuildStepList Windows

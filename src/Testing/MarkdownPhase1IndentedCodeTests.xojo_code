@@ -1,11 +1,11 @@
 #tag Class
-Protected Class MarkdownPhase1IndentedCodeFenceTests
+Protected Class MarkdownPhase1IndentedCodeTests
 Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example77Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -44,8 +44,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example80Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -84,8 +84,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example81Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -124,8 +124,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example82Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -164,8 +164,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example83Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -204,8 +204,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example84Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -244,8 +244,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example86Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -284,8 +284,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example87Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -324,8 +324,8 @@ Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example88Test()
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = GetTestNumberFromMethodName(CurrentMethodName) + ".md"
-		  Dim astNAme As Text = GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
+		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + ".md"
+		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(CurrentMethodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
@@ -359,44 +359,6 @@ Inherits TestGroup
 		  Assert.AreEqual(expected, actual)
 		  
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Function GetTestNumberFromMethodName(methodName As Text) As Text
-		  // Given the name of a test, extract and return the test number.
-		  // The method name should be in the format:
-		  // MarkdownPhase1ATXTests.ExampleXXTest
-		  
-		  #Pragma BreakOnExceptions False
-		  
-		  Dim startPos As Integer = methodName.IndexOf("Example") + 7
-		  Dim chars() As Text = methodName.Split
-		  If startPos = 6 Or startPos = chars.Ubound Then
-		    Dim e As New Xojo.Core.InvalidArgumentException
-		    e.Reason = "Invalid method name format. Expected: `MarkdownPhase1ATXTests.ExampleXXTest`"
-		    Raise e
-		  End If
-		  
-		  Dim result As Text
-		  Dim tmp As Integer
-		  For i As Integer = startPos To chars.Ubound
-		    Try
-		      tmp = Integer.FromText(chars(i))
-		      result = result + chars(i)
-		    Catch
-		      Exit
-		    End Try
-		  Next i
-		  
-		  If result.Length = 0 Then
-		    Dim e As New Xojo.Core.InvalidArgumentException
-		    e.Reason = "Invalid method name format. Expected: `MarkdownPhase1ATXTests.ExampleXXTest`"
-		    Raise e
-		  End If
-		  
-		  Return result
-		  
-		End Function
 	#tag EndMethod
 
 

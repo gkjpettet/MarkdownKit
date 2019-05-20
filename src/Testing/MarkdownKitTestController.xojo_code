@@ -8,8 +8,8 @@ Inherits TestController
 		  Dim group As TestGroup
 		  
 		  group = New MarkdownPhase1ATXTests(Self, "ATX Headings")
-		  group = New MarkdownPhase1IndentedCodeFenceTests(Self, "Indented Code Fences")
-		  
+		  group = New MarkdownPhase1IndentedCodeTests(Self, "Indented Code Blocks")
+		  group = New MarkdownPhase1FencedCodeTests(Self, "Fenced Code Blocks")
 		End Sub
 	#tag EndEvent
 
@@ -51,6 +51,42 @@ Inherits TestController
 		    MsgBox("Unable to find the Markdown example file `" + fileName + "`")
 		    Return False
 		  End Try
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function GetTestNumberFromMethodName(methodName As Text) As Text
+		  // Given the name of a test, extract and return the test number.
+		  
+		  #Pragma BreakOnExceptions False
+		  
+		  Dim startPos As Integer = methodName.IndexOf("Example") + 7
+		  Dim chars() As Text = methodName.Split
+		  If startPos = 6 Or startPos = chars.Ubound Then
+		    Dim e As New Xojo.Core.InvalidArgumentException
+		    e.Reason = "Invalid method name format. Expected: `ExampleXXTest`"
+		    Raise e
+		  End If
+		  
+		  Dim result As Text
+		  Dim tmp As Integer
+		  For i As Integer = startPos To chars.Ubound
+		    Try
+		      tmp = Integer.FromText(chars(i))
+		      result = result + chars(i)
+		    Catch
+		      Exit
+		    End Try
+		  Next i
+		  
+		  If result.Length = 0 Then
+		    Dim e As New Xojo.Core.InvalidArgumentException
+		    e.Reason = "Invalid method name format. Expected: `ExampleXXTest`"
+		    Raise e
+		  End If
+		  
+		  Return result
 		  
 		End Function
 	#tag EndMethod

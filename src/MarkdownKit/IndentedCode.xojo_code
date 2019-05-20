@@ -37,16 +37,15 @@ Inherits MarkdownKit.Block
 		    If tmp(0) = &u0009 Then
 		      tmp.Remove(0)
 		    Else
-		      // If the raw text line is preceded by >= 4 spaces, remove 4 spaces.
-		      If tmp.Ubound >= 3 Then
-		        For i = 0 To 3
-		          If tmp(0) = " " Then
-		            tmp.Remove(0)
-		          Else
-		            Exit
-		          End If
-		        Next i
-		      End If
+		      // If the raw text begins with <= 4 contiguous spaces, remove them.
+		      Dim limit As Integer = Min(tmp.Ubound, 3)
+		      For i = 0 To limit
+		        If tmp(0) = " " Then
+		          tmp.Remove(0)
+		        Else
+		          Exit
+		        End If
+		      Next i
 		    End If
 		  End If
 		  

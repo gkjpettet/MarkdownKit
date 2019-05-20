@@ -1136,6 +1136,24 @@ End
 		End Function
 	#tag EndMenuHandler
 
+	#tag MenuHandler
+		Function WindowMain() As Boolean Handles WindowMain.Action
+			WinMain.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function WindowTests() As Boolean Handles WindowTests.Action
+			WinTests.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
 
 	#tag Method, Flags = &h0
 		Sub ExportTests(filePath As String)

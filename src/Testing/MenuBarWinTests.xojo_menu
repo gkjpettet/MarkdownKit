@@ -1,11 +1,21 @@
 #tag Menu
-Begin Menu MainMenuBar
+Begin Menu MenuBarWinTests
    Begin MenuItem FileMenu
       SpecialMenu = 0
       Text = "&File"
       Index = -2147483648
       AutoEnable = True
       Visible = True
+      Begin MenuItem FileRunTests
+         SpecialMenu = 0
+         Text = "&Run Tests"
+         Index = -2147483648
+         ShortcutKey = "R"
+         Shortcut = "Cmd+R"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
       Begin QuitMenuItem FileQuit
          SpecialMenu = 0
          Text = "#App.kFileQuit"
@@ -32,7 +42,7 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
-      Begin MenuItem EditSeparator1
+      Begin MenuItem UntitledMenu1
          SpecialMenu = 0
          Text = "-"
          Index = -2147483648
@@ -76,16 +86,16 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
-      Begin MenuItem EditSeparator2
+      Begin MenuItem UntitledMenu0
          SpecialMenu = 0
          Text = "-"
          Index = -2147483648
          AutoEnable = True
          Visible = True
       End
-      Begin MenuItem EditSelectAll
+      Begin MenuItem EditSelectAllGroups
          SpecialMenu = 0
-         Text = "Select &All"
+         Text = "Select &All Groups"
          Index = -2147483648
          ShortcutKey = "A"
          Shortcut = "Cmd+A"
@@ -93,29 +103,12 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
-   End
-   Begin MenuItem WindowMenu
-      SpecialMenu = 0
-      Text = "Window"
-      Index = -2147483648
-      AutoEnable = True
-      Visible = True
-      Begin MenuItem WindowMain
+      Begin MenuItem EditUnselectAllGroups
          SpecialMenu = 0
-         Text = "Main"
+         Text = "Unselect All Groups"
          Index = -2147483648
-         ShortcutKey = "1"
-         Shortcut = "Cmd+1"
-         MenuModifier = True
-         AutoEnable = True
-         Visible = True
-      End
-      Begin MenuItem WindowTests
-         SpecialMenu = 0
-         Text = "Tests"
-         Index = -2147483648
-         ShortcutKey = "2"
-         Shortcut = "Cmd+2"
+         ShortcutKey = "-"
+         Shortcut = "Cmd+-"
          MenuModifier = True
          AutoEnable = True
          Visible = True

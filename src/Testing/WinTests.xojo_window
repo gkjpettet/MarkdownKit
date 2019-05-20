@@ -16,7 +16,7 @@ Begin Window WinTests
    MaxHeight       =   32000
    MaximizeButton  =   False
    MaxWidth        =   32000
-   MenuBar         =   1919610602
+   MenuBar         =   1396744191
    MenuBarVisible  =   True
    MinHeight       =   64
    MinimizeButton  =   True
@@ -1018,7 +1018,7 @@ Begin Window WinTests
          Width           =   123
       End
    End
-   Begin XojoUnitTestToolbar TestToolbar1
+   Begin XojoUnitTestToolbar MyToolbar
       Enabled         =   True
       Index           =   -2147483648
       InitialParent   =   ""
@@ -1130,15 +1130,6 @@ End
 	#tag MenuHandler
 		Function FileRunTests() As Boolean Handles FileRunTests.Action
 			RunTests
-			
-			Return True
-			
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
-		Function HelpAboutXojoUnit() As Boolean Handles HelpAboutXojoUnit.Action
-			XojoUnitAboutWindow.Show
 			
 			Return True
 			
@@ -1270,10 +1261,10 @@ End
 		  StartLabel.Text = now.ShortDate + " " + now.ShortTime
 		  
 		  ProgressWheel1.Visible = True
-		  TestToolbar1.RunButton.Enabled = False
-		  TestToolbar1.RunUntilFailButton.Enabled = False
-		  TestToolbar1.StopButton.Enabled = True
-		  TestToolbar1.ExportButton.Enabled = False
+		  MyToolbar.RunButton.Enabled = False
+		  MyToolbar.RunUntilFailButton.Enabled = False
+		  MyToolbar.StopButton.Enabled = True
+		  MyToolbar.ExportButton.Enabled = False
 		  
 		  Controller.Start
 		  ResetTestGroupList
@@ -1414,10 +1405,10 @@ End
 		    RunTests
 		  Else
 		    ProgressWheel1.Visible = False
-		    TestToolbar1.RunButton.Enabled = True
-		    TestToolbar1.RunUntilFailButton.Enabled = True
-		    TestToolbar1.StopButton.Enabled = False
-		    TestToolbar1.ExportButton.Enabled = True
+		    MyToolbar.RunButton.Enabled = True
+		    MyToolbar.RunUntilFailButton.Enabled = True
+		    MyToolbar.StopButton.Enabled = False
+		    MyToolbar.ExportButton.Enabled = True
 		  End If
 		  
 		End Sub
@@ -1835,22 +1826,22 @@ End
 		End Function
 	#tag EndEvent
 #tag EndEvents
-#tag Events TestToolbar1
+#tag Events MyToolbar
 	#tag Event
 		Sub Action(item As ToolItem)
 		  Select Case item
-		  Case TestToolbar1.RunButton
+		  Case MyToolbar.RunButton
 		    RunUntilFail = False
 		    RunTests
 		    
-		  Case TestToolbar1.RunUntilFailButton
+		  Case MyToolbar.RunUntilFailButton
 		    RunUntilFail = True
 		    RunTests
 		    
-		  Case TestToolbar1.StopButton
+		  Case MyToolbar.StopButton
 		    StopTests
 		    
-		  Case TestToolbar1.ExportButton
+		  Case MyToolbar.ExportButton
 		    Dim dlg As New SaveAsDialog
 		    Dim f As FolderItem
 		    dlg.InitialDirectory = SpecialFolder.Documents

@@ -9,7 +9,7 @@ Begin Window WinTests
    FullScreen      =   False
    FullScreenButton=   False
    HasBackColor    =   False
-   Height          =   720
+   Height          =   980
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -44,7 +44,7 @@ Begin Window WinTests
       GridLinesVertical=   0
       HasHeading      =   False
       HeadingIndex    =   -1
-      Height          =   720
+      Height          =   980
       HelpTag         =   ""
       Hierarchical    =   True
       Index           =   -2147483648
@@ -602,7 +602,7 @@ Begin Window WinTests
       Bold            =   False
       Caption         =   "Selected Test Results"
       Enabled         =   True
-      Height          =   486
+      Height          =   746
       HelpTag         =   ""
       Index           =   1
       InitialParent   =   ""
@@ -742,7 +742,7 @@ Begin Window WinTests
          DataSource      =   ""
          Enabled         =   True
          Format          =   ""
-         Height          =   334
+         Height          =   315
          HelpTag         =   ""
          HideSelection   =   True
          Index           =   -2147483648
@@ -861,7 +861,7 @@ Begin Window WinTests
          DataSource      =   ""
          Enabled         =   True
          Format          =   ""
-         Height          =   334
+         Height          =   315
          HelpTag         =   ""
          HideSelection   =   True
          Index           =   -2147483648
@@ -933,6 +933,90 @@ Begin Window WinTests
          Visible         =   True
          Width           =   100
       End
+      Begin TextArea TestInputMarkdown
+         AcceptTabs      =   False
+         Alignment       =   0
+         AutoDeactivate  =   True
+         AutomaticallyCheckSpelling=   False
+         BackColor       =   &cFFFFFF00
+         Bold            =   False
+         Border          =   True
+         DataField       =   ""
+         DataSource      =   ""
+         Enabled         =   True
+         Format          =   ""
+         Height          =   235
+         HelpTag         =   ""
+         HideSelection   =   True
+         Index           =   -2147483648
+         InitialParent   =   "GroupBoxes$1"
+         Italic          =   False
+         Left            =   306
+         LimitText       =   0
+         LineHeight      =   0.0
+         LineSpacing     =   1.0
+         LockBottom      =   True
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   False
+         Mask            =   ""
+         Multiline       =   True
+         ReadOnly        =   True
+         Scope           =   2
+         ScrollbarHorizontal=   False
+         ScrollbarVertical=   True
+         Styled          =   True
+         TabIndex        =   9
+         TabPanelIndex   =   0
+         TabStop         =   True
+         Text            =   ""
+         TextColor       =   &c00000000
+         TextFont        =   "System"
+         TextSize        =   0.0
+         TextUnit        =   0
+         Top             =   705
+         Transparent     =   False
+         Underline       =   False
+         UseFocusRing    =   True
+         Visible         =   True
+         Width           =   742
+      End
+      Begin Label Labels
+         AutoDeactivate  =   True
+         Bold            =   False
+         DataField       =   ""
+         DataSource      =   ""
+         Enabled         =   True
+         Height          =   20
+         HelpTag         =   ""
+         Index           =   10
+         InitialParent   =   "GroupBoxes$1"
+         Italic          =   False
+         Left            =   306
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   False
+         LockTop         =   True
+         Multiline       =   False
+         Scope           =   0
+         Selectable      =   False
+         TabIndex        =   10
+         TabPanelIndex   =   0
+         TabStop         =   True
+         Text            =   "Input Markdown:"
+         TextAlign       =   0
+         TextColor       =   &c00000000
+         TextFont        =   "System"
+         TextSize        =   0.0
+         TextUnit        =   0
+         Top             =   673
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   123
+      End
    End
    Begin XojoUnitTestToolbar TestToolbar1
       Enabled         =   True
@@ -946,7 +1030,6 @@ Begin Window WinTests
    Begin MarkdownKitTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
-      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -1068,6 +1151,43 @@ End
 		  Controller.ExportTestResults filePath.ToText
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function GetTestNumberFromTestName(testName As Text) As Text
+		  // Expected test name format:
+		  // exampleXXX
+		  
+		  //#Pragma BreakOnExceptions False
+		  
+		  Dim startPos As Integer = testName.IndexOf("example") + 7
+		  Dim chars() As Text = testName.Split
+		  If startPos = 6 Or startPos = chars.Ubound Then
+		    Dim e As New Xojo.Core.InvalidArgumentException
+		    e.Reason = "Invalid method name format. Expected: `exampleXX`"
+		    Raise e
+		  End If
+		  
+		  Dim result As Text
+		  Dim tmp As Integer
+		  For i As Integer = startPos To chars.Ubound
+		    Try
+		      tmp = Integer.FromText(chars(i))
+		      result = result + chars(i)
+		    Catch
+		      Exit
+		    End Try
+		  Next i
+		  
+		  If result.Length = 0 Then
+		    Dim e As New Xojo.Core.InvalidArgumentException
+		    e.Reason = "Invalid method name format. Expected: `exampleXX`"
+		    Raise e
+		  End If
+		  
+		  Return result
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -1415,6 +1535,22 @@ End
 		  
 		  TestResultsExpected.Text = expected
 		  TestResultsActual.Text = actual
+		  
+		  #Pragma BreakOnExceptions False
+		  // Display this test's input Markdown source.
+		  Try
+		    // Get the test number from the test name.
+		    Dim testNumber As Text = GetTestNumberFromTestName(name.ToText)
+		    // Read the contents of the file containing the input Markdown for this test 
+		    // and assign it to the relevant text area.
+		    Dim md As Text
+		    Call MarkdownPhase1ATXTests.GetTestMarkdown(testNumber + ".md", md)
+		    MarkdownPhase1ATXTests.TransformWhitespace(md)
+		    TestInputMarkdown.Text = md
+		  Catch e
+		    // Ignore.
+		  End Try
+		  #Pragma BreakOnExceptions True
 		  
 		End Sub
 	#tag EndMethod

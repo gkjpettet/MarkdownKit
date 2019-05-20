@@ -1,0 +1,11 @@
+<document>
+<paragraph>
+<text>Foo bar</text>
+</paragraph>
+<heading level="1">
+<text>baz</text>
+</heading>
+<paragraph>
+<text>Bar foo</text>
+</paragraph>
+</document>

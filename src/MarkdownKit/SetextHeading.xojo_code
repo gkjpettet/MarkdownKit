@@ -37,7 +37,6 @@ Inherits MarkdownKit.Block
 		    Self.IsOpen = False
 		  End If
 		  
-		  #Pragma Warning "TODO"
 		  
 		End Sub
 	#tag EndMethod

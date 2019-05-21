@@ -153,9 +153,10 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub ConvertParagraphToSetextHeading(b As MarkdownKit.Block, line As MarkdownKit.LineInfo, level As Integer)
+		Private Function ConvertParagraphToSetextHeading(b As MarkdownKit.Block, line As MarkdownKit.LineInfo, level As Integer) As MarkdownKit.Block
 		  // Remove the passed Paragraph block from its parent and replace it with a new 
 		  // SetextHeading block with the same children.
+		  // Returns the newly created SetextHeading.
 		  
 		  // Make sure we've been passed a Paragraph block.
 		  If b.Type <> MarkdownKit.BlockType.Paragraph Then
@@ -173,10 +174,9 @@ Inherits MarkdownKit.Block
 		    Raise New MarkdownKit.MarkdownException("Unable to convert paragraph block to setext heading")
 		  End If
 		  
-		  // Create a new setext block to replace the paragraph.
-		  #Pragma Error "This is wrong. Need to create a stx NOT in the tree to insert later!"
-		  Dim stx As MarkdownKit.Block = _
-		  CreateChildBlock(theParent, line, MarkdownKit.BlockType.SetextHeading, p.FirstCharPos, p.FirstCharCol)
+		  // Create a new SetextHeading block to replace the paragraph.
+		  Dim stx As New MarkdownKit.SetextHeading(line, p.FirstCharPos, p.FirstCharCol)
+		  stx.Level = level
 		  
 		  // Copy the Paragraph's children to this SetextHeading.
 		  For i As Integer = 0 To p.Children.Ubound
@@ -193,7 +193,11 @@ Inherits MarkdownKit.Block
 		    theParent.Children.Insert(index, stx)
 		  End If
 		  
-		End Sub
+		  stx.Parent = theParent
+		  
+		  Return stx
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -465,9 +469,13 @@ Inherits MarkdownKit.Block
 		    ElseIf Not indented And container.Type = MarkdownKit.BlockType.Paragraph And _
 		      (currentChar = "=" Or currentChar = "-") And _
 		      MyScanner.ValidSetextHeadingUnderline(line, tmpInt1) Then
+		      // ======= NEW SETEXT HEADING =======
 		      // We know now that the container is NOT a paragraph but is actually a SetextHeading.
-		      ConvertParagraphToSetextHeading(container, line, tmpInt1)
-		      
+		      container = ConvertParagraphToSetextHeading(container, line, tmpInt1)
+		      // We don't want to add this line (which we know must be a setext underline line) 
+		      // as a child of this new setext heading so we'll flag that the line is blank so that 
+		      // it doesn't get added.
+		      blank = True
 		    ElseIf indented And Not blank And Not maybeLazy Then
 		      // ======= NEW INDENTED CODE BLOCK =======
 		      // // Advance past the indent.

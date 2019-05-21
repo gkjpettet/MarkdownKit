@@ -457,13 +457,13 @@ Protected Class TestGroup
 	#tag EndHook
 
 
-	#tag ComputedProperty, Flags = &h1
+	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
 			  Return mAssert
 			End Get
 		#tag EndGetter
-		Protected Assert As Assert
+		Assert As Assert
 	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0

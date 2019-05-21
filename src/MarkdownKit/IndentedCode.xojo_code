@@ -32,6 +32,15 @@ Inherits MarkdownKit.Block
 		    tmp.Append(theLine.Chars(i))
 		  Next i
 		  
+		  // If this indented code block is the immediate child of a block quote then 
+		  // Remove the opening block quote marker from the start of the line (if present).
+		  If Self.Parent.Type = MarkdownKit.BlockType.BlockQuote And tmp.Ubound >= 0 And _
+		    tmp(0) = ">" Then
+		    tmp.Remove(0)
+		    // Optional space after the block quote opener?
+		    If tmp.Ubound >= 0 And tmp(0) = " " Then tmp.Remove(0)
+		  End If
+		  
 		  If tmp.Ubound >= 0 Then
 		    // If the raw text line is preceded by a tab, remove it.
 		    If tmp(0) = &u0009 Then

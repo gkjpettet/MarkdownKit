@@ -43,6 +43,7 @@ Class=MarkdownKitTestController;Testing/MarkdownKitTestController.xojo_code;&h00
 Class=MarkdownPhase1ATXTests;Testing/MarkdownPhase1ATXTests.xojo_code;&h0000000061C9FFFF;&h0000000065A43FFF;false
 Class=MarkdownPhase1IndentedCodeTests;Testing/MarkdownPhase1IndentedCodeTests.xojo_code;&h000000002BFEBFFF;&h0000000065A43FFF;false
 Class=MarkdownPhase1FencedCodeTests;Testing/MarkdownPhase1FencedCodeTests.xojo_code;&h00000000330F5FFF;&h0000000065A43FFF;false
+Class=MarkdownPhase1BlockquoteTests;Testing/MarkdownPhase1BlockquoteTests.xojo_code;&h0000000072B2D7FF;&h0000000065A43FFF;false
 DefaultWindow=WinTests
 AppMenuBar=MenuBarMain
 MajorVersion=1

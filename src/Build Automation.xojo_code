@@ -142,6 +142,20 @@
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxMy5tZA==
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxNC1waGFzZTEuYXN0
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxNC5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxNS1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxNS5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxNy1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxNy5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxOC1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxOC5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxOS1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIxOS5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIyMC1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIyMC5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIyMS1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIyMS5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIyMi1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIyMi5tZA==
 				End
 			End
 			Begin BuildStepList Windows

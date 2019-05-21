@@ -92,9 +92,6 @@ Inherits MarkdownKit.Block
 		  // Nothing to do if this block is already closed.
 		  If Not Self.IsOpen Then Return
 		  
-		  // Blank lines preceding or following an indented code block are not included in it.
-		  #Pragma Warning "TODO"
-		  
 		  // Mark the block as closed.
 		  Self.IsOpen = False
 		  

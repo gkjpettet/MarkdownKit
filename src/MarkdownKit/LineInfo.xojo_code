@@ -24,7 +24,28 @@ Protected Class LineInfo
 		    End If
 		  Next i
 		  
-		  
+		  // A line that begins with a tab or at least 4 contiguous spaces is indented.
+		  Indented = False
+		  If Chars(0) = &u0009 Then
+		    Indented = True
+		  Else
+		    Dim count As Integer = 0
+		    Dim limit As Integer = Min(CharsUbound, 3)
+		    For i As Integer = 0 To limit
+		      If Chars(i) = &u0009 Then
+		        Indented = True
+		        Exit
+		      ElseIf Chars(i) = " " Then
+		        count = count + 1
+		        If count = 4 Then
+		          Indented = True
+		          Exit
+		        End If
+		      Else
+		        Exit
+		      End If
+		    Next i
+		  End If
 		End Sub
 	#tag EndMethod
 
@@ -35,6 +56,10 @@ Protected Class LineInfo
 
 	#tag Property, Flags = &h0
 		CharsUbound As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		Indented As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

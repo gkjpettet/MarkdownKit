@@ -315,10 +315,8 @@ Inherits MarkdownKit.Block
 		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `absoluteCol`.
 		    FindFirstNonWhitespace(line, currentCharPos, absoluteCol, relativeCol, currentChar)
 		    
-		    // Is the first NWS character indented?
-		    #Pragma Warning "NOTE: Needs to be absoluteCol to fix test 40"
-		    indented = If(absoluteCol > 4, True, False)
-		    // indented = If(relativeCol > 4, True, False)
+		    // // Is the first NWS character indented?
+		    indented = If(line.Indented Or relativeCol > 4, True, False)
 		    
 		    // Blank remaining line?
 		    blank = If(currentChar = "", True, False)
@@ -375,10 +373,8 @@ Inherits MarkdownKit.Block
 		    // index `currentCharPos`. Update `currentChar`, `currentCharPos` and `absoluteCol`.
 		    FindFirstNonWhitespace(line, currentCharPos, absoluteCol, relativeCol, currentChar)
 		    
-		    // Is the first NWS character indented?
-		    #Pragma Warning "NOTE: Needs to be absoluteCol to fix test 40"
-		    indented = If(absoluteCol > 4, True, False)
-		    // indented = If(relativeCol > 4, True, False)
+		    // // Is the first NWS character indented?
+		    indented = If(line.Indented Or relativeCol > 4, True, False)
 		    
 		    // Blank remaining line?
 		    blank = If(currentChar = "", True, False)
@@ -441,11 +437,6 @@ Inherits MarkdownKit.Block
 		  
 		  // What remains at the currentCharPos is a text line. Add this text to the 
 		  // appropriate container.
-		  #Pragma Warning "May need to uncomment the following three lines. Not sure if needed."
-		  // FindFirstNonWhitespace(line, currentCharPos, absoluteCol, relativeCol, currentChar)
-		  // indented = If(relativeCol > 4, True, False)
-		  // blank = If(currentChar = "", True, False)
-		  
 		  // If the last line processed belonged to a paragraph block,
 		  // and we didn't match all of the line prefixes for the open containers,
 		  // and we didn't start any new containers,

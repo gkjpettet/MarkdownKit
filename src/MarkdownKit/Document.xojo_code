@@ -152,6 +152,50 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub ConvertParagraphToSetextHeading(b As MarkdownKit.Block, line As MarkdownKit.LineInfo, level As Integer)
+		  // Remove the passed Paragraph block from its parent and replace it with a new 
+		  // SetextHeading block with the same children.
+		  
+		  // Make sure we've been passed a Paragraph block.
+		  If b.Type <> MarkdownKit.BlockType.Paragraph Then
+		    Raise New MarkdownKit.MarkdownException("Expected a Paragraph block to be passed")
+		  End If
+		  
+		  Dim p As MarkdownKit.Paragraph = MarkdownKit.Paragraph(b)
+		  
+		  // Get a reference to the Paragraph's parent.
+		  Dim theParent As MarkdownKit.Block = p.Parent
+		  
+		  // Get the index of this Paragraph in its parent's Children array.
+		  Dim index As Integer = theParent.Children.IndexOf(p)
+		  If index = -1 Then
+		    Raise New MarkdownKit.MarkdownException("Unable to convert paragraph block to setext heading")
+		  End If
+		  
+		  // Create a new setext block to replace the paragraph.
+		  #Pragma Error "This is wrong. Need to create a stx NOT in the tree to insert later!"
+		  Dim stx As MarkdownKit.Block = _
+		  CreateChildBlock(theParent, line, MarkdownKit.BlockType.SetextHeading, p.FirstCharPos, p.FirstCharCol)
+		  
+		  // Copy the Paragraph's children to this SetextHeading.
+		  For i As Integer = 0 To p.Children.Ubound
+		    stx.Children.Append(p.Children(i))
+		  Next i
+		  
+		  // Remove the Paragraph.
+		  theParent.Children.Remove(index)
+		  
+		  // Insert the SetextHeading.
+		  If index = 0 Then
+		    theParent.Children.Append(stx)
+		  Else
+		    theParent.Children.Insert(index, stx)
+		  End If
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, charPos As Integer, charCol As Integer) As MarkdownKit.Block
 		  // Creates a new block of the specified type and adds it as a child of `container`.
@@ -177,6 +221,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.FencedCode(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.IndentedCode
 		    child = New MarkdownKit.IndentedCode(line, charPos, charCol)
+		  Case MarkdownKit.BlockType.SetextHeading
+		    child = new MarkdownKit.SetextHeading(line, charPos, charCol)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -415,6 +461,12 @@ Inherits MarkdownKit.Block
 		      absoluteCol = -1
 		      relativeCol = -1
 		      currentCharPos = -1
+		      
+		    ElseIf Not indented And container.Type = MarkdownKit.BlockType.Paragraph And _
+		      (currentChar = "=" Or currentChar = "-") And _
+		      MyScanner.ValidSetextHeadingUnderline(line, tmpInt1) Then
+		      // We know now that the container is NOT a paragraph but is actually a SetextHeading.
+		      ConvertParagraphToSetextHeading(container, line, tmpInt1)
 		      
 		    ElseIf indented And Not blank And Not maybeLazy Then
 		      // ======= NEW INDENTED CODE BLOCK =======

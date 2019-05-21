@@ -141,12 +141,40 @@ Implements Global.MarkdownKit.Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  mOutput.Append("<heading level=" + """" + stx.Level.ToText + """" +  ">")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In stx.Children
+		    b.Accept(Self)
+		  Next b
+		  
+		  mOutput.Append("</heading>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitSoftBreak(sb As MarkdownKit.SoftBreak)
 		  #Pragma Unused sb
 		  
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  
 		  mOutput.Append("<softbreak />")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitThematicBreak(tb As MarkdownKit.ThematicBreak)
+		  #Pragma Unused tb
+		  
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  mOutput.Append("<thematic_break />")
 		  mOutput.Append(EOL)
 		  
 		End Sub

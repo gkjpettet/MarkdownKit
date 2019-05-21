@@ -176,6 +176,53 @@ Protected Class Scanner
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ValidSetextHeadingUnderline(line As MarkdownKit.LineInfo, ByRef level As Integer) As Boolean
+		  // Returns True if `line` is a valid Setext heading underline.
+		  // NB: Alters the value of the ByRef `level` parameter, setting it to the 
+		  // header level.
+		  
+		  // Reset the ByRef `level` parameter.
+		  level = 0
+		  
+		  If line.IsBlank Then Return False
+		  
+		  Dim limit As Integer = Min(line.CharsUbound, 2)
+		  Dim firstNWSIndex As Integer = -1
+		  For i As Integer = 0 To limit
+		    If line.Chars(i) = " " Then
+		      firstNWSIndex = firstNWSIndex + 1
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  If firstNWSIndex = -1 Then firstNWSIndex = 0
+		  
+		  // Get the underline character.
+		  If firstNWSIndex > line.CharsUbound Then Return False
+		  Dim underlineChar As Text = line.Chars(firstNWSIndex)
+		  If underlineChar <> "=" And underlineChar <> "-" Then Return False
+		  
+		  // Since valid Setext underlines can have any number of trailing spaces, 
+		  // Find the index of the last non-space character.
+		  Dim lastNWSIndex As Integer = line.CharsUbound
+		  For i As Integer = line.CharsUbound DownTo firstNWSIndex
+		    If line.Chars(i) <> " " Then
+		      lastNWSIndex = i
+		      Exit
+		    End If
+		  Next i
+		  
+		  // Check that every character between these two indexes matches the underlineChar.
+		  For i As Integer = firstNWSIndex To lastNWSIndex
+		    If line.Chars(i) <> underlineChar Then Return False
+		  Next i
+		  
+		  level = If(underlineChar = "=", 1, 2)
+		  Return True
+		End Function
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

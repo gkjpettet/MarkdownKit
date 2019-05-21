@@ -1,0 +1,7 @@
+<document>
+<fenced_code_block info="ruby">
+<text>def foo(x)</text>
+<text>  return 3</text>
+<text>end</text>
+</fenced_code_block>
+</document>

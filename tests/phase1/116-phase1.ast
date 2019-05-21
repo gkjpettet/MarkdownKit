@@ -1,0 +1,5 @@
+<document>
+<fenced_code_block info="aa ``` ~~~">
+<text>foo</text>
+</fenced_code_block>
+</document>

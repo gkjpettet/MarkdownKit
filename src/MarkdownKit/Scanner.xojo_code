@@ -188,7 +188,7 @@ Protected Class Scanner
 		  If line.IsBlank Then Return False
 		  
 		  Dim limit As Integer = Min(line.CharsUbound, 2)
-		  Dim firstNWSIndex As Integer = -1
+		  Dim firstNWSIndex As Integer = 0
 		  For i As Integer = 0 To limit
 		    If line.Chars(i) = " " Then
 		      firstNWSIndex = firstNWSIndex + 1
@@ -196,7 +196,6 @@ Protected Class Scanner
 		      Exit
 		    End If
 		  Next i
-		  If firstNWSIndex = -1 Then firstNWSIndex = 0
 		  
 		  // Get the underline character.
 		  If firstNWSIndex > line.CharsUbound Then Return False

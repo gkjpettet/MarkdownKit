@@ -37,6 +37,11 @@ Inherits MarkdownKit.Block
 		    Self.IsOpen = False
 		  End If
 		  
+		  // Remove trailing whitespace from the last child.
+		  If Children.Ubound >= 0 Then
+		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound))
+		    StripTrailingWhitespace(rt.Chars)
+		  End If
 		  
 		End Sub
 	#tag EndMethod

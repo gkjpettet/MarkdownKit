@@ -45,6 +45,7 @@ Class=MarkdownPhase1ATXTests;Testing/MarkdownPhase1ATXTests.xojo_code;&h00000000
 Class=MarkdownPhase1IndentedCodeTests;Testing/MarkdownPhase1IndentedCodeTests.xojo_code;&h000000002BFEBFFF;&h0000000065A43FFF;false
 Class=MarkdownPhase1FencedCodeTests;Testing/MarkdownPhase1FencedCodeTests.xojo_code;&h00000000330F5FFF;&h0000000065A43FFF;false
 Class=MarkdownPhase1BlockquoteTests;Testing/MarkdownPhase1BlockquoteTests.xojo_code;&h0000000072B2D7FF;&h0000000065A43FFF;false
+Class=MarkdownPhase1SetextTests;Testing/MarkdownPhase1SetextTests.xojo_code;&h000000002E2B0FFF;&h0000000065A43FFF;false
 Class=ThematicBreak;MarkdownKit/ThematicBreak.xojo_code;&h0000000014F8FFFF;&h0000000023D9CFFF;false
 DefaultWindow=WinTests
 AppMenuBar=MenuBarMain

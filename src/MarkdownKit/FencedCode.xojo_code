@@ -39,6 +39,15 @@ Inherits MarkdownKit.Block
 		    tmp.Append(theLine.Chars(i))
 		  Next i
 		  
+		  // If this fenced code block is the immediate child of a block quote then 
+		  // Remove the opening block quote marker from the start of the line (if present).
+		  If Self.Parent.Type = MarkdownKit.BlockType.BlockQuote And tmp.Ubound >= 0 And _
+		    tmp(0) = ">" Then
+		    tmp.Remove(0)
+		    // Optional space after the block quote opener?
+		    If tmp.Ubound >= 0 And tmp(0) = " " Then tmp.Remove(0)
+		  End If
+		  
 		  // Add the raw text as the last child of this block.
 		  Children.Append(New MarkdownKit.RawText(tmp, theLine, startPos, startCol))
 		  
@@ -205,6 +214,35 @@ Inherits MarkdownKit.Block
 		#tag ViewProperty
 			Name="InfoString"
 			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="JustOpened"
+			Group="Behavior"
+			InitialValue="True"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="NeedsClosing"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Offset"
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningChar"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningLength"
+			Group="Behavior"
+			InitialValue="0"
 			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior

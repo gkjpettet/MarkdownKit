@@ -8,6 +8,76 @@ Inherits TestGroup
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example14Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example15Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example16Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example17Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example18Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example19Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example20Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example21Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example22Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example23Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag Note, Name = About
 		These tests validate the first phase (document block construction) of the parsing process.

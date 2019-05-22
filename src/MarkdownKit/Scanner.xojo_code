@@ -247,30 +247,22 @@ Protected Class Scanner
 		  // Check it's possible to have a valid thematic break.
 		  If firstNWSIndex + 2 > line.CharsUbound Then Return False
 		  
-		  // Make sure we have at least 3 contiguous thematicChars in a row.
+		  // We need to find at least 3 thematicChars on this line. They can be followed by 
+		  // any number of spaces or tabs.
 		  Dim numThematicChars As Integer = 0
-		  Dim lastThematicCharIndex As Integer = -1
 		  For i As Integer = firstNWSIndex To line.CharsUbound
-		    If line.Chars(i) = thematicChar Then
+		    Select Case line.Chars(i)
+		    Case thematicChar
 		      numThematicChars = numThematicChars + 1
-		      lastThematicCharIndex = i
+		    Case " ", &u0009
+		      // Allowed - ignore.
 		    Else
-		      Exit
-		    End If
-		  Next i
-		  If numThematicChars < 3 Then Return False
-		  
-		  If lastThematicCharIndex = line.CharsUbound Then Return True
-		  
-		  // There are trailing characters after the thematic break characters. 
-		  // ensure they are only spaces or tabs.
-		  Dim start As Integer = lastThematicCharIndex + 1
-		  For i As Integer = start To line.CharsUbound
-		    If line.Chars(i) <> " " And line.Chars(i) <> &u0009 Then Return False
+		      Return False
+		    End Select
 		  Next i
 		  
-		  // All good.
-		  Return True
+		  Return If(numThematicChars >= 3, True, False)
+		  
 		End Function
 	#tag EndMethod
 

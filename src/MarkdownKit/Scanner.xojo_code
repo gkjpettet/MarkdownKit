@@ -222,6 +222,58 @@ Protected Class Scanner
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ValidThematicBreakLine(line As MarkdownKit.LineInfo) As Boolean
+		  // Returns True if the passed line is a valid thematic break.
+		  
+		  // We need at least three characters.
+		  If line.CharsUbound < 2 Then Return False
+		  
+		  // Up to 3 indenting spaces are allowed.
+		  Dim firstNWSIndex As Integer = 0
+		  For i As Integer = 0 To 2
+		    If line.Chars(i) = " " Then
+		      firstNWSIndex = firstNWSIndex + 1
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  If firstNWSIndex > line.CharsUbound Then Return False
+		  
+		  // Get the thematic character (should be either "-", "_" or "*".
+		  Dim thematicChar As Text = line.Chars(firstNWSIndex)
+		  If thematicChar <> "-" And thematicChar <> "_" And thematicChar <> "*" Then Return False
+		  
+		  // Check it's possible to have a valid thematic break.
+		  If firstNWSIndex + 2 > line.CharsUbound Then Return False
+		  
+		  // Make sure we have at least 3 contiguous thematicChars in a row.
+		  Dim numThematicChars As Integer = 0
+		  Dim lastThematicCharIndex As Integer = -1
+		  For i As Integer = firstNWSIndex To line.CharsUbound
+		    If line.Chars(i) = thematicChar Then
+		      numThematicChars = numThematicChars + 1
+		      lastThematicCharIndex = i
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  If numThematicChars < 3 Then Return False
+		  
+		  If lastThematicCharIndex = line.CharsUbound Then Return True
+		  
+		  // There are trailing characters after the thematic break characters. 
+		  // ensure they are only spaces or tabs.
+		  Dim start As Integer = lastThematicCharIndex + 1
+		  For i As Integer = start To line.CharsUbound
+		    If line.Chars(i) <> " " And line.Chars(i) <> &u0009 Then Return False
+		  Next i
+		  
+		  // All good.
+		  Return True
+		End Function
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

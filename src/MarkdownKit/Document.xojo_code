@@ -227,6 +227,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.IndentedCode(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.SetextHeading
 		    child = new MarkdownKit.SetextHeading(line, charPos, charCol)
+		  Case MarkdownKit.BlockType.ThematicBreak
+		    child = new MarkdownKit.ThematicBreak(line, charPos, charCol)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -476,6 +478,20 @@ Inherits MarkdownKit.Block
 		      // as a child of this new setext heading so we'll flag that the line is blank so that 
 		      // it doesn't get added.
 		      blank = True
+		      
+		    ElseIf Not indented And Not (container.Type = MarkdownKit.BlockType.Paragraph And allMatched = False) And _
+		      MyScanner.ValidThematicBreakLine(line) Then
+		      // ======= NEW THEMATIC BREAK =======
+		      // It's only now that we know the line is not part of a setext heading.
+		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.ThematicBreak, _
+		      currentCharPos, absoluteCol)
+		      container.Finalise
+		      container = container.Parent
+		      
+		      // Mark this line as blank so it is subsequently ignored.
+		      blank = True
+		      Exit
+		      
 		    ElseIf indented And Not blank And Not maybeLazy Then
 		      // ======= NEW INDENTED CODE BLOCK =======
 		      // // Advance past the indent.

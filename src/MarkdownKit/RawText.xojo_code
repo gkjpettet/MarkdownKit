@@ -15,6 +15,27 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function IsBlank() As Boolean
+		  // Returns True if this line of raw text is empty or contains only whitespace.
+		  If Chars.Ubound = - 1 Then Return True
+		  
+		  Dim limit As Integer = Chars.Ubound
+		  Dim i As Integer
+		  For i = 0 To limit
+		    Select Case Chars(i)
+		    Case " ", &u0009, &u000A
+		      // Continue...
+		    Else
+		      Return False
+		    End Select
+		  Next i
+		  
+		  Return True
+		  
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
 		Chars() As Text
@@ -22,6 +43,12 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="OpeningMarkerHasOptionalTab"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsOpen"
 			Group="Behavior"

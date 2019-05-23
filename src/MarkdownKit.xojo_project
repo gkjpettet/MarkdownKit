@@ -50,6 +50,7 @@ Class=MarkdownPhase1BlockquoteTests;Testing/Phase 1/MarkdownPhase1BlockquoteTest
 Class=MarkdownPhase1FencedCodeTests;Testing/Phase 1/MarkdownPhase1FencedCodeTests.xojo_code;&h00000000330F5FFF;&h00000000233AA7FF;false
 Class=MarkdownPhase1IndentedCodeTests;Testing/Phase 1/MarkdownPhase1IndentedCodeTests.xojo_code;&h000000002BFEBFFF;&h00000000233AA7FF;false
 Class=MarkdownPhase1SetextTests;Testing/Phase 1/MarkdownPhase1SetextTests.xojo_code;&h000000002E2B0FFF;&h00000000233AA7FF;false
+Class=MarkdownPhase1ListItemTests;Testing/Phase 1/MarkdownPhase1ListItemTests.xojo_code;&h000000006FC587FF;&h00000000233AA7FF;false
 Class=MarkdownPhase1ThematicBreakTests;Testing/Phase 1/MarkdownPhase1ThematicBreakTests.xojo_code;&h0000000056EC9FFF;&h00000000233AA7FF;false
 Class=ListData;MarkdownKit/ListData.xojo_code;&h0000000014157FFF;&h0000000023D9CFFF;false
 DefaultWindow=WinTests

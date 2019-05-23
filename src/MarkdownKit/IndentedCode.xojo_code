@@ -96,6 +96,31 @@ Inherits MarkdownKit.Block
 		  // Nothing to do if this block is already closed.
 		  If Not Self.IsOpen Then Return
 		  
+		  // Blank lines preceding or following an indented code block are not included in it.
+		  Dim i As Integer
+		  Dim limit As Integer = Children.Ubound
+		  Dim rt As MarkdownKit.RawText
+		  // Leading blank lines...
+		  For i = 0 to limit
+		    rt = MarkdownKit.RawText(Children(i))
+		    If rt.IsBlank Then
+		      Children.Remove(0)
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  // Trailing blank lines...
+		  If Children.Ubound > -1 Then
+		    For i  = Children.Ubound DownTo 0
+		      rt = MarkdownKit.RawText(Children(i))
+		      If rt.IsBlank Then
+		        Children.Remove(i)
+		      Else
+		        Exit
+		      End If
+		    Next i
+		  End If
+		  
 		  // Mark the block as closed.
 		  Self.IsOpen = False
 		  
@@ -126,6 +151,12 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="OpeningMarkerHasOptionalTab"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true

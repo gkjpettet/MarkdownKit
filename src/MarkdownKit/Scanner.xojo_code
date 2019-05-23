@@ -26,15 +26,15 @@ Protected Class Scanner
 		  Next i
 		  If level = 0 Then Return False
 		  
-		  // The opening sequence of # characters must be followed by a space or the EOL.
+		  // The opening sequence of # characters must be followed by a space, a tab or the EOL.
 		  // Add the start position and the number of hashes found together. If that 
 		  // equals the last character in the line then the run of hashes must run up 
 		  // to the end of the line.
 		  If startPos + level = (line.CharsUbound + 1) Then Return True
 		  
-		  // Is there a space following the run of hashes?
+		  // Is there a space/tab following the run of hashes?
 		  If startPos + level > line.CharsUbound Then Return False
-		  If line.Chars(startPos + level) = " " Then Return True
+		  If line.Chars(startPos + level) = " " Or line.Chars(startPos + level) = &u0009 Then Return True
 		  
 		  // Invalid.
 		  Return False

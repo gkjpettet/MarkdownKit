@@ -72,6 +72,13 @@ Inherits TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example62Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example63Test()
 		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
 		  
@@ -86,7 +93,35 @@ Inherits TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example66Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example67Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example68Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example70Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example71Test()
 		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
 		  
 		End Sub
@@ -101,6 +136,20 @@ Inherits TestGroup
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example73Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example74Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example75Test()
 		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
 		  
 		End Sub

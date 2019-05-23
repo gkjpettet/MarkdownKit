@@ -1,5 +1,5 @@
 Type=Desktop
-RBProjectVersion=2019.01
+RBProjectVersion=2019.011
 MinIDEVersion=20070100
 Class=XojoUnitTestFailedException;Testing/XojoUnit/TestFramework/XojoUnitTestFailedException.xojo_code;&h000000005565EFFF;&h00000000580AB7FF;false
 Class=TestResult;Testing/XojoUnit/TestFramework/TestResult.xojo_code;&h0000000007101FFF;&h00000000580AB7FF;false

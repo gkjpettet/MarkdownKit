@@ -6,7 +6,7 @@
 			Begin BuildStepList Mac OS X
 				Begin BuildProjectStep Build
 				End
-				Begin CopyFilesBuildStep CopyTests
+				Begin CopyFilesBuildStep CopyPhase1Tests
 					AppliesTo = 0
 					Destination = 1
 					Subdirectory = 
@@ -22,6 +22,8 @@
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzgubWQ=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzEwLXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzEwLm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzExLXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzExLm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzEzLXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzEzLm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzE0LXBoYXNlMS5hc3Q=
@@ -84,6 +86,8 @@
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ1Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ2LXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ2Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ3LXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ3Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ4LXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ4Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzQ5LXBoYXNlMS5hc3Q=
@@ -108,16 +112,30 @@
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzYwLm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzYxLXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzYxLm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzYyLXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzYyLm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzYzLXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzYzLm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY1LXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY1Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY2LXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY2Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY3LXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY3Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY4LXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzY4Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzcwLXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzcwLm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzcxLXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzcxLm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzcyLXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzcyLm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzczLXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzczLm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzc0LXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzc0Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzc1LXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzc1Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzc2LXBoYXNlMS5hc3Q=
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzc2Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzc3LXBoYXNlMS5hc3Q=

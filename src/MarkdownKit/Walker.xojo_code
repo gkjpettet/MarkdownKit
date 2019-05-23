@@ -43,6 +43,18 @@ Protected Interface Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitList(theList As MarkdownKit.List)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitListItem(li As MarkdownKit.ListItem)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitParagraph(p As MarkdownKit.Paragraph)
 		  
 		End Sub

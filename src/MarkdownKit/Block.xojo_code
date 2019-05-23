@@ -117,6 +117,10 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		ListData As MarkdownKit.ListData
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		OpeningMarkerHasOptionalTab As Boolean = False
 	#tag EndProperty
 
@@ -204,6 +208,12 @@ Protected Class Block
 			Name="FirstCharCol"
 			Group="Behavior"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningMarkerHasOptionalTab"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

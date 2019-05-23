@@ -114,6 +114,54 @@ Implements Global.MarkdownKit.Walker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitList(theList As MarkdownKit.List)
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  Const Q = """"
+		  
+		  // Construct the list header.
+		  Dim header As Text
+		  If theList.ListData.Type = MarkdownKit.ListType.Ordered Then
+		    header = "type=" + Q + "ordered" + Q + " start=" + Q + _
+		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _
+		    If(theList.ListData.Tight, "true", "false") + Q + " delimiter=" + _
+		    Q + If(theList.ListData.Delimiter = MarkdownKit.ListDelimiterType.Period, ".", ")") + Q
+		  ElseIf theList.ListData.Type = MarkdownKit.ListType.Unordered Then
+		    header = "type=" + Q + "bullet" + Q + " start=" + Q + _
+		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _
+		    If(theList.ListData.Tight, "true", "false") + Q
+		  End If
+		  
+		  mOutput.Append("<list " + header + ">")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In theList.Children
+		    b.Accept(Self)
+		  Next b
+		  
+		  mOutput.Append("</list>")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitListItem(li As MarkdownKit.ListItem)
+		  // Part of the Global.MarkdownKit.Walker interface.
+		  
+		  mOutput.Append("<item>")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In li.Children
+		    b.Accept(Self)
+		  Next b
+		  
+		  mOutput.Append("</item>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitParagraph(p As MarkdownKit.Paragraph)
 		  // Part of the Global.MarkdownKit.Walker interface.
 		  

@@ -236,6 +236,10 @@ Inherits MarkdownKit.Block
 		    child = new MarkdownKit.SetextHeading(line, charPos, charCol)
 		  Case MarkdownKit.BlockType.ThematicBreak
 		    child = new MarkdownKit.ThematicBreak(line, charPos, charCol)
+		  Case MarkdownKit.BlockType.List
+		    child = New MarkdownKit.List(line, charPos, charCol)
+		  Case MarkdownKit.BlockType.ListItem
+		    child = New MarkdownKit.ListItem(line, charPos, charCol)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -334,6 +338,16 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Function ListsMatch(listData As MarkdownKit.ListData, itemData As MarkdownKit.ListData) As Boolean
+		  If listData.Type = itemData.Type And listData.Bullet = itemData.Bullet Then
+		    Return True
+		  Else
+		    Return False
+		  End If
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub ProcessLine(line As MarkdownKit.LineInfo, ByRef currentBlock As MarkdownKit.Block)
 		  Dim container As MarkdownKit.Block
@@ -366,6 +380,7 @@ Inherits MarkdownKit.Block
 		  Dim indented As Boolean
 		  Dim tmpInt1, tmpInt2 As Integer
 		  Dim tmpText1, tmpText2 As Text
+		  Dim tmpListData As ListData
 		  While container.LastChild <> Nil And container.LastChild.IsOpen
 		    
 		    container = container.LastChild
@@ -388,6 +403,19 @@ Inherits MarkdownKit.Block
 		        AdvancePos(line, 1, currentCharPos, absoluteCol, currentChar)
 		        // An optional space is permitted after the ">". Handle this scenario.
 		        Call AdvanceOptionalSpace(line, currentCharPos, absoluteCol, currentChar)
+		      Else
+		        allMatched = False
+		      End If
+		      
+		    Case MarkdownKit.BlockType.List
+		      #Pragma Warning "TODO: This may not be needed"
+		      If blank Then container.ListData.Tight = False
+		      
+		    Case MarkdownKit.BlockType.ListItem
+		      If currentCharPos >= container.ListData.ContentStartIndex Then
+		        // Continue this open list item.
+		        // Advance past the list marker.
+		        AdvancePos(line, container.ListData.MarkerWidth, currentCharPos, absoluteCol, currentChar)
 		      Else
 		        allMatched = False
 		      End If
@@ -499,6 +527,24 @@ Inherits MarkdownKit.Block
 		      // Mark this line as blank so it is subsequently ignored.
 		      blank = True
 		      Exit
+		      
+		    ElseIf (Not indented Or container.Type = MarkdownKit.BlockType.List) And _
+		      Not blank And MyScanner.ValidListMarker(line, currentCharPos, tmpListData) Then
+		      // Check the container. If it's a list then see if this list item
+		      // can continue the list. Otherwise, create a new list container.
+		      If container.Type <> MarkdownKit.BlockType.List Or Not ListsMatch(container.ListData, tmpListData) Then
+		        container = CreateChildBlock(container, line, MarkdownKit.BlockType.List, _
+		        currentCharPos, absoluteCol)
+		        container.ListData = tmpListData
+		      End If
+		      
+		      // Add the list data.
+		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.ListItem, _
+		      currentCharPos, absoluteCol)
+		      container.ListData = tmpListData
+		      
+		      // Advance our position in the line past the list marker.
+		      AdvancePos(line, tmpListData.MarkerWidth, currentCharPos, absoluteCol, currentChar)
 		      
 		    ElseIf indented And Not blank And Not maybeLazy Then
 		      // ======= NEW INDENTED CODE BLOCK =======
@@ -621,6 +667,12 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="OpeningMarkerHasOptionalTab"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Type"
 			Group="Behavior"

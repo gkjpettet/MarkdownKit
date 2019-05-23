@@ -177,6 +177,93 @@ Protected Class Scanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function ValidListMarker(line As MarkdownKit.LineInfo, startPos As Integer, ByRef data As MarkdownKit.ListData) As Boolean
+		  // Returns True if there is a valid list marker (bullet or number) on 
+		  // the passed line beginning at `startPos`. 
+		  // Populates `data` with the required details if True.
+		  // Otherwise returns False and empties out `data`.
+		  
+		  data = New MarkdownKit.ListData
+		  
+		  // If any line is a thematic break then that line is not a list item.
+		  If ValidThematicBreakLine(line) Then Return False
+		  
+		  // Get the characters from this line.
+		  Dim chars() As Text
+		  For i As Integer = startPos To line.CharsUbound
+		    chars.Append(line.Chars(i))
+		  Next i
+		  
+		  If chars.Ubound < 1 Then Return False
+		  
+		  Dim limit As Integer
+		  // Ordered or unordered?
+		  Select Case chars(0)
+		  Case "-"
+		    data.Bullet = MarkdownKit.BulletType.Dash
+		    data.Type = MarkdownKit.ListType.Unordered
+		    data.ContentStartIndex = 1
+		  Case "+"
+		    data.Bullet = MarkdownKit.BulletType.Plus
+		    data.Type = MarkdownKit.ListType.Unordered
+		    data.ContentStartIndex = 1
+		  Case "*"
+		    data.Bullet = MarkdownKit.BulletType.Star
+		    data.Type = MarkdownKit.ListType.Unordered
+		    data.ContentStartIndex = 1
+		  Else
+		    // [0-9]{1,9}[\.\)]
+		    limit = Min(chars.Ubound, 8)
+		    Dim numDigits As Integer = 0
+		    Dim startText As Text
+		    For i As Integer = 0 To limit
+		      Select Case chars(i)
+		      Case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+		        // Max 9 digits to avoid integer overflows in some browsers.
+		        If numDigits > 9 Then Return False
+		        startText = startText + chars(i)
+		        data.ContentStartIndex = data.ContentStartIndex + 1
+		      Else
+		        // Check for a "." or ")".
+		        If numDigits = 0 Then Return False
+		        If chars(i) = "." Then
+		          data.Delimiter = MarkdownKit.ListDelimiterType.Period
+		        ElseIf chars(i) = ")" Then
+		          data.Delimiter = MarkdownKit.ListDelimiterType.Paren
+		        Else
+		          Return False
+		        End If
+		        data.ContentStartIndex = data.ContentStartIndex + 1
+		        Exit
+		      End Select
+		    Next i
+		    data.Type = MarkdownKit.ListType.Ordered
+		    data.Start = Integer.FromText(startText)
+		  End Select
+		  
+		  // The next character must be a space.
+		  If data.ContentStartIndex > chars.Ubound Then Return False
+		  If chars(data.ContentStartIndex) <> " " Then Return False
+		  data.ContentStartIndex = data.ContentStartIndex + 1
+		  
+		  // Up to an additional 2 spaces may be present.
+		  limit = Min(chars.Ubound, data.ContentStartIndex + 1)
+		  For i As Integer = data.ContentStartIndex To limit
+		    If chars(i) = " " Then
+		      data.ContentStartIndex = data.ContentStartIndex + 1
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  
+		  // How wide is the list marker?
+		  data.MarkerWidth = data.ContentStartIndex - startPos
+		  
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function ValidSetextHeadingUnderline(line As MarkdownKit.LineInfo, ByRef level As Integer) As Boolean
 		  // Returns True if `line` is a valid Setext heading underline.
 		  // NB: Alters the value of the ByRef `level` parameter, setting it to the 

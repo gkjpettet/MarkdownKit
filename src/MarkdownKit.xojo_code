@@ -219,6 +219,22 @@ Protected Module MarkdownKit
 		ReferenceDefinition
 	#tag EndEnum
 
+	#tag Enum, Name = BulletType, Type = Integer, Flags = &h1
+		Dash
+		  Plus
+		Star
+	#tag EndEnum
+
+	#tag Enum, Name = ListDelimiterType, Type = Integer, Flags = &h1
+		Paren
+		Period
+	#tag EndEnum
+
+	#tag Enum, Name = ListType, Type = Integer, Flags = &h1
+		Ordered
+		Unordered
+	#tag EndEnum
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

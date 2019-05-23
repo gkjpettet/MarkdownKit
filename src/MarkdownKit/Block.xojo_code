@@ -48,7 +48,7 @@ Protected Class Block
 		  Self.Line = theLine
 		  Self.FirstCharPos = charPos
 		  Self.FirstCharCol = charCol
-		  
+		  Self.OpeningMarkerHasOptionalTab = False
 		End Sub
 	#tag EndMethod
 
@@ -114,6 +114,10 @@ Protected Class Block
 
 	#tag Property, Flags = &h0
 		Line As MarkdownKit.LineInfo
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		OpeningMarkerHasOptionalTab As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

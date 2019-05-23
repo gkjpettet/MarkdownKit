@@ -17,17 +17,24 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub AdvanceOptionalSpace(line As MarkdownKit.LineInfo, ByRef charPos As Integer, ByRef charCol As Integer, ByRef char As Text)
+		Private Function AdvanceOptionalSpace(line As MarkdownKit.LineInfo, ByRef charPos As Integer, ByRef charCol As Integer, ByRef char As Text) As Boolean
 		  // This method advances the character pointer and updates the passed ByRef parameters by 
-		  // one place if (and only if) this character is a space.
+		  // one place if this character is either a space or a tab.
+		  // Returns True if the character is a tab, False if it is anything else.
 		  
-		  If char <> &u0020 Then Return
+		  If char <> &u0020 And char <> &u0009 Then Return False
 		  
-		  If charPos >= line.CharsUbound Then Return
+		  If charPos >= line.CharsUbound Then Return False
 		  
 		  AdvancePos(line, 1, charPos, charCol, char)
 		  
-		End Sub
+		  If char = &u0009 Then
+		    Return True
+		  Else
+		    Return False
+		  End If
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -380,7 +387,7 @@ Inherits MarkdownKit.Block
 		        // Advance one position along the line (past the ">" character we've just handled).
 		        AdvancePos(line, 1, currentCharPos, absoluteCol, currentChar)
 		        // An optional space is permitted after the ">". Handle this scenario.
-		        AdvanceOptionalSpace(line, currentCharPos, absoluteCol, currentChar)
+		        Call AdvanceOptionalSpace(line, currentCharPos, absoluteCol, currentChar)
 		      Else
 		        allMatched = False
 		      End If
@@ -436,10 +443,11 @@ Inherits MarkdownKit.Block
 		      // Advance one position along the line (past the ">" character we've just handled).
 		      AdvancePos(line, 1, currentCharPos, absoluteCol, currentChar)
 		      // An optional space is permitted after the ">". Handle this scenario.
-		      AdvanceOptionalSpace(line, currentCharPos, absoluteCol, currentChar)
+		      Dim optionalTab As Boolean = AdvanceOptionalSpace(line, currentCharPos, absoluteCol, currentChar)
 		      // Create the new blockquote block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.BlockQuote, _
 		      currentCharPos, absoluteCol)
+		      container.OpeningMarkerHasOptionalTab = optionalTab
 		      
 		    ElseIf Not indented And currentChar = "#" And _
 		      Not IsEscaped(line.Chars, currentCharPos) And _

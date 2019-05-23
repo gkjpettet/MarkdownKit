@@ -40,12 +40,6 @@ Inherits MarkdownKit.Block
 		    chars.Append(theLine.Chars(i))
 		  Next i
 		  
-		  // Blank line?
-		  If chars.Ubound = -1 Then
-		    Children.Append(New MarkdownKit.RawText(chars, theLine, startPos, startCol))
-		    Return
-		  End If
-		  
 		  // Remove up to 4 leading spaces from the line.
 		  Dim numSpaces As Integer = NumberOfLeadingSpaces(chars)
 		  Dim limit As Integer = Min(numSpaces - 1, 3)
@@ -58,6 +52,14 @@ Inherits MarkdownKit.Block
 		  
 		  // If we have removed less than 4 spaces, we should remove a leading tab if present.
 		  If numSpaces < 4 And chars.Ubound >= 0 And chars(0) = &u0009 Then chars.Remove(0)
+		  
+		  // Expand the optional tab.
+		  If Self.Parent.Type = MarkdownKit.BlockType.BlockQuote Then
+		    If Self.Parent.OpeningMarkerHasOptionalTab Then
+		      chars.Insert(0, " ")
+		      chars.Insert(0, " ")
+		    End If
+		  End If
 		  
 		  // Add the raw text as the last child of this block.
 		  Children.Append(New MarkdownKit.RawText(chars, theLine, startPos, startCol))

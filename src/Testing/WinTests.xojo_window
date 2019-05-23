@@ -609,6 +609,7 @@ Begin Window WinTests
    Begin MarkdownKitTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
+      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -1165,13 +1166,11 @@ End
 	#tag Method, Flags = &h21
 		Private Function GetTestNumberFromTestName(testName As Text) As Text
 		  // Expected test name format:
-		  // exampleXXX
+		  // ExampleXXX
 		  
-		  //#Pragma BreakOnExceptions False
-		  
-		  Dim startPos As Integer = testName.IndexOf("example") + 7
+		  Dim startPos As Integer = testName.IndexOf("Example") + 7
 		  Dim chars() As Text = testName.Split
-		  If startPos = 6 Or startPos = chars.Ubound Then
+		  If startPos > chars.Ubound Then
 		    Dim e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `exampleXX`"
 		    Raise e

@@ -47,7 +47,7 @@ Protected Class Block
 		Sub Constructor(theLine As MarkdownKit.LineInfo, charPos As Integer, charCol As Integer)
 		  Self.Line = theLine
 		  Self.FirstCharPos = charPos
-		  Self.FirstCharCol = charcol
+		  Self.FirstCharCol = charCol
 		  
 		End Sub
 	#tag EndMethod

@@ -26,40 +26,42 @@ Inherits MarkdownKit.Block
 		    " to closed container " + Self.Type.ToText)
 		  End If
 		  
-		  Dim tmp() As Text
+		  If startPos <> 0 Then
+		    Raise New MarkdownKit.MarkdownException("The entire line should always be added in " + _
+		    "indented code blocks")
+		  End If
+		  
+		  // Get the relevant characters from the line that represent this code 
+		  // block's line. It is dependant upon this code block's container.
+		  startPos = Self.Parent.FirstCharPos
+		  Dim chars() As Text
 		  Dim i As Integer
 		  For i = startPos To theLine.CharsUbound
-		    tmp.Append(theLine.Chars(i))
+		    chars.Append(theLine.Chars(i))
 		  Next i
 		  
-		  // If this indented code block is the immediate child of a block quote then 
-		  // Remove the opening block quote marker from the start of the line (if present).
-		  If Self.Parent.Type = MarkdownKit.BlockType.BlockQuote And tmp.Ubound >= 0 And _
-		    tmp(0) = ">" Then
-		    tmp.Remove(0)
-		    // Optional space after the block quote opener?
-		    If tmp.Ubound >= 0 And tmp(0) = " " Then tmp.Remove(0)
+		  // Blank line?
+		  If chars.Ubound = -1 Then
+		    Children.Append(New MarkdownKit.RawText(chars, theLine, startPos, startCol))
+		    Return
 		  End If
 		  
-		  If tmp.Ubound >= 0 Then
-		    // If the raw text line is preceded by a tab, remove it.
-		    If tmp(0) = &u0009 Then
-		      tmp.Remove(0)
-		    Else
-		      // If the raw text begins with <= 4 contiguous spaces, remove them.
-		      Dim limit As Integer = Min(tmp.Ubound, 3)
-		      For i = 0 To limit
-		        If tmp(0) = " " Then
-		          tmp.Remove(0)
-		        Else
-		          Exit
-		        End If
-		      Next i
-		    End If
+		  // Remove up to 4 leading spaces from the line.
+		  Dim numSpaces As Integer = NumberOfLeadingSpaces(chars)
+		  Dim limit As Integer = Min(numSpaces - 1, 3)
+		  limit = Min(chars.Ubound, limit)
+		  If limit > -1 Then
+		    For i = 0 To limit
+		      chars.Remove(0)
+		    Next i
 		  End If
+		  
+		  // If we have removed less than 4 spaces, we should remove a leading tab if present.
+		  If numSpaces < 4 And chars.Ubound >= 0 And chars(0) = &u0009 Then chars.Remove(0)
 		  
 		  // Add the raw text as the last child of this block.
-		  Children.Append(New MarkdownKit.RawText(tmp, theLine, startPos, startCol))
+		  Children.Append(New MarkdownKit.RawText(chars, theLine, startPos, startCol))
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -96,6 +98,28 @@ Inherits MarkdownKit.Block
 		  Self.IsOpen = False
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function NumberOfLeadingSpaces(chars() As Text) As Integer
+		  // Returns the number of contiguous leading spaces in this array.
+		  
+		  If chars.Ubound = -1 Then Return 0
+		  
+		  Dim limit As Integer = chars.Ubound
+		  Dim i As Integer
+		  Dim count As Integer = 0
+		  For i = 0 To limit
+		    If chars(i) = " " Then
+		      count = count + 1
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  
+		  Return count
+		  
+		End Function
 	#tag EndMethod
 
 

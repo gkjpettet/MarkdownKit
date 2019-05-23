@@ -494,8 +494,6 @@ Inherits MarkdownKit.Block
 		      
 		    ElseIf indented And Not blank And Not maybeLazy Then
 		      // ======= NEW INDENTED CODE BLOCK =======
-		      // // Advance past the indent.
-		      // AdvancePos(line, 4, currentCharPos, absoluteCol, currentChar)
 		      // Create the new indented code block.
 		      container = CreateChildBlock(container, line, MarkdownKit.BlockType.IndentedCode, _
 		      currentCharPos, absoluteCol)

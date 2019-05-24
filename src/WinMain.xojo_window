@@ -222,7 +222,7 @@ End
 		Sub Action()
 		  // Create a new Markdown document.
 		  Dim doc As New MarkdownKit.Document(Source.Text.ToText)
-		  doc.ConstructBlockStructure
+		  doc.ParseBlockStructure
 		  
 		  // Clear out the old AST.
 		  Output.Text = ""
@@ -230,17 +230,8 @@ End
 		  // Remove any earlier warnings.
 		  Info.Text = ""
 		  
-		  // Print out the document "phase 1" block structure.
-		  Dim printer As New Phase1PrettyPrinter
-		  printer.Pretty = True
-		  printer.VisitDocument(doc)
-		  Output.Text = printer.Output
+		  #Pragma Warning "TODO"
 		  
-		  // If an exception occurs, display the error message.
-		  Exception e As MarkdownKit.MarkdownException
-		    Info.Text = e.Reason
-		    Output.Text = ""
-		    
 		End Sub
 	#tag EndEvent
 #tag EndEvents

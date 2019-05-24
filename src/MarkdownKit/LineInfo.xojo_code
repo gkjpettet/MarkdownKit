@@ -1,80 +1,58 @@
 #tag Class
 Protected Class LineInfo
 	#tag Method, Flags = &h0
-		Sub Constructor(lineContent As Text, lineNumber As Integer)
-		  Self.Chars = lineContent.Split
-		  Self.Number = lineNumber
-		  Self.CharsUbound = Self.Chars.Ubound
-		  IsEmpty = If(lineContent = "", True, False)
+		Sub Constructor(lineText As Text, lineNumber As Integer)
+		  Value = lineText
+		  Chars = lineText.Split
+		  CharsUbound = Chars.Ubound
+		  Number = lineNumber
+		  
+		  IsEmpty = If(Value = "", True, False)
 		  
 		  If IsEmpty Then
-		    // Empty lines are also considered blank lines.
 		    IsBlank = True
-		    // Nothing more to do for blank lines.
 		    Return
 		  End If
 		  
-		  // A line containing no characters, or a line containing only spaces (U+0020) 
-		  // or tabs (U+0009), is considered a blank line.
+		  // A line containing no characters, or a line containing only spaces or
+		  // tabs, is considered blank (spec 0.29 2.1).
+		  Dim i As Integer
 		  IsBlank = True
-		  For i As Integer = 0 To CharsUbound
-		    If Chars(i) <> &u0020 And Chars(i) <> &u0009 Then
+		  For i = 0 To CharsUbound
+		    Select Case Chars(i)
+		    Case &u0020, &u0009
+		      // Keep searching.
+		    Else
 		      IsBlank = False
-		      Exit
-		    End If
+		    End Select
 		  Next i
 		  
-		  // A line that begins with a tab or at least 4 contiguous spaces is indented.
-		  Indented = False
-		  If Chars(0) = &u0009 Then
-		    Indented = True
-		  Else
-		    Dim count As Integer = 0
-		    Dim limit As Integer = Min(CharsUbound, 3)
-		    For i As Integer = 0 To limit
-		      If Chars(i) = &u0009 Then
-		        Indented = True
-		        Exit
-		      ElseIf Chars(i) = " " Then
-		        count = count + 1
-		        If count = 4 Then
-		          Indented = True
-		          Exit
-		        End If
-		      Else
-		        Exit
-		      End If
-		    Next i
-		  End If
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0
+	#tag Property, Flags = &h0, Description = 416E206172726179206F662074686520696E646976696475616C2063686172616374657273206F662074686973206C696E652E
 		Chars() As Text
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
+	#tag Property, Flags = &h0, Description = 54686520757070657220626F756E6473206F662074686973206C696E6527732043686172732061727261792E20
 		CharsUbound As Integer = -1
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		Indented As Boolean = False
+	#tag Property, Flags = &h0, Description = 41206C696E6520697320636F6E7369646572656420626C616E6B20696620697420697320656D707479206F72206F6E6C7920636F6E7461696E7320776869746573706163652E
+		IsBlank As Boolean = True
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		IsBlank As Boolean
+	#tag Property, Flags = &h0, Description = 49662074686973206C696E6520636F6E7461696E73206E6F207465787420617420616C6C2C20697420697320636F6E7369646572656420656D7074792E
+		IsEmpty As Boolean = True
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		IsEmpty As Boolean
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 546865206F6E652D6261736564206C696E65206E756D62657220696E20746865206F726967696E616C204D61726B646F776E20736F7572636520746861742074686973204C696E65496E666F20646572697665642066726F6D
-		#tag Note
-			Zero-based.
-		#tag EndNote
+	#tag Property, Flags = &h0, Description = 546865206C696E65206E756D626572206F662074686973206C696E6520696E20746865206F726967696E616C204D61726B646F776E20736F757263652E204C696E65206E756D6265727320617265206F6E652D62617365642E
 		Number As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206F726967696E616C20746578742076616C7565206F662074686973206C696E652E
+		Value As Text
 	#tag EndProperty
 
 
@@ -113,28 +91,9 @@ Protected Class LineInfo
 			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Number"
+			Name="Value"
 			Group="Behavior"
-			InitialValue="1"
 			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="CharsUbound"
-			Group="Behavior"
-			InitialValue="-1"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsEmpty"
-			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsBlank"
-			Group="Behavior"
-			InitialValue="True"
-			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

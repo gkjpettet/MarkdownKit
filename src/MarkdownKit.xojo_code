@@ -62,6 +62,22 @@ Protected Module MarkdownKit
 	#tag EndProperty
 
 
+	#tag Enum, Name = BlockType, Flags = &h1
+		Document
+		  BlockQuote
+		  List
+		  ListItem
+		  FencedCode
+		  IndentedCode
+		  HtmlBlock
+		  Paragraph
+		  AtxHeading
+		  SetextHeading
+		  ThematicBreak
+		ReferenceDefinition
+	#tag EndEnum
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Name"

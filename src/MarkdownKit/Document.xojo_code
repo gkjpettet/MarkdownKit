@@ -3,6 +3,8 @@ Protected Class Document
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
 		Sub Constructor(source As Text)
+		  Self.Type = MarkdownKit.BlockType.Document
+		  
 		  // Document Blocks act as the root of the block tree. They don't have parents.
 		  Self.Parent = Nil
 		  
@@ -78,7 +80,14 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub ProcessLine(line As MarkdownKit.LineInfo, ByRef currentBlock As MarkdownKit.Block)
-		  #Pragma Warning "TODO"
+		  // Takes a line of source Markdown and incorporates it into the document tree.
+		  // currentBlock: The Block that most recently has had lines added to it.
+		  //               Will be modified by the method.
+		  
+		  // Always start processing at the document root.
+		  Dim container As MarkdownKit.Block = Self
+		  
+		  TryOpenBlocks(line, container)
 		  
 		End Sub
 	#tag EndMethod
@@ -97,17 +106,61 @@ Inherits MarkdownKit.Block
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub TryOpenBlocks(line As MarkdownKit.LineInfo, ByRef container As MarkdownKit.Block)
+		  // This is step 1 in determining the document bloxk structure.
+		  // Iterate through open blocks and descend through the last children 
+		  // down to the last open block. For each open Block, check to see if 
+		  // this line meets the required condition to keep the block open.
+		  // `container`: This will be set to the Block which last had a match to the line.
+		  
+		  Dim indent As Integer
+		  Dim blank As Boolean
+		  Dim allMatched As Boolean = True
+		  
+		  While container.LastChild <> Nil And container.LastChild.IsOpen
+		    
+		    container = container.LastChild
+		    
+		    line.FindFirstNonWhitespace
+		    
+		    indent = line.FirstNWSColumn - line.Column + line.RemainingSpaces
+		    
+		    blank = If(line.CurrentChar = "", True, False)
+		    
+		    Select Case container.Type
+		    Case MarkdownKit.BlockType.BlockQuote
+		      If indent <= 3 And line.CurrentChar= ">" Then
+		        line.AdvanceOffset(indent + 1, True)
+		        Call line.AdvanceOptionalSpace
+		      Else
+		        allMatched = False
+		      End If
+		      
+		    End Select
+		  Wend
+		  
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
 		Lines() As MarkdownKit.LineInfo
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		LinesUbound As Integer = -1
+	#tag Property, Flags = &h21
+		Private LinesUbound As Integer = -1
 	#tag EndProperty
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsOpen"
+			Group="Behavior"
+			InitialValue="True"
+			Type="Boolean"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -140,12 +193,6 @@ Inherits MarkdownKit.Block
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsOpen"
-			Group="Behavior"
-			InitialValue="True"
-			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

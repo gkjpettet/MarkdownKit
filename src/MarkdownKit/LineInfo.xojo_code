@@ -43,7 +43,10 @@ Protected Class LineInfo
 	#tag Method, Flags = &h0
 		Function AdvanceOptionalSpace() As Boolean
 		  // Advance a single space or tab if the next character is a space.
-		  If remainingSpaces > 0 Then
+		  // Returns True if there is an optional space or False if the next character 
+		  // is a non-whitespace character.
+		  
+		  If RemainingSpaces > 0 Then
 		    RemainingSpaces = RemainingSpaces - 1
 		    Return True
 		  End If
@@ -99,12 +102,12 @@ Protected Class LineInfo
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 46696E647320746865206E657874206E6F6E2D776869746573706163652063686172616374657220696E2074686973206C696E6520626567696E6E696E67206174207468652063757272656E74206F66667365742E2055706461746573206043757272656E7443686172602C2060436F6C756D6E602C206046697273744E57536020616E64206046697273744E5753436F6C756D6E602070726F706572746965732E
-		Sub FindFirstNonWhitespace()
-		  // Starting at Offset, find the first non-whitespace (NWS) character on this 
-		  // line, updating FirstNWS, FirstNWSColumn and CurrentChar.
+		Sub FindNextNonWhitespace()
+		  // Starting at Offset, find the next non-whitespace (NWS) character on this 
+		  // line, updating NextNWS, NextNWSColumn and CurrentChar.
 		  // If we don't find a NWS then we set:
 		  //        - CurrentChar to ""
-		  //        - Column, FirstNWSColumn and FirstNWSColumn to -1
+		  //        - Column, NextNWSColumn and NextNWSColumn to -1
 		  
 		  
 		  // Is the entire line blank?
@@ -114,24 +117,24 @@ Protected Class LineInfo
 		  If Offset <> 0 And CurrentChar = "" Then Return
 		  
 		  Dim charsToNextTabStop As Integer = kTabSize - (Column Mod kTabSize)
-		  FirstNWS = Offset
-		  FirstNWSColumn = Column
+		  NextNWS = Offset
+		  NextNWSColumn = Column
 		  
 		  Do
-		    If FirstNWS > CharsUbound Then
+		    If NextNWS > CharsUbound Then
 		      CurrentChar = ""
 		    Else
-		      CurrentChar = Chars(FirstNWS)
+		      CurrentChar = Chars(NextNWS)
 		    End If
 		    Select Case CurrentChar
 		    Case " "
-		      FirstNWS = FirstNWS + 1
-		      FirstNWSColumn = FirstNWSColumn + 1
+		      NextNWS = NextNWS + 1
+		      NextNWSColumn = NextNWSColumn + 1
 		      charsToNextTabStop = charsToNextTabStop - 1
 		      If charsToNextTabStop = 0 Then charsToNextTabStop = kTabSize
 		    Case &u0009
-		      FirstNWS = FirstNWS + 1
-		      FirstNWSColumn = FirstNWSColumn + charsToNextTabStop
+		      NextNWS = NextNWS + 1
+		      NextNWSColumn = NextNWSColumn + charsToNextTabStop
 		      charsToNextTabStop = kTabSize
 		    Else
 		      Exit
@@ -150,20 +153,12 @@ Protected Class LineInfo
 		CharsUbound As Integer = -1
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 546865207669727475616C20287A65726F2D62617365642920706F736974696F6E20696E20746865206C696E6520746861742074616B65732054414220657870616E73696F6E20696E746F206163636F756E742E
+	#tag Property, Flags = &h0, Description = 546865207669727475616C20706F736974696F6E20696E20746865206C696E6520746861742074616B65732054414220657870616E73696F6E20696E746F206163636F756E742E
 		Column As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468652063757272656E742063686172616374657220696E20746865206C696E652E
 		CurrentChar As Text
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 546865207A65726F2D626173656420696E646578206F6620746865206669727374206E6F6E2D776869746573706163652063686172616374657220696E20746865206C696E652C20617373756D696E67207468617420746865206C696E6520626567696E7320617420606F6666736574602E
-		FirstNWS As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 546865207A65726F2D6261736564207669727475616C20706F736974696F6E206F6620746865206669727374206E6F6E2D776869746573706163652063686172616374657220746861742074616B65732054414220657870616E73696F6E20696E746F206163636F756E742E
-		FirstNWSColumn As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 41206C696E6520697320636F6E7369646572656420626C616E6B20696620697420697320656D707479206F72206F6E6C7920636F6E7461696E7320776869746573706163652E
@@ -174,6 +169,14 @@ Protected Class LineInfo
 		IsEmpty As Boolean = True
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 546865207A65726F2D626173656420696E646578206F6620746865206E657874206E6F6E2D776869746573706163652063686172616374657220696E20746865206C696E652C20617373756D696E67207468617420746865206C696E6520626567696E7320617420606F6666736574602E
+		NextNWS As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865207669727475616C20706F736974696F6E206F6620746865206E657874206E6F6E2D776869746573706163652063686172616374657220746861742074616B65732054414220657870616E73696F6E20696E746F206163636F756E742E
+		NextNWSColumn As Integer = 0
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 546865206C696E65206E756D626572206F662074686973206C696E6520696E20746865206F726967696E616C204D61726B646F776E20736F757263652E204C696E65206E756D6265727320617265206F6E652D62617365642E
 		Number As Integer = 1
 	#tag EndProperty
@@ -182,7 +185,7 @@ Protected Class LineInfo
 		Offset As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
+	#tag Property, Flags = &h0, Description = 416E2061646A7573746D656E742076616C756520746F20746865207669727475616C2060436F6C756D6E60207468617420706F696E747320746F20746865206E756D626572206F66207370616365732066726F6D207468652054414220746861742068617665206E6F74206265656E20696E636C7564656420696E20616E7920696E64656E742E
 		RemainingSpaces As Integer = 0
 	#tag EndProperty
 

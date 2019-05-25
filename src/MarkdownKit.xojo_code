@@ -52,6 +52,42 @@ Protected Module MarkdownKit
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ToText(Extends type As MarkdownKit.BlockType) As Text
+		  // Returns a Text representation of the passed MarkdownKit.BlockType.
+		  
+		  Select Case type
+		  Case MarkdownKit.BlockType.AtxHeading
+		    Return "ATX Heading"
+		  Case MarkdownKit.BlockType.BlockQuote
+		    Return "Blockquote"
+		  Case MarkdownKit.BlockType.Document
+		    Return "Document"
+		  Case MarkdownKit.BlockType.FencedCode
+		    Return "Fenced Code"
+		  Case MarkdownKit.BlockType.HtmlBlock
+		    Return "HTML Block"
+		  Case MarkdownKit.BlockType.IndentedCode
+		    Return "Indented Code"
+		  Case MarkdownKit.BlockType.List
+		    Return "List"
+		  Case MarkdownKit.BlockType.ListItem
+		    Return "List Item"
+		  Case MarkdownKit.BlockType.Paragraph
+		    Return "Paragraph"
+		  Case MarkdownKit.BlockType.ReferenceDefinition
+		    Return "Reference Definition"
+		  Case MarkdownKit.BlockType.SetextHeading
+		    Return "Setext Heading"
+		  Case MarkdownKit.BlockType.ThematicBreak
+		    Return "Thematic Break"
+		  Else
+		    Return "Unknown block type"
+		  End Select
+		  
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h21, Description = 412064696374696F6E617279206F6620746865206368617261637465727320746861742061726520657363617061626C65206279206120707265636564696E67206261636B736C617368
 		Private mEscapableCharacters As Xojo.Core.Dictionary

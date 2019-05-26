@@ -170,7 +170,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub ProcessRemainderOfLine(line As MarkdownKit.LineInfo, currentBlock As MarkdownKit.Block, container As MarkdownKit.Block, lastMatchedContainer As MarkdownKit.Block)
+		Private Sub ProcessRemainderOfLine(line As MarkdownKit.LineInfo, ByRef currentBlock As MarkdownKit.Block, ByRef container As MarkdownKit.Block, ByRef lastMatchedContainer As MarkdownKit.Block)
 		  // We've tried matching against the open blocks and we've opened any required 
 		  // new blocks. What now remains at the offset is a text line. Add it to the 
 		  // appropriate container.
@@ -210,7 +210,7 @@ Inherits MarkdownKit.Block
 		    container = lastMatchedContainer And _
 		    Not blank And _
 		    currentBlock.Type = BlockType.Paragraph And _
-		    currentBlock.Children.Ubound >= -1 Then
+		    currentBlock.Children.Ubound > -1 Then
 		    currentBlock.AddLine(line, line.Offset)
 		    
 		  Else // This is NOT a lazy continuation line.
@@ -315,7 +315,7 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h21
 		Private Sub TryOpenBlocks(line As MarkdownKit.LineInfo, ByRef container As MarkdownKit.Block)
-		  // This is step 1 in determining the document bloxk structure.
+		  // This is step 1 in determining the document block structure.
 		  // Iterate through open blocks and descend through the last children 
 		  // down to the last open block. For each open Block, check to see if 
 		  // this line meets the required condition to keep the block open.
@@ -357,7 +357,6 @@ Inherits MarkdownKit.Block
 		      Exit
 		    End If
 		  Wend
-		  
 		  
 		End Sub
 	#tag EndMethod

@@ -54,10 +54,10 @@ Protected Class Block
 
 	#tag Method, Flags = &h0, Description = 52657475726E7320746865206669727374206368696C64206F66207468697320426C6F636B206F72204E696C2069662074686520426C6F636B20686173206E6F206368696C6472656E2E
 		Function FirstChild() As MarkdownKit.Block
-		  // Return the first child of htis Block. Nil otherwise.
+		  // Return the first child of this Block. Nil otherwise.
 		  
-		  If Children.Ubound >- 1 Then
-		    Return Children(Children.Ubound)
+		  If Children.Ubound > -1 Then
+		    Return Children(0)
 		  Else
 		    Return Nil
 		  End If
@@ -91,6 +91,10 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.Paragraph
 		  ElseIf Self IsA MarkdownKit.RawText Then
 		    mType = MarkdownKit.BlockType.RawText
+		  ElseIf Self IsA MarkdownKit.IndentedCode Then
+		    mType = MarkdownKit.BlockType.IndentedCode
+		  ElseIf Self IsA MarkdownKit.FencedCode Then
+		    mType = MarkdownKit.BlockType.FencedCode
 		  Else
 		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
 		  End If
@@ -208,6 +212,28 @@ Protected Class Block
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Type"
+			Group="Behavior"
+			Type="MarkdownKit.BlockType"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Document"
+				"1 - BlockQuote"
+				"2 - List"
+				"3 - ListItem"
+				"4 - FencedCode"
+				"5 - IndentedCode"
+				"6 - HtmlBlock"
+				"7 - Paragraph"
+				"8 - AtxHeading"
+				"9 - SetextHeading"
+				"10 - ThematicBreak"
+				"11 - ReferenceDefinition"
+				"12 - Block"
+				"13 - RawText"
+			#tag EndEnumValues
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

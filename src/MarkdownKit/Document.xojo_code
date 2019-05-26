@@ -100,6 +100,10 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.BlockQuote(line.Number, startPos, startColumn)
 		  Case BlockType.Paragraph
 		    child = New MarkdownKit.Paragraph(line.Number, startPos, startColumn)
+		  Case BlockType.IndentedCode
+		    child = New MarkdownKit.IndentedCode(line.Number, startPos, startColumn)
+		  Case BlockType.FencedCode
+		    child = New MarkdownKit.FencedCode(line.Number, startPos, startColumn)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -227,10 +231,16 @@ Inherits MarkdownKit.Block
 		    Wend
 		    
 		    If container.Type = MarkdownKit.BlockType.IndentedCode Then
-		      #Pragma Warning "TODO"
+		      container.AddLine(line, line.Offset)
 		      
 		    ElseIf container.Type = MarkdownKit.BlockType.FencedCode Then
-		      #Pragma Warning "TODO"
+		      If (indent <= 3 And line.CurrentChar = FencedCode(container).FenceChar) And _
+		        0 <> Scanner.ScanCloseCodeFence(line.Chars, line.NextNWS, FencedCode(container).FenceLength) Then
+		        // If it's a closing fence, set the fence length to -1. It will be closed when the next line is processed. 
+		        FencedCode(container).FenceLength = -1
+		      Else
+		        container.AddLine(line, line.Offset)
+		      End If
 		      
 		    ElseIf container.Type = MarkdownKit.BlockType.HtmlBlock Then
 		      #Pragma Warning "TODO"
@@ -282,7 +292,7 @@ Inherits MarkdownKit.Block
 		  // try to start a new container block.
 		  
 		  Const kCodeIndent = 4
-		  Dim indent As Integer
+		  Dim indent, tmpInt1 As Integer
 		  Dim blank, indented As Boolean
 		  
 		  While container.Type <> BlockType.FencedCode And _
@@ -299,6 +309,21 @@ Inherits MarkdownKit.Block
 		      Call line.AdvanceOptionalSpace
 		      container = CreateChildBlock(container, line, BlockType.BlockQuote, line.NextNWS, _
 		      line.NextNWSColumn)
+		      
+		    ElseIf Not indented And _
+		      (line.CurrentChar = "`" Or line.CurrentChar = "~") And _ 
+		      0 <> Scanner.ScanOpenCodeFence(line.Chars, line.NextNWS, tmpInt1) Then
+		      
+		      container = CreateChildBlock(container, line, BlockType.FencedCode, line.NextNWS, _
+		      line.NextNWSColumn)
+		      FencedCode(container).FenceChar = line.CurrentChar
+		      FencedCode(container).FenceLength = tmpInt1
+		      FencedCode(container).FenceOffset = line.NextNWS - line.Offset
+		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
+		      
+		    ElseIf indented And Not maybeLazy And Not blank Then
+		      line.AdvanceOffset(kCodeIndent, True)
+		      container = CreateChildBlock(container, line, BlockType.IndentedCode, line.Offset, 0)
 		      
 		    Else
 		      Exit
@@ -321,6 +346,7 @@ Inherits MarkdownKit.Block
 		  // this line meets the required condition to keep the block open.
 		  // `container`: This will be set to the Block which last had a match to the line.
 		  
+		  Const kCodeIndent = 4
 		  Dim indent As Integer
 		  Dim blank As Boolean
 		  Dim allMatched As Boolean = True
@@ -342,6 +368,30 @@ Inherits MarkdownKit.Block
 		        Call line.AdvanceOptionalSpace
 		      Else
 		        allMatched = False
+		      End If
+		      
+		    Case BlockType.IndentedCode
+		      If indent >= kCodeIndent Then
+		        line.AdvanceOffset(kCodeIndent, True)
+		      ElseIf blank Then
+		        line.AdvanceOffset(line.NextNWS - line.Offset, False)
+		      Else
+		        allMatched = False
+		      End If
+		      
+		    Case BlockType.FencedCode
+		      // -1 means we've seen closer 
+		      If MarkdownKit.FencedCode(container).FenceLength = -1 Then
+		        allMatched = False
+		        If blank Then container.IsLastLineBlank = True
+		      Else
+		        // Skip optional spaces of fence offset.
+		        Dim i As Integer = MarkdownKit.FencedCode(container).FenceOffset
+		        While i > 0 And line.Chars(line.Offset) = " "
+		          line.Offset = line.Offset + 1
+		          line.Column = line.Column + 1
+		          i = i - 1
+		        Wend
 		      End If
 		      
 		    Case MarkdownKit.BlockType.Paragraph

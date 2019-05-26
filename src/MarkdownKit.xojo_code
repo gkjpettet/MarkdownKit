@@ -52,6 +52,27 @@ Protected Module MarkdownKit
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function IsBlank(Extends chars() As Text) As Boolean
+		  // Returns True if this array of characters is empty or contains only whitespace.
+		  If chars.Ubound = - 1 Then Return True
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  Dim i As Integer
+		  For i = 0 To charsUbound
+		    Select Case Chars(i)
+		    Case " ", &u0009
+		      // Continue...
+		    Else
+		      Return False
+		    End Select
+		  Next i
+		  
+		  Return True
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function ToText(Extends type As MarkdownKit.BlockType) As Text
 		  // Returns a Text representation of the passed MarkdownKit.BlockType.

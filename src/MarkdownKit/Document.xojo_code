@@ -28,7 +28,7 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub Constructor(source As Text)
-		  Super.Constructor(1, 1)
+		  Super.Constructor(1, 0, 1)
 		  
 		  Self.Type = MarkdownKit.BlockType.Document
 		  
@@ -84,7 +84,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 416464732061206E657720626C6F636B206173206368696C64206F6620616E6F746865722E2052657475726E7320746865206368696C642E
-		Shared Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, startColumn As Integer) As MarkdownKit.Block
+		Shared Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, startPos As Integer, startColumn As Integer) As MarkdownKit.Block
 		  // Create a new Block of the specified type, add it as a child of theParent and 
 		  // return the newly created child.
 		  
@@ -99,9 +99,9 @@ Inherits MarkdownKit.Block
 		  Dim child As MarkdownKit.Block
 		  Select Case childType
 		  Case BlockType.BlockQuote
-		    child = New MarkdownKit.BlockQuote(line.Number, startColumn)
+		    child = New MarkdownKit.BlockQuote(line.Number, startPos, startColumn)
 		  Case BlockType.Paragraph
-		    child = New MarkdownKit.Paragraph(line.Number, startColumn)
+		    child = New MarkdownKit.Paragraph(line.Number, startPos, startColumn)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -163,9 +163,17 @@ Inherits MarkdownKit.Block
 		  // Should we create a new block?
 		  TryNewBlocks(line, container, maybeLazy)
 		  
-		  // What remains at the offset is a text line. Add the text to the
+		  // What remains at the offset is a text line. Add it to the appropriate container.
+		  ProcessRemainderOfLine(line, currentBlock, container, lastMatchedContainer)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub ProcessRemainderOfLine(line As MarkdownKit.LineInfo, currentBlock As MarkdownKit.Block, container As MarkdownKit.Block, lastMatchedContainer As MarkdownKit.Block)
+		  // We've tried matching against the open blocks and we've opened any required 
+		  // new blocks. What now remains at the offset is a text line. Add it to the 
 		  // appropriate container.
-		  #Pragma Warning "TODO: Convert to a method?"
 		  
 		  line.FindNextNonWhitespace
 		  Dim indent As Integer = line.NextNWSColumn - line.Column
@@ -203,11 +211,53 @@ Inherits MarkdownKit.Block
 		    Not blank And _
 		    currentBlock.Type = BlockType.Paragraph And _
 		    currentBlock.Children.Ubound >= -1 Then
-		    currentBlock.AddLine(line)
-		  Else
-		    // This is NOT a lazy continuation line.
-		    #Pragma Warning "TODO"
+		    currentBlock.AddLine(line, line.Offset)
 		    
+		  Else // This is NOT a lazy continuation line.
+		    // Finalise any blocks that were not matched and set `curentBlock` to `container`.
+		    While currentBlock <> lastMatchedContainer
+		      currentBlock.Finalise(line)
+		      currentBlock = currentBlock.Parent
+		      
+		      If currentBlock = Nil Then
+		        Raise New MarkdownException( _
+		        "Cannot finalise container block. Last matched container type = " + _ 
+		        lastMatchedContainer.Type.ToText)
+		      End If
+		    Wend
+		    
+		    If container.Type = MarkdownKit.BlockType.IndentedCode Then
+		      #Pragma Warning "TODO"
+		      
+		    ElseIf container.Type = MarkdownKit.BlockType.FencedCode Then
+		      #Pragma Warning "TODO"
+		      
+		    ElseIf container.Type = MarkdownKit.BlockType.HtmlBlock Then
+		      #Pragma Warning "TODO"
+		      
+		    ElseIf blank Then
+		      // Do nothing?
+		      
+		    ElseIf container.Type = MarkdownKit.BlockType.AtxHeading Then
+		      #Pragma Warning "TODO"
+		      
+		    ElseIf AcceptsLines(container.Type) Then
+		      container.AddLine(line, line.NextNWS)
+		      
+		    ElseIf container.Type <> BlockType.ThematicBreak And _ 
+		      container.Type <> BlockType.SetextHeading Then
+		      // Create a paragraph container for this line.
+		      container = CreateChildBlock(container, line, BlockType.Paragraph, _
+		      line.NextNWS, line.NextNWSColumn)
+		      container.AddLine(line, line.NextNWS)
+		      
+		    Else
+		      Raise New MarkdownKit.MarkdownException( _
+		      "Line " + line.Number.ToText + " with container type `" + _
+		      container.Type.ToText + "` did not match any condition")
+		    End If
+		    
+		    currentBlock = container
 		  End If
 		End Sub
 	#tag EndMethod
@@ -247,7 +297,8 @@ Inherits MarkdownKit.Block
 		    If Not indented And line.CurrentChar = ">" Then
 		      line.AdvanceOffset(line.NextNWS + 1 - line.Offset, False)
 		      Call line.AdvanceOptionalSpace
-		      container = CreateChildBlock(container, line, BlockType.BlockQuote, line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.BlockQuote, line.NextNWS, _
+		      line.NextNWSColumn)
 		      
 		    Else
 		      Exit

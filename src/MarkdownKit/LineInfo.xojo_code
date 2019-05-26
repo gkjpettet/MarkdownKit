@@ -21,7 +21,8 @@ Protected Class LineInfo
 		  Do
 		    If count <= 0 Then Exit
 		    If Offset > CharsUbound Then Exit
-		    Select Case Chars(Offset)
+		    CurrentChar = Chars(Offset)
+		    Select Case CurrentChar
 		    Case ""
 		      Exit
 		    Case &u0009

@@ -230,7 +230,7 @@ End
 		  // Remove any earlier warnings.
 		  Info.Text = ""
 		  
-		  #Pragma Warning "TODO"
+		  Break
 		  
 		End Sub
 	#tag EndEvent

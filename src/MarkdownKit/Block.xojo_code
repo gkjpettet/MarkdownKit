@@ -1,20 +1,36 @@
 #tag Class
 Protected Class Block
 	#tag Method, Flags = &h0
-		Sub AddLine(line As MarkdownKit.LineInfo)
-		  // This method must be overridden by subclasses.
+		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer)
+		  // Add the passed line to this Block.
+		  // May be overridden by subclasses if more complicated tasks are required.
 		  
-		  Dim e As New Xojo.Core.UnsupportedOperationException
-		  e.Reason = "The Block.AddLine method must be overridden by subclasses."
-		  Raise e
+		  If Not Self.IsOpen Then
+		    Raise New MarkdownKit.MarkdownException("Attempted to add line " + _
+		    line.Number.ToText + " to closed container " + Self.Type.ToText)
+		  End If
 		  
-		  #Pragma Error "Implement in subclasses"
+		  Dim tmp() As Text
+		  Dim i As Integer
+		  
+		  // Get the characters from the current line offset to the end of the line.
+		  // Remember to account for missing spaces.
+		  For i = 1 To line.RemainingSpaces
+		    tmp.Append(" ")
+		  Next i
+		  For i = startPos To line.CharsUbound
+		    tmp.Append(line.Chars(i))
+		  Next i
+		  
+		  // Add the raw text as the last child of this block.
+		  Children.Append(New MarkdownKit.RawText(tmp, line))
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(lineNumber As Integer, startColumn As Integer)
+		Sub Constructor(lineNumber As Integer, startPos As Integer, startColumn As Integer)
 		  Self.LineNumber = lineNumber
+		  Self.StartPosition = startPos
 		  Self.StartColumn = startColumn
 		  
 		End Sub
@@ -85,7 +101,11 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		StartColumn As Integer
+		StartColumn As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		StartPosition As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -162,12 +182,19 @@ Protected Class Block
 		#tag ViewProperty
 			Name="StartColumn"
 			Group="Behavior"
+			InitialValue="1"
 			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LineNumber"
 			Group="Behavior"
 			InitialValue="1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="StartPosition"
+			Group="Behavior"
+			InitialValue="0"
 			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior

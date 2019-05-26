@@ -30,8 +30,6 @@ Inherits MarkdownKit.Block
 		Sub Constructor(source As Text)
 		  Super.Constructor(1, 0, 1)
 		  
-		  Self.Type = MarkdownKit.BlockType.Document
-		  
 		  // Document Blocks act as the root of the block tree. They don't have parents.
 		  Self.Parent = Nil
 		  
@@ -149,6 +147,8 @@ Inherits MarkdownKit.Block
 		  
 		  // Always start processing at the document root.
 		  Dim container As MarkdownKit.Block = Self
+		  
+		  //If line.Chars(Line.CharsUbound) = "!" Then Break
 		  
 		  // Match this line against each open block in the tree.
 		  TryOpenBlocks(line, container)
@@ -344,7 +344,7 @@ Inherits MarkdownKit.Block
 		        allMatched = False
 		      End If
 		      
-		    Case BlockType.Paragraph
+		    Case MarkdownKit.BlockType.Paragraph
 		      If blank Then
 		        container.IsLastLineBlank = True
 		        allMatched = False

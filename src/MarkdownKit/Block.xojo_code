@@ -32,7 +32,7 @@ Protected Class Block
 		  Self.LineNumber = lineNumber
 		  Self.StartPosition = startPos
 		  Self.StartColumn = startColumn
-		  
+		  SetType
 		End Sub
 	#tag EndMethod
 
@@ -79,6 +79,24 @@ Protected Class Block
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Sub SetType()
+		  // Set this Block's type enumeration.
+		  
+		  If Self IsA MarkdownKit.BlockQuote Then
+		    mType = MarkdownKit.BlockType.BlockQuote
+		  ElseIf Self IsA MarkdownKit.Document Then
+		    mType = MarkdownKit.BlockType.Document
+		  ElseIf Self IsA MarkdownKit.Paragraph Then
+		    mType = MarkdownKit.BlockType.Paragraph
+		  ElseIf Self IsA MarkdownKit.RawText Then
+		    mType = MarkdownKit.BlockType.RawText
+		  Else
+		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
+		  End If
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0, Description = 5468697320426C6F636B2773206368696C6420426C6F636B732028696620616E79292E
 		Children() As MarkdownKit.Block
@@ -96,6 +114,10 @@ Protected Class Block
 		LineNumber As Integer = 1
 	#tag EndProperty
 
+	#tag Property, Flags = &h21
+		Private mType As MarkdownKit.BlockType = MarkdownKit.BlockType.Block
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 5468697320426C6F636B277320706172656E742028692E653A20656E636C6F73696E672920426C6F636B2E2057696C6C206265204E696C206966207468697320426C6F636B2069732074686520726F6F7420446F63756D656E742E
 		Parent As MarkdownKit.Block
 	#tag EndProperty
@@ -108,9 +130,19 @@ Protected Class Block
 		StartPosition As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return mType
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  // Read only.
+			End Set
+		#tag EndSetter
 		Type As MarkdownKit.BlockType
-	#tag EndProperty
+	#tag EndComputedProperty
 
 
 	#tag ViewBehavior
@@ -152,26 +184,6 @@ Protected Class Block
 			Group="Behavior"
 			InitialValue="True"
 			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Type"
-			Group="Behavior"
-			Type="MarkdownKit.BlockType"
-			EditorType="Enum"
-			#tag EnumValues
-				"0 - Document"
-				"1 - BlockQuote"
-				"2 - List"
-				"3 - ListItem"
-				"4 - FencedCode"
-				"5 - IndentedCode"
-				"6 - HtmlBlock"
-				"7 - Paragraph"
-				"8 - AtxHeading"
-				"9 - SetextHeading"
-				"10 - ThematicBreak"
-				"11 - ReferenceDefinition"
-			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsLastLineBlank"

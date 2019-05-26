@@ -131,7 +131,9 @@ Protected Module MarkdownKit
 		  AtxHeading
 		  SetextHeading
 		  ThematicBreak
-		ReferenceDefinition
+		  ReferenceDefinition
+		  Block
+		RawText
 	#tag EndEnum
 
 

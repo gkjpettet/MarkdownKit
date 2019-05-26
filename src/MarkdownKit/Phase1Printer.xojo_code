@@ -31,6 +31,25 @@ Implements IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
+		  // Part of the MarkdownKit.IWalker interface.
+		  
+		  mOutput.Append(CurrentIndent + _
+		  "<heading level=" + """" + atx.Level.ToText + """" +  ">")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In atx.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</heading>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitBlock(b As MarkdownKit.Block)
 		  // Part of the IWalker interface.
 		  

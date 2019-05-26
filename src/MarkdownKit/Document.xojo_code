@@ -255,7 +255,7 @@ Inherits MarkdownKit.Block
 		      // Do nothing?
 		      
 		    ElseIf container.Type = MarkdownKit.BlockType.AtxHeading Then
-		      #Pragma Warning "TODO"
+		      #Pragma ERROR "TODO - last part of ATX implementation?"
 		      
 		    ElseIf AcceptsLines(container.Type) Then
 		      container.AddLine(line, line.NextNWS)
@@ -298,7 +298,7 @@ Inherits MarkdownKit.Block
 		  // try to start a new container block.
 		  
 		  Const kCodeIndent = 4
-		  Dim indent, tmpInt1 As Integer
+		  Dim indent, tmpInt1, tmpInt2 As Integer
 		  Dim blank, indented As Boolean
 		  
 		  While container.Type <> BlockType.FencedCode And _
@@ -311,15 +311,26 @@ Inherits MarkdownKit.Block
 		    blank = If(line.CurrentChar = "", True, False)
 		    
 		    If Not indented And line.CurrentChar = ">" Then
+		      // ============= New blockquote =============
 		      line.AdvanceOffset(line.NextNWS + 1 - line.Offset, False)
 		      Call line.AdvanceOptionalSpace
 		      container = CreateChildBlock(container, line, BlockType.BlockQuote, line.NextNWS, _
 		      line.NextNWSColumn)
 		      
+		    ElseIf Not indented And line.CurrentChar = "#" And _
+		       0 <> Scanner.ScanAtxHeadingStart(line.Chars, line.NextNWS, _ 
+		      tmpInt1, tmpInt2) Then
+		      // ============= New ATX heading =============
+		      line.AdvanceOffset(line.NextNWS + tmpInt2 - line.Offset, False)
+		      
+		      container = CreateChildBlock(container, line, BlockType.AtxHeading, line.NextNWS, _
+		      line.NextNWSColumn)
+		      ATXHeading(container).Level = tmpInt1
+		      
 		    ElseIf Not indented And _
 		      (line.CurrentChar = "`" Or line.CurrentChar = "~") And _ 
 		      0 <> Scanner.ScanOpenCodeFence(line.Chars, line.NextNWS, tmpInt1) Then
-		      
+		      // ============= New fenced code block =============
 		      container = CreateChildBlock(container, line, BlockType.FencedCode, line.NextNWS, _
 		      line.NextNWSColumn)
 		      FencedCode(container).FenceChar = line.CurrentChar
@@ -328,6 +339,7 @@ Inherits MarkdownKit.Block
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
 		      
 		    ElseIf indented And Not maybeLazy And Not blank Then
+		      // ============= New indented code block =============
 		      line.AdvanceOffset(kCodeIndent, True)
 		      container = CreateChildBlock(container, line, BlockType.IndentedCode, line.Offset, 0)
 		      
@@ -384,6 +396,11 @@ Inherits MarkdownKit.Block
 		      Else
 		        allMatched = False
 		      End If
+		      
+		    Case BlockType.AtxHeading, BlockType.SetextHeading
+		      // A heading can never contain more than one line.
+		      allMatched = False
+		      If blank Then container.IsLastLineBlank = True
 		      
 		    Case BlockType.FencedCode
 		      // -1 means we've seen closer 

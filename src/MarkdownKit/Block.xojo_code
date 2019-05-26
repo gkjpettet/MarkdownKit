@@ -244,6 +244,8 @@ Protected Class Block
 				"11 - ReferenceDefinition"
 				"12 - Block"
 				"13 - RawText"
+				"14 - Softbreak"
+				"15 - Hardbreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 	#tag EndViewBehavior

@@ -11,6 +11,7 @@ Class=Document;MarkdownKit/Document.xojo_code;&h0000000047E76FFF;&h0000000021428
 Class=LineInfo;MarkdownKit/LineInfo.xojo_code;&h0000000047FA6FFF;&h00000000214287FF;false
 Class=Block;MarkdownKit/Block.xojo_code;&h000000000CFE3FFF;&h00000000214287FF;false
 Class=BlockQuote;MarkdownKit/BlockQuote.xojo_code;&h00000000023ED7FF;&h00000000214287FF;false
+Class=ATXHeading;MarkdownKit/ATXHeading.xojo_code;&h0000000013A35FFF;&h00000000214287FF;false
 Class=IndentedCode;MarkdownKit/IndentedCode.xojo_code;&h00000000070177FF;&h00000000214287FF;false
 Class=FencedCode;MarkdownKit/FencedCode.xojo_code;&h0000000044C85FFF;&h00000000214287FF;false
 Class=Paragraph;MarkdownKit/Paragraph.xojo_code;&h000000003A340FFF;&h00000000214287FF;false

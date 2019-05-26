@@ -1,6 +1,61 @@
 #tag Class
 Protected Class Scanner
 	#tag Method, Flags = &h0
+		Shared Function ScanATXHeadingStart(chars() As Text, pos As Integer, ByRef headingLevel As Integer, ByRef length As Integer) As Integer
+		  headingLevel = 1
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  If pos + 1 > charsUbound Then
+		    length = 0
+		    Return length
+		  End If
+		  
+		  If chars(pos) <> "#" Then
+		    length = 0
+		    Return length
+		  End If
+		  
+		  Dim spaceExists As Boolean = False
+		  
+		  Dim i As Integer
+		  Dim c As Text
+		  For i = pos + 1 To charsUbound
+		    c = chars(i)
+		    
+		    If c = "#" Then
+		      If headingLevel = 6 Then
+		        length = 0
+		        Return length
+		      End If
+		      
+		      If spaceExists Then
+		        length = i - pos
+		        Return length
+		      Else
+		        headingLevel = headingLevel + 1
+		      End If
+		      
+		    ElseIf c = " " Or c = &u0009 Then
+		      spaceExists = True
+		      
+		    ElseIf c = "" Then
+		      length = i - pos + 1
+		      Return length
+		    Else
+		      length = If(spaceExists, i - pos, 0)
+		      Return length
+		    End If
+		  Next i
+		  
+		  length = If(spaceExists, (charsUbound + 1) - pos, 0)
+		  
+		  Return length
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ScanCloseCodeFence(chars() As Text, pos As Integer, length As Integer) As Integer
 		  // Scan for a closing fence of at least length `length`.
 		  

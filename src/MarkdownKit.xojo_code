@@ -73,6 +73,25 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Sub StripTrailingWhitespace(chars() As Text)
+		  // Takes an array of characters and removes contiguous whitespace 
+		  // characters from the end of it.
+		  // Whitespace characters are &u0020, &u0009.
+		  // Mutates the passed array.
+		  
+		  Dim i As Integer
+		  For i = chars.Ubound DownTo 0
+		    If chars(chars.Ubound) = &u0020 Or chars(chars.Ubound) = &u0009 Then
+		      chars.Remove(chars.Ubound)
+		    Else
+		      Exit
+		    End If
+		  Next i
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function ToText(Extends type As MarkdownKit.BlockType) As Text
 		  // Returns a Text representation of the passed MarkdownKit.BlockType.
@@ -133,7 +152,9 @@ Protected Module MarkdownKit
 		  ThematicBreak
 		  ReferenceDefinition
 		  Block
-		RawText
+		  RawText
+		  Softbreak
+		Hardbreak
 	#tag EndEnum
 
 

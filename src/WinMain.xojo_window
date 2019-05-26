@@ -230,8 +230,17 @@ End
 		  // Remove any earlier warnings.
 		  Info.Text = ""
 		  
-		  Break
+		  // Print out the document "phase 1" block structure.
+		  Dim printer As New MarkdownKit.Phase1Printer
+		  printer.Pretty = True
+		  printer.VisitDocument(doc)
+		  Output.Text = printer.Output
 		  
+		  // If an exception occurs, display the error message.
+		  Exception e As MarkdownKit.MarkdownException
+		    Info.Text = e.Reason
+		    Output.Text = ""
+		    
 		End Sub
 	#tag EndEvent
 #tag EndEvents

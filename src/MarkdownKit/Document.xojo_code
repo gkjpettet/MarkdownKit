@@ -1,6 +1,12 @@
 #tag Class
 Protected Class Document
 Inherits MarkdownKit.Block
+	#tag Method, Flags = &h0
+		Sub Accept(visitor As MarkdownKit.IWalker)
+		  visitor.VisitDocument(Self)
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Shared Function AcceptsLines(type As MarkdownKit.BlockType) As Boolean
 		  // Returns True if the queried Block type accepts lines.

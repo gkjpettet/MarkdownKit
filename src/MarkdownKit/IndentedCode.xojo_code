@@ -2,6 +2,12 @@
 Protected Class IndentedCode
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
+		Sub Accept(visitor As MarkdownKit.IWalker)
+		  visitor.VisitIndentedCode(Self)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Finalise(line As MarkdownKit.LineInfo)
 		  // Calling the overridden superclass method.
 		  Super.Finalise(line)

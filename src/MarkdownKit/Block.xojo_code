@@ -1,6 +1,12 @@
 #tag Class
 Protected Class Block
 	#tag Method, Flags = &h0
+		Sub Accept(visitor As MarkdownKit.IWalker)
+		  visitor.VisitBlock(Self)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer)
 		  // Add the passed line to this Block.
 		  // May be overridden by subclasses if more complicated tasks are required.
@@ -95,9 +101,14 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.IndentedCode
 		  ElseIf Self IsA MarkdownKit.FencedCode Then
 		    mType = MarkdownKit.BlockType.FencedCode
+		  ElseIf Self IsA MarkdownKit.Softbreak Then
+		    mType = MarkdownKit.BlockType.Softbreak
+		  ElseIf Self IsA MarkdownKit.Hardbreak Then
+		    mType = MarkdownKit.BlockType.Hardbreak
 		  Else
 		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
 		  End If
+		  
 		End Sub
 	#tag EndMethod
 

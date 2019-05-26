@@ -2,6 +2,12 @@
 Protected Class RawText
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
+		Sub Accept(visitor As MarkdownKit.IWalker)
+		  visitor.VisitRawText(Self)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Constructor(chars() As Text, line As MarkdownKit.LineInfo)
 		  Super.Constructor(line.Number, line.Offset, -1)
 		  Self.Chars = chars

@@ -17,13 +17,18 @@ Protected Class Block
 		  End If
 		  
 		  Dim len As Integer = If(length = -1, line.CharsUbound - line.Offset + 1, length)
-		  If len <= 0 Then Return
 		  
 		  Dim tmp() As Text
-		  Dim i As Integer
+		  
+		  If len <= 0 Then
+		    // Blank line.
+		    Children.Append(New MarkdownKit.RawText(tmp, line))
+		    Return
+		  End If
 		  
 		  // Get the characters from the current line offset to the end of the line.
 		  // Remember to account for missing spaces.
+		  Dim i As Integer
 		  For i = 1 To line.RemainingSpaces
 		    tmp.Append(" ")
 		  Next i

@@ -114,7 +114,11 @@ Protected Class Scanner
 		    c = chars(i)
 		    
 		    If c = fchar Then
-		      If fenceDone Then return 0
+		      If fenceDone Then
+		        // Backticks are permitted in tilde-declared fences.
+		        If fchar = "~" Then Continue 
+		        Return 0
+		      End If
 		      length = length + 1
 		      Continue
 		    End If

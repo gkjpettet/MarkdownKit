@@ -438,7 +438,8 @@ Inherits MarkdownKit.Block
 		      Else
 		        // Skip optional spaces of fence offset.
 		        Dim i As Integer = MarkdownKit.FencedCode(container).FenceOffset
-		        While i > 0 And line.Chars(line.Offset) = " "
+		        While i > 0 And line.Offset <= line.CharsUbound And _
+		          line.Chars(line.Offset) = " "
 		          line.Offset = line.Offset + 1
 		          line.Column = line.Column + 1
 		          i = i - 1

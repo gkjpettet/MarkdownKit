@@ -12,13 +12,17 @@ Inherits MarkdownKit.Block
 		  // Calling the overridden superclass method.
 		  Super.Finalise(line)
 		  
-		  // The first child is the info string. It ma be empty.
-		  Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(FirstChild)
-		  If Not rt.IsBlank Then
-		    InfoString = Text.Join(rt.Chars, "")
+		  If FirstChild <> Nil Then
+		    // The first child (if present) is the info string. It may be empty.
+		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(FirstChild)
+		    If Not rt.IsBlank Then
+		      InfoString = Text.Join(rt.Chars, "").Trim
+		    End If
+		    Children.Remove(0)
 		  End If
-		  Children.Remove(0)
 		  
+		  Exception e
+		    // This is a bug.
 		End Sub
 	#tag EndMethod
 

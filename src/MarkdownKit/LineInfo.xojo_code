@@ -19,7 +19,14 @@ Protected Class LineInfo
 		  
 		  Dim charsToTabStop As Integer
 		  Do
-		    If count <= 0 Or Offset > CharsUbound Then
+		    // If count <= 0 Or Offset > CharsUbound Then
+		    // CurrentChar = ""
+		    // Exit
+		    // End If
+		    
+		    If count = 0 Then Exit
+		    
+		    If Offset > CharsUbound Then
 		      CurrentChar = ""
 		      Exit
 		    End If
@@ -62,14 +69,14 @@ Protected Class LineInfo
 		  Case " "
 		    Offset = Offset + 1
 		    Column = Column + 1
-		    CurrentChar = Chars(Offset)
+		    CurrentChar = If(Offset <= CharsUbound, Chars(Offset), "")
 		    Return True
 		  Case &u0009
 		    Offset = Offset + 1
 		    Dim charsToTabStop As Integer = 4 - (Column Mod kTabSize)
 		    Column = Column + charsToTabStop
 		    RemainingSpaces = charsToTabStop - 1
-		    CurrentChar = Chars(Offset)
+		    CurrentChar = If(Offset <= CharsUbound, Chars(Offset), "")
 		    Return True
 		  End Select
 		  

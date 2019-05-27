@@ -58,7 +58,7 @@ Protected Class Block
 		  // upon block closure.
 		  // `line` is the line that triggered the Finalise call.
 		  
-		  If IsOpen Then
+		  If Not IsOpen Then
 		    Return
 		  Else
 		    IsOpen = False

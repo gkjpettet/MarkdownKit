@@ -13,8 +13,9 @@ Inherits MarkdownKit.Block
 		  Super.AddLine(line, startPos)
 		  
 		  // Do we need to prepend a hard or soft break before this line?
+		  Dim rt As MarkdownKit.RawText
 		  If Children.Ubound > 0 Then
-		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(Children(Children.Ubound - 1))
+		    rt = MarkdownKit.RawText(Children(Children.Ubound - 1))
 		    Dim charsUbound As Integer = rt.Chars.Ubound
 		    
 		    If charsUbound > 1 And rt.Chars(charsUbound) = " " And _ 
@@ -32,6 +33,13 @@ Inherits MarkdownKit.Block
 		    End If
 		    
 		    // Strip the trailing whitespace from the end of the preceding line.
+		    StripTrailingWhitespace(rt.Chars)
+		  End If
+		  
+		  // Strip leading and trailing whitespace from THIS line.
+		  If Children.Ubound >= 0 Then
+		    rt = MarkdownKit.RawText(Children(Children.Ubound))
+		    StripLeadingWhitespace(rt.Chars)
 		    StripTrailingWhitespace(rt.Chars)
 		  End If
 		  

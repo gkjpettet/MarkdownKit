@@ -118,7 +118,7 @@ Inherits TestController
 		  doc.ParseBlockStructure
 		  
 		  // Convert the phase 1 block structure to Text.
-		  Dim printer As New MarkdownKit.Phase1Printer
+		  Dim printer As New Phase1Printer
 		  printer.Pretty = False
 		  printer.VisitDocument(doc)
 		  Dim actual As Text = printer.Output

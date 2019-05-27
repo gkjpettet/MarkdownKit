@@ -116,6 +116,8 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.Hardbreak
 		  ElseIf Self Isa MarkdownKit.ATXHeading Then
 		    mType = MarkdownKit.BlockType.AtxHeading
+		  ElseIf Self IsA MarkdownKit.SetextHeading Then
+		    mType = MarkdownKit.BlockType.SetextHeading
 		  Else
 		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
 		  End If

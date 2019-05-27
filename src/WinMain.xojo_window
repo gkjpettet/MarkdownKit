@@ -231,7 +231,7 @@ End
 		  Info.Text = ""
 		  
 		  // Print out the document "phase 1" block structure.
-		  Dim printer As New MarkdownKit.Phase1Printer
+		  Dim printer As New Phase1Printer
 		  printer.Pretty = True
 		  printer.VisitDocument(doc)
 		  Output.Text = printer.Output

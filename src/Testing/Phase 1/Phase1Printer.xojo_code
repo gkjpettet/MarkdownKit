@@ -1,6 +1,6 @@
 #tag Class
 Protected Class Phase1Printer
-Implements IWalker
+Implements  Global.MarkdownKit.IWalker
 	#tag Method, Flags = &h21
 		Private Function CurrentIndent() As Text
 		  // Given the current indentation level (specified by mCurrentIndent), this 
@@ -181,6 +181,25 @@ Implements IWalker
 		  mOutput.Append(CurrentIndent + "<text>")
 		  mOutput.Append(Text.Join(rt.Chars, ""))
 		  mOutput.Append("</text>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
+		  // Part of the MarkdownKit.IWalker interface.
+		  
+		  mOutput.Append(CurrentIndent + _
+		  "<heading level=" + """" + stx.Level.ToText + """" +  ">")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In stx.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod

@@ -55,6 +55,12 @@ Protected Interface IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitSoftBreak(sb As MarkdownKit.Softbreak)
 		  
 		End Sub

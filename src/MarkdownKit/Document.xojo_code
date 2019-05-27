@@ -112,6 +112,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.FencedCode(line.Number, startPos, startColumn)
 		  Case BlockType.ATXHeading
 		    child = New MarkdownKit.ATXHeading(line.Number, startPos, startColumn)
+		  Case BlockType.SetextHeading
+		    child = New MarkdownKit.SetextHeading(line.Number, startPos, startColumn)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"

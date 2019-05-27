@@ -74,6 +74,23 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Sub StripLeadingWhitespace(chars() As Text)
+		  // Takes a ByRef array of characters and removes contiguous whitespace 
+		  // characters from the beginning of it.
+		  // Whitespace characters are &u0020, &u0009.
+		  
+		  Dim i As Integer
+		  For i = chars.Ubound DownTo 0
+		    If chars(0) = &u0020 Or chars(0) = &u0009 Then
+		      chars.Remove(0)
+		    Else
+		      Exit
+		    End If
+		  Next i
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Sub StripTrailingWhitespace(chars() As Text)
 		  // Takes an array of characters and removes contiguous whitespace 
 		  // characters from the end of it.

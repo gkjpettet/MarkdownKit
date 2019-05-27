@@ -16,8 +16,8 @@ Protected Class Block
 		    line.Number.ToText + " to closed container " + Self.Type.ToText)
 		  End If
 		  
-		  length = If(length = -1, line.CharsUbound - line.Offset + 1, length)
-		  If length <= 0 Then Return
+		  Dim len As Integer = If(length = -1, line.CharsUbound - line.Offset + 1, length)
+		  If len <= 0 Then Return
 		  
 		  Dim tmp() As Text
 		  Dim i As Integer
@@ -27,7 +27,7 @@ Protected Class Block
 		  For i = 1 To line.RemainingSpaces
 		    tmp.Append(" ")
 		  Next i
-		  Dim limit As Integer = startPos + length - 1
+		  Dim limit As Integer = Xojo.Math.Min(line.Chars.Ubound, startPos + len - 1)
 		  For i = startPos To limit
 		    tmp.Append(line.Chars(i))
 		  Next i

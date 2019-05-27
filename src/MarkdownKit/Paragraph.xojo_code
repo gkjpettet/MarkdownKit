@@ -38,6 +38,25 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub Finalise(line As MarkdownKit.LineInfo)
+		  // Calling the overridden superclass method.
+		  Super.Finalise(line)
+		  
+		  // Strip leading and trailing whitespace.
+		  Dim rt As MarkdownKit.RawText
+		  If Children.Ubound >= 0 Then
+		    // Leading...
+		    rt = MarkdownKit.RawText(Children(0))
+		    StripLeadingWhitespace(rt.Chars)
+		    // Trailing.
+		    rt = MarkdownKit.RawText(Children(Children.Ubound))
+		    StripTrailingWhitespace(rt.Chars)
+		  End If
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 	#tag EndViewBehavior

@@ -257,31 +257,6 @@ Inherits MarkdownKit.Block
 		      // Do nothing?
 		      
 		    ElseIf container.Type = MarkdownKit.BlockType.AtxHeading Then
-		      #Pragma Warning "BROKEN: Line not being added to the heading"
-		      #Pragma Warning "May be an off-by-1 error in Scanner.ScanATXHeadingStart"
-		      Dim p As Integer = line.CharsUbound
-		      
-		      // Trim trailing spaces.
-		      While p >= 0 And (line.Chars(p) = " " Or line.Chars(p) = &u0009)
-		        p = p - 1
-		      Wend
-		      
-		      Dim px As Integer = p
-		      
-		      // If the line end in #s, remove them.
-		      while p >= 0 And line.Chars(p) = "#"
-		        p = p - 1
-		      Wend
-		      
-		      // There must be a space before the last #.
-		      If p < 0 Or (line.Chars(p) <> " " And line.Chars(p) <> &u0009) Then p = px
-		      
-		      // Trim trailing spaces that are before the closing #s.
-		      While p >= line.NextNWS And (line.Chars(p) = " " Or line.Chars(p) = &u0009)
-		        p = p - 1
-		      Wend
-		      
-		      container.AddLine(line, line.NextNWS, p - line.NextNWS + 1)
 		      container.Finalise(line)
 		      container = container.Parent
 		      

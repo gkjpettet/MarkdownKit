@@ -7,6 +7,39 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub Finalise(line As MarkdownKit.LineInfo)
+		  Dim p As Integer = line.CharsUbound
+		  
+		  // Trim trailing spaces.
+		  While p >= 0 And (line.Chars(p) = " " Or line.Chars(p) = &u0009)
+		    p = p - 1
+		  Wend
+		  
+		  Dim px As Integer = p
+		  
+		  // If the line ends in #s, remove them.
+		  while p >= 0 And line.Chars(p) = "#"
+		    p = p - 1
+		  Wend
+		  
+		  // There must be a space before the last #.
+		  If p < 0 Or (line.Chars(p) <> " " And line.Chars(p) <> &u0009) Then p = px
+		  
+		  // Trim trailing spaces that are before the closing #s.
+		  While p >= line.NextNWS And (line.Chars(p) = " " Or line.Chars(p) = &u0009)
+		    p = p - 1
+		  Wend
+		  
+		  // Add this line only if there is content.
+		  If p - line.NextNWS > -1 Then AddLine(line, line.NextNWS, p - line.NextNWS + 1)
+		  
+		  // Close this block.
+		  Self.IsOpen = False
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
 		Level As Integer = 0

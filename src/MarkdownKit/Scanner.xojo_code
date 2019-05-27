@@ -2,55 +2,55 @@
 Protected Class Scanner
 	#tag Method, Flags = &h0
 		Shared Function ScanATXHeadingStart(chars() As Text, pos As Integer, ByRef headingLevel As Integer, ByRef length As Integer) As Integer
-		  headingLevel = 1
+		  // Checks to see if there is a valid ATX heading start.
+		  // We are passed the characters of the line as an array and the position we 
+		  // should consider to be the first character. 
+		  // The method assumes that leading spaces have been skipped over during 
+		  // calculation of `pos` so the first character should be a #.
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  
-		  If pos + 1 > charsUbound Then
-		    length = 0
-		    Return length
-		  End If
+		  // Reset the ByRef variables.
+		  length = 0
+		  headingLevel = 0
 		  
-		  If chars(pos) <> "#" Then
-		    length = 0
-		    Return length
-		  End If
+		  // Sanity check.
+		  If pos > charsUbound Then Return 0
+		  If chars(pos) <> "#" Then Return 0
 		  
-		  Dim spaceExists As Boolean = False
-		  
+		  // An ATX heading consists of a string of characters, starting with an 
+		  // opening sequence of 1–6 unescaped # characters.
 		  Dim i As Integer
-		  Dim c As Text
-		  For i = pos + 1 To charsUbound
-		    c = chars(i)
-		    
-		    If c = "#" Then
-		      If headingLevel = 6 Then
-		        length = 0
-		        Return length
-		      End If
-		      
-		      If spaceExists Then
-		        length = i - pos
-		        Return length
-		      Else
-		        headingLevel = headingLevel + 1
-		      End If
-		      
-		    ElseIf c = " " Or c = &u0009 Then
-		      spaceExists = True
-		      
-		    ElseIf c = "" Then
-		      length = i - pos + 1
-		      Return length
+		  For i = pos To charsUbound
+		    If chars(i) = "#" Then
+		      headingLevel = headingLevel + 1
+		      If headingLevel > 6 Then Return 0
 		    Else
-		      length = If(spaceExists, i - pos, 0)
-		      Return length
+		      Exit
 		    End If
 		  Next i
+		  If headingLevel = 0 Then Return 0
 		  
-		  length = If(spaceExists, (charsUbound + 1) - pos, 0)
-		  
-		  Return length
+		  // The opening sequence of #s must be followed by a space, a tab or the EOL.
+		  If (pos + headingLevel) > charsUbound Then
+		    length = headingLevel
+		    Return length
+		  ElseIf chars(pos + headingLevel) = " " Or chars(pos + headingLevel) = &u0009 Then
+		    // This is a valid opening sequence. Keep consuming whitespace to determine 
+		    // the full length of the opening sequence.
+		    length = headingLevel
+		    For i = pos + headingLevel To charsUbound
+		      Select Case chars(i)
+		      Case " ", &u0009
+		        length = length + 1
+		      Else
+		        Exit
+		      End Select
+		    Next i
+		    Return length
+		  Else
+		    Return 0
+		  End If
 		  
 		End Function
 	#tag EndMethod

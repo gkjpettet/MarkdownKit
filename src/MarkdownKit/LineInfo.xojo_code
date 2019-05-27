@@ -120,9 +120,6 @@ Protected Class LineInfo
 		  // Is the entire line blank?
 		  If IsBlank Then CurrentChar = ""
 		  
-		  // Is the remainder of the line blank?
-		  If Offset <> 0 And CurrentChar = "" Then Return
-		  
 		  Dim charsToNextTabStop As Integer = kTabSize - (Column Mod kTabSize)
 		  NextNWS = Offset
 		  NextNWSColumn = Column

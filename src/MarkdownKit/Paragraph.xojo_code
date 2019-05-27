@@ -8,7 +8,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer)
+		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer, length As Integer = -1)
 		  // Calling the overridden superclass method.
 		  Super.AddLine(line, startPos)
 		  
@@ -19,16 +19,16 @@ Inherits MarkdownKit.Block
 		    
 		    If charsUbound > 1 And rt.Chars(charsUbound) = " " And _ 
 		      rt.Chars(charsUbound - 1) = " " Then
-		      // The preceding line ended with two spaces. This is a hard line break.
-		      Children.Append(New MarkdownKit.Hardbreak(line.Number - 1))
+		      // The preceding line ended with two spaces. Prepend a hard line break.
+		      Children.Insert(Children.Ubound, New MarkdownKit.Hardbreak(line.Number - 1))
 		    ElseIf rt.Chars(charsUbound) = "\" Then
 		      // A backslash at the end of the preceding lines indicates a hard break.
-		      Children.Append(New MarkdownKit.Hardbreak(line.Number - 1))
+		      Children.Insert(Children.Ubound, New MarkdownKit.Hardbreak(line.Number - 1))
 		      // Remove the trailing backslash from the preceding line.
 		      rt.Chars.Remove(rt.Chars.Ubound)
 		    Else
-		      // Soft line break.
-		      Children.Append(New MarkdownKit.Softbreak(line.Number - 1))
+		      // Prepend a soft line break.
+		      Children.Insert(Children.Ubound, New MarkdownKit.Softbreak(line.Number - 1))
 		    End If
 		    
 		    // Strip the trailing whitespace from the end of the preceding line.

@@ -7,7 +7,7 @@ Protected Class Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer)
+		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer, length As Integer = -1)
 		  // Add the passed line to this Block.
 		  // May be overridden by subclasses if more complicated tasks are required.
 		  
@@ -15,6 +15,9 @@ Protected Class Block
 		    Raise New MarkdownKit.MarkdownException("Attempted to add line " + _
 		    line.Number.ToText + " to closed container " + Self.Type.ToText)
 		  End If
+		  
+		  length = If(length = -1, line.CharsUbound - line.Offset + 1, length)
+		  If length <= 0 Then Return
 		  
 		  Dim tmp() As Text
 		  Dim i As Integer
@@ -24,7 +27,8 @@ Protected Class Block
 		  For i = 1 To line.RemainingSpaces
 		    tmp.Append(" ")
 		  Next i
-		  For i = startPos To line.CharsUbound
+		  Dim limit As Integer = startPos + length - 1
+		  For i = startPos To limit
 		    tmp.Append(line.Chars(i))
 		  Next i
 		  
@@ -105,6 +109,8 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.Softbreak
 		  ElseIf Self IsA MarkdownKit.Hardbreak Then
 		    mType = MarkdownKit.BlockType.Hardbreak
+		  ElseIf Self Isa MarkdownKit.ATXHeading Then
+		    mType = MarkdownKit.BlockType.AtxHeading
 		  Else
 		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
 		  End If

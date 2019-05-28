@@ -120,6 +120,8 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.SetextHeading
 		  ElseIf Self IsA MarkdownKit.ThematicBreak Then
 		    mType = MarkdownKit.BlockType.ThematicBreak
+		  ElseIf Self IsA MarkdownKit.ListItem Then
+		    mType = MarkdownKit.BlockType.ListItem
 		  Else
 		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
 		  End If

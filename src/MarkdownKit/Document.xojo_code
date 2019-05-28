@@ -7,8 +7,8 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Shared Function AcceptsLines(type As MarkdownKit.BlockType) As Boolean
+	#tag Method, Flags = &h0
+		Shared Function AcceptsLines(type As MarkdownKit.BlockType) As Boolean
 		  // Returns True if the queried Block type accepts lines.
 		  
 		  Return type = BlockType.Paragraph Or _
@@ -163,6 +163,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.SetextHeading(line.Number, startPos, startColumn)
 		  Case BlockType.ThematicBreak
 		    child = New MarkdownKit.ThematicBreak(line.Number, startPos, startColumn)
+		  Case BlockType.ListItem
+		    child = New MarkdownKit.ListItem(line.Number, startPos, startColumn)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -372,7 +374,7 @@ Inherits MarkdownKit.Block
 		      line.NextNWSColumn)
 		      
 		    ElseIf Not indented And line.CurrentChar = "#" And _
-		       0 <> Scanner.ScanAtxHeadingStart(line.Chars, line.NextNWS, _ 
+		      0 <> Scanner.ScanAtxHeadingStart(line.Chars, line.NextNWS, _ 
 		      tmpInt1, tmpInt2) Then
 		      // ============= New ATX heading =============
 		      line.AdvanceOffset(line.NextNWS + tmpInt2 - line.Offset, False)
@@ -520,6 +522,54 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsLastLineBlank"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="StartColumn"
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LineNumber"
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="StartPosition"
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Type"
+			Group="Behavior"
+			Type="MarkdownKit.BlockType"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Document"
+				"1 - BlockQuote"
+				"2 - List"
+				"3 - ListItem"
+				"4 - FencedCode"
+				"5 - IndentedCode"
+				"6 - HtmlBlock"
+				"7 - Paragraph"
+				"8 - AtxHeading"
+				"9 - SetextHeading"
+				"10 - ThematicBreak"
+				"11 - ReferenceDefinition"
+				"12 - Block"
+				"13 - RawText"
+				"14 - Softbreak"
+				"15 - Hardbreak"
+			#tag EndEnumValues
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsOpen"
 			Group="Behavior"

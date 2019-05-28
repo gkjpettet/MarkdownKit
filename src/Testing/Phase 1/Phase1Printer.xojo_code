@@ -1,6 +1,6 @@
 #tag Class
 Protected Class Phase1Printer
-Implements  Global.MarkdownKit.IWalker
+Implements Global.MarkdownKit.IWalker
 	#tag Method, Flags = &h21
 		Private Function CurrentIndent() As Text
 		  // Given the current indentation level (specified by mCurrentIndent), this 
@@ -157,6 +157,24 @@ Implements  Global.MarkdownKit.IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitListItem(li As MarkdownKit.ListItem)
+		  // Part of the MarkdownKit.IWalker interface.
+		  
+		  mOutput.Append(CurrentIndent + "<item>")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In li.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</item>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitParagraph(p As MarkdownKit.Paragraph)
 		  // Part of the IWalker interface.
 		  
@@ -308,6 +326,17 @@ Implements  Global.MarkdownKit.IWalker
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Output"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Pretty"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

@@ -19,12 +19,8 @@ Protected Class LineInfo
 		  
 		  Dim charsToTabStop As Integer
 		  Do
-		    // If count <= 0 Or Offset > CharsUbound Then
-		    // CurrentChar = ""
-		    // Exit
-		    // End If
-		    
-		    If count = 0 Then Exit
+		    // If count = 0 Then Exit
+		    If count <= 0 Then Exit
 		    
 		    If Offset > CharsUbound Then
 		      CurrentChar = ""

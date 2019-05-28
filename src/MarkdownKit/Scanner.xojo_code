@@ -136,6 +136,51 @@ Protected Class Scanner
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Shared Function ScanThematicBreak(chars() As Text, pos As Integer) As Integer
+		  // Scan for a thematic break line.
+		  // Valid thematic break lines consist of >= 3 dashes, underscores or asterixes 
+		  // which may be optionally separated by any amount of spaces or tabs whitespace.
+		  // The characters must match.
+		  ' ^([-][ ]*){3,}[\s]*$"
+		  ' ^([_][ ]*){3,}[\s]*$"
+		  ' ^([\*][ ]*){3,}[\s]*$"
+		  // Returns the length of the matching thematic break.
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  Dim count As Integer = 0
+		  Dim i As Integer
+		  Dim c, tbChar As Text
+		  
+		  For i = pos To charsUbound
+		    c = chars(i)
+		    If c = " " Or c = &u0009 Then
+		      Continue
+		    ElseIf count = 0 Then
+		      Select Case c
+		      Case "-", "_", "*"
+		        tbChar = c
+		        count = count + 1
+		      Else
+		        Return 0
+		      End Select
+		    ElseIf c = tbChar Then
+		      count = count + 1
+		    Else
+		      Return 0
+		    End If
+		  Next i
+		  
+		  If count < 3 Then
+		    Return 0
+		  Else
+		    Return charsUbound + 1 - pos
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

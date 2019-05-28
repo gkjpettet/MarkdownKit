@@ -345,6 +345,17 @@ Inherits MarkdownKit.Block
 		      FencedCode(container).FenceOffset = line.NextNWS - line.Offset
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
 		      
+		    ElseIf Not indented And _
+		      Not (container.Type = BlockType.Paragraph And Not line.AllMatched) And _
+		      0 <> Scanner.ScanThematicBreak(line.Chars, line.NextNWS) Then
+		      // ============= New thematic break =============
+		      // It's only now that we know that the line is not part of a setext heading.
+		      container = CreateChildBlock(container, line, BlockType.ThematicBreak, _
+		      line.NextNWS, line.NextNWSColumn)
+		      container.Finalise(line)
+		      container = container.Parent
+		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
+		      
 		    ElseIf indented And Not maybeLazy And Not blank Then
 		      // ============= New indented code block =============
 		      line.AdvanceOffset(kCodeIndent, True)
@@ -374,7 +385,8 @@ Inherits MarkdownKit.Block
 		  Const kCodeIndent = 4
 		  Dim indent As Integer
 		  Dim blank As Boolean
-		  Dim allMatched As Boolean = True
+		  
+		  line.AllMatched = True
 		  
 		  While container.LastChild <> Nil And container.LastChild.IsOpen
 		    
@@ -392,7 +404,7 @@ Inherits MarkdownKit.Block
 		        line.AdvanceOffset(indent + 1, True)
 		        Call line.AdvanceOptionalSpace
 		      Else
-		        allMatched = False
+		        line.AllMatched = False
 		      End If
 		      
 		    Case BlockType.IndentedCode
@@ -401,18 +413,18 @@ Inherits MarkdownKit.Block
 		      ElseIf blank Then
 		        line.AdvanceOffset(line.NextNWS - line.Offset, False)
 		      Else
-		        allMatched = False
+		        line.AllMatched = False
 		      End If
 		      
 		    Case BlockType.AtxHeading, BlockType.SetextHeading
 		      // A heading can never contain more than one line.
-		      allMatched = False
+		      line.AllMatched = False
 		      If blank Then container.IsLastLineBlank = True
 		      
 		    Case BlockType.FencedCode
 		      // -1 means we've seen closer 
 		      If MarkdownKit.FencedCode(container).FenceLength = -1 Then
-		        allMatched = False
+		        line.AllMatched = False
 		        If blank Then container.IsLastLineBlank = True
 		      Else
 		        // Skip optional spaces of fence offset.
@@ -428,11 +440,11 @@ Inherits MarkdownKit.Block
 		    Case MarkdownKit.BlockType.Paragraph
 		      If blank Then
 		        container.IsLastLineBlank = True
-		        allMatched = False
+		        line.AllMatched = False
 		      End If
 		    End Select
 		    
-		    If Not allMatched Then
+		    If Not line.AllMatched Then
 		      // Back up to the last matching block.
 		      container = container.Parent
 		      Exit

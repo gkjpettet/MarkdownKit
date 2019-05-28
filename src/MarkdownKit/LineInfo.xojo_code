@@ -153,6 +153,10 @@ Protected Class LineInfo
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h0
+		AllMatched As Boolean = True
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 416E206172726179206F662074686520696E646976696475616C2063686172616374657273206F662074686973206C696E652E
 		Chars() As Text
 	#tag EndProperty

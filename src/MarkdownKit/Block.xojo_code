@@ -48,6 +48,8 @@ Protected Class Block
 		  Self.StartPosition = startPos
 		  Self.StartColumn = startColumn
 		  SetType
+		  Self.ListData = New MarkdownKit.ListData
+		  
 		End Sub
 	#tag EndMethod
 
@@ -144,6 +146,10 @@ Protected Class Block
 
 	#tag Property, Flags = &h0, Description = 546865206C696E65206E756D6265722074686174207468697320626C6F636B20626567696E73206F6E2E
 		LineNumber As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		ListData As MarkdownKit.ListData
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

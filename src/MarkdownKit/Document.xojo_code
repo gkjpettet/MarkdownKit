@@ -356,6 +356,7 @@ Inherits MarkdownKit.Block
 		  Const kCodeIndent = 4
 		  Dim indent, tmpInt1, tmpInt2 As Integer
 		  Dim blank, indented As Boolean
+		  Dim tmpData As MarkdownKit.ListData
 		  
 		  While container.Type <> BlockType.FencedCode And _
 		    container.Type <> BlockType.IndentedCode And _
@@ -413,6 +414,48 @@ Inherits MarkdownKit.Block
 		      container = container.Parent
 		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
 		      
+		    ElseIf (Not indented Or container.Type = BlockType.List) And _
+		      0 <> ParseListMarker(line.Chars, line.NextNWS, container.Type = BlockType.Paragraph, tmpData) Then
+		      ' tmpint1 = matched
+		      
+		      // Compute padding.
+		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
+		      
+		      Dim prevOffset As Integer = line.Offset
+		      Dim prevColumn As Integer = line.Column
+		      Dim prevRemainingSpaces As Integer = line.RemainingSpaces
+		      
+		      While line.Column - prevColumn <= kCodeIndent
+		        If Not line.AdvanceOptionalSpace Then Exit
+		      Wend
+		      
+		      If line.Column = prevColumn Then
+		        // No spaces at all.
+		        tmpData.Padding = tmpInt1 + 1
+		      ElseIf line.Column - prevColumn > kCodeIndent Or line.CurrentChar = "" Then
+		        tmpData.Padding = tmpInt1 + 1
+		        // Too many (or no) spaces, ignoring everything but the first one.
+		        line.Offset = prevOffset
+		        line.Column = prevColumn
+		        line.RemainingSpaces = prevRemainingSpaces
+		        Call line.AdvanceOptionalSpace
+		      Else
+		        tmpData.Padding = tmpInt1 + line.Column - prevColumn
+		      End If
+		      
+		      // Check the container. If it's a list, see if this list item
+		      // can continue the list. Otherwise, create a list container.
+		      tmpData.MarkerOffset = indent
+		      
+		      If container.Type <> BlockType.List Or Not ListsMatch(container.ListData, tmpData) Then
+		        container = CreateChildBlock(container, line, BlockType.List, line.NextNWS, line.NextNWSColumn)
+		        container.ListData = tmpData
+		      End If
+		      
+		      // Add the list item.
+		      container = CreateChildBlock(container, line, BlockType.ListItem, line.NextNWS, line.NextNWSColumn)
+		      container.ListData = tmpData
+		      
 		    ElseIf indented And Not maybeLazy And Not blank Then
 		      // ============= New indented code block =============
 		      line.AdvanceOffset(kCodeIndent, True)
@@ -460,6 +503,18 @@ Inherits MarkdownKit.Block
 		      If indent <= 3 And line.CurrentChar= ">" Then
 		        line.AdvanceOffset(indent + 1, True)
 		        Call line.AdvanceOptionalSpace
+		      Else
+		        line.AllMatched = False
+		      End If
+		      
+		    Case BlockType.ListItem
+		      If indent >= container.ListData.MarkerOffset + container.ListData.Padding Then
+		        line.AdvanceOffset(container.ListData.MarkerOffset + container.ListData.Padding, True)
+		      ElseIf blank And container.FirstChild <> Nil Then
+		        // If container.FirstChild is Nil, then the opening line
+		        // of the list item was blank after the list marker. In this
+		        // case, we are done with the list item.
+		        line.AdvanceOffset(line.NextNWS - line.Offset, False)
 		      Else
 		        line.AllMatched = False
 		      End If

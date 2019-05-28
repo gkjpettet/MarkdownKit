@@ -1,9 +1,9 @@
 #tag Class
-Protected Class ListItem
+Protected Class List
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
 		Sub Accept(visitor As MarkdownKit.IWalker)
-		  visitor.VisitListItem(Self)
+		  visitor.VisitList(Self)
 		End Sub
 	#tag EndMethod
 

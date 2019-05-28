@@ -157,6 +157,40 @@ Implements Global.MarkdownKit.IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitList(theList As MarkdownKit.List)
+		  // Part of the MarkdownKit.IWalker interface.
+		  
+		  Const Q = """"
+		  
+		  // Construct the list header.
+		  Dim header As Text
+		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
+		    header = "type=" + Q + "ordered" + Q + " start=" + Q + _
+		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _
+		    If(theList.ListData.IsTight, "true", "false") + Q + " delimiter=" + _
+		    Q + If(theList.ListData.ListDelimiter = MarkdownKit.ListDelimiter.Period, ".", ")") + Q
+		  ElseIf theList.ListData.ListType = MarkdownKit.ListType.Bullet Then
+		    header = "type=" + Q + "bullet" + Q + " start=" + Q + _
+		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _
+		    If(theList.ListData.IsTight, "true", "false") + Q
+		  End If
+		  
+		  mOutput.Append(CurrentIndent + "<list " + header + ">")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In theList.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</list>")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitListItem(li As MarkdownKit.ListItem)
 		  // Part of the MarkdownKit.IWalker interface.
 		  

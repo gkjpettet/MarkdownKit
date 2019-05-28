@@ -87,6 +87,53 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Function ConvertParagraphBlockToSetextHeading(ByRef p As MarkdownKit.Block) As MarkdownKit.Block
+		  // Remove the passed Paragraph block (`b`) from its parent and replace it with a new 
+		  // SetextHeading block with the same children.
+		  // Returns the newly created SetextHeading.
+		  
+		  // Get a reference to the passed paragraph's parent.
+		  Dim paraParent As MarkdownKit.Block = p.Parent
+		  
+		  // Get the index of the passed paragraph in its parent's Children array.
+		  Dim index As Integer = paraParent.Children.IndexOf(p)
+		  If index = -1 Then
+		    Raise New MarkdownKit.MarkdownException("Unable to convert paragraph block to setext heading")
+		  End If
+		  
+		  // Create a new SetextHeading block to replace the paragraph.
+		  Dim stx As New MarkdownKit.SetextHeading(p.LineNumber, p.StartPosition, p.StartColumn)
+		  
+		  // Copy the paragraph's children to this SetextHeading.
+		  Dim pChildrenUbound As Integer = p.Children.Ubound
+		  Dim i As Integer
+		  For i = 0 To pChildrenUbound
+		    stx.Children.Append(p.Children(i))
+		  Next i
+		  
+		  // Remove the paragraph from its parent.
+		  paraParent.Children.Remove(index)
+		  
+		  // Insert our new SetextHeading.
+		  If index = 0 Then
+		    paraParent.Children.Append(stx)
+		  Else
+		    paraParent.Children.Insert(index, stx)
+		  End If
+		  
+		  // Assign the parent.
+		  stx.Parent = paraParent
+		  
+		  // Nil out the old paragraph.
+		  p = Nil
+		  
+		  // Return the new SetextHeading.
+		  Return stx
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, Description = 416464732061206E657720626C6F636B206173206368696C64206F6620616E6F746865722E2052657475726E7320746865206368696C642E
 		Shared Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, startPos As Integer, startColumn As Integer) As MarkdownKit.Block
 		  // Create a new Block of the specified type, add it as a child of theParent and 
@@ -344,6 +391,14 @@ Inherits MarkdownKit.Block
 		      FencedCode(container).FenceLength = tmpInt1
 		      FencedCode(container).FenceOffset = line.NextNWS - line.Offset
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
+		      
+		    ElseIf Not indented And container.Type = BlockType.Paragraph And _
+		      (line.CurrentChar = "=" Or line.CurrentChar = "-") And _
+		      0 <> Scanner.ScanSetextHeadingLine(line.Chars, line.NextNWS, tmpInt1) Then
+		      // ============= New setext heading =============
+		      container = ConvertParagraphBlockToSetextHeading(container)
+		      MarkdownKit.SetextHeading(container).Level = tmpInt1
+		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
 		      
 		    ElseIf Not indented And _
 		      Not (container.Type = BlockType.Paragraph And Not line.AllMatched) And _

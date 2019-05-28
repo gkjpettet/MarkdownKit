@@ -137,6 +137,53 @@ Protected Class Scanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function ScanSetextHeadingLine(chars() As Text, pos As Integer, ByRef level As Integer) As Integer
+		  // Attempts to match a setext heading line. 
+		  // Returns the heading level (1 or 2) or 0 if this is not a setext heading line.
+		  // We also set the ByRef `level` variable to the heading level or 0.
+		  ' ^[=]+[ ]*$
+		  ' ^[-]+[ ]*$
+		  
+		  // Reset the ByRef parameter.
+		  level = 0
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  If pos > charsUbound Then Return 0
+		  
+		  Dim c As Text = chars(pos)
+		  Dim stxChar As Text
+		  If c <> "=" And c <> "-" Then
+		    Return 0
+		  Else
+		    stxChar = c
+		  End If
+		  If pos + 1 > charsUbound Then
+		    level = If(c = "=", 1, 2)
+		    Return level
+		  End If
+		  
+		  Dim i As Integer
+		  Dim done As Boolean = False
+		  For i = pos + 1 To charsUbound
+		    c = chars(i)
+		    
+		    If c = stxChar And Not Done Then Continue
+		    
+		    // Not a  "=" or "-" character.
+		    done = True
+		    
+		    If c = " " Or c = &u0009 Then Continue
+		    
+		    level = 0
+		    Return 0
+		  Next i
+		  
+		  level = If(c = "=", 1, 2)
+		  Return level
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ScanThematicBreak(chars() As Text, pos As Integer) As Integer
 		  // Scan for a thematic break line.
 		  // Valid thematic break lines consist of >= 3 dashes, underscores or asterixes 

@@ -54,6 +54,24 @@ Protected Class Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function EndsWithBlankLine(b As MarkdownKit.Block) As Boolean
+		  // Check to see if the passed block ends with a blank line, 
+		  // descending if needed into lists and sublists.
+		  
+		  Do
+		    If b.IsLastLineBlank Then Return True
+		    
+		    If b.Type <> BlockType.List And b.Type <> BlockType.ListItem Then Return False
+		    
+		    b = b.LastChild
+		    
+		    If b = Nil Then Return False
+		  Loop
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Finalise(line As MarkdownKit.LineInfo)
 		  // This generic base method simply closes this block.
 		  // Subclasses can override this method if they have more complicated needs 
@@ -124,6 +142,8 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.ThematicBreak
 		  ElseIf Self IsA MarkdownKit.ListItem Then
 		    mType = MarkdownKit.BlockType.ListItem
+		  ElseIf Self IsA MarkdownKit.List Then
+		    mType = MarkdownKit.BlockType.List
 		  Else
 		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
 		  End If
@@ -156,8 +176,16 @@ Protected Class Block
 		Private mType As MarkdownKit.BlockType = MarkdownKit.BlockType.Block
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 546865206E657874207369626C696E67206F66207468697320626C6F636B20656C656D656E742E204E696C206966207468697320697320746865206C61737420656C656D656E742E
+		NextSibling As MarkdownKit.Block
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 5468697320426C6F636B277320706172656E742028692E653A20656E636C6F73696E672920426C6F636B2E2057696C6C206265204E696C206966207468697320426C6F636B2069732074686520726F6F7420446F63756D656E742E
 		Parent As MarkdownKit.Block
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 5468652070726576696F7573207369626C696E67206F66207468697320626C6F636B20656C656D656E742E204E696C20696620746869732069732074686520666972737420656C656D656E742E
+		Previous As MarkdownKit.Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

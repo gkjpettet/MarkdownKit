@@ -165,6 +165,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.ThematicBreak(line.Number, startPos, startColumn)
 		  Case BlockType.ListItem
 		    child = New MarkdownKit.ListItem(line.Number, startPos, startColumn)
+		  Case BlockType.List
+		    child = New MarkdownKit.List(line.Number, startPos, startColumn)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -173,11 +175,27 @@ Inherits MarkdownKit.Block
 		  
 		  child.Parent = theParent
 		  
+		  #Pragma Warning "The next If block needs testing"
+		  Dim mLastChild As MarkdownKit.Block = theParent.LastChild
+		  If mLastChild <> Nil Then
+		    mLastChild.NextSibling = child
+		    child.Previous = mLastChild
+		  End If
+		  
 		  // Insert the child into the parent's tree.
 		  theParent.Children.Append(child)
 		  
 		  // Return the new child block.
 		  Return child
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ListsMatch(listData As MarkdownKit.ListData, itemData As MarkdownKit.ListData) As Boolean
+		  Return listData.ListType = itemData.ListType And _
+		  listData.ListDelimiter = itemData.ListDelimiter And _
+		  listData.BulletChar = itemData.BulletChar
 		  
 		End Function
 	#tag EndMethod
@@ -415,8 +433,8 @@ Inherits MarkdownKit.Block
 		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
 		      
 		    ElseIf (Not indented Or container.Type = BlockType.List) And _
-		      0 <> ParseListMarker(line.Chars, line.NextNWS, container.Type = BlockType.Paragraph, tmpData) Then
-		      ' tmpint1 = matched
+		      0 <> Scanner.ParseListMarker(line.Chars, line.NextNWS, _
+		      container.Type = BlockType.Paragraph, tmpData, tmpInt1) Then
 		      
 		      // Compute padding.
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)

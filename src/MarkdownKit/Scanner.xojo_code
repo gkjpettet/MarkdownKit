@@ -1,6 +1,91 @@
 #tag Class
 Protected Class Scanner
 	#tag Method, Flags = &h0
+		Shared Function ParseListMarker(chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
+		  // Attempts to parse a ListItem marker (bullet or enumerated).
+		  // On success, it returns the length of the marker, and populates
+		  // data with the details.  On failure it returns 0.
+		  // Also populates the ByRef `length` parameter to the computed length.
+		  
+		  Dim c As Text
+		  Dim startPos As Integer
+		  data = Nil
+		  length = 0
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  If pos > charsUbound Then Return 0
+		  
+		  startPos = pos
+		  c = chars(pos)
+		  
+		  If c = "+" Or c = "•" Or ((c = "*" Or c = "-") And _
+		    0 = Scanner.ScanThematicBreak(chars, pos)) Then
+		    pos = pos + 1
+		    
+		    If pos > charsUbound Or Not IsWhitespace(chars(pos)) Then Return 0
+		    
+		    If interruptsParagraph And _
+		    Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1 Then Return 0
+		    
+		    data = New MarkdownKit.ListData
+		    data.BulletChar = c
+		    data.Start = 1
+		    
+		  ElseIf c = "0" Or c = "1" Or c = "2" Or c = "3" Or c = "4" Or c = "5" Or _
+		    c = "6" Or c = "7" Or c = "8" Or c = "9" Then
+		    Dim numDigits As Integer = 0
+		    Dim startText As Text
+		    Dim limit As Integer = Min(chars.Ubound, startPos + 8)
+		    For i As Integer = startPos To limit
+		      c = chars(i)
+		      Select Case c
+		      Case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+		        // Max 9 digits to avoid integer overflows in some browsers.
+		        If numDigits = 9 Then Return 0
+		        numDigits = numDigits + 1
+		        startText = startText + c
+		      Else
+		        Exit
+		      End Select
+		    Next i
+		    Dim start As Integer = Integer.FromText(startText)
+		    pos = pos + numDigits
+		    // pos now points to the character after the last digit.
+		    If pos > charsUbound Then Return 0
+		    
+		    // Need to find a period or parenthesis.
+		    c = chars(pos)
+		    If c <> "." And c <> ")" Then Return 0
+		    pos = pos + 1
+		    
+		    // The next character must be whitespace.
+		    If pos > charsUbound Or Not IsWhiteSpace(chars(pos)) Then Return 0
+		    
+		    If interruptsParagraph And _
+		      (start <> 1 Or _
+		      Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1) Then
+		      Return 0
+		    End If
+		    
+		    data = New MarkdownKit.ListData
+		    data.ListType = MarkdownKit.ListType.Ordered
+		    data.BulletChar = ""
+		    data.Start = start
+		    data.ListDelimiter = If(c = ".", _
+		    MarkdownKit.ListDelimiter.Period, MarkdownKit.ListDelimiter.Parenthesis)
+		  Else
+		    Return 0
+		    
+		  End If
+		  
+		  length = pos - startPos
+		  Return pos - startPos
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ScanATXHeadingStart(chars() As Text, pos As Integer, ByRef headingLevel As Integer, ByRef length As Integer) As Integer
 		  // Checks to see if there is a valid ATX heading start.
 		  // We are passed the characters of the line as an array and the position we 
@@ -180,6 +265,24 @@ Protected Class Scanner
 		  
 		  level = If(c = "=", 1, 2)
 		  Return level
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanSpaceChars(chars() As Text, pos As Integer) As Integer
+		  // Match space and tab characters.
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  If pos > charsUbound Then Return 0
+		  
+		  Dim i As Integer
+		  For i = pos To charsUbound
+		    If Not IsWhiteSpace(chars(pos)) Then Return i - pos
+		  Next i
+		  
+		  Return (charsUbound + 1)- pos
+		  
 		End Function
 	#tag EndMethod
 

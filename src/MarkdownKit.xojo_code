@@ -74,6 +74,18 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function IsWhitespace(char As Text) As Boolean
+		  Select Case char
+		  Case " ", &u0009, ""
+		    Return True
+		  Else
+		    Return False
+		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Sub StripLeadingWhitespace(chars() As Text)
 		  // Takes a ByRef array of characters and removes contiguous whitespace 
 		  // characters from the beginning of it.

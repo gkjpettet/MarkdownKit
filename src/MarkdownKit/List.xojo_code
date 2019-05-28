@@ -7,6 +7,44 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub Finalise(line As MarkdownKit.LineInfo)
+		  // Calling the overridden superclass method.
+		  Super.Finalise(line)
+		  
+		  // Determine tight/loose status of the list.
+		  Self.ListData.IsTight = True // Tight by default.
+		  
+		  Dim item As MarkdownKit.Block = Self.FirstChild
+		  Dim subItem As MarkdownKit.Block
+		  
+		  While item <> Nil
+		    
+		    // Check for a non-final non-empty ListItem ending with blank line.
+		    If item.IsLastLineBlank And item.NextSibling <> Nil Then
+		      Self.ListData.IsTight = False
+		      Exit
+		    End If
+		    
+		    // Recurse into the children of the ListItem, to see if there are spaces between them.
+		    subitem = item.FirstChild
+		    
+		    While subItem <> Nil
+		      If EndsWithBlankLine(subItem) And (item.NextSibling <> Nil Or subitem.NextSibling <> Nil) Then
+		        Self.ListData.IsTight = False
+		        Exit
+		      End If
+		      subItem = subitem.NextSibling
+		    Wend
+		    
+		    If Not Self.ListData.IsTight Then Exit
+		    
+		    item = item.NextSibling
+		  Wend
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

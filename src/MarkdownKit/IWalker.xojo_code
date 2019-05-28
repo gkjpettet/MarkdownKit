@@ -66,6 +66,12 @@ Protected Interface IWalker
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub VisitThematicBreak(tb As MarkdownKit.ThematicBreak)
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

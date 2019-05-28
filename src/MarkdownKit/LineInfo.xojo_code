@@ -3,7 +3,8 @@ Protected Class LineInfo
 	#tag Method, Flags = &h0
 		Sub AdvanceOffset(count As Integer, columns As Boolean)
 		  // Advance the offset by the specified number of places.
-		  #Pragma Warning "TODO: When/why is `columns` set?"
+		  // If `columns` is set to True then we need to take into consideration 
+		  // tab stops.
 		  
 		  If columns Then
 		    If RemainingSpaces > count Then

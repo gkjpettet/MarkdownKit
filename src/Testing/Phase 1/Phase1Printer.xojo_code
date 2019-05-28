@@ -216,6 +216,18 @@ Implements  Global.MarkdownKit.IWalker
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub VisitThematicBreak(tb As MarkdownKit.ThematicBreak)
+		  // Part of the MarkdownKit.IWalker interface.
+		  
+		  #Pragma Unused tb
+		  
+		  mOutput.Append(CurrentIndent + "<thematic_break />")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag ComputedProperty, Flags = &h21
 		#tag Getter

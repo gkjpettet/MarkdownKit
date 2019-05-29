@@ -168,10 +168,9 @@ Implements Global.MarkdownKit.IWalker
 		    header = "type=" + Q + "ordered" + Q + " start=" + Q + _
 		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _
 		    If(theList.ListData.IsTight, "true", "false") + Q + " delimiter=" + _
-		    Q + If(theList.ListData.ListDelimiter = MarkdownKit.ListDelimiter.Period, ".", ")") + Q
+		    Q + If(theList.ListData.ListDelimiter = MarkdownKit.ListDelimiter.Period, "period", "paren") + Q
 		  ElseIf theList.ListData.ListType = MarkdownKit.ListType.Bullet Then
-		    header = "type=" + Q + "bullet" + Q + " start=" + Q + _
-		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _
+		    header = "type=" + Q + "bullet" + Q + " tight=" + Q + _
 		    If(theList.ListData.IsTight, "true", "false") + Q
 		  End If
 		  

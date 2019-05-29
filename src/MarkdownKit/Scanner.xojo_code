@@ -7,6 +7,8 @@ Protected Class Scanner
 		  // data with the details.  On failure it returns 0.
 		  // Also populates the ByRef `length` parameter to the computed length.
 		  
+		  '#Pragma Error "Example 255 fails"
+		  
 		  Dim c As Text
 		  Dim startPos As Integer
 		  data = Nil
@@ -25,8 +27,10 @@ Protected Class Scanner
 		    
 		    If pos <= charsUbound And Not IsWhitespace(chars(pos)) Then Return 0
 		    
+		    // If interruptsParagraph And _
+		    // Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1 Then Return 0
 		    If interruptsParagraph And _
-		    Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1 Then Return 0
+		    Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos Then Return 0
 		    
 		    data = New MarkdownKit.ListData
 		    data.BulletChar = c
@@ -62,9 +66,14 @@ Protected Class Scanner
 		    // The next character must be whitespace (unless this is the EOL).
 		    If pos <= charsUbound And Not IsWhiteSpace(chars(pos)) Then Return 0
 		    
+		    // If interruptsParagraph And _
+		    // (start <> 1 Or _
+		    // Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1) Then
+		    // Return 0
+		    // End If
 		    If interruptsParagraph And _
 		      (start <> 1 Or _
-		      Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1) Then
+		      Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos) Then
 		      Return 0
 		    End If
 		    

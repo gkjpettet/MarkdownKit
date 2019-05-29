@@ -166,6 +166,8 @@
 					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjUyLm1k
 					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjUzLm1k
 					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjU0Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjU1LXBoYXNlMS5hc3Q=
+					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjU1Lm1k
 				End
 				Begin CopyFilesBuildStep CopyTestsPhase1AST
 					AppliesTo = 0

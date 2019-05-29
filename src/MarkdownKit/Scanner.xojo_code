@@ -59,8 +59,8 @@ Protected Class Scanner
 		    If c <> "." And c <> ")" Then Return 0
 		    pos = pos + 1
 		    
-		    // The next character must be whitespace.
-		    If pos > charsUbound Or Not IsWhiteSpace(chars(pos)) Then Return 0
+		    // The next character must be whitespace (unless this is the EOL).
+		    If pos <= charsUbound And Not IsWhiteSpace(chars(pos)) Then Return 0
 		    
 		    If interruptsParagraph And _
 		      (start <> 1 Or _

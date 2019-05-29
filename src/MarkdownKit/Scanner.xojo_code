@@ -23,7 +23,7 @@ Protected Class Scanner
 		    0 = Scanner.ScanThematicBreak(chars, pos)) Then
 		    pos = pos + 1
 		    
-		    If pos > charsUbound Or Not IsWhitespace(chars(pos)) Then Return 0
+		    If pos <= charsUbound And Not IsWhitespace(chars(pos)) Then Return 0
 		    
 		    If interruptsParagraph And _
 		    Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1 Then Return 0

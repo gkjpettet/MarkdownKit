@@ -292,6 +292,12 @@
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIzOC5tZA==
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIzOS1waGFzZTEuYXN0
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzIzOS5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI0MC1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI0MC5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI0MS1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI0MS5tZA==
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI0Mi1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI0Mi5tZA==
 				End
 			End
 			Begin BuildStepList Windows

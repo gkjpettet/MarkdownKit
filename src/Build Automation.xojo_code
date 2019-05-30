@@ -177,6 +177,7 @@
 					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjYzLm1k
 					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjY0Lm1k
 					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjY1Lm1k
+					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24vMjY2Lm1k
 				End
 				Begin CopyFilesBuildStep CopyTestsPhase1AST
 					AppliesTo = 0
@@ -349,6 +350,7 @@
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI2My1waGFzZTEuYXN0
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI2NC1waGFzZTEuYXN0
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI2NS1waGFzZTEuYXN0
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UxLzI2Ni1waGFzZTEuYXN0
 				End
 			End
 			Begin BuildStepList Windows

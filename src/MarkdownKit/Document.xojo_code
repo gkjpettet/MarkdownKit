@@ -435,7 +435,7 @@ Inherits MarkdownKit.Block
 		    ElseIf (Not indented Or container.Type = BlockType.List) And _
 		      0 <> Scanner.ParseListMarker(line.Chars, line.NextNWS, _
 		      container.Type = BlockType.Paragraph, tmpData, tmpInt1) Then
-		      
+		      // ============= New lists / list items =============
 		      // Compute padding.
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
 		      

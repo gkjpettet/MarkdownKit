@@ -1,13 +1,11 @@
 #tag Class
 Protected Class Scanner
 	#tag Method, Flags = &h0
-		Shared Function ParseListMarker(chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
+		Shared Function ParseListMarker(indented As Boolean, chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
 		  // Attempts to parse a ListItem marker (bullet or enumerated).
 		  // On success, it returns the length of the marker, and populates
 		  // data with the details.  On failure it returns 0.
 		  // Also populates the ByRef `length` parameter to the computed length.
-		  
-		  '#Pragma Error "Example 255 fails"
 		  
 		  Dim c As Text
 		  Dim startPos As Integer
@@ -17,6 +15,9 @@ Protected Class Scanner
 		  Dim charsUbound As Integer = chars.Ubound
 		  
 		  If pos > charsUbound Then Return 0
+		  
+		  // List items may not be indented more than 3 spaces.
+		  if indented Then Return 0
 		  
 		  startPos = pos
 		  c = chars(pos)

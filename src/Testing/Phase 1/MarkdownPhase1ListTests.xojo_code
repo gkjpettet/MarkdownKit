@@ -2,6 +2,13 @@
 Protected Class MarkdownPhase1ListTests
 Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example12Test()
+		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example223Test()
 		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
 		  

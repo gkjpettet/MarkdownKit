@@ -24,6 +24,12 @@ Inherits MarkdownKit.Block
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ToText() As Text
+		  Return Text.Join(Chars, "")
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
 		Chars() As Text
@@ -31,6 +37,12 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="StartPosition"
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StartColumn"
 			Group="Behavior"
@@ -66,6 +78,10 @@ Inherits MarkdownKit.Block
 				"9 - SetextHeading"
 				"10 - ThematicBreak"
 				"11 - ReferenceDefinition"
+				"12 - Block"
+				"13 - RawText"
+				"14 - Softbreak"
+				"15 - Hardbreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

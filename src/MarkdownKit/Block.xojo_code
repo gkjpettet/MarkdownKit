@@ -189,6 +189,10 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		Root As MarkdownKit.Block
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		StartColumn As Integer = 1
 	#tag EndProperty
 

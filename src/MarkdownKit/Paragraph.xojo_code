@@ -65,6 +65,32 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ToText() As Text
+		  // Returns concatenated Text representing this paragraph's children.
+		  // Assumes that the paragraph has not undergone any inline parsing yet.
+		  
+		  #Pragma Error "Needs implementing"
+		  Dim tmp() As Text
+		  Dim child As MarkdownKit.Block
+		  Dim childrenUbound As Integer = Children.Ubound
+		  For i As Integer = 0 To childrenUbound
+		    child = Children(i)
+		    Select Case child
+		    Case IsA MarkdownKit.RawText
+		      
+		    Case IsA MarkdownKit.Softbreak
+		      
+		    Case IsA MarkdownKit.Hardbreak
+		      
+		    Else
+		      Raise New MarkdownKit.MarkdownException("Unexpected block type in " + _
+		      "this paragraph's children")
+		    End Select
+		  Next i
+		End Function
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

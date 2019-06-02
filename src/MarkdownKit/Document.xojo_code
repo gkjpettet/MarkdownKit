@@ -20,6 +20,22 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub AddReferenceLinkDefinition(name As Text, destination As Text, title As Text)
+		  // Adds a new reference link definition to this document's reference map.
+		  
+		  // Only add this definition if it's name is unique (case-insensitive) as 
+		  // the first encountered definition supersedes subsequently similarly named 
+		  // definitions.
+		  If ReferenceMap.HasKey(name) Then
+		    Return
+		  Else
+		    ReferenceMap.Value(name) = New MarkdownKit.ReferenceLinkDefinition(name, destination, title)
+		  End If
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function CanContain(parentType As MarkdownKit.BlockType, childType As MarkdownKit.BlockType) As Boolean
 		  // Returns True if a Block of type `parentType` can contain a child Block of 
 		  // type `childType`.
@@ -36,8 +52,13 @@ Inherits MarkdownKit.Block
 		Sub Constructor(source As Text)
 		  Super.Constructor(1, 0, 1)
 		  
-		  // Document Blocks act as the root of the block tree. They don't have parents.
+		  // Document Blocks act as the root of the block tree. 
+		  Self.Root = Self
+		  
+		  // They don't have parents.
 		  Self.Parent = Nil
+		  
+		  Self.ReferenceMap = New Xojo.Core.Dictionary
 		  
 		  // Make sure that the MarkdownKit module has been initialised.
 		  MarkdownKit.Initialise
@@ -174,8 +195,8 @@ Inherits MarkdownKit.Block
 		  End Select
 		  
 		  child.Parent = theParent
+		  child.Root = theParent.Root
 		  
-		  #Pragma Warning "The next If block needs testing"
 		  Dim mLastChild As MarkdownKit.Block = theParent.LastChild
 		  If mLastChild <> Nil Then
 		    mLastChild.NextSibling = child
@@ -591,6 +612,10 @@ Inherits MarkdownKit.Block
 
 	#tag Property, Flags = &h21
 		Private LinesUbound As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 4B6579203D205265666572656E6365206C696E6B206E616D652C2056616C7565203D204D61726B646F776E4B69742E5265666572656E63654C696E6B446566696E6974696F6E
+		ReferenceMap As Xojo.Core.Dictionary
 	#tag EndProperty
 
 

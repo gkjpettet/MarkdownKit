@@ -31,8 +31,22 @@ Inherits MarkdownKit.Block
 		    p = p - 1
 		  Wend
 		  
-		  // Add this line only if there is content.
-		  If p - line.NextNWS > -1 Then AddLine(line, line.NextNWS, p - line.NextNWS + 1)
+		  // Add contents of the line.
+		  If p - line.NextNWS > -1 Then
+		    Dim len As Integer = If(p - line.NextNWS + 1 = -1, line.CharsUbound - line.Offset + 1, p - line.NextNWS + 1)
+		    If len <= 0 Then Return // Empty heading.
+		    
+		    // Get the characters from the current line offset to the end of the line.
+		    // Remember to account for missing spaces.
+		    Dim i As Integer
+		    For i = 1 To line.RemainingSpaces
+		      RawChars.Append(" ")
+		    Next i
+		    Dim limit As Integer = Xojo.Math.Min(line.Chars.Ubound, line.NextNWS + len - 1)
+		    For i = line.NextNWS To limit
+		      RawChars.Append(line.Chars(i))
+		    Next i
+		  End If
 		  
 		  // Close this block.
 		  Self.IsOpen = False
@@ -43,6 +57,10 @@ Inherits MarkdownKit.Block
 
 	#tag Property, Flags = &h0
 		Level As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		RawChars() As Text
 	#tag EndProperty
 
 
@@ -130,6 +148,12 @@ Inherits MarkdownKit.Block
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StartPosition"
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Level"
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"

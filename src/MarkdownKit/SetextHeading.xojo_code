@@ -7,9 +7,23 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub Finalise(line As MarkdownKit.LineInfo)
+		  // Calling the overridden superclass method.
+		  Super.Finalise(line)
+		  
+		  // Strip the trailing newline (if present)
+		  If RawChars.Ubound >= 0 And RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
 		Level As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		RawChars() As Text
 	#tag EndProperty
 
 

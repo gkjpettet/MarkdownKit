@@ -1,6 +1,22 @@
 #tag Module
 Protected Module MarkdownKit
 	#tag Method, Flags = &h1
+		Protected Sub AppendArray(Extends array1() As Text, array2() As Text)
+		  // Appends the contents of array2 to array1.
+		  // Has no effect on array2 but mutates array2.
+		  
+		  Dim array2Ubound As Integer = array2.Ubound
+		  If array2Ubound < 0 Then Return
+		  
+		  Dim i As Integer
+		  For i = 0 To array2Ubound
+		    array1.Append(array2(i))
+		  Next i
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Sub Initialise()
 		  If mInitialised Then Return
 		  

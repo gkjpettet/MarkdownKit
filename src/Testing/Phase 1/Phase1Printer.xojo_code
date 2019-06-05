@@ -30,6 +30,17 @@ Implements Global.MarkdownKit.IWalker
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Function TransformWhitespace(t As Text) As Text
+		  t = t.ReplaceAll(" ", "•")
+		  t = t.ReplaceAll(&u0009, "→")
+		  t = t.ReplaceAll(&u000A, "⮐")
+		  
+		  Return t
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
 		  // Part of the MarkdownKit.IWalker interface.
@@ -38,14 +49,20 @@ Implements Global.MarkdownKit.IWalker
 		  "<heading level=" + """" + atx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
-		  For Each b As MarkdownKit.Block In atx.Children
-		    IncreaseIndent
-		    b.Accept(Self)
-		    DecreaseIndent
-		  Next b
+		  IncreaseIndent
+		  mOutput.Append(CurrentIndent + "<raw_text>")
+		  
+		  Dim content As Text = Text.Join(atx.RawChars, "")
+		  If ShowWhitespace Then content = TransformWhitespace(content)
+		  
+		  mOutput.Append(content)
+		  mOutput.Append("</raw_text>")
+		  mOutput.Append(EOL)
+		  DecreaseIndent
 		  
 		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
+		  
 		End Sub
 	#tag EndMethod
 
@@ -120,18 +137,6 @@ Implements Global.MarkdownKit.IWalker
 		  Next b
 		  
 		  mOutput.Append(CurrentIndent + "</fenced_code_block>")
-		  mOutput.Append(EOL)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub VisitHardbreak(hb As MarkdownKit.Hardbreak)
-		  // Part of the MarkdownKit.IWalker interface.
-		  
-		  #Pragma Unused hb
-		  
-		  mOutput.Append(CurrentIndent + "<linebreak />")
 		  mOutput.Append(EOL)
 		  
 		End Sub
@@ -214,11 +219,16 @@ Implements Global.MarkdownKit.IWalker
 		  mOutput.Append(CurrentIndent + "<paragraph>")
 		  mOutput.Append(EOL)
 		  
-		  For Each b As MarkdownKit.Block In p.Children
-		    IncreaseIndent
-		    b.Accept(Self)
-		    DecreaseIndent
-		  Next b
+		  IncreaseIndent
+		  mOutput.Append(CurrentIndent + "<raw_text>")
+		  
+		  Dim content As Text = Text.Join(p.RawChars, "")
+		  If ShowWhitespace Then content = TransformWhitespace(content)
+		  
+		  mOutput.Append(content)
+		  mOutput.Append("</raw_text>")
+		  mOutput.Append(EOL)
+		  DecreaseIndent
 		  
 		  mOutput.Append(CurrentIndent + "</paragraph>")
 		  mOutput.Append(EOL)
@@ -230,9 +240,14 @@ Implements Global.MarkdownKit.IWalker
 		  // Part of the IWalker interface.
 		  
 		  mOutput.Append(CurrentIndent + "<text>")
-		  mOutput.Append(Text.Join(rt.Chars, ""))
+		  
+		  Dim content As Text = Text.Join(rt.Chars, "")
+		  If ShowWhitespace Then content = TransformWhitespace(content)
+		  
+		  mOutput.Append(content)
 		  mOutput.Append("</text>")
 		  mOutput.Append(EOL)
+		  
 		End Sub
 	#tag EndMethod
 
@@ -244,24 +259,18 @@ Implements Global.MarkdownKit.IWalker
 		  "<heading level=" + """" + stx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
-		  For Each b As MarkdownKit.Block In stx.Children
-		    IncreaseIndent
-		    b.Accept(Self)
-		    DecreaseIndent
-		  Next b
+		  IncreaseIndent
+		  mOutput.Append(CurrentIndent + "<raw_text>")
+		  
+		  Dim content As Text = Text.Join(stx.RawChars, "")
+		  If ShowWhitespace Then content = TransformWhitespace(content)
+		  
+		  mOutput.Append(content)
+		  mOutput.Append("</raw_text>")
+		  mOutput.Append(EOL)
+		  DecreaseIndent
 		  
 		  mOutput.Append(CurrentIndent + "</heading>")
-		  mOutput.Append(EOL)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub VisitSoftbreak(sb As MarkdownKit.Softbreak)
-		  // Part of the MarkdownKit.Walker interface.
-		  
-		  #Pragma Unused sb
-		  
-		  mOutput.Append(CurrentIndent + "<softbreak />")
 		  mOutput.Append(EOL)
 		  
 		End Sub
@@ -319,6 +328,10 @@ Implements Global.MarkdownKit.IWalker
 
 	#tag Property, Flags = &h0
 		Pretty As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		ShowWhitespace As Boolean = False
 	#tag EndProperty
 
 

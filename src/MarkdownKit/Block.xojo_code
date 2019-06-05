@@ -78,6 +78,8 @@ Protected Class Block
 		  // upon block closure.
 		  // `line` is the line that triggered the Finalise call.
 		  
+		  #Pragma Unused line
+		  
 		  If Not IsOpen Then
 		    Return
 		  Else
@@ -130,10 +132,6 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.IndentedCode
 		  ElseIf Self IsA MarkdownKit.FencedCode Then
 		    mType = MarkdownKit.BlockType.FencedCode
-		  ElseIf Self IsA MarkdownKit.Softbreak Then
-		    mType = MarkdownKit.BlockType.Softbreak
-		  ElseIf Self IsA MarkdownKit.Hardbreak Then
-		    mType = MarkdownKit.BlockType.Hardbreak
 		  ElseIf Self Isa MarkdownKit.ATXHeading Then
 		    mType = MarkdownKit.BlockType.AtxHeading
 		  ElseIf Self IsA MarkdownKit.SetextHeading Then

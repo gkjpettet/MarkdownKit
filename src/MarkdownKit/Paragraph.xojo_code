@@ -9,39 +9,36 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer, length As Integer = -1)
-		  // Calling the overridden superclass method.
-		  Super.AddLine(line, startPos)
-		  
-		  // Do we need to prepend a hard or soft break before this line?
-		  Dim rt As MarkdownKit.RawText
-		  If Children.Ubound > 0 Then
-		    rt = MarkdownKit.RawText(Children(Children.Ubound - 1))
-		    Dim charsUbound As Integer = rt.Chars.Ubound
-		    
-		    If charsUbound > 1 And rt.Chars(charsUbound) = " " And _ 
-		      rt.Chars(charsUbound - 1) = " " Then
-		      // The preceding line ended with two spaces. Prepend a hard line break.
-		      Children.Insert(Children.Ubound, New MarkdownKit.Hardbreak(line.Number - 1))
-		    ElseIf rt.Chars(charsUbound) = "\" Then
-		      // A backslash at the end of the preceding lines indicates a hard break.
-		      Children.Insert(Children.Ubound, New MarkdownKit.Hardbreak(line.Number - 1))
-		      // Remove the trailing backslash from the preceding line.
-		      rt.Chars.Remove(rt.Chars.Ubound)
-		    Else
-		      // Prepend a soft line break.
-		      Children.Insert(Children.Ubound, New MarkdownKit.Softbreak(line.Number - 1))
-		    End If
-		    
-		    // Strip the trailing whitespace from the end of the preceding line.
-		    StripTrailingWhitespace(rt.Chars)
+		  If Not Self.IsOpen Then
+		    Raise New MarkdownKit.MarkdownException("Attempted to add line " + _
+		    line.Number.ToText + " to closed container " + Self.Type.ToText)
 		  End If
 		  
-		  // Strip leading and trailing whitespace from THIS line.
-		  If Children.Ubound >= 0 Then
-		    rt = MarkdownKit.RawText(Children(Children.Ubound))
-		    StripLeadingWhitespace(rt.Chars)
-		    StripTrailingWhitespace(rt.Chars)
+		  Dim len As Integer = If(length = -1, line.CharsUbound - line.Offset + 1, length)
+		  
+		  If len <= 0 Then
+		    // Blank line.
+		    Raise New MarkdownKit.MarkdownException("Bug: I didn't think this would happen!")
 		  End If
+		  
+		  // Get the characters from the current line offset to the end of the line.
+		  Dim tmp() As Text
+		  Dim i As Integer
+		  Dim limit As Integer = Xojo.Math.Min(line.Chars.Ubound, startPos + len - 1)
+		  For i = startPos To limit
+		    tmp.Append(line.Chars(i))
+		  Next i
+		  
+		  // Strip leading and trailing whitespace from this line.
+		  StripLeadingWhitespace(tmp)
+		  StripTrailingWhitespace(tmp)
+		  
+		  // Add a newline to the end of this line as it's needed 
+		  // during subsequent inline parsing.
+		  tmp.Append(&u000A)
+		  
+		  // Append the characters of this line to this paragraph's RawChars array.
+		  RawChars.AppendArray(tmp)
 		  
 		End Sub
 	#tag EndMethod
@@ -51,45 +48,16 @@ Inherits MarkdownKit.Block
 		  // Calling the overridden superclass method.
 		  Super.Finalise(line)
 		  
-		  // Strip leading and trailing whitespace.
-		  Dim rt As MarkdownKit.RawText
-		  If Children.Ubound >= 0 Then
-		    // Leading...
-		    rt = MarkdownKit.RawText(Children(0))
-		    StripLeadingWhitespace(rt.Chars)
-		    // Trailing.
-		    rt = MarkdownKit.RawText(Children(Children.Ubound))
-		    StripTrailingWhitespace(rt.Chars)
-		  End If
+		  // Strip the trailing newline (if present)
+		  If RawChars.Ubound >= 0 And RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
 		  
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function ToText() As Text
-		  // Returns concatenated Text representing this paragraph's children.
-		  // Assumes that the paragraph has not undergone any inline parsing yet.
-		  
-		  #Pragma Error "Needs implementing"
-		  Dim tmp() As Text
-		  Dim child As MarkdownKit.Block
-		  Dim childrenUbound As Integer = Children.Ubound
-		  For i As Integer = 0 To childrenUbound
-		    child = Children(i)
-		    Select Case child
-		    Case IsA MarkdownKit.RawText
-		      
-		    Case IsA MarkdownKit.Softbreak
-		      
-		    Case IsA MarkdownKit.Hardbreak
-		      
-		    Else
-		      Raise New MarkdownKit.MarkdownException("Unexpected block type in " + _
-		      "this paragraph's children")
-		    End Select
-		  Next i
-		End Function
-	#tag EndMethod
+
+	#tag Property, Flags = &h0
+		RawChars() As Text
+	#tag EndProperty
 
 
 	#tag ViewBehavior

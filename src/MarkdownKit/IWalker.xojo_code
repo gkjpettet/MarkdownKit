@@ -31,12 +31,6 @@ Protected Interface IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub VisitHardBreak(hb As MarkdownKit.Hardbreak)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub VisitIndentedCode(i As MarkdownKit.IndentedCode)
 		  
 		End Sub
@@ -68,12 +62,6 @@ Protected Interface IWalker
 
 	#tag Method, Flags = &h0
 		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub VisitSoftBreak(sb As MarkdownKit.Softbreak)
 		  
 		End Sub
 	#tag EndMethod

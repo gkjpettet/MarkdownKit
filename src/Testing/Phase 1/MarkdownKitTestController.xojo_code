@@ -143,7 +143,6 @@ Inherits TestController
 		Shared Sub TransformWhitespace(ByRef t As Text)
 		  t = t.ReplaceAll(" ", "•")
 		  t = t.ReplaceAll(&u0009, "→")
-		  
 		End Sub
 	#tag EndMethod
 

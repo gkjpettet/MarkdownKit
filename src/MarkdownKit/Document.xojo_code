@@ -110,7 +110,7 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h21
 		Private Function ConvertParagraphBlockToSetextHeading(ByRef p As MarkdownKit.Block) As MarkdownKit.Block
-		  // Remove the passed Paragraph block (`b`) from its parent and replace it with a new 
+		  // Remove the passed Paragraph block (`p`) from its parent and replace it with a new 
 		  // SetextHeading block with the same children.
 		  // Returns the newly created SetextHeading.
 		  
@@ -126,12 +126,8 @@ Inherits MarkdownKit.Block
 		  // Create a new SetextHeading block to replace the paragraph.
 		  Dim stx As New MarkdownKit.SetextHeading(p.LineNumber, p.StartPosition, p.StartColumn)
 		  
-		  // Copy the paragraph's children to this SetextHeading.
-		  Dim pChildrenUbound As Integer = p.Children.Ubound
-		  Dim i As Integer
-		  For i = 0 To pChildrenUbound
-		    stx.Children.Append(p.Children(i))
-		  Next i
+		  // Copy the paragraph's raw character array to this SetextHeading.
+		  stx.RawChars = MarkdownKit.Paragraph(p).RawChars
 		  
 		  // Remove the paragraph from its parent.
 		  paraParent.Children.Remove(index)
@@ -289,7 +285,6 @@ Inherits MarkdownKit.Block
 		  // and we don't count blanks in fenced code for the purposes of tight/loose
 		  // lists or breaking out of lists. We also don't set IsLastLineBlank
 		  // on an empty list item.
-		  #Pragma Warning "NOTE: Have omitted the last condition re: container.SourcePosition"
 		  container.IsLastLineBlank = blank And _
 		  container.Type <> BlockType.BlockQuote And _
 		  container.Type <> BlockType.SetextHeading And _

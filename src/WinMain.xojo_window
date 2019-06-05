@@ -233,6 +233,7 @@ End
 		  // Print out the document "phase 1" block structure.
 		  Dim printer As New Phase1Printer
 		  printer.Pretty = True
+		  printer.ShowWhitespace = True
 		  printer.VisitDocument(doc)
 		  Output.Text = printer.Output
 		  

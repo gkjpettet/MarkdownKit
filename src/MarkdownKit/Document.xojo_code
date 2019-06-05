@@ -248,8 +248,6 @@ Inherits MarkdownKit.Block
 		  // Always start processing at the document root.
 		  Dim container As MarkdownKit.Block = Self
 		  
-		  //If line.Chars(Line.CharsUbound) = "!" Then Break
-		  
 		  // Match this line against each open block in the tree.
 		  TryOpenBlocks(line, container)
 		  
@@ -308,8 +306,7 @@ Inherits MarkdownKit.Block
 		  If currentBlock <> lastMatchedContainer And _
 		    container = lastMatchedContainer And _
 		    Not blank And _
-		    currentBlock.Type = BlockType.Paragraph And _
-		    currentBlock.Children.Ubound > -1 Then
+		    currentBlock.Type = BlockType.Paragraph Then
 		    currentBlock.AddLine(line, line.Offset)
 		    
 		  Else // This is NOT a lazy continuation line.

@@ -1,5 +1,6 @@
 <document>
 <heading level="2">
-<text>Foo</text>
+<raw_text>Foo
+Bar</raw_text>
 </heading>
 </document>

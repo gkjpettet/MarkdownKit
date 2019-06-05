@@ -7,13 +7,13 @@ Inherits TestController
 		  
 		  Dim group As TestGroup
 		  
-		  group = New MarkdownPhase1ListTests(Self, "Lists")
+		  // group = New MarkdownPhase1ListTests(Self, "Lists")
 		  group = New MarkdownPhase1SetextTests(Self, "Setext Headings")
-		  group = New MarkdownPhase1ThematicBreakTests(Self, "Thematic Breaks")
-		  group = New MarkdownPhase1BlockquoteTests(Self, "Blockquotes")
-		  group = New MarkdownPhase1ATXTests(Self, "ATX Headings")
-		  group = New MarkdownPhase1IndentedCodeTests(Self, "Indented Code Blocks")
-		  group = New MarkdownPhase1FencedCodeTests(Self, "Fenced Code Blocks")
+		  // group = New MarkdownPhase1ThematicBreakTests(Self, "Thematic Breaks")
+		  // group = New MarkdownPhase1BlockquoteTests(Self, "Blockquotes")
+		  // group = New MarkdownPhase1ATXTests(Self, "ATX Headings")
+		  // group = New MarkdownPhase1IndentedCodeTests(Self, "Indented Code Blocks")
+		  // group = New MarkdownPhase1FencedCodeTests(Self, "Fenced Code Blocks")
 		  
 		End Sub
 	#tag EndEvent
@@ -24,19 +24,17 @@ Inherits TestController
 		  // Takes the name of an example AST output file copied to the 
 		  // app's resources folder and returns the contents.
 		  
-		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource("phase 1 ASTs").Child(fileName)
 		  
-		  Try
-		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
-		    ast = tin.ReadAll
-		    tin.Close
-		    Return True
-		  Catch e
+		  Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		  ast = tin.ReadAll
+		  tin.Close
+		  Return True
+		  
+		  Exception e
 		    MsgBox("Unable to find the AST example file `" + fileName + "`")
-		    
 		    Return False
-		  End Try
-		  
+		    
 		End Function
 	#tag EndMethod
 
@@ -45,18 +43,16 @@ Inherits TestController
 		  // Takes the name of a Markdown example test file copied to the 
 		  // app's resources folder and returns the contents.
 		  
-		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource(fileName)
+		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource("source markdown").Child(fileName)
 		  
-		  Try
-		    Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
-		    md = tin.ReadAll
-		    tin.Close
-		    Return True
-		  Catch e
+		  Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		  md = tin.ReadAll
+		  tin.Close
+		  Return True
+		  
+		  Exception e
 		    MsgBox("Unable to find the Markdown example file `" + fileName + "`")
 		    Return False
-		  End Try
-		  
 		End Function
 	#tag EndMethod
 

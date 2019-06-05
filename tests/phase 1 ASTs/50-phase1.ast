@@ -1,8 +1,8 @@
 <document>
 <heading level="1">
-<text>Foo *bar*</text>
+<raw_text>Foo *bar*</raw_text>
 </heading>
 <heading level="2">
-<text>Foo *bar*</text>
+<raw_text>Foo *bar*</raw_text>
 </heading>
 </document>

@@ -3,190 +3,206 @@ Protected Class MarkdownPhase1SetextTests
 Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example50Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(50)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example51Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(51)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example52Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(52)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example53Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(53)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example54Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(54)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example55Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(55)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example56Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(56)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example57Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(57)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example58Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(58)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example59Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(59)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example60Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(60)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example61Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(61)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example62Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(62)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example63Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(63)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example64Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(64)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example65Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(65)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example66Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(66)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example67Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(67)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example68Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(68)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example69Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(69)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example70Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(70)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example71Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(71)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example72Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(72)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example73Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(73)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example74Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(74)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example75Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(75)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example76Test()
-		  MarkdownKitTestController.RunPhase1Test(CurrentMethodName, Self)
+		  Run(76)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Run(testNumber As Integer)
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = testNumber.ToText + ".md"
+		  Dim astNAme As Text = testNumber.ToText + "-phase1.ast"
 		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
+		  
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ParseBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1Printer
+		  printer.Pretty = False
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  MarkdownKitTestController.TransformWhitespace(actual)
+		  MarkdownKitTestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		  Exception e
+		    Assert.FailCustom(expected, "Exception occurred!")
 		End Sub
 	#tag EndMethod
 

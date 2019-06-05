@@ -1,11 +1,10 @@
 <document>
 <paragraph>
-<text>Foo</text>
-<softbreak />
-<text>bar</text>
+<raw_text>Foo
+bar</raw_text>
 </paragraph>
 <thematic_break />
 <paragraph>
-<text>baz</text>
+<raw_text>baz</raw_text>
 </paragraph>
 </document>

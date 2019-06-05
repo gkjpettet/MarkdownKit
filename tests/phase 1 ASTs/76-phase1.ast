@@ -1,5 +1,8 @@
 <document>
 <paragraph>
-<text>====</text>
+<raw_text>Foo
+bar
+\---
+baz</raw_text>
 </paragraph>
 </document>

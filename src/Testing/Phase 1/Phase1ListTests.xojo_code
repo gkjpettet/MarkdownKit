@@ -1,5 +1,5 @@
 #tag Class
-Protected Class MarkdownPhase1ListTests
+Protected Class Phase1ListTests
 Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example12Test()

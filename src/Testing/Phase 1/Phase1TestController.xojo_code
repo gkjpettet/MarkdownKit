@@ -7,7 +7,7 @@ Inherits TestController
 		  
 		  Dim group As TestGroup
 		  
-		  group = New MarkdownPhase1ListTests(Self, "Lists")
+		  group = New Phase1ListTests(Self, "Lists")
 		  group = New Phase1SetextTests(Self, "Setext Headings")
 		  // group = New Phase1ThematicBreakTests(Self, "Thematic Breaks")
 		  // group = New Phase1BlockquoteTests(Self, "Blockquotes")

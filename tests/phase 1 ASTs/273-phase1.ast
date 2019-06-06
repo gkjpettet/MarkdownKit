@@ -1,16 +1,16 @@
 <document>
 <paragraph>
-<text>Foo</text>
+<raw_text>Foo</raw_text>
 </paragraph>
 <list type="bullet" tight="true">
 <item>
 <paragraph>
-<text>bar</text>
+<raw_text>bar</raw_text>
 </paragraph>
 </item>
 <item>
 <paragraph>
-<text>baz</text>
+<raw_text>baz</raw_text>
 </paragraph>
 </item>
 </list>

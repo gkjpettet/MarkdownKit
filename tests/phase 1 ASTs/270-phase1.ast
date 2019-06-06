@@ -2,15 +2,15 @@
 <list type="bullet" tight="true">
 <item>
 <heading level="1">
-<text>Foo</text>
+<raw_text>Foo</raw_text>
 </heading>
 </item>
 <item>
 <heading level="2">
-<text>Bar</text>
+<raw_text>Bar</raw_text>
 </heading>
 <paragraph>
-<text>baz</text>
+<raw_text>baz</raw_text>
 </paragraph>
 </item>
 </list>

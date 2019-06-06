@@ -1,8 +1,8 @@
 <document>
 <paragraph>
-<text>foo</text>
+<raw_text>foo</raw_text>
 </paragraph>
 <paragraph>
-<text>bar</text>
+<raw_text>bar</raw_text>
 </paragraph>
 </document>

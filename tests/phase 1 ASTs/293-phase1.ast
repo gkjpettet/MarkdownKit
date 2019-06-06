@@ -2,12 +2,12 @@
 <list type="bullet" tight="true">
 <item>
 <paragraph>
-<text>a</text>
+<raw_text>a</raw_text>
 </paragraph>
 <list type="bullet" tight="true">
 <item>
 <paragraph>
-<text>b</text>
+<raw_text>b</raw_text>
 </paragraph>
 </item>
 </list>

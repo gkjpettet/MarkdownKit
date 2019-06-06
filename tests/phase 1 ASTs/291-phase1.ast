@@ -2,11 +2,11 @@
 <list type="bullet" tight="true">
 <item>
 <paragraph>
-<text>a</text>
+<raw_text>a</raw_text>
 </paragraph>
 <block_quote>
 <paragraph>
-<text>b</text>
+<raw_text>b</raw_text>
 </paragraph>
 </block_quote>
 <fenced_code_block>
@@ -15,7 +15,7 @@
 </item>
 <item>
 <paragraph>
-<text>d</text>
+<raw_text>d</raw_text>
 </paragraph>
 </item>
 </list>

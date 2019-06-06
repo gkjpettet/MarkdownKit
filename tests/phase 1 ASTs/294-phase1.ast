@@ -5,7 +5,7 @@
 <text>foo</text>
 </fenced_code_block>
 <paragraph>
-<text>bar</text>
+<raw_text>bar</raw_text>
 </paragraph>
 </item>
 </list>

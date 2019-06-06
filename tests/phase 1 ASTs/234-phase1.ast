@@ -2,7 +2,7 @@
 <list type="bullet" tight="false">
 <item>
 <paragraph>
-<text>Foo</text>
+<raw_text>Foo</raw_text>
 </paragraph>
 <indented_code_block>
 <text>bar</text>

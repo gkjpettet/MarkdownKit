@@ -483,14 +483,14 @@ Inherits TestGroup
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
-		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		  If Not Phase1TestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected AST output.
 		  Dim expected As Text
-		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		  If Not Phase1TestController.GetTestAST(astName, expected) Then
 		    Assert.Fail("Unable to load test AST file `" + astName + "`")
 		    Return
 		  End If
@@ -507,8 +507,8 @@ Inherits TestGroup
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
-		  MarkdownKitTestController.TransformWhitespace(actual)
-		  MarkdownKitTestController.TransformWhitespace(expected)
+		  Phase1TestController.TransformWhitespace(actual)
+		  Phase1TestController.TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
 		  Assert.AreEqual(expected, actual)

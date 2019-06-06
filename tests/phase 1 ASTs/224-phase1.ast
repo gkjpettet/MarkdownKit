@@ -2,16 +2,15 @@
 <list type="ordered" start="1" tight="false" delimiter="period">
 <item>
 <paragraph>
-<text>A paragraph</text>
-<softbreak />
-<text>with two lines.</text>
+<raw_text>A paragraph
+with two lines.</raw_text>
 </paragraph>
 <indented_code_block>
 <text>indented code</text>
 </indented_code_block>
 <block_quote>
 <paragraph>
-<text>A block quote.</text>
+<raw_text>A block quote.</raw_text>
 </paragraph>
 </block_quote>
 </item>

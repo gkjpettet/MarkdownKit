@@ -603,12 +603,10 @@ Begin Window WinTests
       InitialParent   =   ""
       LockedInPosition=   False
       Scope           =   0
-      TabIndex        =   "2"
       TabPanelIndex   =   0
-      TabStop         =   True
       Visible         =   True
    End
-   Begin MarkdownKitTestController Controller
+   Begin Phase1TestController Controller
       AllTestCount    =   0
       Duration        =   0.0
       Enabled         =   True
@@ -623,9 +621,7 @@ Begin Window WinTests
       RunTestCount    =   0
       Scope           =   2
       SkippedCount    =   0
-      TabIndex        =   "3"
       TabPanelIndex   =   0
-      TabStop         =   True
    End
    Begin ProgressWheel ProgressWheel1
       AutoDeactivate  =   True
@@ -1556,8 +1552,8 @@ End
 		    // Read the contents of the file containing the input Markdown for this test 
 		    // and assign it to the relevant text area.
 		    Dim md As Text
-		    Call MarkdownKitTestController.GetTestMarkdown(testNumber + ".md", md)
-		    MarkdownKitTestController.TransformWhitespace(md)
+		    Call Phase1TestController.GetTestMarkdown(testNumber + ".md", md)
+		    Phase1TestController.TransformWhitespace(md)
 		    TestInputMarkdown.Text = md
 		  Catch e
 		    // Ignore.

@@ -1,5 +1,5 @@
 #tag Class
-Protected Class MarkdownKitTestController
+Protected Class Phase1TestController
 Inherits TestController
 	#tag Event
 		Sub InitializeTestGroups()
@@ -7,13 +7,13 @@ Inherits TestController
 		  
 		  Dim group As TestGroup
 		  
-		  // group = New MarkdownPhase1ListTests(Self, "Lists")
-		  group = New MarkdownPhase1SetextTests(Self, "Setext Headings")
-		  // group = New MarkdownPhase1ThematicBreakTests(Self, "Thematic Breaks")
-		  // group = New MarkdownPhase1BlockquoteTests(Self, "Blockquotes")
-		  // group = New MarkdownPhase1ATXTests(Self, "ATX Headings")
-		  // group = New MarkdownPhase1IndentedCodeTests(Self, "Indented Code Blocks")
-		  // group = New MarkdownPhase1FencedCodeTests(Self, "Fenced Code Blocks")
+		  group = New MarkdownPhase1ListTests(Self, "Lists")
+		  group = New Phase1SetextTests(Self, "Setext Headings")
+		  // group = New Phase1ThematicBreakTests(Self, "Thematic Breaks")
+		  // group = New Phase1BlockquoteTests(Self, "Blockquotes")
+		  // group = New Phase1ATXTests(Self, "ATX Headings")
+		  // group = New Phase1IndentedCodeTests(Self, "Indented Code Blocks")
+		  // group = New Phase1FencedCodeTests(Self, "Fenced Code Blocks")
 		  
 		End Sub
 	#tag EndEvent
@@ -95,19 +95,19 @@ Inherits TestController
 	#tag Method, Flags = &h0
 		Shared Sub RunPhase1Test(methodName As Text, tg As TestGroup)
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = MarkdownKitTestController.GetTestNumberFromMethodName(methodName) + ".md"
-		  Dim astNAme As Text = MarkdownKitTestController.GetTestNumberFromMethodName(methodName) + "-phase1.ast"
+		  Dim mdName As Text = Phase1TestController.GetTestNumberFromMethodName(methodName) + ".md"
+		  Dim astNAme As Text = Phase1TestController.GetTestNumberFromMethodName(methodName) + "-phase1.ast"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text
-		  If Not MarkdownKitTestController.GetTestMarkdown(mdName, md) Then
+		  If Not Phase1TestController.GetTestMarkdown(mdName, md) Then
 		    tg.Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected AST output.
 		  Dim expected As Text
-		  If Not MarkdownKitTestController.GetTestAST(astName, expected) Then
+		  If Not Phase1TestController.GetTestAST(astName, expected) Then
 		    tg.Assert.Fail("Unable to load test AST file `" + astName + "`")
 		    Return
 		  End If
@@ -124,8 +124,8 @@ Inherits TestController
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
-		  MarkdownKitTestController.TransformWhitespace(actual)
-		  MarkdownKitTestController.TransformWhitespace(expected)
+		  Phase1TestController.TransformWhitespace(actual)
+		  Phase1TestController.TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
 		  tg.Assert.AreEqual(expected, actual)

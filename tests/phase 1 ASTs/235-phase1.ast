@@ -2,7 +2,7 @@
 <list type="ordered" start="123456789" tight="true" delimiter="period">
 <item>
 <paragraph>
-<text>ok</text>
+<raw_text>ok</raw_text>
 </paragraph>
 </item>
 </list>

@@ -28,8 +28,6 @@ Protected Class Scanner
 		    
 		    If pos <= charsUbound And Not IsWhitespace(chars(pos)) Then Return 0
 		    
-		    // If interruptsParagraph And _
-		    // Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1 Then Return 0
 		    If interruptsParagraph And _
 		    Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos Then Return 0
 		    
@@ -67,11 +65,6 @@ Protected Class Scanner
 		    // The next character must be whitespace (unless this is the EOL).
 		    If pos <= charsUbound And Not IsWhiteSpace(chars(pos)) Then Return 0
 		    
-		    // If interruptsParagraph And _
-		    // (start <> 1 Or _
-		    // Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos - 1) Then
-		    // Return 0
-		    // End If
 		    If interruptsParagraph And _
 		      (start <> 1 Or _
 		      Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos) Then
@@ -93,6 +86,21 @@ Protected Class Scanner
 		  Return pos - startPos
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Sub ParseReference(chars() As Text, doc As MarkdownKit.Document)
+		  // Takes an array of characters representing the raw text of a paragraph.
+		  // Assumes that there are at least 4 characters and chars(0) = "[".
+		  // If we find a valid link reference definition then we remove it from the 
+		  // character array (which is passed by reference) and we add it to the passed 
+		  // Document's reference map dictionary.
+		  // If we don't find a valid reference then we leave chars alone.
+		  // Assumes doc <> Nil.
+		  
+		  #Pragma Warning "TODO"
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0

@@ -48,8 +48,16 @@ Inherits MarkdownKit.Block
 		  // Calling the overridden superclass method.
 		  Super.Finalise(line)
 		  
+		  If RawChars.Ubound < 0 Then Return
+		  
 		  // Strip the trailing newline (if present)
-		  If RawChars.Ubound >= 0 And RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
+		  If RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
+		  
+		  // Reference link definition?
+		  If RawChars(0) = "[" And RawChars.Ubound >= 3 Then
+		    Scanner.ParseReference(RawChars, MarkdownKit.Document(Self.Root))
+		  End If
+		  
 		  
 		End Sub
 	#tag EndMethod

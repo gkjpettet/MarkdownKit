@@ -1,5 +1,5 @@
 #tag Class
-Protected Class ReferenceLinkDefinition
+Protected Class LinkReferenceDefinition
 	#tag Method, Flags = &h0
 		Sub Constructor(name As Text, destination As Text, title As Text)
 		  Self.Name = name
@@ -60,7 +60,17 @@ Protected Class ReferenceLinkDefinition
 		#tag ViewProperty
 			Name="Name"
 			Group="Behavior"
-			Type="Integer"
+			Type="String"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Destination"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Title"
+			Group="Behavior"
+			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

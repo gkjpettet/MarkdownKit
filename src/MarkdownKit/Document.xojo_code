@@ -20,8 +20,8 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub AddReferenceLinkDefinition(name As Text, destination As Text, title As Text)
-		  // Adds a new reference link definition to this document's reference map.
+		Sub AddLinkReferenceDefinition(name As Text, destination As Text, title As Text)
+		  // Adds a new link reference definition to this document's reference map.
 		  
 		  // Only add this definition if it's name is unique (case-insensitive) as 
 		  // the first encountered definition supersedes subsequently similarly named 
@@ -29,7 +29,7 @@ Inherits MarkdownKit.Block
 		  If ReferenceMap.HasKey(name) Then
 		    Return
 		  Else
-		    ReferenceMap.Value(name) = New MarkdownKit.ReferenceLinkDefinition(name, destination, title)
+		    ReferenceMap.Value(name) = New MarkdownKit.LinkReferenceDefinition(name, destination, title)
 		  End If
 		  
 		End Sub

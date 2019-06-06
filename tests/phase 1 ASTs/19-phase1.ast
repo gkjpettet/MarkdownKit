@@ -1,7 +1,6 @@
 <document>
 <paragraph>
-<text>Foo</text>
-<softbreak />
-<text>***</text>
+<raw_text>Foo
+***</raw_text>
 </paragraph>
 </document>

@@ -1,122 +1,148 @@
 #tag Class
-Protected Class MarkdownPhase1ThematicBreakTests
+Protected Class Phase1ThematicBreakTests
 Inherits TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example11Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(11)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example13Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(13)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example14Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(14)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example15Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(15)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example16Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(16)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example17Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(17)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example18Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(18)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example19Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(19)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example20Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(20)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example21Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(21)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example22Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(22)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example23Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(23)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example24Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(24)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example25Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(25)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example26Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(26)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example28Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(28)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example29Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
+		  Run(29)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Run(testNumber As Integer)
+		  // Get the names of the files containing the test Markdown and expected AST output.
+		  Dim mdName As Text = testNumber.ToText + ".md"
+		  Dim astNAme As Text = testNumber.ToText + "-phase1.ast"
 		  
+		  // Get the example Markdown file.
+		  Dim md As Text
+		  If Not Phase1TestController.GetTestMarkdown(mdName, md) Then
+		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
+		    Return
+		  End If
+		  
+		  // Get the expected AST output.
+		  Dim expected As Text
+		  If Not Phase1TestController.GetTestAST(astName, expected) Then
+		    Assert.Fail("Unable to load test AST file `" + astName + "`")
+		    Return
+		  End If
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(md)
+		  doc.ParseBlockStructure
+		  
+		  // Convert the phase 1 block structure to Text.
+		  Dim printer As New Phase1Printer
+		  printer.Pretty = False
+		  printer.VisitDocument(doc)
+		  Dim actual As Text = printer.Output
+		  
+		  // Transform whitespace in our result and the expected truth to make it 
+		  // easier to visualise.
+		  Phase1TestController.TransformWhitespace(actual)
+		  Phase1TestController.TransformWhitespace(expected)
+		  
+		  // Check the result matches the truth.
+		  Assert.AreEqual(expected, actual)
+		  
+		  Exception e
+		    Assert.FailCustom(expected, "Exception occurred!")
 		End Sub
 	#tag EndMethod
 

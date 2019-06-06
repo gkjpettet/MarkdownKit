@@ -1,9 +1,7 @@
 <document>
 <paragraph>
-<text>--</text>
-<softbreak />
-<text>**</text>
-<softbreak />
-<text>__</text>
+<raw_text>--
+**
+__</raw_text>
 </paragraph>
 </document>

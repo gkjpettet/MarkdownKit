@@ -1,9 +1,9 @@
 <document>
 <paragraph>
-<text>Foo</text>
+<raw_text>Foo</raw_text>
 </paragraph>
 <thematic_break />
 <paragraph>
-<text>bar</text>
+<raw_text>bar</raw_text>
 </paragraph>
 </document>

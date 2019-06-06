@@ -1,185 +1,159 @@
 #tag Class
-Protected Class MarkdownPhase1FencedCodeTests
-Inherits TestGroup
+Protected Class Phase1FencedCodeTests
+Inherits Phase1TestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example100Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(100)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example101Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(101)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example102Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(102)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example103Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(103)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example104Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(104)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example105Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(105)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example106Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(106)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example107Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(107)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example109Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(109)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example110Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(110)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example111Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(111)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example112Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(112)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example113Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(113)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example114Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(114)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example116Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(116)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example117Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(117)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example89Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(89)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example90Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(90)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example92Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(92)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example93Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(93)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example94Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(94)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example95Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(95)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example96Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(96)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example97Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(97)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example98Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(98)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example99Test()
-		  Phase1TestController.RunPhase1Test(CurrentMethodName, Self)
-		  
+		  Run(99)
 		End Sub
 	#tag EndMethod
 

@@ -1,12 +1,11 @@
 <document>
 <block_quote>
 <heading level="1">
-<text>Foo</text>
+<raw_text>Foo</raw_text>
 </heading>
 <paragraph>
-<text>bar</text>
-<softbreak />
-<text>baz</text>
+<raw_text>bar
+baz</raw_text>
 </paragraph>
 </block_quote>
 </document>

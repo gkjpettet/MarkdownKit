@@ -6,7 +6,7 @@
 </block_quote>
 <block_quote>
 <paragraph>
-<text>not code</text>
+<raw_text>not code</raw_text>
 </paragraph>
 </block_quote>
 </document>

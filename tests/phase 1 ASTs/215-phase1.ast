@@ -1,10 +1,10 @@
 <document>
 <paragraph>
-<text>foo</text>
+<raw_text>foo</raw_text>
 </paragraph>
 <block_quote>
 <paragraph>
-<text>bar</text>
+<raw_text>bar</raw_text>
 </paragraph>
 </block_quote>
 </document>

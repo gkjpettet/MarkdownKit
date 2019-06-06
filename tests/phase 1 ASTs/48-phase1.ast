@@ -1,11 +1,11 @@
 <document>
 <paragraph>
-<text>Foo bar</text>
+<raw_text>Foo bar</raw_text>
 </paragraph>
 <heading level="1">
-<text>baz</text>
+<raw_text>baz</raw_text>
 </heading>
 <paragraph>
-<text>Bar foo</text>
+<raw_text>Bar foo</raw_text>
 </paragraph>
 </document>

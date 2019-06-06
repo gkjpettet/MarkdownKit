@@ -10,8 +10,8 @@ Inherits TestController
 		  //group = New Phase1ListTests(Self, "Lists")
 		  //group = New Phase1SetextTests(Self, "Setext Headings")
 		  //group = New Phase1ThematicBreakTests(Self, "Thematic Breaks")
-		  group = New Phase1BlockquoteTests(Self, "Blockquotes")
-		  // group = New Phase1ATXTests(Self, "ATX Headings")
+		  //group = New Phase1BlockquoteTests(Self, "Blockquotes")
+		  group = New Phase1ATXTests(Self, "ATX Headings")
 		  // group = New Phase1IndentedCodeTests(Self, "Indented Code Blocks")
 		  // group = New Phase1FencedCodeTests(Self, "Fenced Code Blocks")
 		  

@@ -1,5 +1,5 @@
 <document>
 <paragraph>
-<text>\##•foo</text>
+<raw_text>\##•foo</raw_text>
 </paragraph>
 </document>

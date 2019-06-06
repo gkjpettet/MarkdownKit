@@ -1,7 +1,7 @@
 <document>
 <thematic_break />
 <heading level="2">
-<text>foo</text>
+<raw_text>foo</raw_text>
 </heading>
 <thematic_break />
 </document>

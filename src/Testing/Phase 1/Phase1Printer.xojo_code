@@ -49,16 +49,18 @@ Implements Global.MarkdownKit.IWalker
 		  "<heading level=" + """" + atx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
-		  IncreaseIndent
-		  mOutput.Append(CurrentIndent + "<raw_text>")
-		  
-		  Dim content As Text = Text.Join(atx.RawChars, "")
-		  If ShowWhitespace Then content = TransformWhitespace(content)
-		  
-		  mOutput.Append(content)
-		  mOutput.Append("</raw_text>")
-		  mOutput.Append(EOL)
-		  DecreaseIndent
+		  If atx.RawChars.Ubound > -1 Then
+		    IncreaseIndent
+		    mOutput.Append(CurrentIndent + "<raw_text>")
+		    
+		    Dim content As Text = Text.Join(atx.RawChars, "")
+		    If ShowWhitespace Then content = TransformWhitespace(content)
+		    
+		    mOutput.Append(content)
+		    mOutput.Append("</raw_text>")
+		    mOutput.Append(EOL)
+		    DecreaseIndent
+		  End If
 		  
 		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
@@ -380,6 +382,12 @@ Implements Global.MarkdownKit.IWalker
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Pretty"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ShowWhitespace"
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"

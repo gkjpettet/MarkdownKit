@@ -110,10 +110,43 @@ Protected Class Scanner
 		  // If we don't find a valid reference then we leave chars alone.
 		  // Assumes doc <> Nil.
 		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  Dim pos As Integer = 0
+		  
 		  // Parse the label.
 		  Dim label As New MarkdownKit.CharacterRun
 		  label = Scanner.ParseReferenceLabel(chars)
-		  If label.Start = -1 Then Return // Invalid.
+		  If label.Start = -1 Or label.Finish >= charsUbound Then Return // Invalid.
+		  
+		  pos = label.Finish + 1
+		  
+		  // Colon?
+		  If chars(pos) <> ":" Then
+		    Return
+		  Else
+		    pos = pos + 1
+		    If pos > charsUbound Then Return
+		  End If
+		  
+		  // Advance optional whitespace following the colon (including up to one newline).
+		  Dim i As Integer
+		  Dim seenNewline As Boolean = False
+		  For i = pos To charsUbound
+		    Select Case chars(i)
+		    Case &u000A
+		      If seenNewline Then Return // Invalid.
+		      seenNewline = True
+		    Case " ", &u0009
+		      Continue
+		    Else
+		      Exit
+		    End Select
+		  Next i
+		  pos = i
+		  
+		  // Parse the link destination.
+		  Dim destinationLength As Integer = Scanner.ScanLinkURL(chars, pos)
+		  If destinationLength = 0 Then Return // Invalid.
 		  
 		  #Pragma Warning "TODO"
 		  
@@ -258,6 +291,59 @@ Protected Class Scanner
 		  
 		  Return If(cnt < length, 0, cnt)
 		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanLinkURL(chars() As Text, startPos As Integer) As Integer
+		  // Scans the passed array of characters for a valid link URL.
+		  // Begins at the zero-based `startPos`.
+		  // Returns 0 if no valid URL is found, otherwise returns the length of 
+		  // the entire URL.
+		  
+		  // Two kinds of link destinations:
+		  // 1. A sequence of zero or more characters between an opening < and a closing > 
+		  //    that contains no line breaks or unescaped < or > characters.
+		  // 2. A non-empty sequence of characters that does not start with <, does not 
+		  //    include ASCII space or control characters, and includes parentheses only 
+		  //    if (a) they are backslash-escaped or (b) they are part of a balanced pair 
+		  //    of unescaped parentheses.
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  Dim i As Integer
+		  Dim c As Text
+		  
+		  // Scenario 1:
+		  If chars(startPos) = "<" Then
+		    i = startPos + 1
+		    While i <= charsUbound
+		      c = chars(i)
+		      If c = ">" And Not Escaped(chars, i) Then Return i - startPos + 1
+		      If c = "<" And Not Escaped(chars, i) Then Return 0
+		      If c = &u000A Then Return 0
+		      i = i + 1
+		    Wend
+		    Return 0
+		  End If
+		  
+		  // Scenario 2:
+		  Dim openParensCount, closeParensCount As Integer = 0
+		  For i = startPos To charsUbound
+		    c = chars(i)
+		    Select Case c
+		    Case "("
+		      If Not Escaped(chars, i) Then openParensCount = openParensCount + 1
+		    Case ")"
+		      If Not Escaped(chars, i) Then closeParensCount = closeParensCount + 1
+		    Case &u0000, &u0009, &u000A
+		      Return 0
+		    Case " "
+		      Return If(openParensCount <> closeParensCount, 0, i - startPos + 1)
+		    End Select
+		  Next i
+		  
+		  Return If(openParensCount <> closeParensCount, 0, charsUbound - startPos + 1)
 		  
 		End Function
 	#tag EndMethod

@@ -92,7 +92,7 @@ Protected Module MarkdownKit
 	#tag Method, Flags = &h1
 		Protected Function IsWhitespace(char As Text) As Boolean
 		  Select Case char
-		  Case " ", &u0009, ""
+		  Case " ", &u0009, &u000A, ""
 		    Return True
 		  Else
 		    Return False

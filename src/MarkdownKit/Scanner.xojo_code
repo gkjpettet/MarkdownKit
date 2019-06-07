@@ -1,6 +1,18 @@
 #tag Class
 Protected Class Scanner
 	#tag Method, Flags = &h0
+		Shared Function Escaped(chars() As Text, pos As Integer) As Boolean
+		  // Returns True if the character at zero-based position `pos` is escaped.
+		  // I.e: is preceded by a backslash character.
+		  
+		  If pos > chars.Ubound or pos = 0 Then Return False
+		  
+		  Return If(chars(pos - 1) = "\", True, False)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ParseListMarker(indented As Boolean, chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
 		  // Attempts to parse a ListItem marker (bullet or enumerated).
 		  // On success, it returns the length of the marker, and populates
@@ -98,9 +110,67 @@ Protected Class Scanner
 		  // If we don't find a valid reference then we leave chars alone.
 		  // Assumes doc <> Nil.
 		  
+		  // Parse the label.
+		  Dim label As New MarkdownKit.CharacterRun
+		  label = Scanner.ParseReferenceLabel(chars)
+		  If label.Start = -1 Then Return // Invalid.
+		  
 		  #Pragma Warning "TODO"
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ParseReferenceLabel(chars() As Text) As MarkdownKit.CharacterRun
+		  // Parses the contents of `chars` for a link reference definition label.
+		  // Assumes chars starts with a "[".
+		  // Assumes chars.Ubound >=3.
+		  // Returns a CharacterRun. If no valid label is found then the CharacterRun's
+		  // `start` and `finish` properties will be set to -1.
+		  // Does NOT mutate the passed array.
+		  
+		  // Note the precedence: code backticks have precedence over label bracket
+		  // markers, which have precedence over *, _, and other inline formatting
+		  // markers. So, (2) below contains a link whilst (1) does not:
+		  // (1) [a link `with a ](/url)` character
+		  // (2) [a link *with emphasized ](/url) text*
+		  
+		  Dim result As New MarkdownKit.CharacterRun(0, -1)
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  If charsUbound > kMaxReferenceLabelLength + 1 Then Return result
+		  
+		  // Find the first "]" that is not backslash-escaped.
+		  Dim limit As Integer = Xojo.Math.Min(charsUbound, kMaxReferenceLabelLength + 1)
+		  Dim i As Integer
+		  Dim seenNonWhitespace As Boolean = False
+		  For i = 1 To limit
+		    Select Case chars(i)
+		    Case "["
+		      // Unescaped square brackets are not allowed.
+		      If Not Escaped(chars, i) Then Return result
+		      seenNonWhitespace = True
+		    Case "]"
+		      If Escaped(chars, i) Then
+		        seenNonWhitespace = True
+		        Continue
+		      ElseIf seenNonWhitespace Then
+		        // This is the end of a valid label.
+		        result.Finish = i
+		        Return result
+		      Else // No non-whitespace characters in this label.
+		        Return result
+		      End If
+		    Else
+		      // A valid label needs at least one non-whitespace character.
+		      If Not seenNonWhitespace Then seenNonWhitespace = Not IsWhitespace(chars(i))
+		    End Select
+		  Next i
+		  
+		  // No valid label found.
+		  Return result
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -348,6 +418,10 @@ Protected Class Scanner
 		  
 		End Function
 	#tag EndMethod
+
+
+	#tag Constant, Name = kMaxReferenceLabelLength, Type = Double, Dynamic = False, Default = \"999", Scope = Public
+	#tag EndConstant
 
 
 	#tag ViewBehavior

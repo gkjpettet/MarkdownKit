@@ -2,22 +2,49 @@
 Protected Class CharacterRun
 	#tag Method, Flags = &h0
 		Sub Constructor()
+		  Self.Start = -1
+		  Self.Length = -1
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Constructor(start As Integer, length As Integer)
+		  Self.Start = start
+		  Self.Length = length
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(start As Integer, finish As Integer)
-		  Self.Start = start
-		  Self.Finish = finish
+		Function ToArray(source() As Text) As Text()
+		  // Copies from the passed array of characters the characters that make up 
+		  // this CharacterRun.
 		  
-		End Sub
+		  Dim sourceUbound As Integer = source.Ubound
+		  
+		  // Sanity checks.
+		  If Self.Start < 0 Or (Self.Start + Self.Length - 1) > sourceUbound Then
+		    Raise New MarkdownKit.MarkdownException(_
+		    "This CharacterRun is incompatible with the passed source array")
+		  End If
+		  
+		  Dim result() As Text
+		  Dim i, limit As Integer
+		  limit = Self.Start + Self.Length - 1
+		  For i = Self.Start To limit
+		    result.Append(source(i))
+		  Next i
+		  
+		  Return result
+		  
+		End Function
 	#tag EndMethod
 
 
 	#tag Note, Name = About
-		A CharacterRun represents a substring within an array of characters. IT contains the zero-based start and finish 
-		positions wihtin the array that constitute the word.
+		A CharacterRun represents a substring within an array of characters. It contains the zero-based Start position
+		in the array and the number of characters in the run (Length).
+		
 		E.g: 
 		0 H
 		1 I
@@ -35,7 +62,7 @@ Protected Class CharacterRun
 
 
 	#tag Property, Flags = &h0
-		Finish As Integer = -1
+		Length As Integer = -1
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

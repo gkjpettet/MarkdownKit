@@ -327,7 +327,7 @@ Inherits MarkdownKit.Block
 		      
 		    ElseIf container.Type = MarkdownKit.BlockType.FencedCode Then
 		      If (indent <= 3 And line.CurrentChar = FencedCode(container).FenceChar) And _
-		        0 <> Scanner.ScanCloseCodeFence(line.Chars, line.NextNWS, FencedCode(container).FenceLength) Then
+		        0 <> BlockScanner.ScanCloseCodeFence(line.Chars, line.NextNWS, FencedCode(container).FenceLength) Then
 		        // If it's a closing fence, set the fence length to -1. It will be closed when the next line is processed. 
 		        FencedCode(container).FenceLength = -1
 		      Else
@@ -406,7 +406,7 @@ Inherits MarkdownKit.Block
 		      line.NextNWSColumn)
 		      
 		    ElseIf Not indented And line.CurrentChar = "#" And _
-		      0 <> Scanner.ScanAtxHeadingStart(line.Chars, line.NextNWS, _ 
+		      0 <> BlockScanner.ScanAtxHeadingStart(line.Chars, line.NextNWS, _ 
 		      tmpInt1, tmpInt2) Then
 		      // ============= New ATX heading =============
 		      line.AdvanceOffset(line.NextNWS + tmpInt2 - line.Offset, False)
@@ -417,7 +417,7 @@ Inherits MarkdownKit.Block
 		      
 		    ElseIf Not indented And _
 		      (line.CurrentChar = "`" Or line.CurrentChar = "~") And _ 
-		      0 <> Scanner.ScanOpenCodeFence(line.Chars, line.NextNWS, tmpInt1) Then
+		      0 <> BlockScanner.ScanOpenCodeFence(line.Chars, line.NextNWS, tmpInt1) Then
 		      // ============= New fenced code block =============
 		      container = CreateChildBlock(container, line, BlockType.FencedCode, line.NextNWS, _
 		      line.NextNWSColumn)
@@ -428,7 +428,7 @@ Inherits MarkdownKit.Block
 		      
 		    ElseIf Not indented And container.Type = BlockType.Paragraph And _
 		      (line.CurrentChar = "=" Or line.CurrentChar = "-") And _
-		      0 <> Scanner.ScanSetextHeadingLine(line.Chars, line.NextNWS, tmpInt1) Then
+		      0 <> BlockScanner.ScanSetextHeadingLine(line.Chars, line.NextNWS, tmpInt1) Then
 		      // ============= New setext heading =============
 		      container = ConvertParagraphBlockToSetextHeading(container)
 		      MarkdownKit.SetextHeading(container).Level = tmpInt1
@@ -436,7 +436,7 @@ Inherits MarkdownKit.Block
 		      
 		    ElseIf Not indented And _
 		      Not (container.Type = BlockType.Paragraph And Not line.AllMatched) And _
-		      0 <> Scanner.ScanThematicBreak(line.Chars, line.NextNWS) Then
+		      0 <> BlockScanner.ScanThematicBreak(line.Chars, line.NextNWS) Then
 		      // ============= New thematic break =============
 		      // It's only now that we know that the line is not part of a setext heading.
 		      container = CreateChildBlock(container, line, BlockType.ThematicBreak, _
@@ -446,7 +446,7 @@ Inherits MarkdownKit.Block
 		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
 		      
 		    ElseIf (Not indented Or container.Type = BlockType.List) And _
-		      0 <> Scanner.ParseListMarker(indented, line.Chars, line.NextNWS, _
+		      0 <> BlockScanner.ParseListMarker(indented, line.Chars, line.NextNWS, _
 		      container.Type = BlockType.Paragraph, tmpData, tmpInt1) Then
 		      // ============= New lists / list items =============
 		      // Compute padding.

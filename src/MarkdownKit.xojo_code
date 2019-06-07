@@ -49,6 +49,7 @@ Protected Module MarkdownKit
 		  mEscapableCharacters.Value("-") = 0
 		  mEscapableCharacters.Value(".") = 0
 		  mEscapableCharacters.Value("/") = 0
+		  mEscapableCharacters.Value("\") = 0
 		  mEscapableCharacters.Value(":") = 0
 		  mEscapableCharacters.Value(";") = 0
 		  mEscapableCharacters.Value("<") = 0
@@ -86,6 +87,13 @@ Protected Module MarkdownKit
 		  
 		  Return True
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function IsEscapable(char As Text) As Boolean
+		  // Is the passed character a backslash-escapable character?
+		  Return mEscapableCharacters.HasKey(char)
 		End Function
 	#tag EndMethod
 

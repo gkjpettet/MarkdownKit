@@ -1,17 +1,5 @@
 #tag Class
-Protected Class Scanner
-	#tag Method, Flags = &h0
-		Shared Function Escaped(chars() As Text, pos As Integer) As Boolean
-		  // Returns True if the character at zero-based position `pos` is escaped.
-		  // I.e: is preceded by a backslash character.
-		  
-		  If pos > chars.Ubound or pos = 0 Then Return False
-		  
-		  Return If(chars(pos - 1) = "\", True, False)
-		  
-		End Function
-	#tag EndMethod
-
+Protected Class BlockScanner
 	#tag Method, Flags = &h0
 		Shared Function ParseListMarker(indented As Boolean, chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
 		  // Attempts to parse a ListItem marker (bullet or enumerated).
@@ -35,13 +23,13 @@ Protected Class Scanner
 		  c = chars(pos)
 		  
 		  If c = "+" Or c = "•" Or ((c = "*" Or c = "-") And _
-		    0 = Scanner.ScanThematicBreak(chars, pos)) Then
+		    0 = BlockScanner.ScanThematicBreak(chars, pos)) Then
 		    pos = pos + 1
 		    
 		    If pos <= charsUbound And Not IsWhitespace(chars(pos)) Then Return 0
 		    
 		    If interruptsParagraph And _
-		    Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos Then Return 0
+		    BlockScanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos Then Return 0
 		    
 		    data = New MarkdownKit.ListData
 		    data.BulletChar = c
@@ -79,7 +67,7 @@ Protected Class Scanner
 		    
 		    If interruptsParagraph And _
 		      (start <> 1 Or _
-		      Scanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos) Then
+		      BlockScanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos) Then
 		      Return 0
 		    End If
 		    
@@ -97,112 +85,6 @@ Protected Class Scanner
 		  length = pos - startPos
 		  Return pos - startPos
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Sub ParseReference(chars() As Text, doc As MarkdownKit.Document)
-		  // Takes an array of characters representing the raw text of a paragraph.
-		  // Assumes that there are at least 4 characters and chars(0) = "[".
-		  // If we find a valid link reference definition then we remove it from the 
-		  // character array (which is passed by reference) and we add it to the passed 
-		  // Document's reference map dictionary.
-		  // If we don't find a valid reference then we leave chars alone.
-		  // Assumes doc <> Nil.
-		  
-		  Dim charsUbound As Integer = chars.Ubound
-		  Dim pos As Integer = 0
-		  
-		  // Parse the label.
-		  Dim label As New MarkdownKit.CharacterRun
-		  label = Scanner.ParseReferenceLabel(chars)
-		  If label.Start = -1 Or label.Finish >= charsUbound Then Return // Invalid.
-		  
-		  pos = label.Finish + 1
-		  
-		  // Colon?
-		  If chars(pos) <> ":" Then
-		    Return
-		  Else
-		    pos = pos + 1
-		    If pos > charsUbound Then Return
-		  End If
-		  
-		  // Advance optional whitespace following the colon (including up to one newline).
-		  Dim i As Integer
-		  Dim seenNewline As Boolean = False
-		  For i = pos To charsUbound
-		    Select Case chars(i)
-		    Case &u000A
-		      If seenNewline Then Return // Invalid.
-		      seenNewline = True
-		    Case " ", &u0009
-		      Continue
-		    Else
-		      Exit
-		    End Select
-		  Next i
-		  pos = i
-		  
-		  // Parse the link destination.
-		  Dim destinationLength As Integer = Scanner.ScanLinkURL(chars, pos)
-		  If destinationLength = 0 Then Return // Invalid.
-		  
-		  #Pragma Warning "TODO"
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ParseReferenceLabel(chars() As Text) As MarkdownKit.CharacterRun
-		  // Parses the contents of `chars` for a link reference definition label.
-		  // Assumes chars starts with a "[".
-		  // Assumes chars.Ubound >=3.
-		  // Returns a CharacterRun. If no valid label is found then the CharacterRun's
-		  // `start` and `finish` properties will be set to -1.
-		  // Does NOT mutate the passed array.
-		  
-		  // Note the precedence: code backticks have precedence over label bracket
-		  // markers, which have precedence over *, _, and other inline formatting
-		  // markers. So, (2) below contains a link whilst (1) does not:
-		  // (1) [a link `with a ](/url)` character
-		  // (2) [a link *with emphasized ](/url) text*
-		  
-		  Dim result As New MarkdownKit.CharacterRun(0, -1)
-		  
-		  Dim charsUbound As Integer = chars.Ubound
-		  
-		  If charsUbound > kMaxReferenceLabelLength + 1 Then Return result
-		  
-		  // Find the first "]" that is not backslash-escaped.
-		  Dim limit As Integer = Xojo.Math.Min(charsUbound, kMaxReferenceLabelLength + 1)
-		  Dim i As Integer
-		  Dim seenNonWhitespace As Boolean = False
-		  For i = 1 To limit
-		    Select Case chars(i)
-		    Case "["
-		      // Unescaped square brackets are not allowed.
-		      If Not Escaped(chars, i) Then Return result
-		      seenNonWhitespace = True
-		    Case "]"
-		      If Escaped(chars, i) Then
-		        seenNonWhitespace = True
-		        Continue
-		      ElseIf seenNonWhitespace Then
-		        // This is the end of a valid label.
-		        result.Finish = i
-		        Return result
-		      Else // No non-whitespace characters in this label.
-		        Return result
-		      End If
-		    Else
-		      // A valid label needs at least one non-whitespace character.
-		      If Not seenNonWhitespace Then seenNonWhitespace = Not IsWhitespace(chars(i))
-		    End Select
-		  Next i
-		  
-		  // No valid label found.
-		  Return result
 		End Function
 	#tag EndMethod
 
@@ -291,59 +173,6 @@ Protected Class Scanner
 		  
 		  Return If(cnt < length, 0, cnt)
 		  
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ScanLinkURL(chars() As Text, startPos As Integer) As Integer
-		  // Scans the passed array of characters for a valid link URL.
-		  // Begins at the zero-based `startPos`.
-		  // Returns 0 if no valid URL is found, otherwise returns the length of 
-		  // the entire URL.
-		  
-		  // Two kinds of link destinations:
-		  // 1. A sequence of zero or more characters between an opening < and a closing > 
-		  //    that contains no line breaks or unescaped < or > characters.
-		  // 2. A non-empty sequence of characters that does not start with <, does not 
-		  //    include ASCII space or control characters, and includes parentheses only 
-		  //    if (a) they are backslash-escaped or (b) they are part of a balanced pair 
-		  //    of unescaped parentheses.
-		  
-		  Dim charsUbound As Integer = chars.Ubound
-		  Dim i As Integer
-		  Dim c As Text
-		  
-		  // Scenario 1:
-		  If chars(startPos) = "<" Then
-		    i = startPos + 1
-		    While i <= charsUbound
-		      c = chars(i)
-		      If c = ">" And Not Escaped(chars, i) Then Return i - startPos + 1
-		      If c = "<" And Not Escaped(chars, i) Then Return 0
-		      If c = &u000A Then Return 0
-		      i = i + 1
-		    Wend
-		    Return 0
-		  End If
-		  
-		  // Scenario 2:
-		  Dim openParensCount, closeParensCount As Integer = 0
-		  For i = startPos To charsUbound
-		    c = chars(i)
-		    Select Case c
-		    Case "("
-		      If Not Escaped(chars, i) Then openParensCount = openParensCount + 1
-		    Case ")"
-		      If Not Escaped(chars, i) Then closeParensCount = closeParensCount + 1
-		    Case &u0000, &u0009, &u000A
-		      Return 0
-		    Case " "
-		      Return If(openParensCount <> closeParensCount, 0, i - startPos + 1)
-		    End Select
-		  Next i
-		  
-		  Return If(openParensCount <> closeParensCount, 0, charsUbound - startPos + 1)
 		  
 		End Function
 	#tag EndMethod
@@ -504,10 +333,6 @@ Protected Class Scanner
 		  
 		End Function
 	#tag EndMethod
-
-
-	#tag Constant, Name = kMaxReferenceLabelLength, Type = Double, Dynamic = False, Default = \"999", Scope = Public
-	#tag EndConstant
 
 
 	#tag ViewBehavior

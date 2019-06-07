@@ -203,6 +203,17 @@ End
 	#tag EndEvent
 
 
+	#tag MenuHandler
+		Function DebugTest() As Boolean Handles DebugTest.Action
+			MarkdownKit.Initialise
+			
+			Dim t() As Text = Array("a", "b", "\", "\", "c")
+			MarkdownKit.InlineScanner.Unescape(t)
+			Break
+		End Function
+	#tag EndMenuHandler
+
+
 #tag EndWindowCode
 
 #tag Events Source

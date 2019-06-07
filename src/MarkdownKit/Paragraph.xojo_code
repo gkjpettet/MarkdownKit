@@ -55,7 +55,7 @@ Inherits MarkdownKit.Block
 		  
 		  // Reference link definition?
 		  If RawChars(0) = "[" And RawChars.Ubound >= 3 Then
-		    Scanner.ParseReference(RawChars, MarkdownKit.Document(Self.Root))
+		    InlineScanner.ScanLinkReferenceDefinition(RawChars, MarkdownKit.Document(Self.Root))
 		  End If
 		  
 		  

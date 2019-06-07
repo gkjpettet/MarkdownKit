@@ -94,5 +94,22 @@ Begin Menu MenuBarMain
          Visible = True
       End
    End
+   Begin MenuItem DebugMenu
+      SpecialMenu = 0
+      Text = "Debug"
+      Index = -2147483648
+      AutoEnable = True
+      Visible = True
+      Begin MenuItem DebugTest
+         SpecialMenu = 0
+         Text = "Test"
+         Index = -2147483648
+         ShortcutKey = "D"
+         Shortcut = "Cmd+D"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
+   End
 End
 #tag EndMenu

@@ -14,7 +14,7 @@ Inherits TestController
 		  group = New Phase1ATXTests(Self, "ATX Headings")
 		  group = New Phase1IndentedCodeTests(Self, "Indented Code Blocks")
 		  group = New Phase1FencedCodeTests(Self, "Fenced Code Blocks")
-		  
+		  group = New Phase1BlankLineTests(Self, "Blank Lines")
 		End Sub
 	#tag EndEvent
 

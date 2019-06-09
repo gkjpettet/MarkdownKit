@@ -42,6 +42,7 @@ Class=Phase1TestGroup;Testing/Phase 1/Phase1TestGroup.xojo_code;&h0000000009982F
 Class=Phase1Printer;Testing/Phase 1/Phase1Printer.xojo_code;&h000000001464CFFF;&h00000000233AA7FF;false
 Class=Phase1TestController;Testing/Phase 1/Phase1TestController.xojo_code;&h0000000024DAFFFF;&h00000000233AA7FF;false
 Class=Phase1SetextTests;Testing/Phase 1/Phase1SetextTests.xojo_code;&h000000002E2B0FFF;&h00000000233AA7FF;false
+Class=Phase1BlankLineTests;Testing/Phase 1/Phase1BlankLineTests.xojo_code;&h000000007F9E07FF;&h00000000233AA7FF;false
 Class=Phase1ListTests;Testing/Phase 1/Phase1ListTests.xojo_code;&h000000006A1B37FF;&h00000000233AA7FF;false
 Class=Phase1ATXTests;Testing/Phase 1/Phase1ATXTests.xojo_code;&h0000000061C9FFFF;&h00000000233AA7FF;false
 Class=Phase1BlockquoteTests;Testing/Phase 1/Phase1BlockquoteTests.xojo_code;&h0000000072B2D7FF;&h00000000233AA7FF;false

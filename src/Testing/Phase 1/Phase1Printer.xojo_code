@@ -121,22 +121,14 @@ Implements Global.MarkdownKit.IWalker
 		  
 		  // Display the reference link map.
 		  If d.ReferenceMap.Count > 0 Then
-		    
 		    mOutput.Append(EOL)
 		    mOutput.Append(EOL)
-		    mOutput.Append("Reference Links")
-		    mOutput.Append(EOL)
-		    mOutput.Append("---------------")
-		    mOutput.Append(EOL)
-		    Dim ref As MarkdownKit.LinkReferenceDefinition
+		    DecreaseIndent
 		    For Each entry As Xojo.Core.DictionaryEntry In d.ReferenceMap
-		      ref = entry.Value
-		      mOutput.Append("Name: " + ref.Name + ", ")
-		      mOutput.Append("URL: " + ref.Destination + ", ")
-		      mOutput.Append("Title: " + If(ref.Title <> "", ref.Title, "NONE"))
-		      mOutput.Append(EOL)
+		      IncreaseIndent
+		      MarkdownKit.LinkReferenceDefinition(entry.Value).Accept(Self)
+		      DecreaseIndent
 		    Next entry
-		    
 		  End If
 		  
 		End Sub
@@ -180,6 +172,27 @@ Implements Global.MarkdownKit.IWalker
 		  mOutput.Append(CurrentIndent + "</indented_code_block>")
 		  mOutput.Append(EOL)
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitLinkReferenceDefinition(ref As MarkdownKit.LinkReferenceDefinition)
+		  // Part of the IWalker interface.
+		  
+		  mOutput.Append(CurrentIndent + "<reference_definition>")
+		  mOutput.Append(EOL)
+		  IncreaseIndent
+		  mOutput.Append(CurrentIndent + "<name>" + ref.Name + "</name>")
+		  mOutput.Append(EOL)
+		  mOutput.Append(CurrentIndent + "<destination>" + ref.Destination + "</destination>")
+		  mOutput.Append(EOL)
+		  If ref.Title <> "" Then
+		    mOutput.Append(CurrentIndent + "<title>" + ref.Title + "</title>")
+		    mOutput.Append(EOL)
+		  End If
+		  DecreaseIndent
+		  mOutput.Append(CurrentIndent + "</reference_definition>")
+		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod
 

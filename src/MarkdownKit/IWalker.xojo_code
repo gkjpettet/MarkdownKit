@@ -37,6 +37,12 @@ Protected Interface IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitLinkReferenceDefinition(ref As MarkdownKit.LinkReferenceDefinition)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitList(theList As MarkdownKit.List)
 		  
 		End Sub

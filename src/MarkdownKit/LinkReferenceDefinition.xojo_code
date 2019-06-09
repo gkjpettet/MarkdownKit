@@ -1,6 +1,12 @@
 #tag Class
 Protected Class LinkReferenceDefinition
 	#tag Method, Flags = &h0
+		Sub Accept(visitor As MarkdownKit.IWalker)
+		  visitor.VisitLinkReferenceDefinition(Self)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Constructor(name As Text, destination As Text, title As Text)
 		  Self.Name = name
 		  Self.Destination = destination

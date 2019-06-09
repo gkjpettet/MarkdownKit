@@ -24,6 +24,12 @@ Protected Class InlineScanner
 		  
 		  ReplaceCharacterReferences(chars)
 		  
+		  // Remove leading whitespace from the title.
+		  StripLeadingWhitespace(chars)
+		  
+		  // Remove a trailing newline from the title if present
+		  If chars.Ubound > -1 And chars(chars.Ubound) = &u000A Then Call chars.Pop
+		  
 		End Sub
 	#tag EndMethod
 

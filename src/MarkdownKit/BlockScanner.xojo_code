@@ -266,14 +266,7 @@ Protected Class BlockScanner
 		  // Parse the link destination.
 		  Dim destinationCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkDestination(chars, pos, True)
 		  If destinationCR.Length = -1 Then Return // Invalid.
-		  
-		  // Parse the (optional) link title.
 		  pos = pos + destinationCR.Length
-		  If pos = charsUbound Or chars(pos) = &u000A Then
-		    // No title.
-		    FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
-		    Return
-		  End If
 		  
 		  // Advance optional whitespace following the destination (including up to one newline).
 		  seenNewline = False
@@ -290,15 +283,20 @@ Protected Class BlockScanner
 		  Next i
 		  pos = i
 		  destinationCR.Finish = pos
+		  
 		  If pos = charsUbound Then
 		    // No title.
 		    FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
 		    Return
 		  End If
 		  
-		  // Parse the title.
+		  // Parse the (optional) title.
 		  Dim titleCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkTitle(chars, pos)
-		  If titleCR.Length = -1 Then Return // Invalid.
+		  If titleCR.Length = -1 Then
+		    // No title.
+		    FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
+		    Return
+		  End If
 		  
 		  // Ensure that there are no further non-whitespace characters on this line 
 		  // (i.e: up to the next newline or end of array).

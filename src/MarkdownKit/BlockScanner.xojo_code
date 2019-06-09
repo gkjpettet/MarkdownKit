@@ -1,6 +1,48 @@
 #tag Class
 Protected Class BlockScanner
 	#tag Method, Flags = &h0
+		Shared Sub FinaliseLinkReferenceDefinition(ByRef chars() As Text, doc As MarkdownKit.Document, labelCR As MarkdownKit.CharacterRun, destinationCR As MarkdownKit.CharacterRun, titleCR As MarkdownKit.CharacterRun = Nil)
+		  // Called by the ScanLinkReferenceDefinition method. 
+		  // Handles the addition of this reference definition to the document's reference 
+		  // map (if appropriate) and removing the definition from the raw characters 
+		  // of this paragraph block.
+		  
+		  // ##### LABEL #####
+		  Dim labelChars() As Text = labelCR.ToArray(chars)
+		  InlineScanner.CleanLinkLabel(labelChars)
+		  // Normalise the link label by collapsing internal whitespace.
+		  InlineScanner.CollapseInternalWhitespace(labelChars)
+		  Dim label As Text = Text.Join(labelChars, "")
+		  
+		  // ##### DESTINATION #####
+		  Dim urlChars() As Text = destinationCR.ToArray(chars)
+		  InlineScanner.CleanURL(urlChars)
+		  Dim url As Text = Text.Join(urlChars, "")
+		  
+		  // ##### TITLE #####
+		  Dim title As Text = ""
+		  If titleCR <> Nil Then
+		    Dim titleChars() As Text = titleCR.ToArray(chars)
+		    InlineScanner.CleanLinkTitle(titleChars)
+		    title = Text.Join(titleChars, "")
+		  End If
+		  
+		  // Only add this reference to the document if it's the first time we've encountered 
+		  // a reference with this normalised name.
+		  If Not doc.ReferenceMap.HasKey(label) Then
+		    // This is the first reference with this label that we've encountered. Add it.
+		    doc.AddLinkReferenceDefinition(label, url, title)
+		  End If
+		  
+		  // Remove the entire reference definition from the original character array.
+		  Dim refLength As Integer = If(titleCR <> Nil And titleCR.Finish <> -1, titleCR.Finish, destinationCR.Finish)
+		  chars.RemoveLeft(refLength)
+		  StripLeadingWhitespace(chars)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ParseListMarker(indented As Boolean, chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
 		  // Attempts to parse a ListItem marker (bullet or enumerated).
 		  // On success, it returns the length of the marker, and populates
@@ -175,6 +217,114 @@ Protected Class BlockScanner
 		  
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Sub ScanLinkReferenceDefinition(ByRef chars() As Text, doc As MarkdownKit.Document)
+		  // Takes an array of characters representing the raw text of a paragraph.
+		  // Assumes that there are at least 4 characters and chars(0) = "[".
+		  // If we find a valid link reference definition then we remove it from the 
+		  // character array (which is passed by reference) and we add it to the passed 
+		  // Document's reference map dictionary.
+		  // If we don't find a valid reference then we leave chars alone.
+		  // Assumes doc <> Nil.
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  Dim pos As Integer = 0
+		  
+		  // Parse the label.
+		  Dim labelCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkLabel(chars)
+		  If labelCR.Length = -1 Then Return // Invalid.
+		  
+		  pos = labelCR.Start + labelCR.Length
+		  If pos > charsUbound Then Return
+		  
+		  // Colon?
+		  If chars(pos) <> ":" Then
+		    Return
+		  Else
+		    pos = pos + 1
+		    If pos > charsUbound Then Return
+		  End If
+		  
+		  // Advance optional whitespace following the colon (including up to one newline).
+		  Dim i As Integer
+		  Dim seenNewline As Boolean = False
+		  For i = pos To charsUbound
+		    Select Case chars(i)
+		    Case &u000A
+		      If seenNewline Then Return // Invalid.
+		      seenNewline = True
+		    Case " ", &u0009
+		      Continue
+		    Else
+		      Exit
+		    End Select
+		  Next i
+		  pos = i
+		  
+		  // Parse the link destination.
+		  Dim destinationCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkDestination(chars, pos, True)
+		  If destinationCR.Length = -1 Then Return // Invalid.
+		  
+		  // Parse the (optional) link title.
+		  pos = pos + destinationCR.Length
+		  If pos = charsUbound Or chars(pos) = &u000A Then
+		    // No title.
+		    FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
+		    Return
+		  End If
+		  
+		  // Advance optional whitespace following the destination (including up to one newline).
+		  seenNewline = False
+		  For i = pos To charsUbound
+		    Select Case chars(i)
+		    Case &u000A
+		      If seenNewline Then Return // Invalid.
+		      seenNewline = True
+		    Case " ", &u0009
+		      Continue
+		    Else
+		      Exit
+		    End Select
+		  Next i
+		  pos = i
+		  destinationCR.Finish = pos
+		  If pos = charsUbound Then
+		    // No title.
+		    FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
+		    Return
+		  End If
+		  
+		  // Parse the title.
+		  Dim titleCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkTitle(chars, pos)
+		  If titleCR.Length = -1 Then Return // Invalid.
+		  
+		  // Ensure that there are no further non-whitespace characters on this line 
+		  // (i.e: up to the next newline or end of array).
+		  pos = pos + titleCR.Length
+		  seenNewline = False
+		  Dim c As Text
+		  If pos < charsUbound Then
+		    For i = pos To charsUbound
+		      c = chars(i)
+		      If c = &u000A And Not seenNewline Then
+		        seenNewline = True
+		      ElseIf Not IsWhitespace(c) Then
+		        If Not seenNewline Then
+		          Return
+		        Else
+		          Exit
+		        End If
+		      End If
+		    Next i
+		  End If
+		  titleCR.Finish = i
+		  
+		  // Finalise the reference.
+		  FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR, titleCR)
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0

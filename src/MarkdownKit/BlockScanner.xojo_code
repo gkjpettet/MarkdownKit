@@ -35,7 +35,7 @@ Protected Class BlockScanner
 		  End If
 		  
 		  // Remove the entire reference definition from the original character array.
-		  Dim refLength As Integer = If(titleCR <> Nil And titleCR.Finish <> -1, titleCR.Finish, destinationCR.Finish)
+		  Dim refLength As Integer = If(titleCR <> Nil And titleCR.Finish <> -1, titleCR.Finish + 1, destinationCR.Finish + 1)
 		  chars.RemoveLeft(refLength)
 		  StripLeadingWhitespace(chars)
 		  
@@ -318,8 +318,8 @@ Protected Class BlockScanner
 		        End If
 		      End If
 		    Next i
+		    titleCR.Finish = i
 		  End If
-		  titleCR.Finish = i
 		  
 		  // Finalise the reference.
 		  FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR, titleCR)

@@ -54,12 +54,16 @@ Inherits MarkdownKit.Block
 		  If RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
 		  
 		  Dim origCount As Integer
-		  While RawChars(0) = "[" And RawChars.Ubound >= 3
+		  While RawChars.Ubound >= 3 And RawChars(0) = "["
 		    // Cache the size of the chars array now as it will change if a reference is found.
 		    origCount = RawChars.Ubound
 		    BlockScanner.ScanLinkReferenceDefinition(RawChars, MarkdownKit.Document(Self.Root))
 		    If origCount = RawChars.Ubound Then Exit // No more reference links found.
 		  Wend
+		  
+		  // Do we need to remove this paragraph entirely? This occurs when its only content 
+		  // was a reference link.
+		  If RawChars.Ubound = -1 Then Self.Parent.RemoveChild(Self)
 		  
 		End Sub
 	#tag EndMethod

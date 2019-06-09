@@ -116,6 +116,16 @@ Protected Class Block
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub RemoveChild(child As MarkdownKit.Block)
+		  // Removes the passed child block from this block.
+		  // Only looks at the top level children of this block.
+		  
+		  Dim childIndex As Integer = Children.IndexOf(child)
+		  If childIndex <> -1 Then Children.Remove(childIndex)
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Sub SetType()
 		  // Set this Block's type enumeration.

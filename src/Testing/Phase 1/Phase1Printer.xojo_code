@@ -349,7 +349,7 @@ Implements Global.MarkdownKit.IWalker
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return Text.Join(mOutput, "")
+			  Return Text.Join(mOutput, "").Trim
 			End Get
 		#tag EndGetter
 		#tag Setter

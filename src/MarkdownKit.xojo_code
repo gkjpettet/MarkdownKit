@@ -110,19 +110,40 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Sub RemoveLeft(Extends source() As Text, length As Integer)
+		  // Removes `length` elements from the start of the passed array.
+		  
+		  If length <= 0 Or (length - 1) > source.Ubound Then
+		    Raise New MarkdownKit.MarkdownException( _
+		    "Invalid parameters provided to the MarkdownKit.RemoveLeft method")
+		  End If
+		  
+		  Dim remaining As Integer = length
+		  Do Until remaining = 0
+		    source.Remove(0)
+		    remaining = remaining - 1
+		  Loop
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Sub StripLeadingWhitespace(chars() As Text)
 		  // Takes a ByRef array of characters and removes contiguous whitespace 
 		  // characters from the beginning of it.
 		  // Whitespace characters are &u0020, &u0009.
 		  
 		  Dim i As Integer
+		  Dim c As Text
 		  For i = chars.Ubound DownTo 0
-		    If chars(0) = &u0020 Or chars(0) = &u0009 Then
+		    c = chars(0)
+		    Select Case c
+		    Case &u0020, &u0009, &u000A
 		      chars.Remove(0)
 		    Else
 		      Exit
-		    End If
+		    End Select
 		  Next i
+		  
 		End Sub
 	#tag EndMethod
 
@@ -134,12 +155,15 @@ Protected Module MarkdownKit
 		  // Mutates the passed array.
 		  
 		  Dim i As Integer
+		  Dim c As Text
 		  For i = chars.Ubound DownTo 0
-		    If chars(chars.Ubound) = &u0020 Or chars(chars.Ubound) = &u0009 Then
+		    c = chars(chars.Ubound)
+		    Select Case c
+		    Case &u0020, &u0009, &u000A
 		      chars.Remove(chars.Ubound)
 		    Else
 		      Exit
-		    End If
+		    End Select
 		  Next i
 		  
 		End Sub

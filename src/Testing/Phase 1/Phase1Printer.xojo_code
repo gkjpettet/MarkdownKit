@@ -119,6 +119,26 @@ Implements Global.MarkdownKit.IWalker
 		  
 		  mOutput.Append(CurrentIndent + "</document>")
 		  
+		  // Display the reference link map.
+		  If d.ReferenceMap.Count > 0 Then
+		    
+		    mOutput.Append(EOL)
+		    mOutput.Append(EOL)
+		    mOutput.Append("Reference Links")
+		    mOutput.Append(EOL)
+		    mOutput.Append("---------------")
+		    mOutput.Append(EOL)
+		    Dim ref As MarkdownKit.LinkReferenceDefinition
+		    For Each entry As Xojo.Core.DictionaryEntry In d.ReferenceMap
+		      ref = entry.Value
+		      mOutput.Append("Name: " + ref.Name + ", ")
+		      mOutput.Append("URL: " + ref.Destination + ", ")
+		      mOutput.Append("Title: " + If(ref.Title <> "", ref.Title, "NONE"))
+		      mOutput.Append(EOL)
+		    Next entry
+		    
+		  End If
+		  
 		End Sub
 	#tag EndMethod
 

@@ -207,8 +207,10 @@ End
 		Function DebugTest() As Boolean Handles DebugTest.Action
 			MarkdownKit.Initialise
 			
-			Dim t() As Text = Array("a", "b", "\", "\", "c")
-			MarkdownKit.InlineScanner.Unescape(t)
+			Dim test As Text = "ab  cd   ef"
+			Dim t() As Text = test.Split
+			
+			MarkdownKit.InlineScanner.CollapseInternalWhitespace(t)
 			Break
 		End Function
 	#tag EndMenuHandler

@@ -54,10 +54,17 @@ Inherits MarkdownKit.Block
 		  If RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
 		  
 		  // Reference link definition?
-		  If RawChars(0) = "[" And RawChars.Ubound >= 3 Then
-		    InlineScanner.ScanLinkReferenceDefinition(RawChars, MarkdownKit.Document(Self.Root))
-		  End If
+		  // If RawChars(0) = "[" And RawChars.Ubound >= 3 Then
+		  // InlineScanner.ScanLinkReferenceDefinition(RawChars, MarkdownKit.Document(Self.Root))
+		  // End If
 		  
+		  Dim origCount As Integer
+		  While RawChars(0) = "[" And RawChars.Ubound >= 3
+		    // Cache the size of the chars array now as it will change if a reference is found.
+		    origCount = RawChars.Ubound
+		    InlineScanner.ScanLinkReferenceDefinition(RawChars, MarkdownKit.Document(Self.Root))
+		    If origCount = RawChars.Ubound Then Exit // No reference link found.
+		  Wend
 		  
 		End Sub
 	#tag EndMethod

@@ -8,9 +8,10 @@ Protected Class CharacterRun
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(start As Integer, length As Integer)
+		Sub Constructor(start As Integer, length As Integer, finish As Integer)
 		  Self.Start = start
 		  Self.Length = length
+		  Self.Finish = finish
 		  
 		End Sub
 	#tag EndMethod
@@ -29,6 +30,8 @@ Protected Class CharacterRun
 		  End If
 		  
 		  Dim result() As Text
+		  If Self.Length = 0 Then Return result
+		  
 		  Dim i, limit As Integer
 		  limit = Self.Start + Self.Length - 1
 		  For i = Self.Start To limit
@@ -60,6 +63,10 @@ Protected Class CharacterRun
 		
 	#tag EndNote
 
+
+	#tag Property, Flags = &h0
+		Finish As Integer = -1
+	#tag EndProperty
 
 	#tag Property, Flags = &h0
 		Length As Integer = -1

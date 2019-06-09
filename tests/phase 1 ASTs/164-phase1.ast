@@ -1,0 +1,11 @@
+<document>
+<paragraph>
+<raw_text>[Foo bar]</raw_text>
+</paragraph>
+</document>
+
+<reference_definition>
+<name>Foo bar</name>
+<destination>my url</destination>
+<title>title</title>
+</reference_definition>

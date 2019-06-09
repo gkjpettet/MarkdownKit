@@ -43,7 +43,7 @@ Protected Class InlineScanner
 		  StripTrailingWhitespace(chars)
 		  
 		  // If the URL has flanking < and > characters, remove them.
-		  If charsUbound >=1 And chars(0) = "<" And chars(charsUbound - 1) = ">" Then
+		  If charsUbound >= 1 And chars(0) = "<" And chars(charsUbound) = ">" Then
 		    chars.Remove(0)
 		    Call chars.Pop
 		  End If

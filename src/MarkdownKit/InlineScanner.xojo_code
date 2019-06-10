@@ -267,6 +267,7 @@ Protected Class InlineScanner
 		  //    including a ( or ) character only if it is backslash-escaped.
 		  
 		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
+		  result.Invalid = True
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  
@@ -293,6 +294,7 @@ Protected Class InlineScanner
 		    If c = delimiter And Not Escaped(chars, i) Then
 		      result.Length = i - startPos + 1
 		      result.Finish = i
+		      result.Invalid = False
 		      Return result
 		    End If
 		  Next i

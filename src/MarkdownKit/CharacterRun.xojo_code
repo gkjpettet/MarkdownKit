@@ -69,6 +69,10 @@ Protected Class CharacterRun
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		Invalid As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		Length As Integer = -1
 	#tag EndProperty
 

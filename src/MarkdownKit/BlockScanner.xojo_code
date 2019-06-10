@@ -292,7 +292,9 @@ Protected Class BlockScanner
 		  
 		  // Parse the (optional) title.
 		  Dim titleCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkTitle(chars, pos)
-		  If titleCR.Length = -1 Then
+		  If titleCR.Invalid Then
+		    Return
+		  ElseIf titleCR.Length = -1 Then
 		    // No title.
 		    FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
 		    Return

@@ -10,8 +10,6 @@ Protected Class BlockScanner
 		  // ##### LABEL #####
 		  Dim labelChars() As Text = labelCR.ToArray(chars)
 		  InlineScanner.CleanLinkLabel(labelChars)
-		  // Normalise the link label by collapsing internal whitespace.
-		  InlineScanner.CollapseInternalWhitespace(labelChars)
 		  Dim label As Text = Text.Join(labelChars, "")
 		  
 		  // ##### DESTINATION #####

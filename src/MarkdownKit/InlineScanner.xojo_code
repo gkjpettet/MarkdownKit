@@ -8,6 +8,10 @@ Protected Class InlineScanner
 		  chars.Remove(0)
 		  Call chars.Pop
 		  
+		  CollapseInternalWhitespace(chars)
+		  StripLeadingWhitespace(chars)
+		  StripTrailingWhitespace(chars)
+		  
 		End Sub
 	#tag EndMethod
 
@@ -287,8 +291,7 @@ Protected Class InlineScanner
 		  Case "("
 		    delimiter = ")"
 		  Else
-		    // Edge case.
-		    If c = "[" And startPos > 0 And chars(startPos - 1) = &u000A Then result.Invalid = False
+		    If startPos > 0 And chars(startPos - 1) = &u000A Then result.Invalid = False
 		    Return result
 		  End Select
 		  

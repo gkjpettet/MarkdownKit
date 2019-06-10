@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<raw_text>"title" ok</raw_text>
+</paragraph>
+</document>
+
+<reference_definition>
+<name>foo</name>
+<destination>/url</destination>
+</reference_definition>

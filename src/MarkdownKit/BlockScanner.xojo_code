@@ -317,6 +317,12 @@ Protected Class BlockScanner
 		        seenNewline = True
 		      ElseIf Not IsWhitespace(c) Then
 		        If Not seenNewline Then
+		          // The only way this can still be a valid reference def is if this 
+		          // title begins on a newline (in which case we treat it as a 
+		          // definition without a title)
+		          If chars(titleCR.Start - 1) = &u000A Then // No title.
+		            FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
+		          End If
 		          Return
 		        Else
 		          Exit

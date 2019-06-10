@@ -14,8 +14,7 @@ Inherits MarkdownKit.Block
 		  
 		  If RawChars.Ubound < 0 Then Return
 		  
-		  // Strip the trailing newline (if present)
-		  If RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
+		  StripTrailingWhitespace(RawChars)
 		  
 		  Dim origCount As Integer
 		  While RawChars.Ubound >= 3 And RawChars(0) = "["

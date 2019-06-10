@@ -1,5 +1,5 @@
 #tag Menu
-Begin Menu MenuBarWinTests
+Begin Menu MenuBarTests
    Begin MenuItem FileMenu
       SpecialMenu = 0
       Text = "&File"
@@ -120,9 +120,9 @@ Begin Menu MenuBarWinTests
       Index = -2147483648
       AutoEnable = True
       Visible = True
-      Begin MenuItem WindowMain
+      Begin MenuItem WindowEditor
          SpecialMenu = 0
-         Text = "Main"
+         Text = "Editor"
          Index = -2147483648
          ShortcutKey = "1"
          Shortcut = "Cmd+1"

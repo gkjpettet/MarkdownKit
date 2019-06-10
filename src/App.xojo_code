@@ -2,8 +2,17 @@
 Protected Class App
 Inherits Application
 	#tag MenuHandler
-		Function WindowMain() As Boolean Handles WindowMain.Action
-			WinMain.Show
+		Function WindowEditor() As Boolean Handles WindowEditor.Action
+			WinEditor.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function WindowTests() As Boolean Handles WindowTests.Action
+			WinTests.Show
 			
 			Return True
 			

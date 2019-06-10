@@ -1,5 +1,5 @@
 #tag Window
-Begin Window WinMain
+Begin Window WinEditor
    BackColor       =   &cFFFFFF00
    Backdrop        =   0
    CloseButton     =   True
@@ -16,7 +16,7 @@ Begin Window WinMain
    MaxHeight       =   32000
    MaximizeButton  =   True
    MaxWidth        =   32000
-   MenuBar         =   426672127
+   MenuBar         =   1468874751
    MenuBarVisible  =   True
    MinHeight       =   64
    MinimizeButton  =   True
@@ -194,6 +194,13 @@ End
 
 #tag WindowCode
 	#tag Event
+		Sub EnableMenuItems()
+		  ParserRun.Enabled = If(Source.Text.Len > 0, True, False)
+		  
+		End Sub
+	#tag EndEvent
+
+	#tag Event
 		Sub Open()
 		  // Disable smart quotes.
 		  Source.SmartQuotes = False
@@ -215,24 +222,36 @@ End
 		End Function
 	#tag EndMenuHandler
 
+	#tag MenuHandler
+		Function ParserRun() As Boolean Handles ParserRun.Action
+			Parse
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
 
-#tag EndWindowCode
+	#tag MenuHandler
+		Function WindowEditor() As Boolean Handles WindowEditor.Action
+			WinEditor.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
 
-#tag Events Source
-	#tag Event
-		Sub TextChange()
-		  If Me.Text.Len > 0 Then
-		    ButtonParse.Enabled = True
-		  Else
-		    ButtonParse.Enabled = False
-		  End If
-		  
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events ButtonParse
-	#tag Event
-		Sub Action()
+	#tag MenuHandler
+		Function WindowTests() As Boolean Handles WindowTests.Action
+			WinTests.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+
+	#tag Method, Flags = &h0
+		Sub Parse()
 		  // Create a new Markdown document.
 		  Dim doc As New MarkdownKit.Document(Source.Text.ToText)
 		  doc.ParseBlockStructure
@@ -255,6 +274,29 @@ End
 		    Info.Text = e.Reason
 		    Output.Text = ""
 		    
+		End Sub
+	#tag EndMethod
+
+
+#tag EndWindowCode
+
+#tag Events Source
+	#tag Event
+		Sub TextChange()
+		  If Me.Text.Len > 0 Then
+		    ButtonParse.Enabled = True
+		  Else
+		    ButtonParse.Enabled = False
+		  End If
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ButtonParse
+	#tag Event
+		Sub Action()
+		  Parse
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents

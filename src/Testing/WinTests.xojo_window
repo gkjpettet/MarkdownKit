@@ -609,7 +609,6 @@ Begin Window WinTests
    Begin Phase1TestController Controller
       AllTestCount    =   0
       Duration        =   0.0
-      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -1138,8 +1137,8 @@ End
 	#tag EndMenuHandler
 
 	#tag MenuHandler
-		Function WindowMain() As Boolean Handles WindowMain.Action
-			WinMain.Show
+		Function WindowEditor() As Boolean Handles WindowEditor.Action
+			WinEditor.Show
 			
 			Return True
 			

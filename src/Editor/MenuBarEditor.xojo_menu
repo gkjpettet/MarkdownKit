@@ -1,5 +1,5 @@
 #tag Menu
-Begin Menu MenuBarMain
+Begin Menu MenuBarEditor
    Begin MenuItem FileMenu
       SpecialMenu = 0
       Text = "&File"
@@ -109,6 +109,40 @@ Begin Menu MenuBarMain
          Index = -2147483648
          ShortcutKey = "-"
          Shortcut = "Cmd+-"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
+   End
+   Begin MenuItem DebugMenu
+      SpecialMenu = 0
+      Text = "Debug"
+      Index = -2147483648
+      AutoEnable = True
+      Visible = True
+      Begin MenuItem UntitledTest
+         SpecialMenu = 0
+         Text = "Test"
+         Index = -2147483648
+         ShortcutKey = "T"
+         Shortcut = "Cmd+T"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
+   End
+   Begin MenuItem ParserMenu
+      SpecialMenu = 0
+      Text = "Parser"
+      Index = -2147483648
+      AutoEnable = True
+      Visible = True
+      Begin MenuItem ParserRun
+         SpecialMenu = 0
+         Text = "Run"
+         Index = -2147483648
+         ShortcutKey = "Y"
+         Shortcut = "Cmd+Y"
          MenuModifier = True
          AutoEnable = True
          Visible = True

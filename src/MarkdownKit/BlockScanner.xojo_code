@@ -269,6 +269,7 @@ Protected Class BlockScanner
 		  pos = pos + destinationCR.Length
 		  
 		  // Advance optional whitespace following the destination (including up to one newline).
+		  Dim skippedWhitespace As Boolean = False
 		  If pos <= charsUbound Then
 		    seenNewline = False
 		    For i = pos To charsUbound
@@ -276,7 +277,9 @@ Protected Class BlockScanner
 		      Case &u000A
 		        If seenNewline Then Return // Invalid.
 		        seenNewline = True
+		        skippedWhitespace = True
 		      Case " ", &u0009
+		        skippedWhitespace = True
 		        Continue
 		      Else
 		        Exit
@@ -300,6 +303,9 @@ Protected Class BlockScanner
 		    // No title.
 		    FinaliseLinkReferenceDefinition(chars, doc, labelCR, destinationCR)
 		    Return
+		  Else
+		    // Titles must be separated from the destination by whitespace
+		    If Not skippedWhitespace Then Return
 		  End If
 		  
 		  // Ensure that there are no further non-whitespace characters on this line 

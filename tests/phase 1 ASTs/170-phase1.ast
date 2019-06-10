@@ -1,0 +1,8 @@
+<document>
+<paragraph>
+<raw_text>[foo]: <bar>(baz)</raw_text>
+</paragraph>
+<paragraph>
+<raw_text>[foo]</raw_text>
+</paragraph>
+</document>

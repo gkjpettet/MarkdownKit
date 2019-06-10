@@ -25,7 +25,6 @@ Inherits MarkdownKit.Block
 		    If origCount = RawChars.Ubound Then Exit // No more reference links found.
 		  Wend
 		  
-		  
 		End Sub
 	#tag EndMethod
 

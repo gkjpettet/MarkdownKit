@@ -109,7 +109,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function ConvertParagraphBlockToSetextHeading(ByRef p As MarkdownKit.Block) As MarkdownKit.Block
+		Private Function ConvertParagraphBlockToSetextHeading(ByRef p As MarkdownKit.Block, line As MarkdownKit.LineInfo) As MarkdownKit.Block
 		  // Remove the passed Paragraph block (`p`) from its parent and replace it with a new 
 		  // SetextHeading block with the same children.
 		  // Returns the newly created SetextHeading.
@@ -126,8 +126,24 @@ Inherits MarkdownKit.Block
 		  // Create a new SetextHeading block to replace the paragraph.
 		  Dim stx As New MarkdownKit.SetextHeading(p.LineNumber, p.StartPosition, p.StartColumn)
 		  
+		  // Set the root.
+		  stx.Root = p.Root
+		  
 		  // Copy the paragraph's raw character array to this SetextHeading.
 		  stx.RawChars = MarkdownKit.Paragraph(p).RawChars
+		  
+		  // Edge case:
+		  // It's possible for the contents of this setext heading to be a reference link definition only.
+		  // In this scenario, we need to get the definition and add it to the document's reference map (if 
+		  // appropriate), add the setext heading line as content to this paragraph and raise 
+		  // an EdgeCase exception.
+		  stx.Finalise(line)
+		  If stx.RawChars.Ubound = -1 Then
+		    p.AddLine(line, 0)
+		    #Pragma BreakOnExceptions False
+		    Raise New MarkdownKit.EdgeCase
+		    #Pragma BreakOnExceptions True
+		  End If
 		  
 		  // Remove the paragraph from its parent.
 		  paraParent.Children.Remove(index)
@@ -141,9 +157,6 @@ Inherits MarkdownKit.Block
 		  
 		  // Assign the parent.
 		  stx.Parent = paraParent
-		  
-		  // Set the root.
-		  stx.Root = p.Root
 		  
 		  // Nil out the old paragraph.
 		  p = Nil
@@ -433,8 +446,15 @@ Inherits MarkdownKit.Block
 		      (line.CurrentChar = "=" Or line.CurrentChar = "-") And _
 		      0 <> BlockScanner.ScanSetextHeadingLine(line.Chars, line.NextNWS, tmpInt1) Then
 		      // ============= New setext heading =============
-		      container = ConvertParagraphBlockToSetextHeading(container)
-		      MarkdownKit.SetextHeading(container).Level = tmpInt1
+		      Try
+		        container = ConvertParagraphBlockToSetextHeading(container, line)
+		        MarkdownKit.SetextHeading(container).Level = tmpInt1
+		      Catch e As MarkdownKit.EdgeCase
+		        // This happens when the entire contents of the setext heading is a 
+		        // reference link definition. In this scenario, `container` remains a 
+		        // paragraph with the setext heading line having been added to the 
+		        // paragraph's contents.
+		      End Try
 		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
 		      
 		    ElseIf Not indented And _

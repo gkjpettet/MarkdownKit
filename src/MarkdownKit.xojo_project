@@ -58,6 +58,7 @@ Class=CharacterRun;MarkdownKit/CharacterRun.xojo_code;&h00000000053C7FFF;&h00000
 Class=InlineScanner;MarkdownKit/InlineScanner.xojo_code;&h000000007D7DC7FF;&h00000000214287FF;false
 MenuBar=MenuBarEditor;Editor/MenuBarEditor.xojo_menu;&h00000000578D3FFF;&h00000000685F5FFF;false
 Window=WinEditor;Editor/WinEditor.xojo_window;&h000000004602EFFF;&h00000000685F5FFF;false
+Class=EdgeCase;MarkdownKit/EdgeCase.xojo_code;&h000000000DCC3FFF;&h00000000214287FF;false
 DefaultWindow=WinTests
 AppMenuBar=MenuBarMain
 MajorVersion=1

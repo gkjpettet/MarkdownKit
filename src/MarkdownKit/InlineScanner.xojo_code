@@ -14,7 +14,7 @@ Protected Class InlineScanner
 	#tag Method, Flags = &h0
 		Shared Sub CleanLinkTitle(chars() As Text)
 		  // Takes an array of characters representing a link title that has been parsed by ScanLinkTitle().
-		  // Removes surrounding delimiters and replaces character references.
+		  // Removes surrounding delimiters, handles backslash-escaped characters and replaces character references.
 		  // NB: Does NOT unescape special characters.
 		  // Mutates the passed array.
 		  
@@ -22,6 +22,7 @@ Protected Class InlineScanner
 		  chars.Remove(0)
 		  Call chars.Pop
 		  
+		  Unescape(chars)
 		  ReplaceCharacterReferences(chars)
 		  
 		  // Remove leading whitespace from the title.

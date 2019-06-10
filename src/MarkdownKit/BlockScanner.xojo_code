@@ -325,11 +325,12 @@ Protected Class BlockScanner
 		          End If
 		          Return
 		        Else
+		          titleCR.Finish = i - 1
 		          Exit
 		        End If
 		      End If
+		      titleCR.Finish = i
 		    Next i
-		    titleCR.Finish = i
 		  End If
 		  
 		  // Finalise the reference.

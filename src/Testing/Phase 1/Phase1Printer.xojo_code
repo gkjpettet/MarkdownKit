@@ -121,14 +121,23 @@ Implements Global.MarkdownKit.IWalker
 		  
 		  // Display the reference link map.
 		  If d.ReferenceMap.Count > 0 Then
+		    // Since iterating through a dictionary does not guarantee order, 
+		    // we will get the keys (definition names) as an array and sort 
+		    // them alphabetically.
+		    Dim keys() As Text
+		    For Each entry As Xojo.Core.DictionaryEntry In d.ReferenceMap
+		      keys.Append(entry.Key)
+		    Next entry
+		    keys.Sort
+		    
 		    mOutput.Append(EOL)
 		    mOutput.Append(EOL)
 		    DecreaseIndent
-		    For Each entry As Xojo.Core.DictionaryEntry In d.ReferenceMap
+		    For i As Integer = 0 To keys.Ubound
 		      IncreaseIndent
-		      MarkdownKit.LinkReferenceDefinition(entry.Value).Accept(Self)
+		      MarkdownKit.LinkReferenceDefinition(d.ReferenceMap.Value(keys(i))).Accept(Self)
 		      DecreaseIndent
-		    Next entry
+		    Next i
 		  End If
 		  
 		End Sub

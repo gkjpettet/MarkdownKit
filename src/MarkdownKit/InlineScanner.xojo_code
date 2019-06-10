@@ -190,7 +190,7 @@ Protected Class InlineScanner
 		  If openParensCount <> closeParensCount Then
 		    Return result
 		  Else
-		    result.Length = charsUbound - startPos
+		    result.Length = charsUbound - startPos + 1
 		    result.Finish = charsUbound
 		    Return result
 		  End If

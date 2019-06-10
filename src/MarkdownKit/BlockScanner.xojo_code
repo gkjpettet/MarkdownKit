@@ -286,7 +286,6 @@ Protected Class BlockScanner
 		      End Select
 		    Next i
 		    pos = i
-		    destinationCR.Finish = pos
 		  End If
 		  
 		  If pos >= charsUbound Then

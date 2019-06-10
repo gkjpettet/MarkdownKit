@@ -171,7 +171,7 @@ Protected Class InlineScanner
 		          Return result
 		        Else
 		          result.Length = i - startPos
-		          result.Finish = i
+		          result.Finish = i - 1
 		          Return result
 		        End If
 		      Else
@@ -287,6 +287,8 @@ Protected Class InlineScanner
 		  Case "("
 		    delimiter = ")"
 		  Else
+		    // Edge case.
+		    If c = "[" And startPos > 0 And chars(startPos - 1) = &u000A Then result.Invalid = False
 		    Return result
 		  End Select
 		  

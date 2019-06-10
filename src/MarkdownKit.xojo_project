@@ -22,6 +22,7 @@ Class=RawText;MarkdownKit/RawText.xojo_code;&h00000000317EAFFF;&h00000000214287F
 Class=BlockScanner;MarkdownKit/BlockScanner.xojo_code;&h000000001574BFFF;&h00000000214287FF;false
 Interface=IWalker;MarkdownKit/IWalker.xojo_code;&h0000000043C017FF;&h00000000214287FF;false
 Class=ThematicBreak;MarkdownKit/ThematicBreak.xojo_code;&h000000001BC2D7FF;&h00000000214287FF;false
+Class=HTML;MarkdownKit/HTML.xojo_code;&h0000000012B337FF;&h00000000214287FF;false
 MenuBar=MenuBarTests;Testing/MenuBarTests.xojo_menu;&h0000000053409FFF;&h0000000065A43FFF;false
 Window=WinTests;Testing/WinTests.xojo_window;&h00000000090B6FFF;&h0000000065A43FFF;false
 Folder=XojoUnit;Testing/XojoUnit;&h00000000429EC7FF;&h0000000065A43FFF;false

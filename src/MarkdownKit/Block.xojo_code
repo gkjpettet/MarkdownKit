@@ -152,6 +152,8 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.ListItem
 		  ElseIf Self IsA MarkdownKit.List Then
 		    mType = MarkdownKit.BlockType.List
+		  ElseIf Self IsA MarkdownKit.HTML Then
+		    mType = MarkdownKit.BlockType.HtmlBlock
 		  Else
 		    Raise New MarkdownKit.MarkdownException("Unknown Block type")
 		  End If

@@ -200,6 +200,8 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.ListItem(line.Number, startPos, startColumn)
 		  Case BlockType.List
 		    child = New MarkdownKit.List(line.Number, startPos, startColumn)
+		  Case BlockType.HTML
+		    child = New MarkdownKit.HTML(line.Number, startPos, startColumn)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"

@@ -166,6 +166,13 @@ Implements Global.MarkdownKit.IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitHTML(h As MarkdownKit.HTML)
+		  #Pragma Warning "TODO"
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitIndentedCode(i As MarkdownKit.IndentedCode)
 		  // Part of the IWalker interface.
 		  

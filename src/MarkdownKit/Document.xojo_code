@@ -142,6 +142,9 @@ Inherits MarkdownKit.Block
 		  // Assign the parent.
 		  stx.Parent = paraParent
 		  
+		  // Set the root.
+		  stx.Root = p.Root
+		  
 		  // Nil out the old paragraph.
 		  p = Nil
 		  

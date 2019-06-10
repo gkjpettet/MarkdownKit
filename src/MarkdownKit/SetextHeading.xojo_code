@@ -12,8 +12,20 @@ Inherits MarkdownKit.Block
 		  // Calling the overridden superclass method.
 		  Super.Finalise(line)
 		  
+		  If RawChars.Ubound < 0 Then Return
+		  
 		  // Strip the trailing newline (if present)
-		  If RawChars.Ubound >= 0 And RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
+		  If RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
+		  
+		  Dim origCount As Integer
+		  While RawChars.Ubound >= 3 And RawChars(0) = "["
+		    // Cache the size of the chars array now as it will change if a reference is found.
+		    origCount = RawChars.Ubound
+		    BlockScanner.ScanLinkReferenceDefinition(RawChars, MarkdownKit.Document(Self.Root))
+		    If origCount = RawChars.Ubound Then Exit // No more reference links found.
+		  Wend
+		  
+		  
 		End Sub
 	#tag EndMethod
 

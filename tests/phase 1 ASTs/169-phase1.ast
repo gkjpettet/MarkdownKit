@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<raw_text>[foo]</raw_text>
+</paragraph>
+</document>
+
+<reference_definition>
+<name>foo</name>
+<destination></destination>
+</reference_definition>

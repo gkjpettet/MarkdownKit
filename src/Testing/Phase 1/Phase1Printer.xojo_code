@@ -176,7 +176,6 @@ Implements Global.MarkdownKit.IWalker
 		  mOutput.Append(CurrentIndent + "<raw_text>")
 		  
 		  Dim content As Text = Text.Join(h.RawChars, "")
-		  If ShowWhitespace Then content = TransformWhitespace(content)
 		  
 		  mOutput.Append(content)
 		  mOutput.Append("</raw_text>")

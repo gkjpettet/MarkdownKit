@@ -7,8 +7,56 @@ Inherits MarkdownKit.Block
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub AddLine(line As MarkdownKit.LineInfo, startPos As Integer, length As Integer = -1)
+		  If Not Self.IsOpen Then
+		    Raise New MarkdownKit.MarkdownException("Attempted to add line " + _
+		    line.Number.ToText + " to closed container " + Self.Type.ToText)
+		  End If
+		  
+		  Dim len As Integer = If(length = -1, line.CharsUbound - line.Offset + 1, length)
+		  
+		  // Unexpected blank line?
+		  If len <= 0 Then Raise New MarkdownKit.MarkdownException("Bug: I didn't think this would happen!")
+		  
+		  // Get the characters from the current line offset to the end of the line.
+		  Dim tmp() As Text
+		  Dim i As Integer
+		  Dim limit As Integer = Xojo.Math.Min(line.Chars.Ubound, startPos + len - 1)
+		  For i = startPos To limit
+		    tmp.Append(line.Chars(i))
+		  Next i
+		  
+		  // Add a newline to the end of this line.
+		  tmp.Append(&u000A)
+		  
+		  // Append the characters of this line to this block's RawChars array.
+		  RawChars.AppendArray(tmp)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Finalise(line As MarkdownKit.LineInfo)
+		  // Calling the overridden superclass method.
+		  Super.Finalise(line)
+		  
+		  If RawChars.Ubound < 0 Then Return
+		  
+		  #Pragma Warning "CHECK: May not need to pop the last newline off..."
+		  If RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StartColumn"
 			Group="Behavior"
@@ -55,6 +103,7 @@ Inherits MarkdownKit.Block
 				"13 - RawText"
 				"14 - Softbreak"
 				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

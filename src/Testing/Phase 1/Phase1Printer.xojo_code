@@ -167,20 +167,24 @@ Implements Global.MarkdownKit.IWalker
 
 	#tag Method, Flags = &h0
 		Sub VisitHTML(h As MarkdownKit.HTML)
-		  // Part of the MarkdownKit.IWalker interface.
+		  // Part of the IWalker interface.
 		  
 		  mOutput.Append(CurrentIndent + "<html_block>")
 		  mOutput.Append(EOL)
 		  
-		  For Each b As MarkdownKit.Block In h.Children
-		    IncreaseIndent
-		    b.Accept(Self)
-		    DecreaseIndent
-		  Next b
+		  IncreaseIndent
+		  mOutput.Append(CurrentIndent + "<raw_text>")
+		  
+		  Dim content As Text = Text.Join(h.RawChars, "")
+		  If ShowWhitespace Then content = TransformWhitespace(content)
+		  
+		  mOutput.Append(content)
+		  mOutput.Append("</raw_text>")
+		  mOutput.Append(EOL)
+		  DecreaseIndent
 		  
 		  mOutput.Append(CurrentIndent + "</html_block>")
 		  mOutput.Append(EOL)
-		  
 		End Sub
 	#tag EndMethod
 

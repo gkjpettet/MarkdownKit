@@ -203,6 +203,10 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		RawChars() As Text
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		Root As MarkdownKit.Block
 	#tag EndProperty
 
@@ -340,7 +344,14 @@ Protected Class Block
 				"13 - RawText"
 				"14 - Softbreak"
 				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

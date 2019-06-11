@@ -448,10 +448,10 @@ Inherits MarkdownKit.Block
 		      FencedCode(container).FenceOffset = line.NextNWS - line.Offset
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
 		      
-		    ElseIf (Not indented And line.CurrentChar = "<" And _
-		      Block.kHTMLBlockTypeNone <> (BlockScanner.ScanHtmlBlockStart(line, line.NextNWS, tmpInt1)) _
+		    ElseIf Not indented And line.CurrentChar = "<" And _
+		      (Block.kHTMLBlockTypeNone <> BlockScanner.ScanHtmlBlockStart(line, line.NextNWS, tmpInt1) _
 		      Or (container.Type <> BlockType.Paragraph And _
-		      Block.kHTMLBlockTypeNone <> (BlockScanner.ScanHtmlBlockType7Start(line, line.NextNWS, tmpInt1)))) Then
+		      Block.kHTMLBlockTypeNone <> BlockScanner.ScanHtmlBlockType7Start(line, line.NextNWS, tmpInt1))) Then
 		      // ============= New HTML block =============
 		      container = CreateChildBlock(container, line, BlockType.HTMLBlock, line.NextNWS, _
 		      line.NextNWSColumn)
@@ -659,6 +659,12 @@ Inherits MarkdownKit.Block
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="IsLastLineBlank"
 			Group="Behavior"
 			InitialValue="False"
@@ -704,6 +710,7 @@ Inherits MarkdownKit.Block
 				"13 - RawText"
 				"14 - Softbreak"
 				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

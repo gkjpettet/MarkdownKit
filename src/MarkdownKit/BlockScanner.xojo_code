@@ -306,15 +306,15 @@ Protected Class BlockScanner
 		  
 		  Select Case type
 		  Case Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
-		    Return ScanHTMLBlockType1End(line, pos)
+		    Return HTMLScanner.ScanHTMLBlockType1End(line, pos)
 		  Case Block.kHTMLBlockTypeComment
-		    Return ScanHtmlBlockType2End(line, pos)
+		    Return HTMLScanner.ScanHtmlBlockType2End(line, pos)
 		  Case Block.kHTMLBlockTypeProcessingInstruction
-		    Return ScanHtmlBlockType3End(line, pos)
+		    Return HTMLScanner.ScanHtmlBlockType3End(line, pos)
 		  Case Block.kHTMLBlockTypeDocumentType
-		    Return ScanHtmlBlockType4End(line, pos)
+		    Return HTMLScanner.ScanHtmlBlockType4End(line, pos)
 		  Case Block.kHTMLBlockTypeCData
-		    Return ScanHtmlBlockType5End(line, pos)
+		    Return HTMLScanner.ScanHtmlBlockType5End(line, pos)
 		  Else
 		    Return False
 		  End Select
@@ -457,80 +457,6 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanHtmlBlockType1End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
-		  // HTML block type 1:
-		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
-		  //                  (case-insensitive; it need not match the start tag).
-		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  If t.IndexOf(pos, "</pre>") <> -1 Then Return True
-		  If t.IndexOf(pos, "</style>") <> -1 Then Return True
-		  If t.IndexOf(pos, "</script>") <> -1 Then Return True
-		  
-		  Return False
-		  
-		  Exception e
-		    Return False
-		    
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ScanHtmlBlockType2End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
-		  // HTML block type 2:
-		  // End condition: line contains the string "-->"
-		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, "-->") <> -1, True, False)
-		  
-		  Exception e
-		    Return False
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ScanHtmlBlockType3End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
-		  // HTML block type 3:
-		  // End condition: line contains the string "?>"
-		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, "?>") <> -1, True, False)
-		  
-		  Exception e
-		    Return False
-		    
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ScanHtmlBlockType4End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
-		  // HTML block type 4:
-		  // End condition: line contains the character ">".
-		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, ">") <> -1, True, False)
-		  
-		  Exception e
-		    Return False
-		    
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ScanHtmlBlockType5End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
-		  // HTML block type 5:
-		  // End condition: line contains the string "]]>".
-		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, "]]>") <> -1, True, False)
-		  
-		  Exception e
-		    Return False
-		    
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Shared Function ScanHtmlBlockType7Start(line As MarkdownKit.LineInfo, pos As Integer, ByRef type As Integer) As Integer
 		  // Returns Block.kHTMLBlockTypeNonInterruptingBlock (type 7) If this line (begining at 
 		  // `pos`) is a valid type 7 HTML block start. Otherwise returns Block.kHTMLBlockTypeNone.
@@ -552,9 +478,9 @@ Protected Class BlockScanner
 		  End If
 		  
 		  If chars(pos + 1) = "/" Then
-		    pos = ScanHtmlTagClosingTag(chars, pos + 2)
+		    pos = HTMLScanner.ScanClosingTag(chars, pos + 2)
 		  Else
-		    pos = ScanHtmlTagOpenTag(chars, pos + 1)
+		    pos = HTMLScanner.ScanOpenTag(chars, pos + 1)
 		  End If
 		  If pos = 0 Then
 		    type = Block.kHTMLBlockTypeNone
@@ -571,147 +497,6 @@ Protected Class BlockScanner
 		  
 		  type = Block.kHTMLBlockTypeNonInterruptingBlock
 		  Return Block.kHTMLBlockTypeNonInterruptingBlock
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ScanHtmlTagClosingTag(chars() As Text, pos As integer) As Integer
-		  // Scans the passed line beginning at `pos` for a valid HTML closingTag.
-		  // Returns the zero-based index in line.Chars where the closingTag ends.
-		  // Returns 0 if no valid closingTag is found.
-		  // NB: Assumes that `pos` points to the character immediately following "</"
-		  // closingTag: </, tagName, optional whitespace, >
-		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
-		  
-		  Dim charsUbound As Integer = chars.Ubound
-		  If pos + 1 > charsUbound Then Return 0
-		  
-		  // The tag name must start with an ASCII letter.
-		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
-		  
-		  // Get the tag name and move `pos` to the position immediately following the tag name.
-		  Dim tagName As Text
-		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos)
-		  If pos >= charsUbound Then Return 0
-		  If tagName = "" Then Return 0
-		  
-		  // Skip optional whitespace.
-		  Dim c As Text
-		  Call ScannerCharacterMatcher.SkipWhitespace(chars, charsUbound, pos, c)
-		  If pos >= charsUbound Then Return 0
-		  
-		  // Check for the tag closing delimiter.
-		  If c = ">" Then
-		    Return pos + 1
-		  Else
-		    Return 0
-		  End If
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function ScanHtmlTagOpenTag(chars() As Text, pos As Integer) As Integer
-		  // Scans the passed line beginning at `pos` for a valid HTML open tag.
-		  // Returns the zero-based index in line.Chars where the openTag ends.
-		  // Returns 0 if no valid openTag is found.
-		  // NB: Assumes that `pos` points to the character immediately following "<"
-		  
-		  // openTag: "<", a tagname, >= 0 attributes, optional whitespace, optional "/", and a ">".
-		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
-		  // attribute: whitespace, attributeName, optional attributeValueSpec
-		  // attributeName: ASCII letter|-|:, >=0 ASCII letter|digit|_|.|:|-
-		  // attributeValueSpec: optional whitespace, =, optional whitespace, attributeValue
-		  // attributeValue: unQuotedAttValue | singleQuotedAttValue | doubleQuotedAttValue
-		  // unQuotedAttValue: > 0 characters NOT including whitespace, ", ', =, <, >, or `.
-		  // singleQuotedAttValue: ', >= 0 characters NOT including ', then a final '
-		  // doubleQuotedAttValue: ", >= 0 characters NOT including ", then a final "
-		  
-		  Dim charsUbound As Integer = chars.Ubound
-		  If pos + 1 > charsUbound Then Return 0
-		  
-		  // The tag name must start with an ASCII letter.
-		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
-		  
-		  // Get the tag name and move `pos` to the position immediately following the tag name.
-		  Dim tagName As Text
-		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos)
-		  If pos >= charsUbound Then Return 0
-		  If tagName = "" Then Return 0
-		  
-		  // Since this method is only called when determining whether a line is a 
-		  // type 7 HTML block start, "script", "pre" and "style" are not valid tag names.
-		  If tagName = "script" Or tagName = "pre" Or tagName = "style" Then Return 0
-		  
-		  // Loop until the end of the line is reached or the tag is closed.
-		  Dim hadWhitespace As Boolean = False
-		  Dim hadAttribute As Boolean = False
-		  Dim tmpChar As Text
-		  Dim currentChar As Text = chars(pos)
-		  While pos <= charsUbound
-		    // Skip whitespace.
-		    hadWhitespace = ScannerCharacterMatcher.SkipWhitespace(chars, charsUbound, pos, currentChar)
-		    
-		    // Has the end of the tag been reached?
-		    If currentChar = ">" Then
-		      Return pos + 1
-		    Else
-		      If currentChar = "/" Then
-		        If pos + 1 <= charsUbound And chars(pos + 1) = ">" Then
-		          Return pos + 2
-		        Else
-		          Return 0
-		        End If
-		      End If
-		    End If
-		    
-		    // Have we arrived at an attribute value?
-		    If currentChar = "=" Then
-		      If Not hadAttribute Or pos >= charsUbound Then Return 0
-		      
-		      // Move past the "=" symbol and any whitespace.
-		      pos = pos + 1
-		      currentChar = chars(pos)
-		      Call ScannerCharacterMatcher.SkipWhitespace(chars, charsUbound, pos, currentChar)
-		      
-		      If currentChar = "'" Or currentChar = """" Then
-		        tmpChar = currentChar
-		        pos = pos + 1
-		        If pos > charsUbound Then Return 0
-		        currentChar = chars(pos)
-		        Call ScannerCharacterMatcher.MatchAnythingExcept(chars, charsUbound, pos, currentChar, tmpChar)
-		        If currentChar <> tmpChar Or pos >= charsUbound Then Return 0
-		        
-		        pos = pos + 1
-		        If pos > charsUbound Then Return 0
-		        currentChar = chars(pos)
-		      Else
-		        // Unquoted atrribute values must have at least one character.
-		        If Not ScannerCharacterMatcher.MatchAnythingExceptWhitespace(chars, charsUbound, pos, currentChar, """", "'", "=", "<", ">", "`") Then
-		          Return 0
-		        End If
-		      End If
-		      
-		      hadAttribute = False
-		      Continue
-		    End If
-		    
-		    // The attribute must be preceded by whitespace.
-		    If Not hadWhitespace Then Return 0
-		    
-		    // If the end has not been found then there is just one possible alternative - an attribute.
-		    // Ensure that the attribute name starts with a correct character
-		    If Not ScannerCharacterMatcher.MatchASCIILetter(chars, charsUbound, pos, currentChar, "_", ":") Then
-		      Return 0
-		    End If
-		    
-		    // Match any remaining characters in the attribute name.
-		    Call ScannerCharacterMatcher.MatchASCIILetterOrDigit(chars, charsUbound, pos, currentChar, "_", ":", ".", "-")
-		    hadAttribute = True
-		  Wend
-		  
-		  Return 0
 		  
 		End Function
 	#tag EndMethod

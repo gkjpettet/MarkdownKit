@@ -66,6 +66,12 @@ Inherits MarkdownKit.Block
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
@@ -126,6 +132,7 @@ Inherits MarkdownKit.Block
 				"13 - RawText"
 				"14 - Softbreak"
 				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

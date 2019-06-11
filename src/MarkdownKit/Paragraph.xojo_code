@@ -16,10 +16,8 @@ Inherits MarkdownKit.Block
 		  
 		  Dim len As Integer = If(length = -1, line.CharsUbound - line.Offset + 1, length)
 		  
-		  If len <= 0 Then
-		    // Blank line.
-		    Raise New MarkdownKit.MarkdownException("Bug: I didn't think this would happen!")
-		  End If
+		  // Unexpected blank line?
+		  If len <= 0 Then Raise New MarkdownKit.MarkdownException("Bug: I didn't think this would happen!")
 		  
 		  // Get the characters from the current line offset to the end of the line.
 		  Dim tmp() As Text
@@ -31,7 +29,6 @@ Inherits MarkdownKit.Block
 		  
 		  // Strip leading and trailing whitespace from this line.
 		  StripLeadingWhitespace(tmp)
-		  'StripTrailingWhitespace(tmp)
 		  
 		  // Add a newline to the end of this line as it's needed 
 		  // during subsequent inline parsing.
@@ -68,12 +65,13 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0
-		RawChars() As Text
-	#tag EndProperty
-
-
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -159,6 +157,7 @@ Inherits MarkdownKit.Block
 				"13 - RawText"
 				"14 - Softbreak"
 				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 	#tag EndViewBehavior

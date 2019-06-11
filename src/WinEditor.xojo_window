@@ -16,7 +16,7 @@ Begin Window WinEditor
    MaxHeight       =   32000
    MaximizeButton  =   True
    MaxWidth        =   32000
-   MenuBar         =   1468874751
+   MenuBar         =   1396744191
    MenuBarVisible  =   True
    MinHeight       =   64
    MinimizeButton  =   True
@@ -195,8 +195,8 @@ End
 #tag WindowCode
 	#tag Event
 		Sub EnableMenuItems()
-		  ParserRun.Enabled = If(Source.Text.Len > 0, True, False)
-		  
+		  ParserParse.Enabled = If(Source.Text.Len > 0, True, False)
+		  EditSelectAllGroups.Enabled = If(Source.Text.Len > 0, True, False)
 		End Sub
 	#tag EndEvent
 
@@ -211,19 +211,7 @@ End
 
 
 	#tag MenuHandler
-		Function DebugTest() As Boolean Handles DebugTest.Action
-			MarkdownKit.Initialise
-			
-			Dim test As Text = "ab  cd   ef"
-			Dim t() As Text = test.Split
-			
-			MarkdownKit.InlineScanner.CollapseInternalWhitespace(t)
-			Break
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
-		Function ParserRun() As Boolean Handles ParserRun.Action
+		Function ParserParse() As Boolean Handles ParserParse.Action
 			Parse
 			
 			Return True

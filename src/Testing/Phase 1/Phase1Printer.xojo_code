@@ -167,7 +167,19 @@ Implements Global.MarkdownKit.IWalker
 
 	#tag Method, Flags = &h0
 		Sub VisitHTML(h As MarkdownKit.HTML)
-		  #Pragma Warning "TODO"
+		  // Part of the MarkdownKit.IWalker interface.
+		  
+		  mOutput.Append(CurrentIndent + "<html_block>")
+		  mOutput.Append(EOL)
+		  
+		  For Each b As MarkdownKit.Block In h.Children
+		    IncreaseIndent
+		    b.Accept(Self)
+		    DecreaseIndent
+		  Next b
+		  
+		  mOutput.Append(CurrentIndent + "</html_block>")
+		  mOutput.Append(EOL)
 		  
 		End Sub
 	#tag EndMethod

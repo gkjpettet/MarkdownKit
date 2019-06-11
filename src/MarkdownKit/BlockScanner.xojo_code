@@ -41,6 +41,87 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Sub Initialise()
+		  If mInitialised Then Return
+		  
+		  InitialiseBlockScannerHTMLTagNames
+		  
+		  mInitialised = True
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Sub InitialiseBlockScannerHTMLTagNames()
+		  // Initialise the lookup dictionary for HTML tag names.
+		  
+		  mHTMLTagNames = New Xojo.Core.Dictionary
+		  
+		  mHTMLTagNames.Value("ADDRESS") = 0
+		  mHTMLTagNames.Value("ARTICLE") = 0
+		  mHTMLTagNames.Value("ASIDE") = 0
+		  mHTMLTagNames.Value("BASE") = 0
+		  mHTMLTagNames.Value("BASEFONT") = 0
+		  mHTMLTagNames.Value("BLOCKQUOTE") = 0
+		  mHTMLTagNames.Value("BODY") = 0
+		  mHTMLTagNames.Value("CAPTION") = 0
+		  mHTMLTagNames.Value("CENTER") = 0
+		  mHTMLTagNames.Value("COL") = 0
+		  mHTMLTagNames.Value("COLGROUP") = 0
+		  mHTMLTagNames.Value("DD") = 0
+		  mHTMLTagNames.Value("DETAILS") = 0
+		  mHTMLTagNames.Value("DIALOG") = 0
+		  mHTMLTagNames.Value("DIR") = 0
+		  mHTMLTagNames.Value("DIV") = 0
+		  mHTMLTagNames.Value("DL") = 0
+		  mHTMLTagNames.Value("DT") = 0
+		  mHTMLTagNames.Value("FIELDSET") = 0
+		  mHTMLTagNames.Value("FIGCAPTION") = 0
+		  mHTMLTagNames.Value("FIGURE") = 0
+		  mHTMLTagNames.Value("FOOTER") = 0
+		  mHTMLTagNames.Value("FORM") = 0
+		  mHTMLTagNames.Value("FRAME") = 0
+		  mHTMLTagNames.Value("FRAMESET") = 0
+		  mHTMLTagNames.Value("H1") = 0
+		  mHTMLTagNames.Value("HEAD") = 0
+		  mHTMLTagNames.Value("HEADER") = 0
+		  mHTMLTagNames.Value("HR") = 0
+		  mHTMLTagNames.Value("HTML") = 0
+		  mHTMLTagNames.Value("IFRAME") = 0
+		  mHTMLTagNames.Value("LEGEND") = 0
+		  mHTMLTagNames.Value("LI") = 0
+		  mHTMLTagNames.Value("MAIN") = 0
+		  mHTMLTagNames.Value("MENU") = 0
+		  mHTMLTagNames.Value("MENUITEM") = 0
+		  mHTMLTagNames.Value("META") = 0
+		  mHTMLTagNames.Value("NAV") = 0
+		  mHTMLTagNames.Value("NOFRAMES") = 0
+		  mHTMLTagNames.Value("OL") = 0
+		  mHTMLTagNames.Value("OPTGROUP") = 0
+		  mHTMLTagNames.Value("OPTION") = 0
+		  mHTMLTagNames.Value("P") = 0
+		  mHTMLTagNames.Value("PARAM") = 0
+		  mHTMLTagNames.Value("PRE") = 0
+		  mHTMLTagNames.Value("SCRIPT") = 0
+		  mHTMLTagNames.Value("SECTION") = 0
+		  mHTMLTagNames.Value("SOURCE") = 0
+		  mHTMLTagNames.Value("STYLE") = 0
+		  mHTMLTagNames.Value("SUMMARY") = 0
+		  mHTMLTagNames.Value("TABLE") = 0
+		  mHTMLTagNames.Value("TBODY") = 0
+		  mHTMLTagNames.Value("TD") = 0
+		  mHTMLTagNames.Value("TFOOT") = 0
+		  mHTMLTagNames.Value("TH") = 0
+		  mHTMLTagNames.Value("THEAD") = 0
+		  mHTMLTagNames.Value("TITLE") = 0
+		  mHTMLTagNames.Value("TR") = 0
+		  mHTMLTagNames.Value("TRACK") = 0
+		  mHTMLTagNames.Value("UL") = 0
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ParseListMarker(indented As Boolean, chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
 		  // Attempts to parse a ListItem marker (bullet or enumerated).
 		  // On success, it returns the length of the marker, and populates
@@ -213,6 +294,310 @@ Protected Class BlockScanner
 		  
 		  Return If(cnt < length, 0, cnt)
 		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockEnd(type As Integer, line As MarkdownKit.LineInfo, pos As Integer) As Boolean
+		  // Scans for the correct ending condition for the specified HTML block type.
+		  // Returns True if we find one, False otherwise.
+		  // There are 7 kinds of HTML blocks (CommonMark spec 0.29 4.6).
+		  
+		  Select Case type
+		  Case Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
+		    Return ScanHTMLBlockEnd1(line, pos)
+		  Case Block.kHTMLBlockTypeComment
+		    #Pragma Warning "Needs implementing"
+		  Case Block.kHTMLBlockTypeProcessingInstruction
+		    #Pragma Warning "Needs implementing"
+		  Case Block.kHTMLBlockTypeDocumentType
+		    #Pragma Warning "Needs implementing"
+		  Case Block.kHTMLBlockTypeCData
+		    #Pragma Warning "Needs implementing"
+		  Else
+		    Return False
+		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockEnd1(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
+		  // HTML block type 1:
+		  // Start condition: line begins with the string <script, <pre, or <style (case-insensitive), 
+		  //                  followed by whitespace, the string >, or the end of the line.
+		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
+		  //                  (case-insensitive; it need not match the start tag).
+		  
+		  #Pragma Warning "To implement"
+		  Raise New MarkdownKit.MarkdownException("To implement")
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockStart(line As MarkdownKit.LineInfo, pos As Integer, ByRef type As Integer) As Integer
+		  // Scan for the start of an HTML block.
+		  // Returns the type of HTML block as one of the Block.kHTMLBlockType constants.
+		  // There are 7 kinds of HTML block. See the note "HTML Block Types" in this class 
+		  // for more detail.
+		  
+		  Dim chars() As Text = line.Chars
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  // The shortest opening condition is two characters.
+		  If pos + 1 > charsUbound Then Return Block.kHTMLBlockTypeNone
+		  
+		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
+		  
+		  pos = pos + 1
+		  Dim c As Text = chars(pos)
+		  
+		  // Type 2, 4 or 5?
+		  // 2: <!--
+		  // 4: <!A-Z{1}
+		  // 5: <![CDATA[
+		  If c = "!" Then
+		    pos = pos + 1
+		    If pos > charsUbound Then Return Block.kHTMLBlockTypeNone
+		    c = chars(pos)
+		    If Utilities.IsUppercaseASCIIChar(c) Then Return Block.kHTMLBlockTypeDocumentType
+		    
+		    // `pos` is currently pointing at the character after "!".
+		    If pos + 1 > charsUbound Then Return Block.kHTMLBlockTypeNone
+		    If chars(pos) = "-" And chars(pos + 1) = "-" Then
+		      Return Block.kHTMLBlockTypeComment
+		    End If
+		    
+		    // `pos` still points at the character after "!".
+		    If pos + 7 > charsUbound Then Return Block.kHTMLBlockTypeNone
+		    If chars.ToText(pos, 7).Compare("[CDATA[", Text.CompareCaseSensitive) = 0 Then
+		      Return Block.kHTMLBlockTypeCData
+		    End If
+		    
+		    Return Block.kHTMLBlockTypeNone
+		  End If
+		  
+		  // Type 3?
+		  If c = "?" Then Return Block.kHTMLBlockTypeProcessingInstruction
+		  
+		  // Type 1 or 6?
+		  // 1: <(script|pre|style)([•→\n]|>)
+		  // 6: <|</(HTMLTagName)([•→\n]|>|/>)
+		  Dim slashAtStart As Boolean = If(c = "/", True, False)
+		  If slashAtStart Then
+		    pos = pos + 1
+		    If pos > charsUbound Then Return Block.kHTMLBlockTypeNone
+		    c = chars(pos)
+		  End If
+		  
+		  // `pos` currently points to the first character of a potential tag name.
+		  Dim tagNameArray() As Text
+		  While pos < charsUbound And tagNameArray.Ubound < 10
+		    c = chars(pos)
+		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.CharInHeaderLevelRange(c) Then
+		      tagNameArray.Append(c)
+		    Else
+		      Exit
+		    End If
+		    pos = pos + 1
+		  Wend
+		  If pos = charsUbound Then Return Block.kHTMLBlockTypeNone
+		  Dim tagName As Text = Text.Join(tagNameArray, "")
+		  If Not mHTMLTagNames.HasKey(tagName) Then Return Block.kHTMLBlockTypeNone
+		  
+		  Dim maybeType1 As Boolean
+		  maybeType1 = If(Not slashAtStart And (tagName = "script" Or tagName = "pre" Or tagName = "style"), True, False)
+		  
+		  // `pos` points to the character immediately following the tag name.
+		  c = chars(pos)
+		  If maybeType1 Then
+		    If IsWhitespace(c) Or c = ">" Then
+		      Return Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
+		    Else
+		      Return Block.kHTMLBlockTypeNone
+		    End If
+		  Else // Type 6?
+		    If IsWhitespace(c) Or c = ">" Or (c = "/" And pos + 1 <= charsUbound And chars(pos + 1) = ">") Then
+		      Return Block.kHTMLBlockTypeInterruptingBlock
+		    Else
+		      Return Block.kHTMLBlockTypeNone
+		    End If
+		  End If
+		  
+		  Return Block.kHTMLBlockTypeNone
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockType7Start(line As MarkdownKit.LineInfo, pos As Integer, ByRef type As Integer) As Integer
+		  // Returns Block.kHTMLBlockTypeNonInterruptingBlock (type 7) If this line (begining at 
+		  // `pos`) is a valid type 7 HTML block start. Otherwise returns Block.kHTMLBlockTypeNone.
+		  // Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
+		  //         {closingTag}[•→]+|⮐$
+		  
+		  // At least 3 characters are required for a valid type 7 block start.
+		  Dim chars() As Text = line.Chars
+		  Dim charsUbound As Integer = chars.Ubound
+		  If pos + 2 > charsUbound Then Return Block.kHTMLBlockTypeNone
+		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
+		  
+		  If chars(pos + 1) = "/" Then
+		    pos = ScanHtmlTagClosingTag(chars, pos + 2)
+		  Else
+		    pos = ScanHtmlTagOpenTag(chars, pos + 1)
+		  End If
+		  If pos = 0 Then Return Block.kHTMLBlockTypeNone
+		  
+		  While pos < charsUbound
+		    If Not IsWhitespace(chars(pos)) Then Return Block.kHTMLBlockTypeNone
+		    pos = pos + 1
+		  Wend
+		  
+		  Return Block.kHTMLBlockTypeNonInterruptingBlock
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlTagClosingTag(chars() As Text, pos As integer) As Integer
+		  // Scans the passed line beginning at `pos` for a valid HTML closingTag.
+		  // Returns the zero-based index in line.Chars where the closingTag ends.
+		  // Returns 0 if no valid closingTag is found.
+		  // NB: Assumes that `pos` points to the character immediately following "</"
+		  // closingTag: </, tagName, optional whitespace, >
+		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  If pos + 1 > charsUbound Then Return 0
+		  
+		  // The tag name must start with an ASCII letter.
+		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
+		  
+		  // Get the tag name and move `pos` to the position immediately following the tag name.
+		  Dim tagName As Text
+		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos, tagName)
+		  If pos >= charsUbound Then Return 0
+		  If tagName = "" Then Return 0
+		  
+		  // Skip optional whitespace.
+		  Dim c As Text
+		  Call ScannerCharacterMatcher.SkipWhitespace(chars, charsUbound, pos, c)
+		  If pos >= charsUbound Then Return 0
+		  
+		  // Check for the tag closing delimiter.
+		  If c = ">" Then
+		    Return pos + 1
+		  Else
+		    Return 0
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlTagOpenTag(chars() As Text, pos As Integer) As Integer
+		  // Scans the passed line beginning at `pos` for a valid HTML open tag.
+		  // Returns the zero-based index in line.Chars where the openTag ends.
+		  // Returns 0 if no valid openTag is found.
+		  // NB: Assumes that `pos` points to the character immediately following "<"
+		  
+		  // openTag: "<", a tagname, >= 0 attributes, optional whitespace, optional "/", and a ">".
+		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
+		  // attribute: whitespace, attributeName, optional attributeValueSpec
+		  // attributeName: ASCII letter|-|:, >=0 ASCII letter|digit|_|.|:|-
+		  // attributeValueSpec: optional whitespace, =, optional whitespace, attributeValue
+		  // attributeValue: unQuotedAttValue | singleQuotedAttValue | doubleQuotedAttValue
+		  // unQuotedAttValue: > 0 characters NOT including whitespace, ", ', =, <, >, or `.
+		  // singleQuotedAttValue: ', >= 0 characters NOT including ', then a final '
+		  // doubleQuotedAttValue: ", >= 0 characters NOT including ", then a final "
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  If pos + 1 > charsUbound Then Return 0
+		  
+		  // The tag name must start with an ASCII letter.
+		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
+		  
+		  // Get the tag name and move `pos` to the position immediately following the tag name.
+		  Dim tagName As Text
+		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos, tagName)
+		  If pos >= charsUbound Then Return 0
+		  If tagName = "" Then Return 0
+		  
+		  // Since this method is only called when determining whether a line is a 
+		  // type 7 HTML block start, "script", "pre" and "style" are not valid tag names.
+		  If tagName = "script" Or tagName = "pre" Or tagName = "style" Then Return 0
+		  
+		  // Loop until the end of the line is reached or the tag is closed.
+		  Dim hadWhitespace As Boolean = False
+		  Dim hadAttribute As Boolean = False
+		  Dim tmpChar As Text
+		  Dim currentChar As Text = chars(pos)
+		  While pos <= charsUbound
+		    // Skip whitespace.
+		    hadWhitespace = ScannerCharacterMatcher.SkipWhitespace(chars, charsUbound, pos, currentChar)
+		    
+		    // Has the end of the tag been reached?
+		    If currentChar = ">" Then
+		      Return pos + 1
+		    Else
+		      If currentChar = "/" Then
+		        If pos + 1 <= charsUbound And chars(pos + 1) = ">" Then
+		          Return pos + 2
+		        Else
+		          Return 0
+		        End If
+		      End If
+		    End If
+		    
+		    // Have we arrived at an attribute value?
+		    If currentChar = "=" Then
+		      If Not hadAttribute Or pos >= charsUbound Then Return 0
+		      
+		      // Move past the "=" symbol and any whitespace.
+		      pos = pos + 1
+		      currentChar = chars(pos)
+		      Call ScannerCharacterMatcher.SkipWhitespace(chars, charsUbound, pos, currentChar)
+		      
+		      If currentChar = "'" Or currentChar = """" Then
+		        tmpChar = currentChar
+		        pos = pos + 1
+		        If pos > charsUbound Then Return 0
+		        currentChar = chars(pos)
+		        Call ScannerCharacterMatcher.MatchAnythingExcept(chars, charsUbound, pos, currentChar, tmpChar)
+		        If currentChar <> tmpChar Or pos >= charsUbound Then Return 0
+		        
+		        pos = pos + 1
+		        If pos > charsUbound Then Return 0
+		        currentChar = chars(pos)
+		      Else
+		        // Unquoted atrribute values must have at least one character.
+		        If Not ScannerCharacterMatcher.MatchAnythingExceptWhitespace(chars, charsUbound, pos, currentChar, """", "'", "=", "<", ">", "`") Then
+		          Return 0
+		        End If
+		      End If
+		      
+		      hadAttribute = False
+		      Continue
+		    End If
+		    
+		    // The attribute must be preceded by whitespace.
+		    If Not hadWhitespace Then Return 0
+		    
+		    // If the end has not been found then there is just one possible alternative - an attribute.
+		    // Ensure that the attribute name starts with a correct character
+		    If Not ScannerCharacterMatcher.MatchASCIILetter(chars, charsUbound, pos, currentChar, "_", ":") Then
+		      Return 0
+		    End If
+		    
+		    // Match any remaining characters in the attribute name.
+		    Call ScannerCharacterMatcher.MatchASCIILetterOrDigit(chars, charsUbound, pos, currentChar, "_", ":", ".", "-")
+		    hadAttribute = True
+		  Wend
+		  
+		  Return 0
 		  
 		End Function
 	#tag EndMethod
@@ -495,6 +880,47 @@ Protected Class BlockScanner
 		  
 		End Function
 	#tag EndMethod
+
+
+	#tag Note, Name = HTML Block Types
+		Type 1: Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines)
+		Start condition: line begins with the string <script, <pre, or <style (case-insensitive), followed by whitespace, the string >, or the end of the line.
+		End condition: line contains an end tag </script>, </pre>, or </style> (case-insensitive; it need not match the start tag).
+		
+		Type 2: (Block.kHTMLBlockTypeComment)
+		Start condition: line begins with the string <!--.
+		End condition: line contains the string -->.
+		
+		Type 3: (Block.kHTMLBlockTypeProcessingInstruction)
+		Start condition: line begins with the string <?.
+		End condition: line contains the string ?>.
+		
+		Type 4: (Block.kHTMLBlockTypeDocumentType)
+		Start condition: line begins with the string <! followed by an uppercase ASCII letter.
+		End condition: line contains the character >.
+		
+		Type 5: (Block.kHTMLBlockTypeCData)
+		Start condition: line begins with the string <![CDATA[.
+		End condition: line contains the string ]]>.
+		
+		Type 6: (Block.kHTMLBlockTypeInterruptingBlock)
+		Start condition: line begins the string < or </ followed by one of the strings (case-insensitive) address, article, aside, base, basefont, blockquote, body, caption, center, col, colgroup, dd, details, dialog, dir, div, dl, dt, fieldset, figcaption, figure, footer, form, frame, frameset, h1, h2, h3, h4, h5, h6, head, header, hr, html, iframe, legend, li, link, main, menu, menuitem, nav, noframes, ol, optgroup, option, p, param, section, source, summary, table, tbody, td, tfoot, th, thead, title, tr, track, ul, followed by whitespace, the end of the line, the string >, or the string />.
+		End condition: line is followed by a blank line.
+		
+		Type 7: (Block.kHTMLBlockTypeNonInterruptingBlock)
+		Start condition: line begins with a complete open tag (with any tag name other than script, style, or pre) or a complete closing tag, followed only by whitespace or the end of the line.
+		End condition: line is followed by a blank line.
+		
+	#tag EndNote
+
+
+	#tag Property, Flags = &h21
+		Private Shared mHTMLTagNames As Xojo.Core.Dictionary
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private Shared mInitialised As Boolean = False
+	#tag EndProperty
 
 
 	#tag ViewBehavior

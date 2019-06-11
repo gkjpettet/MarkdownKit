@@ -166,6 +166,10 @@ Protected Class Block
 		Children() As MarkdownKit.Block
 	#tag EndProperty
 
+	#tag Property, Flags = &h0
+		HTMLBlockType As Integer = kHTMLBlockTypeNone
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 49662054727565207468656E20746865206C617374206C696E65206F66207468697320636F6E7461696E657220697320626C616E6B2E
 		IsLastLineBlank As Boolean = False
 	#tag EndProperty
@@ -223,6 +227,31 @@ Protected Class Block
 		#tag EndSetter
 		Type As MarkdownKit.BlockType
 	#tag EndComputedProperty
+
+
+	#tag Constant, Name = kHTMLBlockTypeCData, Type = Double, Dynamic = False, Default = \"5", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kHTMLBlockTypeComment, Type = Double, Dynamic = False, Default = \"2", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kHTMLBlockTypeDocumentType, Type = Double, Dynamic = False, Default = \"4", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kHTMLBlockTypeInterruptingBlock, Type = Double, Dynamic = False, Default = \"6", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kHTMLBlockTypeInterruptingBlockWithEmptyLines, Type = Double, Dynamic = False, Default = \"1", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kHTMLBlockTypeNone, Type = Double, Dynamic = False, Default = \"0", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kHTMLBlockTypeNonInterruptingBlock, Type = Double, Dynamic = False, Default = \"7", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kHTMLBlockTypeProcessingInstruction, Type = Double, Dynamic = False, Default = \"3", Scope = Public
+	#tag EndConstant
 
 
 	#tag ViewBehavior

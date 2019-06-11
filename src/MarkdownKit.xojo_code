@@ -22,6 +22,8 @@ Protected Module MarkdownKit
 		  
 		  InitialiseEscapableCharactersDictionary
 		  
+		  BlockScanner.Initialise
+		  
 		  mInitialised = True
 		  
 		End Sub
@@ -203,6 +205,28 @@ Protected Module MarkdownKit
 		  Else
 		    Return "Unknown block type"
 		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function ToText(Extends chars() As Text, start As Integer, length As Integer) As Text
+		  // Grabs `length` characters from the passed character array beginning at `start` 
+		  // and returns them as concatenated Text.
+		  // If any of the passed parameters are out of range then we return "".
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  If start < 0 Or start > charsUbound Or length <= 0 Or _
+		  (start + length - 1 > charsUbound) Then Return ""
+		  
+		  Dim limit As Integer = start + length - 1
+		  Dim tmp() As Text
+		  For i As Integer = start To limit
+		    tmp.Append(chars(i))
+		  Next i
+		  
+		  Return Text.Join(tmp, "")
 		  
 		End Function
 	#tag EndMethod

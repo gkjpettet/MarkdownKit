@@ -200,7 +200,7 @@ Inherits MarkdownKit.Block
 		    child = New MarkdownKit.ListItem(line.Number, startPos, startColumn)
 		  Case BlockType.List
 		    child = New MarkdownKit.List(line.Number, startPos, startColumn)
-		  Case BlockType.HTML
+		  Case BlockType.HtmlBlock
 		    child = New MarkdownKit.HTML(line.Number, startPos, startColumn)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
@@ -353,7 +353,11 @@ Inherits MarkdownKit.Block
 		      End If
 		      
 		    ElseIf container.Type = MarkdownKit.BlockType.HtmlBlock Then
-		      #Pragma Warning "TODO"
+		      container.AddLine(line, line.Offset)
+		      If BlockScanner.ScanHTMLBlockEnd(container.HtmlBlockType, line, line.NextNWS) Then
+		        container.Finalise(line)
+		        container = container.Parent
+		      End If
 		      
 		    ElseIf blank Then
 		      // Do nothing?
@@ -443,6 +447,16 @@ Inherits MarkdownKit.Block
 		      FencedCode(container).FenceLength = tmpInt1
 		      FencedCode(container).FenceOffset = line.NextNWS - line.Offset
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
+		      
+		    ElseIf (Not indented And line.CurrentChar = "<" And _
+		      Block.kHTMLBlockTypeNone <> (BlockScanner.ScanHtmlBlockStart(line, line.NextNWS, tmpInt1)) _
+		      Or (container.Type <> BlockType.Paragraph And _
+		      Block.kHTMLBlockTypeNone <> (BlockScanner.ScanHtmlBlockType7Start(line, line.NextNWS, tmpInt1)))) Then
+		      // ============= New HTML block =============
+		      container = CreateChildBlock(container, line, BlockType.HTMLBlock, line.NextNWS, _
+		      line.NextNWSColumn)
+		      container.HtmlBlockType = tmpInt1
+		      // NB: We don't adjust offset because the tag is part of the text.
 		      
 		    ElseIf Not indented And container.Type = BlockType.Paragraph And _
 		      (line.CurrentChar = "=" Or line.CurrentChar = "-") And _
@@ -603,6 +617,13 @@ Inherits MarkdownKit.Block
 		          line.Column = line.Column + 1
 		          i = i - 1
 		        Wend
+		      End If
+		      
+		    Case MarkdownKit.BlockType.HTML
+		      // All other block types can accept blanks.
+		      If blank And container.HtmlBlockType >= kHtmlBlockTypeInterruptingBlock Then
+		        container.IsLastLineBlank = True
+		        line.AllMatched = False
 		      End If
 		      
 		    Case MarkdownKit.BlockType.Paragraph

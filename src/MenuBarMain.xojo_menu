@@ -114,6 +114,23 @@ Begin Menu MenuBarMain
          Visible = True
       End
    End
+   Begin MenuItem ParserMenu
+      SpecialMenu = 0
+      Text = "Parser"
+      Index = -2147483648
+      AutoEnable = True
+      Visible = True
+      Begin MenuItem ParserParse
+         SpecialMenu = 0
+         Text = "Parse"
+         Index = -2147483648
+         ShortcutKey = "Y"
+         Shortcut = "Cmd+Y"
+         MenuModifier = True
+         AutoEnable = False
+         Visible = True
+      End
+   End
    Begin MenuItem WindowMenu
       SpecialMenu = 0
       Text = "Window"

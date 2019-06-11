@@ -306,15 +306,15 @@ Protected Class BlockScanner
 		  
 		  Select Case type
 		  Case Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
-		    Return ScanHTMLBlockEnd1(line, pos)
+		    Return ScanHTMLBlockType1End(line, pos)
 		  Case Block.kHTMLBlockTypeComment
-		    #Pragma Warning "Needs implementing"
+		    Return ScanHtmlBlockType2End(line, pos)
 		  Case Block.kHTMLBlockTypeProcessingInstruction
-		    #Pragma Warning "Needs implementing"
+		    Return ScanHtmlBlockType3End(line, pos)
 		  Case Block.kHTMLBlockTypeDocumentType
-		    #Pragma Warning "Needs implementing"
+		    Return ScanHtmlBlockType4End(line, pos)
 		  Case Block.kHTMLBlockTypeCData
-		    #Pragma Warning "Needs implementing"
+		    Return ScanHtmlBlockType5End(line, pos)
 		  Else
 		    Return False
 		  End Select
@@ -323,23 +323,10 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanHtmlBlockEnd1(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
-		  // HTML block type 1:
-		  // Start condition: line begins with the string <script, <pre, or <style (case-insensitive), 
-		  //                  followed by whitespace, the string >, or the end of the line.
-		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
-		  //                  (case-insensitive; it need not match the start tag).
-		  
-		  #Pragma Warning "To implement"
-		  Raise New MarkdownKit.MarkdownException("To implement")
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Shared Function ScanHtmlBlockStart(line As MarkdownKit.LineInfo, pos As Integer, ByRef type As Integer) As Integer
 		  // Scan for the start of an HTML block.
 		  // Returns the type of HTML block as one of the Block.kHTMLBlockType constants.
+		  // Also sets the ByRef `type` parameter to the same value as the returned value.
 		  // There are 7 kinds of HTML block. See the note "HTML Block Types" in this class 
 		  // for more detail.
 		  
@@ -347,9 +334,15 @@ Protected Class BlockScanner
 		  Dim charsUbound As Integer = chars.Ubound
 		  
 		  // The shortest opening condition is two characters.
-		  If pos + 1 > charsUbound Then Return Block.kHTMLBlockTypeNone
+		  If pos + 1 > charsUbound Then
+		    type = Block.kHTMLBlockTypeNone
+		    Return Block.kHTMLBlockTypeNone
+		  End If
 		  
-		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
+		  If chars(pos) <> "<" Then
+		    type = Block.kHTMLBlockTypeNone
+		    Return Block.kHTMLBlockTypeNone
+		  End If
 		  
 		  pos = pos + 1
 		  Dim c As Text = chars(pos)
@@ -360,27 +353,44 @@ Protected Class BlockScanner
 		  // 5: <![CDATA[
 		  If c = "!" Then
 		    pos = pos + 1
-		    If pos > charsUbound Then Return Block.kHTMLBlockTypeNone
+		    If pos > charsUbound Then
+		      type = Block.kHTMLBlockTypeNone
+		      Return Block.kHTMLBlockTypeNone
+		    End If
+		    
 		    c = chars(pos)
-		    If Utilities.IsUppercaseASCIIChar(c) Then Return Block.kHTMLBlockTypeDocumentType
+		    If Utilities.IsUppercaseASCIIChar(c) Then
+		      type = Block.kHTMLBlockTypeDocumentType
+		      Return Block.kHTMLBlockTypeDocumentType
+		    End If
 		    
 		    // `pos` is currently pointing at the character after "!".
 		    If pos + 1 > charsUbound Then Return Block.kHTMLBlockTypeNone
 		    If chars(pos) = "-" And chars(pos + 1) = "-" Then
+		      type = Block.kHTMLBlockTypeComment
 		      Return Block.kHTMLBlockTypeComment
 		    End If
 		    
 		    // `pos` still points at the character after "!".
-		    If pos + 7 > charsUbound Then Return Block.kHTMLBlockTypeNone
+		    If pos + 7 > charsUbound Then
+		      type = Block.kHTMLBlockTypeNone
+		      Return Block.kHTMLBlockTypeNone
+		    End If
+		    
 		    If chars.ToText(pos, 7).Compare("[CDATA[", Text.CompareCaseSensitive) = 0 Then
+		      type = Block.kHTMLBlockTypeCData
 		      Return Block.kHTMLBlockTypeCData
 		    End If
 		    
+		    type = Block.kHTMLBlockTypeNone
 		    Return Block.kHTMLBlockTypeNone
 		  End If
 		  
 		  // Type 3?
-		  If c = "?" Then Return Block.kHTMLBlockTypeProcessingInstruction
+		  If c = "?" Then
+		    type = Block.kHTMLBlockTypeProcessingInstruction
+		    Return Block.kHTMLBlockTypeProcessingInstruction
+		  End If
 		  
 		  // Type 1 or 6?
 		  // 1: <(script|pre|style)([•→\n]|>)
@@ -388,7 +398,10 @@ Protected Class BlockScanner
 		  Dim slashAtStart As Boolean = If(c = "/", True, False)
 		  If slashAtStart Then
 		    pos = pos + 1
-		    If pos > charsUbound Then Return Block.kHTMLBlockTypeNone
+		    If pos > charsUbound Then
+		      type = Block.kHTMLBlockTypeNone
+		      Return Block.kHTMLBlockTypeNone
+		    End If
 		    c = chars(pos)
 		  End If
 		  
@@ -403,9 +416,16 @@ Protected Class BlockScanner
 		    End If
 		    pos = pos + 1
 		  Wend
-		  If pos = charsUbound Then Return Block.kHTMLBlockTypeNone
+		  If pos = charsUbound Then
+		    type = Block.kHTMLBlockTypeNone
+		    Return Block.kHTMLBlockTypeNone
+		  End If
+		  
 		  Dim tagName As Text = Text.Join(tagNameArray, "")
-		  If Not mHTMLTagNames.HasKey(tagName) Then Return Block.kHTMLBlockTypeNone
+		  If Not mHTMLTagNames.HasKey(tagName) Then
+		    type = Block.kHTMLBlockTypeNone
+		    Return Block.kHTMLBlockTypeNone
+		  End If
 		  
 		  Dim maybeType1 As Boolean
 		  maybeType1 = If(Not slashAtStart And (tagName = "script" Or tagName = "pre" Or tagName = "style"), True, False)
@@ -414,20 +434,99 @@ Protected Class BlockScanner
 		  c = chars(pos)
 		  If maybeType1 Then
 		    If IsWhitespace(c) Or c = ">" Then
+		      type = Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
 		      Return Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
 		    Else
+		      type = Block.kHTMLBlockTypeNone
 		      Return Block.kHTMLBlockTypeNone
 		    End If
 		  Else // Type 6?
 		    If IsWhitespace(c) Or c = ">" Or (c = "/" And pos + 1 <= charsUbound And chars(pos + 1) = ">") Then
+		      type = Block.kHTMLBlockTypeInterruptingBlock
 		      Return Block.kHTMLBlockTypeInterruptingBlock
 		    Else
+		      type = Block.kHTMLBlockTypeNone
 		      Return Block.kHTMLBlockTypeNone
 		    End If
 		  End If
 		  
+		  type = Block.kHTMLBlockTypeNone
 		  Return Block.kHTMLBlockTypeNone
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockType1End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
+		  // HTML block type 1:
+		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
+		  //                  (case-insensitive; it need not match the start tag).
+		  
+		  Dim t As Text = Text.Join(line.Chars, "")
+		  If t.IndexOf(pos, "</pre>") <> -1 Then Return True
+		  If t.IndexOf(pos, "</style>") <> -1 Then Return True
+		  If t.IndexOf(pos, "</script>") <> -1 Then Return True
+		  
+		  Return False
+		  
+		  Exception e
+		    Return False
+		    
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockType2End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
+		  // HTML block type 2:
+		  // End condition: line contains the string "-->"
+		  
+		  Dim t As Text = Text.Join(line.Chars, "")
+		  Return If(t.IndexOf(pos, "-->") <> -1, True, False)
+		  
+		  Exception e
+		    Return False
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockType3End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
+		  // HTML block type 3:
+		  // End condition: line contains the string "?>"
+		  
+		  Dim t As Text = Text.Join(line.Chars, "")
+		  Return If(t.IndexOf(pos, "?>") <> -1, True, False)
+		  
+		  Exception e
+		    Return False
+		    
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockType4End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
+		  // HTML block type 4:
+		  // End condition: line contains the character ">".
+		  
+		  Dim t As Text = Text.Join(line.Chars, "")
+		  Return If(t.IndexOf(pos, ">") <> -1, True, False)
+		  
+		  Exception e
+		    Return False
+		    
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanHtmlBlockType5End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
+		  // HTML block type 5:
+		  // End condition: line contains the string "]]>".
+		  
+		  Dim t As Text = Text.Join(line.Chars, "")
+		  Return If(t.IndexOf(pos, "]]>") <> -1, True, False)
+		  
+		  Exception e
+		    Return False
+		    
 		End Function
 	#tag EndMethod
 
@@ -435,27 +534,42 @@ Protected Class BlockScanner
 		Shared Function ScanHtmlBlockType7Start(line As MarkdownKit.LineInfo, pos As Integer, ByRef type As Integer) As Integer
 		  // Returns Block.kHTMLBlockTypeNonInterruptingBlock (type 7) If this line (begining at 
 		  // `pos`) is a valid type 7 HTML block start. Otherwise returns Block.kHTMLBlockTypeNone.
+		  // Also sets the ByRef `type` parameter to the same value as the returned value.
 		  // Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
 		  //         {closingTag}[•→]+|⮐$
 		  
 		  // At least 3 characters are required for a valid type 7 block start.
 		  Dim chars() As Text = line.Chars
 		  Dim charsUbound As Integer = chars.Ubound
-		  If pos + 2 > charsUbound Then Return Block.kHTMLBlockTypeNone
-		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
+		  If pos + 2 > charsUbound Then
+		    type = Block.kHTMLBlockTypeNone
+		    Return Block.kHTMLBlockTypeNone
+		  End If
+		  
+		  If chars(pos) <> "<" Then
+		    type = Block.kHTMLBlockTypeNone
+		    Return Block.kHTMLBlockTypeNone
+		  End If
 		  
 		  If chars(pos + 1) = "/" Then
 		    pos = ScanHtmlTagClosingTag(chars, pos + 2)
 		  Else
 		    pos = ScanHtmlTagOpenTag(chars, pos + 1)
 		  End If
-		  If pos = 0 Then Return Block.kHTMLBlockTypeNone
+		  If pos = 0 Then
+		    type = Block.kHTMLBlockTypeNone
+		    Return Block.kHTMLBlockTypeNone
+		  End If
 		  
 		  While pos < charsUbound
-		    If Not IsWhitespace(chars(pos)) Then Return Block.kHTMLBlockTypeNone
+		    If Not IsWhitespace(chars(pos)) Then
+		      type = Block.kHTMLBlockTypeNone
+		      Return Block.kHTMLBlockTypeNone
+		    End If
 		    pos = pos + 1
 		  Wend
 		  
+		  type = Block.kHTMLBlockTypeNonInterruptingBlock
 		  Return Block.kHTMLBlockTypeNonInterruptingBlock
 		  
 		End Function
@@ -478,7 +592,7 @@ Protected Class BlockScanner
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
 		  Dim tagName As Text
-		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos, tagName)
+		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos)
 		  If pos >= charsUbound Then Return 0
 		  If tagName = "" Then Return 0
 		  
@@ -522,7 +636,7 @@ Protected Class BlockScanner
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
 		  Dim tagName As Text
-		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos, tagName)
+		  tagName = ScannerCharacterMatcher.GetHtmlTagName(chars, pos)
 		  If pos >= charsUbound Then Return 0
 		  If tagName = "" Then Return 0
 		  

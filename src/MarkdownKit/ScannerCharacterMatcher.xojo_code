@@ -7,7 +7,7 @@ Protected Class ScannerCharacterMatcher
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function GetHtmlTagName(chars() As Text, ByRef pos As Integer, tagName As Text) As Text
+		Shared Function GetHtmlTagName(chars() As Text, ByRef pos As Integer) As Text
 		  // Starting at `pos`, read a HTML tag name from the passed character array and return it.
 		  // Increment `pos` so that at the end of the method, it points to the character immediately 
 		  // after the tag name. 

@@ -56,7 +56,6 @@ Protected Class LineInfo
 		  
 		  If RemainingSpaces > 0 Then
 		    RemainingSpaces = RemainingSpaces - 1
-		    #Pragma Warning "TODO: What should CurrentChar be set to here?"
 		    Return True
 		  End If
 		  

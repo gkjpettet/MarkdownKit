@@ -15,10 +15,10 @@ Inherits MarkdownKit.Block
 		  // Blank lines preceding or following an indented code block are not included in it.
 		  Dim i As Integer
 		  Dim limit As Integer = Children.Ubound
-		  Dim rt As MarkdownKit.RawText
+		  Dim rt As MarkdownKit.TextBlock
 		  // Leading blank lines...
 		  For i = 0 to limit
-		    rt = MarkdownKit.RawText(Children(i))
+		    rt = MarkdownKit.TextBlock(Children(i))
 		    If rt.IsBlank Then
 		      Children.Remove(0)
 		    Else
@@ -28,7 +28,7 @@ Inherits MarkdownKit.Block
 		  // Trailing blank lines...
 		  If Children.Ubound > -1 Then
 		    For i  = Children.Ubound DownTo 0
-		      rt = MarkdownKit.RawText(Children(i))
+		      rt = MarkdownKit.TextBlock(Children(i))
 		      If rt.IsBlank Then
 		        Children.Remove(i)
 		      Else
@@ -42,6 +42,12 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -85,6 +91,7 @@ Inherits MarkdownKit.Block
 			Name="Type"
 			Group="Behavior"
 			Type="MarkdownKit.BlockType"
+			EditorType="Enum"
 			#tag EnumValues
 				"0 - Document"
 				"1 - BlockQuote"
@@ -98,6 +105,11 @@ Inherits MarkdownKit.Block
 				"9 - SetextHeading"
 				"10 - ThematicBreak"
 				"11 - ReferenceDefinition"
+				"12 - Block"
+				"13 - RawText"
+				"14 - Softbreak"
+				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

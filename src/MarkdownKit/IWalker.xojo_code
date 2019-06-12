@@ -67,13 +67,13 @@ Protected Interface IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub VisitRawText(rt As MarkdownKit.RawText)
+		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
+		Sub VisitTextBlock(tb As MarkdownKit.TextBlock)
 		  
 		End Sub
 	#tag EndMethod

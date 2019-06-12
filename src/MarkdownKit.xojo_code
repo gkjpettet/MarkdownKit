@@ -255,7 +255,7 @@ Protected Module MarkdownKit
 		  ThematicBreak
 		  ReferenceDefinition
 		  Block
-		  RawText
+		  TextBlock
 		  Softbreak
 		  Hardbreak
 		HTML

@@ -14,7 +14,7 @@ Inherits MarkdownKit.Block
 		  
 		  If FirstChild <> Nil Then
 		    // The first child (if present) is the info string. It may be empty.
-		    Dim rt As MarkdownKit.RawText = MarkdownKit.RawText(FirstChild)
+		    Dim rt As MarkdownKit.TextBlock = MarkdownKit.TextBlock(FirstChild)
 		    If Not rt.IsBlank Then
 		      InfoString = Text.Join(rt.Chars, "").Trim
 		    End If
@@ -45,6 +45,12 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -104,6 +110,9 @@ Inherits MarkdownKit.Block
 				"11 - ReferenceDefinition"
 				"12 - Block"
 				"13 - RawText"
+				"14 - Softbreak"
+				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -129,6 +138,26 @@ Inherits MarkdownKit.Block
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FenceChar"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FenceLength"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FenceOffset"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="InfoString"
+			Group="Behavior"
+			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

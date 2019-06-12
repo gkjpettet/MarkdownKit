@@ -1,9 +1,9 @@
 #tag Class
-Protected Class RawText
+Protected Class TextBlock
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
 		Sub Accept(visitor As MarkdownKit.IWalker)
-		  visitor.VisitRawText(Self)
+		  visitor.VisitTextBlock(Self)
 		End Sub
 	#tag EndMethod
 
@@ -37,6 +37,12 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="HTMLBlockType"
+			Group="Behavior"
+			InitialValue="kHTMLBlockTypeNone"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StartPosition"
 			Group="Behavior"
@@ -82,6 +88,7 @@ Inherits MarkdownKit.Block
 				"13 - RawText"
 				"14 - Softbreak"
 				"15 - Hardbreak"
+				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

@@ -302,22 +302,6 @@ Implements Global.MarkdownKit.IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub VisitRawText(rt As MarkdownKit.RawText)
-		  // Part of the IWalker interface.
-		  
-		  mOutput.Append(CurrentIndent + "<text>")
-		  
-		  Dim content As Text = Text.Join(rt.Chars, "")
-		  If ShowWhitespace Then content = TransformWhitespace(content)
-		  
-		  mOutput.Append(content)
-		  mOutput.Append("</text>")
-		  mOutput.Append(EOL)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
 		  // Part of the MarkdownKit.IWalker interface.
 		  
@@ -337,6 +321,22 @@ Implements Global.MarkdownKit.IWalker
 		  DecreaseIndent
 		  
 		  mOutput.Append(CurrentIndent + "</heading>")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitTextBlock(tb As MarkdownKit.TextBlock)
+		  // Part of the IWalker interface.
+		  
+		  mOutput.Append(CurrentIndent + "<text>")
+		  
+		  Dim content As Text = Text.Join(tb.Chars, "")
+		  If ShowWhitespace Then content = TransformWhitespace(content)
+		  
+		  mOutput.Append(content)
+		  mOutput.Append("</text>")
 		  mOutput.Append(EOL)
 		  
 		End Sub

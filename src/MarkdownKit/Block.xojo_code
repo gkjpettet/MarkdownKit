@@ -22,7 +22,7 @@ Protected Class Block
 		  
 		  If len <= 0 Then
 		    // Blank line.
-		    Children.Append(New MarkdownKit.RawText(tmp, line))
+		    Children.Append(New MarkdownKit.TextBlock(tmp, line))
 		    Return
 		  End If
 		  
@@ -38,7 +38,7 @@ Protected Class Block
 		  Next i
 		  
 		  // Add the raw text as the last child of this block.
-		  Children.Append(New MarkdownKit.RawText(tmp, line))
+		  Children.Append(New MarkdownKit.TextBlock(tmp, line))
 		End Sub
 	#tag EndMethod
 
@@ -136,8 +136,8 @@ Protected Class Block
 		    mType = MarkdownKit.BlockType.Document
 		  ElseIf Self IsA MarkdownKit.Paragraph Then
 		    mType = MarkdownKit.BlockType.Paragraph
-		  ElseIf Self IsA MarkdownKit.RawText Then
-		    mType = MarkdownKit.BlockType.RawText
+		  ElseIf Self IsA MarkdownKit.TextBlock Then
+		    mType = MarkdownKit.BlockType.TextBlock
 		  ElseIf Self IsA MarkdownKit.IndentedCode Then
 		    mType = MarkdownKit.BlockType.IndentedCode
 		  ElseIf Self IsA MarkdownKit.FencedCode Then

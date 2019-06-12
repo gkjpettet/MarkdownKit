@@ -60,6 +60,7 @@ Class=InlineScanner;MarkdownKit/InlineScanner.xojo_code;&h000000007D7DC7FF;&h000
 Class=EdgeCase;MarkdownKit/EdgeCase.xojo_code;&h000000000DCC3FFF;&h00000000214287FF;false
 Class=Utilities;MarkdownKit/Utilities.xojo_code;&h000000000076A7FF;&h00000000214287FF;false
 Class=HTMLScanner;MarkdownKit/HTMLScanner.xojo_code;&h000000002AE407FF;&h00000000214287FF;false
+Class=Phase1HTMLBlockTests;Testing/Phase 1/Phase1HTMLBlockTests.xojo_code;&h000000003893B7FF;&h00000000233AA7FF;false
 DefaultWindow=WinTests
 AppMenuBar=MenuBarMain
 MajorVersion=1

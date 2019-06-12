@@ -7,6 +7,7 @@ Inherits TestController
 		  
 		  Dim group As TestGroup
 		  
+		  group = New Phase1HTMLBlockTests(Self, "HTML Blocks")
 		  group = New Phase1ParagraphTests(Self, "Paragraph Tests")
 		  group = New Phase1ReferenceLinkTests(Self, "Reference Links")
 		  group = New Phase1ListTests(Self, "Lists")

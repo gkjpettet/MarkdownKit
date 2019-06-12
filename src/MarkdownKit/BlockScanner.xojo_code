@@ -83,6 +83,11 @@ Protected Class BlockScanner
 		  mHTMLTagNames.Value("FRAME") = 0
 		  mHTMLTagNames.Value("FRAMESET") = 0
 		  mHTMLTagNames.Value("H1") = 0
+		  mHTMLTagNames.Value("H2") = 0
+		  mHTMLTagNames.Value("H3") = 0
+		  mHTMLTagNames.Value("H4") = 0
+		  mHTMLTagNames.Value("H5") = 0
+		  mHTMLTagNames.Value("H6") = 0
 		  mHTMLTagNames.Value("HEAD") = 0
 		  mHTMLTagNames.Value("HEADER") = 0
 		  mHTMLTagNames.Value("HR") = 0
@@ -90,10 +95,10 @@ Protected Class BlockScanner
 		  mHTMLTagNames.Value("IFRAME") = 0
 		  mHTMLTagNames.Value("LEGEND") = 0
 		  mHTMLTagNames.Value("LI") = 0
+		  mHTMLTagNames.Value("LINK") = 0
 		  mHTMLTagNames.Value("MAIN") = 0
 		  mHTMLTagNames.Value("MENU") = 0
 		  mHTMLTagNames.Value("MENUITEM") = 0
-		  mHTMLTagNames.Value("META") = 0
 		  mHTMLTagNames.Value("NAV") = 0
 		  mHTMLTagNames.Value("NOFRAMES") = 0
 		  mHTMLTagNames.Value("OL") = 0
@@ -101,11 +106,8 @@ Protected Class BlockScanner
 		  mHTMLTagNames.Value("OPTION") = 0
 		  mHTMLTagNames.Value("P") = 0
 		  mHTMLTagNames.Value("PARAM") = 0
-		  mHTMLTagNames.Value("PRE") = 0
-		  mHTMLTagNames.Value("SCRIPT") = 0
 		  mHTMLTagNames.Value("SECTION") = 0
 		  mHTMLTagNames.Value("SOURCE") = 0
-		  mHTMLTagNames.Value("STYLE") = 0
 		  mHTMLTagNames.Value("SUMMARY") = 0
 		  mHTMLTagNames.Value("TABLE") = 0
 		  mHTMLTagNames.Value("TBODY") = 0
@@ -416,10 +418,6 @@ Protected Class BlockScanner
 		    End If
 		    pos = pos + 1
 		  Wend
-		  If pos = charsUbound Then
-		    type = Block.kHTMLBlockTypeNone
-		    Return Block.kHTMLBlockTypeNone
-		  End If
 		  
 		  Dim tagName As Text = Text.Join(tagNameArray, "")
 		  If Not mHTMLTagNames.HasKey(tagName) Then
@@ -464,34 +462,29 @@ Protected Class BlockScanner
 		  // Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
 		  //         {closingTag}[•→]+|⮐$
 		  
+		  // Reset the ByRef type parameter.
+		  type = Block.kHTMLBlockTypeNone
+		  
 		  // At least 3 characters are required for a valid type 7 block start.
 		  Dim chars() As Text = line.Chars
 		  Dim charsUbound As Integer = chars.Ubound
-		  If pos + 2 > charsUbound Then
-		    type = Block.kHTMLBlockTypeNone
-		    Return Block.kHTMLBlockTypeNone
-		  End If
+		  If pos + 2 > charsUbound Then Return Block.kHTMLBlockTypeNone
 		  
-		  If chars(pos) <> "<" Then
-		    type = Block.kHTMLBlockTypeNone
-		    Return Block.kHTMLBlockTypeNone
-		  End If
+		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
 		  
+		  Dim tagName As Text
 		  If chars(pos + 1) = "/" Then
-		    pos = HTMLScanner.ScanClosingTag(chars, pos + 2)
+		    pos = HTMLScanner.ScanClosingTag(chars, pos + 2, tagName)
 		  Else
-		    pos = HTMLScanner.ScanOpenTag(chars, pos + 1)
-		  End If
-		  If pos = 0 Then
-		    type = Block.kHTMLBlockTypeNone
-		    Return Block.kHTMLBlockTypeNone
-		  End If
-		  
-		  While pos < charsUbound
-		    If Not IsWhitespace(chars(pos)) Then
-		      type = Block.kHTMLBlockTypeNone
+		    pos = HTMLScanner.ScanOpenTag(chars, pos + 1, tagName)
+		    If tagName = "script" Or tagName = "style" Or tagName = "pre" Then
 		      Return Block.kHTMLBlockTypeNone
 		    End If
+		  End If
+		  If pos = 0 Then Return Block.kHTMLBlockTypeNone
+		  
+		  While pos < charsUbound
+		    If Not IsWhitespace(chars(pos)) Then Return Block.kHTMLBlockTypeNone
 		    pos = pos + 1
 		  Wend
 		  

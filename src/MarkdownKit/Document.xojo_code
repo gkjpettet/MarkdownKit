@@ -619,7 +619,7 @@ Inherits MarkdownKit.Block
 		        Wend
 		      End If
 		      
-		    Case MarkdownKit.BlockType.HTML
+		    Case MarkdownKit.BlockType.HtmlBlock
 		      // All other block types can accept blanks.
 		      If blank And container.HtmlBlockType >= kHtmlBlockTypeInterruptingBlock Then
 		        container.IsLastLineBlank = True

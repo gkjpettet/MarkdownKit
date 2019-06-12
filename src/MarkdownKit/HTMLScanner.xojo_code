@@ -121,13 +121,18 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanClosingTag(chars() As Text, pos As integer) As Integer
+		Shared Function ScanClosingTag(chars() As Text, pos As integer, ByRef tagName As Text) As Integer
 		  // Scans the passed line beginning at `pos` for a valid HTML closingTag.
 		  // Returns the zero-based index in line.Chars where the closingTag ends.
 		  // Returns 0 if no valid closingTag is found.
 		  // NB: Assumes that `pos` points to the character immediately following "</"
 		  // closingTag: </, tagName, optional whitespace, >
 		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
+		  // Also sets the ByRef tagName parameter to the detected tagName (if present) 
+		  // or "" if no valid tagName is found.
+		  
+		  // Reset `tagName`.
+		  tagName = ""
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  If pos + 1 > charsUbound Then Return 0
@@ -136,7 +141,6 @@ Protected Class HTMLScanner
 		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
-		  Dim tagName As Text
 		  tagName = HTMLScanner.GetHtmlTagName(chars, pos)
 		  If pos >= charsUbound Then Return 0
 		  If tagName = "" Then Return 0
@@ -231,11 +235,13 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanOpenTag(chars() As Text, pos As Integer) As Integer
+		Shared Function ScanOpenTag(chars() As Text, pos As Integer, ByRef tagName As Text) As Integer
 		  // Scans the passed line beginning at `pos` for a valid HTML open tag.
 		  // Returns the zero-based index in line.Chars where the openTag ends.
 		  // Returns 0 if no valid openTag is found.
 		  // NB: Assumes that `pos` points to the character immediately following "<"
+		  // Sets the ByRef parameter `tagName` to the detected tag name (if present) 
+		  // or "" if no valid tag is found.
 		  
 		  // openTag: "<", a tagname, >= 0 attributes, optional whitespace, optional "/", and a ">".
 		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
@@ -247,6 +253,9 @@ Protected Class HTMLScanner
 		  // singleQuotedAttValue: ', >= 0 characters NOT including ', then a final '
 		  // doubleQuotedAttValue: ", >= 0 characters NOT including ", then a final "
 		  
+		  // Reset `tagName`.
+		  tagName = ""
+		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  If pos + 1 > charsUbound Then Return 0
 		  
@@ -254,7 +263,6 @@ Protected Class HTMLScanner
 		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
-		  Dim tagName As Text
 		  tagName = HTMLScanner.GetHtmlTagName(chars, pos)
 		  If pos >= charsUbound Then Return 0
 		  If tagName = "" Then Return 0

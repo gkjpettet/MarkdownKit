@@ -200,7 +200,7 @@ Protected Module MarkdownKit
 		    Return "Setext Heading"
 		  Case MarkdownKit.BlockType.ThematicBreak
 		    Return "Thematic Break"
-		  Case MarkdownKit.BlockType.HTML
+		  Case MarkdownKit.BlockType.HtmlBlock
 		    Return "HTML"
 		  Else
 		    Return "Unknown block type"
@@ -257,8 +257,7 @@ Protected Module MarkdownKit
 		  Block
 		  TextBlock
 		  Softbreak
-		  Hardbreak
-		HTML
+		Hardbreak
 	#tag EndEnum
 
 	#tag Enum, Name = ListDelimiter, Type = Integer, Flags = &h1, Description = 446566696E6573207468652064656C696D69746572207573656420696E2074686520736F7572636520666F72206F726465726564206C697374732E

@@ -25,6 +25,22 @@ Implements Global.MarkdownKit.IWalker
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Function EncodePredefinedEntities(t As Text) As Text
+		  // Encodes the 5 predefined entities to make them XML-safe.
+		  // https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML
+		  
+		  t = t.ReplaceAll("&", "&amp;")
+		  t = t.ReplaceAll("""", "&quot;")
+		  t = t.ReplaceAll("'", "&apos;")
+		  t = t.ReplaceAll("<", "&lt;")
+		  t = t.ReplaceAll(">", "&gt;")
+		  
+		  Return t
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Sub IncreaseIndent()
 		  mCurrentIndent = mCurrentIndent + 1
 		End Sub
@@ -170,19 +186,15 @@ Implements Global.MarkdownKit.IWalker
 		  // Part of the IWalker interface.
 		  
 		  mOutput.Append(CurrentIndent + "<html_block>")
-		  mOutput.Append(EOL)
-		  
-		  IncreaseIndent
-		  mOutput.Append(CurrentIndent + "<raw_text>")
 		  
 		  Dim content As Text = Text.Join(h.RawChars, "")
 		  
+		  // Since the reference AST ( https://spec.commonmark.org/dingus/ ) uses XML, we 
+		  // encode the predefined entities in the content to to match.
+		  content = EncodePredefinedEntities(content)
 		  mOutput.Append(content)
-		  mOutput.Append("</raw_text>")
-		  mOutput.Append(EOL)
-		  DecreaseIndent
 		  
-		  mOutput.Append(CurrentIndent + "</html_block>")
+		  mOutput.Append("</html_block>")
 		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod

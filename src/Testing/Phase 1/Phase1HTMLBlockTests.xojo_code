@@ -43,6 +43,12 @@ Inherits Phase1TestGroup
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example125Test()
+		  Run(125)
+		End Sub
+	#tag EndMethod
+
 
 	#tag Note, Name = About
 		These tests validate the first phase (document block construction) of the parsing process.

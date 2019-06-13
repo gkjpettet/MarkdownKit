@@ -32,10 +32,6 @@ Inherits MarkdownKit.Block
 		Level As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		RawChars() As Text
-	#tag EndProperty
-
 
 	#tag ViewBehavior
 		#tag ViewProperty
@@ -102,10 +98,9 @@ Inherits MarkdownKit.Block
 				"10 - ThematicBreak"
 				"11 - ReferenceDefinition"
 				"12 - Block"
-				"13 - RawText"
+				"13 - TextBlock"
 				"14 - Softbreak"
 				"15 - Hardbreak"
-				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

@@ -145,10 +145,12 @@ Protected Class HTMLScanner
 		  If pos > charsUbound Then Return 0
 		  If tagName = "" Then Return 0
 		  
+		  // Get the current character.
+		  Dim c As Text = chars(pos)
+		  
 		  // Skip optional whitespace.
-		  Dim c As Text
 		  Call HTMLScanner.SkipWhitespace(chars, charsUbound, pos, c)
-		  If pos >= charsUbound Then Return 0
+		  If pos > charsUbound Then Return 0
 		  
 		  // Check for the tag closing delimiter.
 		  If c = ">" Then

@@ -420,13 +420,15 @@ Protected Class BlockScanner
 		  Wend
 		  
 		  Dim tagName As Text = Text.Join(tagNameArray, "")
-		  If Not mHTMLTagNames.HasKey(tagName) Then
+		  If Not mHTMLTagNames.HasKey(tagName) And tagName <> "pre" And tagName <> "script" And tagName <> "style" Then
 		    type = Block.kHTMLBlockTypeNone
 		    Return Block.kHTMLBlockTypeNone
 		  End If
 		  
 		  Dim maybeType1 As Boolean
 		  maybeType1 = If(Not slashAtStart And (tagName = "script" Or tagName = "pre" Or tagName = "style"), True, False)
+		  Dim maybeType6 As Boolean
+		  maybeType6 = If(Not maybeType1 And tagName <> "script" And tagName <> "pre" And tagName <> "style", True, False)
 		  
 		  // `pos` points to the character immediately following the tag name.
 		  c = chars(pos)
@@ -438,7 +440,7 @@ Protected Class BlockScanner
 		      type = Block.kHTMLBlockTypeNone
 		      Return Block.kHTMLBlockTypeNone
 		    End If
-		  Else // Type 6?
+		  ElseIf maybeType6 Then // Type 6?
 		    If IsWhitespace(c) Or c = ">" Or (c = "/" And pos + 1 <= charsUbound And chars(pos + 1) = ">") Then
 		      type = Block.kHTMLBlockTypeInterruptingBlock
 		      Return Block.kHTMLBlockTypeInterruptingBlock

@@ -16,9 +16,6 @@ Inherits MarkdownKit.Block
 		  
 		  Dim len As Integer = If(length = -1, line.CharsUbound - line.Offset + 1, length)
 		  
-		  // Unexpected blank line?
-		  If len <= 0 Then Raise New MarkdownKit.MarkdownException("Bug: I didn't think this would happen!")
-		  
 		  // Get the characters from the current line offset to the end of the line.
 		  Dim tmp() As Text
 		  Dim i As Integer
@@ -43,7 +40,6 @@ Inherits MarkdownKit.Block
 		  
 		  If RawChars.Ubound < 0 Then Return
 		  
-		  #Pragma Warning "CHECK: May not need to pop the last newline off..."
 		  If RawChars(RawChars.Ubound) = &u000A Then Call RawChars.Pop
 		  
 		End Sub

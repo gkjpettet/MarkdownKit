@@ -142,7 +142,7 @@ Protected Class HTMLScanner
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
 		  tagName = HTMLScanner.GetHtmlTagName(chars, pos)
-		  If pos >= charsUbound Then Return 0
+		  If pos > charsUbound Then Return 0
 		  If tagName = "" Then Return 0
 		  
 		  // Skip optional whitespace.
@@ -264,7 +264,7 @@ Protected Class HTMLScanner
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
 		  tagName = HTMLScanner.GetHtmlTagName(chars, pos)
-		  If pos >= charsUbound Then Return 0
+		  If pos > charsUbound Then Return 0
 		  If tagName = "" Then Return 0
 		  
 		  // Since this method is only called when determining whether a line is a 

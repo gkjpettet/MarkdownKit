@@ -1,0 +1,11 @@
+<document>
+<html_block>&lt;style
+  type=&quot;text/css&quot;&gt;
+h1 {color:red;}
+
+p {color:blue;}
+&lt;/style&gt;</html_block>
+<paragraph>
+<raw_text>okay</raw_text>
+</paragraph>
+</document>

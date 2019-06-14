@@ -409,7 +409,7 @@ Protected Class BlockScanner
 		  
 		  // `pos` currently points to the first character of a potential tag name.
 		  Dim tagNameArray() As Text
-		  While pos < charsUbound And tagNameArray.Ubound < 10
+		  While pos <= charsUbound And tagNameArray.Ubound < 10
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.CharInHeaderLevelRange(c) Then
 		      tagNameArray.Append(c)
@@ -431,7 +431,7 @@ Protected Class BlockScanner
 		  maybeType6 = If(Not maybeType1 And tagName <> "script" And tagName <> "pre" And tagName <> "style", True, False)
 		  
 		  // `pos` points to the character immediately following the tag name.
-		  c = chars(pos)
+		  c = If (pos < charsUbound, chars(pos), "")
 		  If maybeType1 Then
 		    If IsWhitespace(c) Or c = ">" Then
 		      type = Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines

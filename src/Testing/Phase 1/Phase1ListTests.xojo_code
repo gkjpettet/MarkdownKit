@@ -344,6 +344,12 @@ Inherits Phase1TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example279Test()
+		  Run(279)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example27Test()
 		  Run(27)
 		End Sub

@@ -1,0 +1,21 @@
+<document>
+<list type="bullet" tight="false">
+<item>
+<paragraph>
+<raw_text>foo</raw_text>
+</paragraph>
+<paragraph>
+<raw_text>notcode</raw_text>
+</paragraph>
+</item>
+<item>
+<paragraph>
+<raw_text>foo</raw_text>
+</paragraph>
+</item>
+</list>
+<html_block>&lt;!-- --&gt;</html_block>
+<indented_code_block>
+<text>code</text>
+</indented_code_block>
+</document>

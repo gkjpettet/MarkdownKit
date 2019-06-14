@@ -31,7 +31,7 @@ Implements Global.MarkdownKit.IWalker
 		  
 		  t = t.ReplaceAll("&", "&amp;")
 		  t = t.ReplaceAll("""", "&quot;")
-		  t = t.ReplaceAll("'", "&apos;")
+		  //t = t.ReplaceAll("'", "&apos;") ' Not used in the AST output from the CommonMark Dingus.
 		  t = t.ReplaceAll("<", "&lt;")
 		  t = t.ReplaceAll(">", "&gt;")
 		  

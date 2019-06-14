@@ -1,0 +1,6 @@
+<document>
+<html_block>&lt;!-- foo --&gt;*bar*</html_block>
+<paragraph>
+<raw_text>*baz*</raw_text>
+</paragraph>
+</document>

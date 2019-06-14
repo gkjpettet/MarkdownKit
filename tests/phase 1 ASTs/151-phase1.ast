@@ -1,0 +1,17 @@
+<document>
+<html_block>&lt;![CDATA[
+function matchwo(a,b)
+{
+  if (a &lt; b &amp;&amp; a &lt; 0) then {
+    return 1;
+
+  } else {
+
+    return 0;
+  }
+}
+]]&gt;</html_block>
+<paragraph>
+<raw_text>okay</raw_text>
+</paragraph>
+</document>

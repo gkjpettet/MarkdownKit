@@ -374,7 +374,7 @@ Protected Class BlockScanner
 		    End If
 		    
 		    // `pos` still points at the character after "!".
-		    If pos + 7 > charsUbound Then
+		    If pos + 6 > charsUbound Then
 		      type = Block.kHTMLBlockTypeNone
 		      Return Block.kHTMLBlockTypeNone
 		    End If

@@ -1,0 +1,6 @@
+<document>
+<html_block>&lt;style&gt;p{color:red;}&lt;/style&gt;</html_block>
+<paragraph>
+<raw_text>*foo*</raw_text>
+</paragraph>
+</document>

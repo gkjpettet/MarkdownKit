@@ -3,7 +3,7 @@ Protected Class App
 Inherits Application
 	#tag MenuHandler
 		Function WindowEditor() As Boolean Handles WindowEditor.Action
-			WinEditor.Show
+			WinPhase1Editor.Show
 			
 			Return True
 			

@@ -258,6 +258,16 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub ParseInlines()
+		  // Walks this document and children parsing string content into inline content 
+		  // where appropriate.
+		  
+		  #Pragma Warning "TODO"
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub ProcessLine(line As MarkdownKit.LineInfo, ByRef currentBlock As MarkdownKit.Block)
 		  // Takes a line of source Markdown and incorporates it into the document tree.
 		  // currentBlock: The Block that most recently has had lines added to it.
@@ -707,10 +717,9 @@ Inherits MarkdownKit.Block
 				"10 - ThematicBreak"
 				"11 - ReferenceDefinition"
 				"12 - Block"
-				"13 - RawText"
+				"13 - TextBlock"
 				"14 - Softbreak"
 				"15 - Hardbreak"
-				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

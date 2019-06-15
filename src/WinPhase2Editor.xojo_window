@@ -1,5 +1,5 @@
 #tag Window
-Begin Window WinEditor
+Begin Window WinPhase2Editor
    BackColor       =   &cFFFFFF00
    Backdrop        =   0
    CloseButton     =   True
@@ -23,7 +23,7 @@ Begin Window WinEditor
    MinWidth        =   64
    Placement       =   0
    Resizeable      =   True
-   Title           =   "MarkdownKit"
+   Title           =   "Phase 2 Editor"
    Visible         =   True
    Width           =   1200
    Begin BetterTextArea Source
@@ -221,7 +221,7 @@ End
 
 	#tag MenuHandler
 		Function WindowEditor() As Boolean Handles WindowEditor.Action
-			WinEditor.Show
+			WinPhase2Editor.Show
 			
 			Return True
 			
@@ -243,6 +243,7 @@ End
 		  // Create a new Markdown document.
 		  Dim doc As New MarkdownKit.Document(Source.Text.ToText)
 		  doc.ParseBlockStructure
+		  doc.ParseInlines
 		  
 		  // Clear out the old AST.
 		  Output.Text = ""
@@ -250,7 +251,7 @@ End
 		  // Remove any earlier warnings.
 		  Info.Text = ""
 		  
-		  // Print out the document "phase 1" block structure.
+		  // Print out the document's "phase 2" block structure.
 		  Dim printer As New Phase1Printer
 		  printer.Pretty = True
 		  printer.ShowWhitespace = True

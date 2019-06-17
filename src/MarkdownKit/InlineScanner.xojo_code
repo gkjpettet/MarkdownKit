@@ -66,7 +66,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Sub CloseBuffer(buffer As MarkdownKit.Inline, container As MarkdownKit.InlineContainerBlock)
+		Private Shared Sub CloseBuffer(ByRef buffer As MarkdownKit.Inline, container As MarkdownKit.InlineContainerBlock)
 		  // There's an open preceding text inline. Close it.
 		  buffer.Close
 		  
@@ -192,7 +192,7 @@ Protected Class InlineScanner
 		        // Add the code span.
 		        b.Inlines.Append(result)
 		        // Advance the position.
-		        pos = pos + result.EndPos + MarkdownKit.InlineCodespan(result).DelimiterLength + 1
+		        pos = result.EndPos + MarkdownKit.InlineCodespan(result).DelimiterLength + 1
 		      Else
 		        NotInlineStarter(buffer, pos, b) 
 		      End If

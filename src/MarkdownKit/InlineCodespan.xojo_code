@@ -8,12 +8,12 @@ Inherits MarkdownKit.Inline
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Close(source() As Text)
+		Sub Close()
 		  // Everything between StartPos and EndPos is the content of this code span.
 		  
 		  Dim seenNonSpace As Boolean = False
 		  For i As Integer = Self.StartPos To Self.EndPos
-		    Select Case source(i)
+		    Select Case Parent.RawChars(i)
 		    Case &u000A
 		      // Newlines are normalised to spaces.
 		      chars.Append(&u0020)
@@ -21,7 +21,7 @@ Inherits MarkdownKit.Inline
 		      chars.Append(&u0020)
 		    Else
 		      seenNonSpace = True
-		      chars.Append(source(i))
+		      chars.Append(Parent.RawChars(i))
 		    End Select
 		  Next i
 		  
@@ -37,12 +37,18 @@ Inherits MarkdownKit.Inline
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(startPos As Integer, endPos As Integer, source() As Text)
-		  Super.Constructor(startPos, endPos, InlineType.CodeSpan)
-		  Self.Close(source)
+		Sub Constructor(startPos As Integer, endPos As Integer, container As MarkdownKit.InlineContainerBlock, delimiterLength As Integer)
+		  Super.Constructor(startPos, endPos, InlineType.CodeSpan, Xojo.Core.WeakRef.Create(container))
+		  Self.DelimiterLength = delimiterLength
+		  Self.Close
 		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		DelimiterLength As Integer = 0
+	#tag EndProperty
 
 
 	#tag ViewBehavior

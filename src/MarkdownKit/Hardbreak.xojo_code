@@ -1,28 +1,16 @@
 #tag Class
-Protected Class InlineText
+Protected Class Hardbreak
 Inherits MarkdownKit.Inline
 	#tag Method, Flags = &h0
 		Sub Accept(visitor As MarkdownKit.IInlineVisitor)
-		  visitor.VisitInlineText(Self)
+		  visitor.VisitHardbreak(Self)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Close()
-		  #Pragma Warning "TODO: Encode entities, etc"
-		  
-		  For x As Integer = Self.StartPos To Self.EndPos
-		    Self.Chars.Append(Self.Parent.RawChars(x))
-		  Next x
-		  
-		  Self.IsOpen = False
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Constructor(startPos As Integer, endPos As Integer, container As MarkdownKit.InlineContainerBlock)
-		  Super.Constructor(startPos, endPos, InlineType.Textual, Xojo.Core.WeakRef.Create(container))
+		Sub Constructor(container As MarkdownKit.InlineContainerBlock)
+		  // Calling the overridden superclass constructor.
+		  Super.Constructor(-1, -1, MarkdownKit.InlineType.Hardbreak, Xojo.Core.WeakRef.Create(container))
 		  
 		End Sub
 	#tag EndMethod
@@ -95,6 +83,7 @@ Inherits MarkdownKit.Inline
 		#tag ViewProperty
 			Name="IsOpen"
 			Group="Behavior"
+			InitialValue="True"
 			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior

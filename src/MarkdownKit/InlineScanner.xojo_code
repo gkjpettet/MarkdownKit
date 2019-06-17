@@ -65,6 +65,18 @@ Protected Class InlineScanner
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Shared Sub CloseBuffer(buffer As MarkdownKit.Inline, container As MarkdownKit.InlineContainerBlock)
+		  // There's an open preceding text inline. Close it.
+		  buffer.Close
+		  
+		  // Add the buffer to the container block before the code span.
+		  container.Inlines.Append(buffer)
+		  
+		  buffer = Nil
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Shared Sub CollapseInternalWhitespace(chars() As Text)
 		  // Collapses consecutive whitespace within the passed character array to a single space.
@@ -106,14 +118,11 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function HandleBackticks(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As Integer
+		Private Shared Function HandleBackticks(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.InlineCodespan
 		  // We know that index `startPos` in `b.RawChars` is a backtick. 
 		  // Look to see if it represents the start of a valid inline code span.
-		  // If it does then create and append an inline code span for block `b` and 
-		  // advance `pos` to the character after the closing delimiter.
-		  // Returns the updated position (which will either be the character immediately 
-		  // after the closing backtick or the original position+1 in the case that we can't 
-		  // find a valid code span).
+		  // If it does then it creates and returns an inline code span. Otherwise 
+		  // it returns Nil.
 		  
 		  Dim pos As Integer
 		  
@@ -123,7 +132,7 @@ Protected Class InlineScanner
 		    pos = pos + 1
 		  Wend
 		  
-		  If pos = rawCharsUbound Then Return startPos + 1
+		  If pos = rawCharsUbound Then Return Nil
 		  
 		  // `pos` now points to the first character immediately following the opening 
 		  // backtick string.
@@ -135,14 +144,11 @@ Protected Class InlineScanner
 		  Dim closingStartPos As Integer = ScanClosingBacktickString(b, backtickStringLen, _
 		  contentStartPos, rawCharsUbound)
 		  
-		  If closingStartPos = - 1 Then Return startPos + 1
+		  If closingStartPos = - 1 Then Return Nil
 		  
 		  // We've found a code span.
-		  // If this block's last inline is an open inline text element then close it.
-		  If b.LastInlineIsTextual Then b.LastInline.Close(b.RawChars)
-		  b.Inlines.Append(New MarkdownKit.InlineCodespan(contentStartPos, closingStartPos - 1, b.RawChars))
+		  Return New MarkdownKit.InlineCodespan(contentStartPos, closingStartPos - 1, b, backtickStringLen)
 		  
-		  Return closingStartPos + backtickStringLen
 		End Function
 	#tag EndMethod
 
@@ -156,30 +162,54 @@ Protected Class InlineScanner
 		  Dim pos As Integer = 0
 		  Dim rawCharsUbound As Integer = b.RawChars.Ubound
 		  Dim c As Text
-		  Dim tmpInline As MarkdownKit.Inline
+		  Dim buffer As MarkdownKit.Inline
+		  Dim result As MarkdownKit.Inline
 		  
 		  While pos <= rawCharsUbound
 		    
 		    c = b.RawChars(pos)
 		    
 		    If c = "`" And Not Escaped(b.RawChars, pos) Then
-		      pos = HandleBackticks(b, pos, rawCharsUbound)
+		      result = HandleBackticks(b, pos, rawCharsUbound)
+		      If result <> Nil Then
+		        // Found a code span.
+		        If buffer <> Nil Then CloseBuffer(buffer, b)
+		        // Add the code span.
+		        b.Inlines.Append(result)
+		        // Advance the position.
+		        pos = pos + result.EndPos + MarkdownKit.InlineCodespan(result).DelimiterLength + 1
+		      Else
+		        pos = pos + 1
+		      End If
+		      
+		    ElseIf c = &u000A Then // Hard or soft break?
+		      If buffer <> Nil Then CloseBuffer(buffer, b)
+		      If pos - 1 >= 0 And b.RawChars(pos - 1) = "\" Then
+		        b.Inlines.Append(New Hardbreak(b))
+		        pos = pos + 1
+		      ElseIf pos - 2 >= 0 And b.RawChars(pos - 2) = &u0020 And b.RawChars(pos - 1) = &u0020 Then
+		        b.Inlines.Append(New Hardbreak(b))
+		        pos = pos + 1
+		      Else
+		        b.Inlines.Append(New Softbreak(b))
+		        pos = pos + 1
+		      End If
 		      
 		    Else
 		      // This character is not the start of any inline content. If there is an 
 		      // open inline text block then append this character to it, otherwise create a 
 		      // new open inline text block and append this character to it.
-		      tmpInline = b.LastInline
-		      If tmpInline <> Nil And tmpInline IsA InlineText And tmpInline.IsOpen Then
-		        tmpInline.EndPos = pos
+		      If buffer <> Nil Then
+		        buffer.EndPos = pos
 		      Else
-		        b.Inlines.Append(New MarkdownKit.InlineText(pos, pos))
+		        buffer = New MarkdownKit.InlineText(pos, pos, b)
 		      End If
 		      pos = pos + 1
 		    End If
 		  Wend
 		  
-		  If b.LastInlineIsTextual Then b.LastInline.Close(b.RawChars)
+		  If buffer <> Nil Then CloseBuffer(buffer, b)
+		  
 		End Sub
 	#tag EndMethod
 

@@ -7,7 +7,7 @@ Protected Class Inline
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Close(source() As Text)
+		Sub Close()
 		  Dim e As New Xojo.Core.UnsupportedOperationException
 		  e.Reason = "The Inline.Close method should be overridden by subclasses"
 		  Raise e
@@ -16,11 +16,11 @@ Protected Class Inline
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(startPos As Integer, endPos As Integer, type As MarkdownKit.InlineType)
+		Sub Constructor(startPos As Integer, endPos As Integer, type As MarkdownKit.InlineType, parent As Xojo.Core.WeakRef)
 		  Self.StartPos = startPos
 		  Self.EndPos = endPos
 		  Self.Type = type
-		  
+		  Self.mParent = parent
 		End Sub
 	#tag EndMethod
 
@@ -33,18 +33,27 @@ Protected Class Inline
 		EndPos As Integer = -1
 	#tag EndProperty
 
+	#tag Property, Flags = &h0
+		IsOpen As Boolean = True
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		mParent As Xojo.Core.WeakRef
+	#tag EndProperty
+
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return mIsOpen
+			  If mParent.Value = Nil Then
+			    Return Nil
+			  Else
+			    Return MarkdownKit.InlineContainerBlock(mParent.Value)
+			  End If
+			  
 			End Get
 		#tag EndGetter
-		IsOpen As Boolean
+		Parent As MarkdownKit.InlineContainerBlock
 	#tag EndComputedProperty
-
-	#tag Property, Flags = &h1
-		Protected mIsOpen As Boolean = True
-	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 546865207A65726F2D626173656420696E64657820696E2074686520636F6E7461696E65722773205261774368617273206172726179207768657265207468697320696E6C696E6520626567696E73
 		StartPos As Integer = -1
@@ -118,11 +127,6 @@ Protected Class Inline
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsOpen"
-			Group="Behavior"
-			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

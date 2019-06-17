@@ -183,6 +183,17 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitHardbreak(hb As MarkdownKit.Hardbreak)
+		  // Part of the IInlineVisitor interface.
+		  
+		  #Pragma Unused hb
+		  
+		  mOutput.Append(CurrentIndent + "<linebreak />")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitHTML(h As MarkdownKit.HTML)
 		  // Part of the IBlockVisitor interface.
 		  
@@ -367,6 +378,17 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitSoftbreak(sb As MarkdownKit.Softbreak)
+		  // Part of the IInlineVisitor interface.
+		  
+		  #Pragma Unused sb
+		  
+		  mOutput.Append(CurrentIndent + "<softbreak />")
+		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod
 

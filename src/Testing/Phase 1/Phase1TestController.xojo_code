@@ -96,49 +96,6 @@ Inherits TestController
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub RunPhase1Test(methodName As Text, tg As TestGroup)
-		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = Phase1TestController.GetTestNumberFromMethodName(methodName) + ".md"
-		  Dim astNAme As Text = Phase1TestController.GetTestNumberFromMethodName(methodName) + "-phase1.ast"
-		  
-		  // Get the example Markdown file.
-		  Dim md As Text
-		  If Not Phase1TestController.GetTestMarkdown(mdName, md) Then
-		    tg.Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
-		    Return
-		  End If
-		  
-		  // Get the expected AST output.
-		  Dim expected As Text
-		  If Not Phase1TestController.GetTestAST(astName, expected) Then
-		    tg.Assert.Fail("Unable to load test AST file `" + astName + "`")
-		    Return
-		  End If
-		  
-		  // Create a new Markdown document.
-		  Dim doc As New MarkdownKit.Document(md)
-		  doc.ParseBlockStructure
-		  
-		  // Convert the phase 1 block structure to Text.
-		  Dim printer As New Phase1Printer
-		  printer.Pretty = False
-		  printer.VisitDocument(doc)
-		  Dim actual As Text = printer.Output
-		  
-		  // Transform whitespace in our result and the expected truth to make it 
-		  // easier to visualise.
-		  Phase1TestController.TransformWhitespace(actual)
-		  Phase1TestController.TransformWhitespace(expected)
-		  
-		  // Check the result matches the truth.
-		  tg.Assert.AreEqual(expected, actual)
-		  
-		  Exception e
-		    tg.Assert.FailCustom(expected, "Exception occurred!")
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Shared Sub TransformWhitespace(ByRef t As Text)
 		  t = t.ReplaceAll(" ", "•")
 		  t = t.ReplaceAll(&u0009, "→")

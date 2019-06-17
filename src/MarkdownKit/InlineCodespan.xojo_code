@@ -16,9 +16,9 @@ Inherits MarkdownKit.Inline
 		    Select Case source(i)
 		    Case &u000A
 		      // Newlines are normalised to spaces.
-		      chars.Append(" ")
-		    Case " "
-		      chars.Append(" ")
+		      chars.Append(&u0020)
+		    Case &u0020
+		      chars.Append(&u0020)
 		    Else
 		      seenNonSpace = True
 		      chars.Append(source(i))
@@ -28,7 +28,7 @@ Inherits MarkdownKit.Inline
 		  // If the resulting content both begins and ends with a space character, but does not 
 		  // consist entirely of space characters, a single space character is removed from the 
 		  // front and back.
-		  If seenNonSpace And Chars.Ubound >= 1 And Chars(0) = " " And Chars(Chars.Ubound) = " " Then
+		  If seenNonSpace And Chars.Ubound >= 1 And Chars(0) = &u0020 And Chars(Chars.Ubound) = &u0020 Then
 		    Chars.Remove(0)
 		    Call Chars.Pop
 		  End If

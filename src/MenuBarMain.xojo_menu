@@ -137,12 +137,22 @@ Begin Menu MenuBarMain
       Index = -2147483648
       AutoEnable = True
       Visible = True
-      Begin MenuItem WindowEditor
+      Begin MenuItem WindowEditorPhase1
          SpecialMenu = 0
-         Text = "Editor"
+         Text = "Phase 1 Editor"
          Index = -2147483648
          ShortcutKey = "1"
          Shortcut = "Cmd+1"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin MenuItem WindowEditorPhase2
+         SpecialMenu = 0
+         Text = "Phase 2 Editor"
+         Index = -2147483648
+         ShortcutKey = "2"
+         Shortcut = "Cmd+2"
          MenuModifier = True
          AutoEnable = True
          Visible = True
@@ -151,8 +161,8 @@ Begin Menu MenuBarMain
          SpecialMenu = 0
          Text = "Tests"
          Index = -2147483648
-         ShortcutKey = "2"
-         Shortcut = "Cmd+2"
+         ShortcutKey = "3"
+         Shortcut = "Cmd+3"
          MenuModifier = True
          AutoEnable = True
          Visible = True

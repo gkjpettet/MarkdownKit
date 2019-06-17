@@ -152,6 +152,44 @@ Protected Class InlineScanner
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Shared Function HandleLeftAngleBracket(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.InlineHTML
+		  // We know that index `startPos` in `b.RawChars` is a "<".
+		  // Look to see if it represents the start of inline HTML.
+		  // If it does then it creates and returns an inline HTML block. Otherwise 
+		  // it returns Nil.
+		  // NB: The EndPos of the returned inline HTML block is the position of the closing ">"
+		  
+		  // Bare minimum valid HTML tag is: <a>
+		  If startPos + 2 > rawCharsUbound Then Return Nil
+		  
+		  Dim pos As Integer = startPos + 1
+		  Dim c As Text = b.RawChars(pos)
+		  
+		  Dim tagName As Text
+		  
+		  If c = "/" Then
+		    // Closing tag?
+		    #Pragma Warning "TODO"
+		  ElseIf c = "?" Then
+		    // Processing instruction?
+		    #Pragma Warning "TODO"
+		  ElseIf c = "!" Then
+		    // Declaration, comment or CDATA section?
+		    #Pragma Warning "TODO"
+		  Else
+		    // Opening tag?
+		    pos = HTMLScanner.ScanOpenTag(b.RawChars, pos, tagName, False)
+		    If pos = 0 Then
+		      Return Nil
+		    Else
+		      Return New MarkdownKit.InlineHTML(startPos, pos - 1, b)
+		    End If
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Shared Sub NotInlineStarter(ByRef buffer As MarkdownKit.Inline, ByRef pos As Integer, container As MarkdownKit.InlineContainerBlock)
 		  // Called when parsing the raw characters of an inline container block and we have 
@@ -186,6 +224,7 @@ Protected Class InlineScanner
 		    c = b.RawChars(pos)
 		    
 		    If c = "`" And Not Escaped(b.RawChars, pos) Then
+		      // ========= Code spans =========
 		      result = HandleBackticks(b, pos, rawCharsUbound)
 		      If result <> Nil And lastChar <> "`" Then
 		        // Found a code span.
@@ -194,6 +233,20 @@ Protected Class InlineScanner
 		        b.Inlines.Append(result)
 		        // Advance the position.
 		        pos = result.EndPos + MarkdownKit.InlineCodespan(result).DelimiterLength + 1
+		      Else
+		        NotInlineStarter(buffer, pos, b) 
+		      End If
+		      
+		    ElseIf c = "<" And Not Escaped(b.RawChars, pos) Then
+		      // ========= Inline HTML =========
+		      result = HandleLeftAngleBracket(b, pos, rawCharsUbound)
+		      If result <> Nil Then
+		        // Found inline HTML.
+		        If buffer <> Nil Then CloseBuffer(buffer, b)
+		        // Add the inline HTML.
+		        b.Inlines.Append(result)
+		        // Advance the position.
+		        pos = result.EndPos + 1
 		      Else
 		        NotInlineStarter(buffer, pos, b) 
 		      End If

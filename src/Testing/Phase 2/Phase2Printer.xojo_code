@@ -261,6 +261,15 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitInlineHTML(h As MarkdownKit.InlineHTML)
+		  mOutput.Append(CurrentIndent + "<html_inline>")
+		  mOutput.Append(Text.Join(h.Chars, ""))
+		  mOutput.Append("</html_inline>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitInlineText(t As MarkdownKit.InlineText)
 		  // Part of the IInlineVisitor interface.
 		  

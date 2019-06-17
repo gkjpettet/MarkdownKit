@@ -237,7 +237,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanOpenTag(chars() As Text, pos As Integer, ByRef tagName As Text) As Integer
+		Shared Function ScanOpenTag(chars() As Text, pos As Integer, ByRef tagName As Text, type7Only As Boolean = True) As Integer
 		  // Scans the passed line beginning at `pos` for a valid HTML open tag.
 		  // Returns the zero-based index in line.Chars where the openTag ends.
 		  // Returns 0 if no valid openTag is found.
@@ -269,9 +269,10 @@ Protected Class HTMLScanner
 		  If pos > charsUbound Then Return 0
 		  If tagName = "" Then Return 0
 		  
-		  // Since this method is only called when determining whether a line is a 
-		  // type 7 HTML block start, "script", "pre" and "style" are not valid tag names.
-		  If tagName = "script" Or tagName = "pre" Or tagName = "style" Then Return 0
+		  If type7Only Then
+		    // For a valid type 7 HTML block start, "script", "pre" and "style" are not valid tag names.
+		    If tagName = "script" Or tagName = "pre" Or tagName = "style" Then Return 0
+		  End If
 		  
 		  // Loop until the end of the line is reached or the tag is closed.
 		  Dim hadWhitespace As Boolean = False

@@ -176,17 +176,18 @@ Protected Class InlineScanner
 		  
 		  Dim pos As Integer = 0
 		  Dim rawCharsUbound As Integer = b.RawChars.Ubound
-		  Dim c As Text
+		  Dim c, lastChar As Text = ""
 		  Dim buffer As MarkdownKit.Inline
 		  Dim result As MarkdownKit.Inline
 		  
 		  While pos <= rawCharsUbound
 		    
+		    lastChar = c
 		    c = b.RawChars(pos)
 		    
 		    If c = "`" And Not Escaped(b.RawChars, pos) Then
 		      result = HandleBackticks(b, pos, rawCharsUbound)
-		      If result <> Nil Then
+		      If result <> Nil And lastChar <> "`" Then
 		        // Found a code span.
 		        If buffer <> Nil Then CloseBuffer(buffer, b)
 		        // Add the code span.

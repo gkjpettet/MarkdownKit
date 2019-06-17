@@ -153,6 +153,21 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Sub NotInlineStarter(ByRef buffer As MarkdownKit.Inline, ByRef pos As Integer, container As MarkdownKit.InlineContainerBlock)
+		  // Called when parsing the raw characters of an inline container block and we have 
+		  // come across a character that does NOT represent the start of new inline content.
+		  
+		  If buffer <> Nil Then
+		    buffer.EndPos = pos
+		  Else
+		    buffer = New MarkdownKit.InlineText(pos, pos, container)
+		  End If
+		  
+		  pos = pos + 1
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Sub ParseInlines(b As MarkdownKit.InlineContainerBlock)
 		  // We know that `b` is an inline container block (i.e: a paragraph, ATX heading or 
 		  // setext heading) that has at least one character of content in its `RawChars` array.
@@ -179,7 +194,7 @@ Protected Class InlineScanner
 		        // Advance the position.
 		        pos = pos + result.EndPos + MarkdownKit.InlineCodespan(result).DelimiterLength + 1
 		      Else
-		        pos = pos + 1
+		        NotInlineStarter(buffer, pos, b) 
 		      End If
 		      
 		    ElseIf c = &u000A Then // Hard or soft break?
@@ -199,12 +214,7 @@ Protected Class InlineScanner
 		      // This character is not the start of any inline content. If there is an 
 		      // open inline text block then append this character to it, otherwise create a 
 		      // new open inline text block and append this character to it.
-		      If buffer <> Nil Then
-		        buffer.EndPos = pos
-		      Else
-		        buffer = New MarkdownKit.InlineText(pos, pos, b)
-		      End If
-		      pos = pos + 1
+		      NotInlineStarter(buffer, pos, b)
 		    End If
 		  Wend
 		  

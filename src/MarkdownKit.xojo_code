@@ -260,6 +260,18 @@ Protected Module MarkdownKit
 		Hardbreak
 	#tag EndEnum
 
+	#tag Enum, Name = InlineType, Type = Integer, Flags = &h1
+		Textual
+		  Emphasis
+		  Strong
+		  CodeSpan
+		  HTML
+		  Softbreak
+		  Linebreak
+		  Link
+		Image
+	#tag EndEnum
+
 	#tag Enum, Name = ListDelimiter, Type = Integer, Flags = &h1, Description = 446566696E6573207468652064656C696D69746572207573656420696E2074686520736F7572636520666F72206F726465726564206C697374732E
 		Period=0
 		Parenthesis

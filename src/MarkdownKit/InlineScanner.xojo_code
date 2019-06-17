@@ -96,13 +96,91 @@ Protected Class InlineScanner
 	#tag Method, Flags = &h0
 		Shared Function Escaped(chars() As Text, pos As Integer) As Boolean
 		  // Returns True if the character at zero-based position `pos` is escaped.
-		  // I.e: is preceded by a backslash character.
+		  // (i.e: preceded by a backslash character).
 		  
 		  If pos > chars.Ubound or pos = 0 Then Return False
 		  
 		  Return If(chars(pos - 1) = "\", True, False)
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function HandleBackticks(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As Integer
+		  // We know that index `startPos` in `b.RawChars` is a backtick. 
+		  // Look to see if it represents the start of a valid inline code span.
+		  // If it does then create and append an inline code span for block `b` and 
+		  // advance `pos` to the character after the closing delimiter.
+		  // Returns the updated position (which will either be the character immediately 
+		  // after the closing backtick or the original position+1 in the case that we can't 
+		  // find a valid code span).
+		  
+		  Dim pos As Integer
+		  
+		  pos = startPos + 1
+		  While pos <= rawCharsUbound
+		    If b.RawChars(pos) <> "`" Then Exit
+		    pos = pos + 1
+		  Wend
+		  
+		  If pos = rawCharsUbound Then Return startPos + 1
+		  
+		  // `pos` now points to the first character immediately following the opening 
+		  // backtick string.
+		  Dim contentStartPos As Integer = pos
+		  
+		  Dim backtickStringLen As Integer = pos - startPos
+		  
+		  // Find the start position of the closing backtick string (if there is one).
+		  Dim closingStartPos As Integer = ScanClosingBacktickString(b, backtickStringLen, _
+		  contentStartPos, rawCharsUbound)
+		  
+		  If closingStartPos = - 1 Then Return startPos + 1
+		  
+		  // We've found a code span.
+		  // If this block's last inline is an open inline text element then close it.
+		  If b.LastInlineIsTextual Then b.LastInline.Close(b.RawChars)
+		  b.Inlines.Append(New MarkdownKit.InlineCodespan(contentStartPos, closingStartPos - 1, b.RawChars))
+		  
+		  Return closingStartPos + backtickStringLen
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Sub ParseInlines(b As MarkdownKit.InlineContainerBlock)
+		  // We know that `b` is an inline container block (i.e: a paragraph, ATX heading or 
+		  // setext heading) that has at least one character of content in its `RawChars` array.
+		  // This method steps through the raw characters, populating the block's Inlines() array 
+		  // with any inline elements it encounters.
+		  
+		  Dim pos As Integer = 0
+		  Dim rawCharsUbound As Integer = b.RawChars.Ubound
+		  Dim c As Text
+		  Dim tmpInline As MarkdownKit.Inline
+		  
+		  While pos <= rawCharsUbound
+		    
+		    c = b.RawChars(pos)
+		    
+		    If c = "`" And Not Escaped(b.RawChars, pos) Then
+		      pos = HandleBackticks(b, pos, rawCharsUbound)
+		      
+		    Else
+		      // This character is not the start of any inline content. If there is an 
+		      // open inline text block then append this character to it, otherwise create a 
+		      // new open inline text block and append this character to it.
+		      tmpInline = b.LastInline
+		      If tmpInline <> Nil And tmpInline IsA InlineText And tmpInline.IsOpen Then
+		        tmpInline.EndPos = pos
+		      Else
+		        b.Inlines.Append(New MarkdownKit.InlineText(pos, pos))
+		      End If
+		      pos = pos + 1
+		    End If
+		  Wend
+		  
+		  If b.LastInlineIsTextual Then b.LastInline.Close(b.RawChars)
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -114,6 +192,57 @@ Protected Class InlineScanner
 		  #Pragma Warning "Needs implementing"
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function ScanClosingBacktickString(b As MarkdownKit.InlineContainerBlock, backtickStringLen As Integer, startPos As Integer, rawCharsUbound As Integer) As Integer
+		  // Beginning at `startPos` in `b.RawChars`, scan for a closing code span backtick string 
+		  // of `backtickStringLen` characters. If found, return the position of the backtick 
+		  // which forms the beginning of the closing backtick string. Otherwise return -1.
+		  // Assumes `startPos` points at the character immediately following the last backtick of the 
+		  // opening backtick string.
+		  
+		  If startPos + backtickStringLen > rawCharsUbound Then Return -1
+		  
+		  Dim contiguousBackticks As Integer = 0
+		  Dim closingBacktickStringStartPos As Integer = -1
+		  For i As Integer = startPos To rawCharsUbound
+		    If b.RawChars(i) = "`" Then
+		      If contiguousBackticks = 0 Then
+		        // Might be the beginning of the closing sequence.
+		        closingBacktickStringStartPos = i
+		        contiguousBackticks = contiguousBackticks + 1
+		        If backtickStringLen = 1 Then
+		          // We may have found the closer. Check the next character isn't a backtick.
+		          If i + 1 > rawCharsUbound Or b.RawChars(i + 1) <> "`" Then
+		            // Success!
+		            Return closingBacktickStringStartPos
+		          End If
+		        End If
+		      Else
+		        // We already have a potential closing sequence.
+		        contiguousBackticks = contiguousBackticks + 1
+		        If contiguousBackticks = backtickStringLen Then
+		          // We may have found the closer. Check the next character isn't a backtick.
+		          If i + 1 > rawCharsUbound Or b.RawChars(i + 1) <> "`" Then
+		            // Success!
+		            Return closingBacktickStringStartPos
+		          End If
+		        End If
+		      End If
+		    Else
+		      contiguousBackticks = 0
+		      closingBacktickStringStartPos = -1
+		    End If
+		  Next i
+		  
+		  If contiguousBackticks = backtickStringLen Then
+		    Return closingBacktickStringStartPos
+		  Else
+		    Return -1
+		  End If
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0

@@ -2,7 +2,7 @@
 Protected Class HTML
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IWalker)
+		Sub Accept(visitor As MarkdownKit.IBlockVisitor)
 		  visitor.VisitHTML(Self)
 		End Sub
 	#tag EndMethod

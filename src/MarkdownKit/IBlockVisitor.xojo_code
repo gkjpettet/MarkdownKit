@@ -1,5 +1,5 @@
 #tag Interface
-Protected Interface IWalker
+Protected Interface IBlockVisitor
 	#tag Method, Flags = &h0
 		Sub VisitAtxHeading(atx As MarkdownKit.AtxHeading)
 		  
@@ -68,12 +68,6 @@ Protected Interface IWalker
 
 	#tag Method, Flags = &h0
 		Sub VisitSetextHeading(stx As MarkdownKit.SetextHeading)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub VisitTextBlock(tb As MarkdownKit.TextBlock)
 		  
 		End Sub
 	#tag EndMethod

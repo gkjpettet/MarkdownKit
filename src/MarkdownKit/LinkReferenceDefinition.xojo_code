@@ -1,7 +1,7 @@
 #tag Class
 Protected Class LinkReferenceDefinition
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IWalker)
+		Sub Accept(visitor As MarkdownKit.IBlockVisitor)
 		  visitor.VisitLinkReferenceDefinition(Self)
 		End Sub
 	#tag EndMethod

@@ -2,7 +2,7 @@
 Protected Class Document
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IWalker)
+		Sub Accept(visitor As MarkdownKit.IBlockVisitor)
 		  visitor.VisitDocument(Self)
 		End Sub
 	#tag EndMethod
@@ -259,11 +259,28 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub ParseInlines()
-		  // Walks this document and children parsing string content into inline content 
+		  // Walks this document and its children parsing raw text content into inline content 
 		  // where appropriate.
 		  
-		  #Pragma Warning "TODO"
+		  Dim stack() As MarkdownKit.Block
 		  
+		  Dim b As MarkdownKit.Block = Self
+		  
+		  While b <> Nil
+		    If b IsA MarkdownKit.InlineContainerBlock And _
+		    b.RawChars.Ubound > -1 Then InlineScanner.ParseInlines(InlineContainerBlock(b))
+		    
+		    If b.FirstChild <> Nil Then
+		      If b.NextSibling <> Nil Then stack.Append(b.NextSibling)
+		      b = b.FirstChild
+		    ElseIf b.NextSibling <> Nil Then
+		      b = b.NextSibling
+		    ElseIf stack.Ubound > -1 Then
+		      b = stack.Pop
+		    Else
+		      b = Nil
+		    End If
+		  Wend
 		End Sub
 	#tag EndMethod
 

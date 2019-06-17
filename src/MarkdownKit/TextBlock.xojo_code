@@ -2,12 +2,6 @@
 Protected Class TextBlock
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IWalker)
-		  visitor.VisitTextBlock(Self)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub Constructor(chars() As Text, line As MarkdownKit.LineInfo)
 		  Super.Constructor(line.Number, line.Offset, -1)
 		  Self.Chars = chars
@@ -85,10 +79,9 @@ Inherits MarkdownKit.Block
 				"10 - ThematicBreak"
 				"11 - ReferenceDefinition"
 				"12 - Block"
-				"13 - RawText"
+				"13 - TextBlock"
 				"14 - Softbreak"
 				"15 - Hardbreak"
-				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

@@ -1,20 +1,33 @@
 #tag Class
-Protected Class BlockQuote
-Inherits MarkdownKit.Block
+Protected Class InlineText
+Inherits MarkdownKit.Inline
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IBlockVisitor)
-		  visitor.VisitBlockQuote(Self)
+		Sub Accept(visitor As MarkdownKit.IInlineVisitor)
+		  visitor.VisitInlineText(Self)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Close(source() As Text)
+		  #Pragma Warning "TODO: Encode entities, etc"
+		  
+		  For i As Integer = Self.StartPos To Self.EndPos
+		    Chars.Append(source(i))
+		  Next i
+		  
+		  mIsOpen = False
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Constructor(startPos As Integer, endPos As Integer)
+		  Super.Constructor(startPos, endPos, InlineType.Textual)
+		  
 		End Sub
 	#tag EndMethod
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="HTMLBlockType"
-			Group="Behavior"
-			InitialValue="kHTMLBlockTypeNone"
-			Type="Integer"
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -49,58 +62,39 @@ Inherits MarkdownKit.Block
 			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="IsOpen"
-			Group="Behavior"
-			InitialValue="True"
-			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="Type"
 			Group="Behavior"
-			Type="MarkdownKit.BlockType"
+			InitialValue="MarkdownKit.InlineType.Textual"
+			Type="MarkdownKit.InlineType"
 			EditorType="Enum"
 			#tag EnumValues
-				"0 - Document"
-				"1 - BlockQuote"
-				"2 - List"
-				"3 - ListItem"
-				"4 - FencedCode"
-				"5 - IndentedCode"
-				"6 - HtmlBlock"
-				"7 - Paragraph"
-				"8 - AtxHeading"
-				"9 - SetextHeading"
-				"10 - ThematicBreak"
-				"11 - ReferenceDefinition"
-				"12 - Block"
-				"13 - TextBlock"
-				"14 - Softbreak"
-				"15 - Hardbreak"
+				"0 - Textual"
+				"1 - Emphasis"
+				"2 - Strong"
+				"3 - CodeSpan"
+				"4 - HTML"
+				"5 - Softbreak"
+				"6 - Linebreak"
+				"7 - Link"
+				"8 - Image"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="IsLastLineBlank"
+			Name="StartPos"
 			Group="Behavior"
-			InitialValue="False"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="EndPos"
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsOpen"
+			Group="Behavior"
 			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="StartColumn"
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LineNumber"
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="StartPosition"
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

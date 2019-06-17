@@ -1,8 +1,8 @@
 #tag Class
 Protected Class SetextHeading
-Inherits MarkdownKit.Block
+Inherits MarkdownKit.InlineContainerBlock
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IWalker)
+		Sub Accept(visitor As MarkdownKit.IBlockVisitor)
 		  visitor.VisitSetextHeading(Self)
 		End Sub
 	#tag EndMethod

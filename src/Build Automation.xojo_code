@@ -12,6 +12,12 @@
 					Subdirectory = 
 					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UlMjAxJTIwQVNUcy8=
 				End
+				Begin CopyFilesBuildStep CopyPhase2ASTs
+					AppliesTo = 0
+					Destination = 1
+					Subdirectory = 
+					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UlMjAyJTIwQVNUcy8=
+				End
 				Begin CopyFilesBuildStep CopyTestMarkdownSource
 					AppliesTo = 0
 					Destination = 1

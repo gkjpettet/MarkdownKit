@@ -1,6 +1,6 @@
 #tag Class
-Protected Class Phase1Printer
-Implements Global.MarkdownKit.IBlockVisitor
+Protected Class Phase2Printer
+Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 	#tag Method, Flags = &h21
 		Private Function CurrentIndent() As Text
 		  // Given the current indentation level (specified by mCurrentIndent), this 
@@ -65,18 +65,11 @@ Implements Global.MarkdownKit.IBlockVisitor
 		  "<heading level=" + """" + atx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
-		  If atx.RawChars.Ubound > -1 Then
+		  For Each i As MarkdownKit.Inline In atx.Inlines
 		    IncreaseIndent
-		    mOutput.Append(CurrentIndent + "<raw_text>")
-		    
-		    Dim content As Text = Text.Join(atx.RawChars, "")
-		    If ShowWhitespace Then content = TransformWhitespace(content)
-		    
-		    mOutput.Append(content)
-		    mOutput.Append("</raw_text>")
-		    mOutput.Append(EOL)
+		    i.Accept(Self)
 		    DecreaseIndent
-		  End If
+		  Next i
 		  
 		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
@@ -173,7 +166,7 @@ Implements Global.MarkdownKit.IBlockVisitor
 		  For Each b As MarkdownKit.Block In f.Children
 		    IncreaseIndent
 		    
-		    mOutput.Append(CurrentIndent + "<text>")
+		    mOutput.Append("<text>")
 		    content = Text.Join(MarkdownKit.TextBlock(b).Chars, "")
 		    If ShowWhitespace Then content = TransformWhitespace(content)
 		    mOutput.Append(content)
@@ -218,7 +211,7 @@ Implements Global.MarkdownKit.IBlockVisitor
 		  For Each b As MarkdownKit.Block In i.Children
 		    IncreaseIndent
 		    
-		    mOutput.Append(CurrentIndent + "<text>")
+		    mOutput.Append("<text>")
 		    content = Text.Join(MarkdownKit.TextBlock(b).Chars, "")
 		    If ShowWhitespace Then content = TransformWhitespace(content)
 		    mOutput.Append(content)
@@ -231,6 +224,39 @@ Implements Global.MarkdownKit.IBlockVisitor
 		  mOutput.Append(CurrentIndent + "</indented_code_block>")
 		  mOutput.Append(EOL)
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitInline(i As MarkdownKit.Inline)
+		  // Part of the IInlineVisitor interface.
+		  
+		  mOutput.Append(CurrentIndent + "<inline>")
+		  mOutput.Append(Text.Join(i.Chars, ""))
+		  mOutput.Append("</inline>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitInlineCodespan(cs As MarkdownKit.InlineCodespan)
+		  // Part of the IInlineVisitor interface.
+		  
+		  mOutput.Append(CurrentIndent + "<code>")
+		  mOutput.Append(Text.Join(cs.Chars, ""))
+		  mOutput.Append("</code>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitInlineText(t As MarkdownKit.InlineText)
+		  // Part of the IInlineVisitor interface.
+		  
+		  mOutput.Append(CurrentIndent + "<text>")
+		  mOutput.Append(Text.Join(t.Chars, ""))
+		  mOutput.Append("</text>")
+		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod
 
@@ -313,16 +339,11 @@ Implements Global.MarkdownKit.IBlockVisitor
 		  mOutput.Append(CurrentIndent + "<paragraph>")
 		  mOutput.Append(EOL)
 		  
-		  IncreaseIndent
-		  mOutput.Append(CurrentIndent + "<raw_text>")
-		  
-		  Dim content As Text = Text.Join(p.RawChars, "")
-		  If ShowWhitespace Then content = TransformWhitespace(content)
-		  
-		  mOutput.Append(content)
-		  mOutput.Append("</raw_text>")
-		  mOutput.Append(EOL)
-		  DecreaseIndent
+		  For Each i As MarkdownKit.Inline In p.Inlines
+		    IncreaseIndent
+		    i.Accept(Self)
+		    DecreaseIndent
+		  Next i
 		  
 		  mOutput.Append(CurrentIndent + "</paragraph>")
 		  mOutput.Append(EOL)
@@ -337,16 +358,11 @@ Implements Global.MarkdownKit.IBlockVisitor
 		  "<heading level=" + """" + stx.Level.ToText + """" +  ">")
 		  mOutput.Append(EOL)
 		  
-		  IncreaseIndent
-		  mOutput.Append(CurrentIndent + "<raw_text>")
-		  
-		  Dim content As Text = Text.Join(stx.RawChars, "")
-		  If ShowWhitespace Then content = TransformWhitespace(content)
-		  
-		  mOutput.Append(content)
-		  mOutput.Append("</raw_text>")
-		  mOutput.Append(EOL)
-		  DecreaseIndent
+		  For Each i As MarkdownKit.Inline In stx.Inlines
+		    IncreaseIndent
+		    i.Accept(Self)
+		    DecreaseIndent
+		  Next i
 		  
 		  mOutput.Append(CurrentIndent + "</heading>")
 		  mOutput.Append(EOL)
@@ -457,13 +473,13 @@ Implements Global.MarkdownKit.IBlockVisitor
 			Type="Text"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Pretty"
+			Name="ShowWhitespace"
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="ShowWhitespace"
+			Name="Pretty"
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"

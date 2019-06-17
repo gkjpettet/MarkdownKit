@@ -1,8 +1,8 @@
 #tag Class
 Protected Class Paragraph
-Inherits MarkdownKit.Block
+Inherits MarkdownKit.InlineContainerBlock
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IWalker)
+		Sub Accept(visitor As MarkdownKit.IBlockVisitor)
 		  visitor.VisitParagraph(Self)
 		End Sub
 	#tag EndMethod
@@ -154,10 +154,9 @@ Inherits MarkdownKit.Block
 				"10 - ThematicBreak"
 				"11 - ReferenceDefinition"
 				"12 - Block"
-				"13 - RawText"
+				"13 - TextBlock"
 				"14 - Softbreak"
 				"15 - Hardbreak"
-				"16 - HTML"
 			#tag EndEnumValues
 		#tag EndViewProperty
 	#tag EndViewBehavior

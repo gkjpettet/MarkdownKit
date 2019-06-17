@@ -252,7 +252,7 @@ End
 		  Info.Text = ""
 		  
 		  // Print out the document's "phase 2" block structure.
-		  Dim printer As New Phase1Printer
+		  Dim printer As New Phase2Printer
 		  printer.Pretty = True
 		  printer.ShowWhitespace = True
 		  printer.VisitDocument(doc)

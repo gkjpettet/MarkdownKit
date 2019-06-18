@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<link destination="made-up-scheme://foo,bar" title="">
+<text>made-up-scheme://foo,bar</text>
+</link>
+</paragraph>
+</document>

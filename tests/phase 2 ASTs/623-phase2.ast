@@ -1,0 +1,8 @@
+<document>
+<paragraph>
+<text>foo <!--> foo --></text>
+</paragraph>
+<paragraph>
+<text>foo <!-- foo---></text>
+</paragraph>
+</document>

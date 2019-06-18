@@ -281,12 +281,12 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 		  
 		  mOutput.Append(CurrentIndent + "<link destination=")
 		  mOutput.Append("""")
-		  mOutput.Append(l.Destination + """" + " title=")
-		  mOutput.Append("""" + l.Title + """" + ">")
+		  mOutput.Append(EncodePredefinedEntities(l.Destination) + """" + " title=")
+		  mOutput.Append("""" + EncodePredefinedEntities(l.Title) + """" + ">")
 		  mOutput.Append(EOL)
 		  
 		  IncreaseIndent
-		  mOutput.Append(CurrentIndent + "<text>" + l.Label + "</text>")
+		  mOutput.Append(CurrentIndent + "<text>" + EncodePredefinedEntities(l.Label) + "</text>")
 		  DecreaseIndent
 		  
 		  mOutput.Append(EOL)

@@ -163,6 +163,107 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function ScanDeclarationCommentOrCData(chars() As Text, startPos As Integer, charsUbound As Integer) As Integer
+		  // Scans the passed character array `chars` for a valid HTML declaration, comment or CDATA section.
+		  // Assumes `startPos` points at the index of the character immediately following "<!".
+		  // Returns the index of the character immediately after the close of the inline HTML element or 
+		  // 0 if no match is found.
+		  
+		  // CDATA:
+		  // -----
+		  // "<![CDATA[", >= 0 characters, then "]]>"
+		  
+		  // Declaration:
+		  // -----------
+		  // "<!", >= 1 uppercase ASCII letters, whitespace, >= 1 characters not including ">", then ">"
+		  
+		  // Comment:
+		  // -------
+		  // "<!--" + text + "-->"
+		  // Where text does not start with ">" or "->", does not end with "-", and does not contain "--"
+		  
+		  ' <![CDATA[X]]>
+		  ' 0123456789012
+		  '   ^
+		  
+		  ' <!X X>
+		  ' 012345
+		  '   ^
+		  
+		  ' <!--a-->
+		  ' 01234567
+		  '   ^
+		  
+		  // Shortest valid: <!A A>
+		  If startPos + 3 > charsUbound Then Return 0
+		  
+		  Dim c As Text = chars(startPos)
+		  
+		  Dim pos As Integer
+		  If c = "-" Then
+		    // Comment?
+		    If chars(startPos + 1) <> "-" Then Return 0
+		    If chars(startPos + 2) = ">" Then Return 0 // Text can't start with ">"
+		    If chars(startPos + 2) = "-" And chars(startPos + 3) = ">" Then Return 0 // Or "->"
+		    
+		    For pos = startPos + 2 To charsUbound
+		      If chars(pos) = "-" And pos + 2 < charsUbound And chars(pos + 1) = "-" Then
+		        If chars(pos + 2) = ">" Then
+		          Return pos + 3
+		        Else // The contents can't contain "--"
+		          Return 0
+		        End If
+		      End If
+		    Next pos
+		    Return 0
+		    
+		  ElseIf c = "[" Then
+		    // CDATA?
+		    If startPos + 10 > charsUbound Then Return 0
+		    If chars(startPos + 1) <> "C" And chars(startPos + 2) <> "D" And _
+		    chars(startPos + 3) <> "A" And chars(startPos + 4) <> "T" And _
+		    chars(startPos + 5) <> "A" And chars(startPos + 5) <>"[" Then Return 0
+		    // Skip over the contents until we hit "]]>"
+		    For pos = startPos + 6 To charsUbound
+		      If chars(pos) = "]" And pos + 2 <= charsUbound And chars(pos + 1) = "]" And _
+		      chars(pos + 2) = ">" Then Return pos + 3
+		    Next pos
+		    Return 0
+		    
+		  ElseIf Utilities.IsUppercaseASCIIChar(c) Then
+		    // Declaration?
+		    // Consume the uppercase ASCII letters.
+		    
+		    For pos = startPos + 1 To charsUbound
+		      If Not Utilities.IsUppercaseASCIIChar(chars(pos)) Then Exit
+		    Next pos
+		    
+		    // Must see whitespace at `pos`.
+		    If Not MarkdownKit.IsWhitespace(chars(pos)) Then Return 0
+		    // Consume the contiguous whitespace.
+		    For pos = pos + 1 to charsUbound
+		      If Not MarkdownKit.IsWhitespace(chars(pos)) Then Exit
+		    Next pos
+		    
+		    If pos >= charsUbound Then Return 0
+		    
+		    // Must see at least one character that's not ">"
+		    If chars(pos) = ">" Then Return 0
+		    
+		    // Consume characters until we get to ">"
+		    For pos = pos + 1 To charsUbound
+		      If chars(pos) = ">" Then Return pos + 1
+		    Next pos
+		    Return 0
+		    
+		  Else
+		    Return 0
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ScanHtmlBlockType1End(line As MarkdownKit.LineInfo, pos As Integer) As Boolean
 		  // HTML block type 1:
 		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
@@ -340,6 +441,32 @@ Protected Class HTMLScanner
 		    Call HTMLScanner.MatchASCIILetterOrDigit(chars, charsUbound, pos, currentChar, "_", ":", ".", "-")
 		    hadAttribute = True
 		  Wend
+		  
+		  Return 0
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ScanProcessingInstruction(chars() As Text, startPos As Integer, charsUbound As Integer) As Integer
+		  // Scans for a complete inline HTML "processing instruction":
+		  // A processing instruction consists of the string "<?", a string of 
+		  // characters not including the string "?>" and the string "?>".
+		  // Assumes `startPos` points at the index in `chars` of the character immediately 
+		  // following the opening "<?".
+		  // Returns the index in `chars` of the character immediately following the closing "?>" 
+		  // or 0 if no match is found.
+		  
+		  // Min valid format: <??>
+		  If startPos + 2 > charsUbound Then Return 0
+		  
+		  For i As Integer = startPos To charsUbound
+		    If chars(i) = "?" And i + 1 <= charsUbound And chars(i + 1) = ">" Then
+		      Return i + 2
+		    ElseIf chars(i) = &u000A Then
+		      Return 0
+		    End If
+		  Next i
 		  
 		  Return 0
 		  

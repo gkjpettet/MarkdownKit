@@ -263,7 +263,13 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 	#tag Method, Flags = &h0
 		Sub VisitInlineHTML(h As MarkdownKit.InlineHTML)
 		  mOutput.Append(CurrentIndent + "<html_inline>")
-		  mOutput.Append(Text.Join(h.Chars, ""))
+		  
+		  // Since the reference AST ( https://spec.commonmark.org/dingus/ ) uses XML, we 
+		  // encode the predefined entities in the content to to match.
+		  Dim content As Text = Text.Join(h.Chars, "")
+		  content = EncodePredefinedEntities(content)
+		  mOutput.Append(content)
+		  
 		  mOutput.Append("</html_inline>")
 		  mOutput.Append(EOL)
 		End Sub

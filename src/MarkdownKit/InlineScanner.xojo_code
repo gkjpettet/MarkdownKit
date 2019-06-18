@@ -163,28 +163,29 @@ Protected Class InlineScanner
 		  // Bare minimum valid HTML tag is: <a>
 		  If startPos + 2 > rawCharsUbound Then Return Nil
 		  
-		  Dim pos As Integer = startPos + 1
-		  Dim c As Text = b.RawChars(pos)
+		  Dim pos As Integer = 0
+		  Dim c As Text = b.RawChars(startPos + 1)
 		  
 		  Dim tagName As Text
 		  
 		  If c = "/" Then
 		    // Closing tag?
-		    #Pragma Warning "TODO"
+		    pos = HTMLScanner.ScanClosingTag(b.RawChars, startPos + 2, tagName)
 		  ElseIf c = "?" Then
 		    // Processing instruction?
-		    #Pragma Warning "TODO"
+		    pos = HTMLScanner.ScanProcessingInstruction(b.RawChars, startPos + 2, rawCharsUbound)
 		  ElseIf c = "!" Then
-		    // Declaration, comment or CDATA section?
-		    #Pragma Warning "TODO"
+		    // Comment, declaration or CDATA section?
+		    pos = HTMLScanner.ScanDeclarationCommentOrCData(b.RawChars, startPos + 2, rawCharsUbound)
 		  Else
 		    // Opening tag?
-		    pos = HTMLScanner.ScanOpenTag(b.RawChars, pos, tagName, False)
-		    If pos = 0 Then
-		      Return Nil
-		    Else
-		      Return New MarkdownKit.InlineHTML(startPos, pos - 1, b)
-		    End If
+		    pos = HTMLScanner.ScanOpenTag(b.RawChars, startPos + 1, tagName, False)
+		  End If
+		  
+		  If pos = 0 Then
+		    Return Nil
+		  Else
+		    Return New MarkdownKit.InlineHTML(startPos, pos - 1, b)
 		  End If
 		  
 		End Function

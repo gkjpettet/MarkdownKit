@@ -7,6 +7,7 @@ Inherits TestController
 		  
 		  Dim group As TestGroup
 		  
+		  group = New Phase2InlineHTMLTests(Self, "Inline HTML")
 		  group = New Phase2CodespanTests(Self, "Code Spans")
 		  
 		End Sub

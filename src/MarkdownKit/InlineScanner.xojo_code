@@ -155,7 +155,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function HandleLeftAngleBracket(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.InlineHTML
+		Private Shared Function HandleLeftAngleBracket(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.Inline
 		  // We know that index `startPos` in `b.RawChars` is a "<".
 		  // Look to see if it represents the start of inline HTML.
 		  // If it does then it creates and returns an inline HTML block. Otherwise 
@@ -180,8 +180,15 @@ Protected Class InlineScanner
 		    // Comment, declaration or CDATA section?
 		    pos = HTMLScanner.ScanDeclarationCommentOrCData(b.RawChars, startPos + 2, rawCharsUbound)
 		  Else
-		    // Opening tag?
-		    pos = HTMLScanner.ScanOpenTag(b.RawChars, startPos + 1, tagName, False)
+		    // Autolink?
+		    Dim uri As Text
+		    pos = ScanAutoLink(b.RawChars, startPos + 1, rawCharsUbound, uri)
+		    If pos > 0 Then
+		      Return New MarkdownKit.InlineLink(startPos, pos - 1, "", uri, uri, b)
+		    Else
+		      // Opening tag?
+		      pos = HTMLScanner.ScanOpenTag(b.RawChars, startPos + 1, tagName, False)
+		    End If
 		  End If
 		  
 		  If pos = 0 Then
@@ -294,6 +301,56 @@ Protected Class InlineScanner
 		  #Pragma Warning "Needs implementing"
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function ScanAutoLink(chars() As Text, startPos As Integer, charsUbound As Integer, ByRef uri As Text) As Integer
+		  // Scan the passed array of characters for a valid autolink.
+		  // `pos` points to the character immediately after the opening ">"
+		  // Returns the index in `xhars` of the character immediately following a 
+		  // valid autolink or 0 if no match is found.
+		  // Sets the ByRef parameter `uri` to the absolute URI.
+		  // Valid autolink:
+		  // --------------
+		  // "<", absolute URI, ">"
+		  // Absolute URI = scheme, :, >=0 characters (not WS, <, >)
+		  // Scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
+		  
+		  uri = ""
+		  
+		  // Min valid autolink: <aa:>
+		  If startPos + 3 > charsUbound Then Return 0
+		  
+		  // Check for a valid scheme.
+		  Dim pos As Integer = ScanLinkScheme(chars, startPos, charsUbound)
+		  If pos = 0 Or pos >= charsUbound Then Return 0
+		  
+		  // Check for a colon.
+		  If chars(pos) <> ":" Then Return 0
+		  pos = pos +1
+		  
+		  // Skip over any characters that aren't whitespace, "<" or ">"
+		  If pos >= charsUbound Then Return 0
+		  Dim c As Text
+		  For pos = pos To charsUbound
+		    c = chars(pos)
+		    If c = ">" Then
+		      // Valid autolink. Construct the URI.
+		      Dim limit As Integer = pos - 1
+		      Dim tmp() As Text
+		      For i As Integer = startPos To limit
+		        tmp.Append(chars(i))
+		      Next i
+		      uri = Text.Join(tmp, "")
+		      Return pos + 1
+		    End If
+		    If MarkdownKit.IsWhitespace(c) Then Return 0
+		    If c = "<" Then Return 0
+		  Next pos
+		  
+		  Return 0
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -484,6 +541,41 @@ Protected Class InlineScanner
 		  
 		  // No valid label found.
 		  Return result
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function ScanLinkScheme(chars() As Text, pos As Integer, charsUbound As Integer) As Integer
+		  // Scans the passed character array for a valid inline link scheme.
+		  // Returns the position of the character immediately following the scheme if 
+		  // found, otherwise returns 0.
+		  // Valid scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
+		  
+		  // Min valid scheme: aa
+		  If pos + 1 > charsUbound Then Return 0
+		  
+		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) And _
+		  Not Utilities.IsASCIIAlphaChar(chars(pos + 1)) Then Return 0
+		  pos = pos + 2
+		  
+		  // Upto 30 more ASCII letters, digits, +, . or -
+		  Dim count As Integer = 1
+		  
+		  Dim c As Text
+		  While count <= 30
+		    c = chars(pos)
+		    
+		    If Not Utilities.IsASCIIAlphaChar(c) And Not Utilities.IsDigit(c) And _
+		      c <> "." And c <> "." And c <> "-" Then
+		      Return pos
+		    End If
+		    
+		    pos = pos + 1
+		    count = count + 1
+		  Wend
+		  
+		  Return pos
+		  
 		End Function
 	#tag EndMethod
 

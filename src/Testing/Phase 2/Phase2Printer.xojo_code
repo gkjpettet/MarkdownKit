@@ -276,6 +276,27 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitInlineLink(l As MarkdownKit.InlineLink)
+		  // Part of the IBlockVisitor interface.
+		  
+		  mOutput.Append(CurrentIndent + "<link destination=")
+		  mOutput.Append("""")
+		  mOutput.Append(l.Destination + """" + " title=")
+		  mOutput.Append("""" + l.Title + """" + ">")
+		  mOutput.Append(EOL)
+		  
+		  IncreaseIndent
+		  mOutput.Append(CurrentIndent + "<text>" + l.Label + "</text>")
+		  DecreaseIndent
+		  
+		  mOutput.Append(EOL)
+		  mOutput.Append(CurrentIndent + "</link>")
+		  mOutput.Append(EOL)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitInlineText(t As MarkdownKit.InlineText)
 		  // Part of the IInlineVisitor interface.
 		  

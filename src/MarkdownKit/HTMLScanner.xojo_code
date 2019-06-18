@@ -121,6 +121,32 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function MatchASCIILetterOrDigitOrHyphen(chars() As Text, charsUbound As Integer, pos As Integer, maxCount As Integer) As Integer
+		  // Moves along the given array as long as the current character is an ASCII letter 
+		  // or digit or hyphen ("-").
+		  // Returns the number of matched characters.
+		  // Stops skipping if we match maxCount characters.
+		  
+		  If pos > charsUbound Then Return 0
+		  Dim c As Text = chars(pos)
+		  
+		  Dim matched As Integer = 0
+		  
+		  While (c = "-" Or _
+		    Utilities.IsASCIIAlphaChar(c) Or _
+		    Utilities.IsDigit(c)) And _
+		    pos < charsUbound And matched <= maxCount
+		    
+		    pos = pos + 1
+		    c = chars(pos)
+		    matched = matched + 1
+		  Wend
+		  
+		  Return matched
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function ScanClosingTag(chars() As Text, pos As integer, ByRef tagName As Text) As Integer
 		  // Scans the passed line beginning at `pos` for a valid HTML closingTag.
 		  // Returns the zero-based index in line.Chars where the closingTag ends.

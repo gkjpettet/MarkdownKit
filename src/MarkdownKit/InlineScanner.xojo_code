@@ -221,62 +221,62 @@ Protected Class InlineScanner
 		Private Shared Sub InitialiseEmailPartOneDictionary()
 		  mEmailPartOneCharacters = New Xojo.Core.Dictionary
 		  
-		  mEmailPartOneCharacters.Value("a")
-		  mEmailPartOneCharacters.Value("b")
-		  mEmailPartOneCharacters.Value("c")
-		  mEmailPartOneCharacters.Value("d")
-		  mEmailPartOneCharacters.Value("e")
-		  mEmailPartOneCharacters.Value("f")
-		  mEmailPartOneCharacters.Value("g")
-		  mEmailPartOneCharacters.Value("h")
-		  mEmailPartOneCharacters.Value("i")
-		  mEmailPartOneCharacters.Value("j")
-		  mEmailPartOneCharacters.Value("k")
-		  mEmailPartOneCharacters.Value("l")
-		  mEmailPartOneCharacters.Value("m")
-		  mEmailPartOneCharacters.Value("n")
-		  mEmailPartOneCharacters.Value("o")
-		  mEmailPartOneCharacters.Value("p")
-		  mEmailPartOneCharacters.Value("q")
-		  mEmailPartOneCharacters.Value("r")
-		  mEmailPartOneCharacters.Value("s")
-		  mEmailPartOneCharacters.Value("t")
-		  mEmailPartOneCharacters.Value("u")
-		  mEmailPartOneCharacters.Value("v")
-		  mEmailPartOneCharacters.Value("w")
-		  mEmailPartOneCharacters.Value("x")
-		  mEmailPartOneCharacters.Value("y")
-		  mEmailPartOneCharacters.Value("z")
-		  mEmailPartOneCharacters.Value("0")
-		  mEmailPartOneCharacters.Value("1")
-		  mEmailPartOneCharacters.Value("2")
-		  mEmailPartOneCharacters.Value("3")
-		  mEmailPartOneCharacters.Value("4")
-		  mEmailPartOneCharacters.Value("5")
-		  mEmailPartOneCharacters.Value("6")
-		  mEmailPartOneCharacters.Value("7")
-		  mEmailPartOneCharacters.Value("8")
-		  mEmailPartOneCharacters.Value("9")
-		  mEmailPartOneCharacters.Value(".")
-		  mEmailPartOneCharacters.Value("!")
-		  mEmailPartOneCharacters.Value("#")
-		  mEmailPartOneCharacters.Value("$")
-		  mEmailPartOneCharacters.Value("%")
-		  mEmailPartOneCharacters.Value("&")
-		  mEmailPartOneCharacters.Value("'")
-		  mEmailPartOneCharacters.Value("*")
-		  mEmailPartOneCharacters.Value("+")
-		  mEmailPartOneCharacters.Value("/")
-		  mEmailPartOneCharacters.Value("=")
-		  mEmailPartOneCharacters.Value("?")
-		  mEmailPartOneCharacters.Value("^")
-		  mEmailPartOneCharacters.Value("_")
-		  mEmailPartOneCharacters.Value("`")
-		  mEmailPartOneCharacters.Value("{")
-		  mEmailPartOneCharacters.Value("|")
-		  mEmailPartOneCharacters.Value("}")
-		  mEmailPartOneCharacters.Value("~")
-		  mEmailPartOneCharacters.Value("-")
+		  mEmailPartOneCharacters.Value("a") = 0
+		  mEmailPartOneCharacters.Value("b") = 0
+		  mEmailPartOneCharacters.Value("c") = 0
+		  mEmailPartOneCharacters.Value("d") = 0
+		  mEmailPartOneCharacters.Value("e") = 0
+		  mEmailPartOneCharacters.Value("f") = 0
+		  mEmailPartOneCharacters.Value("g") = 0
+		  mEmailPartOneCharacters.Value("h") = 0
+		  mEmailPartOneCharacters.Value("i") = 0
+		  mEmailPartOneCharacters.Value("j") = 0
+		  mEmailPartOneCharacters.Value("k") = 0
+		  mEmailPartOneCharacters.Value("l") = 0
+		  mEmailPartOneCharacters.Value("m") = 0
+		  mEmailPartOneCharacters.Value("n") = 0
+		  mEmailPartOneCharacters.Value("o") = 0
+		  mEmailPartOneCharacters.Value("p") = 0
+		  mEmailPartOneCharacters.Value("q") = 0
+		  mEmailPartOneCharacters.Value("r") = 0
+		  mEmailPartOneCharacters.Value("s") = 0
+		  mEmailPartOneCharacters.Value("t") = 0
+		  mEmailPartOneCharacters.Value("u") = 0
+		  mEmailPartOneCharacters.Value("v") = 0
+		  mEmailPartOneCharacters.Value("w") = 0
+		  mEmailPartOneCharacters.Value("x") = 0
+		  mEmailPartOneCharacters.Value("y") = 0
+		  mEmailPartOneCharacters.Value("z") = 0
+		  mEmailPartOneCharacters.Value("0") = 0
+		  mEmailPartOneCharacters.Value("1") = 0
+		  mEmailPartOneCharacters.Value("2") = 0
+		  mEmailPartOneCharacters.Value("3") = 0
+		  mEmailPartOneCharacters.Value("4") = 0
+		  mEmailPartOneCharacters.Value("5") = 0
+		  mEmailPartOneCharacters.Value("6") = 0
+		  mEmailPartOneCharacters.Value("7") = 0
+		  mEmailPartOneCharacters.Value("8") = 0
+		  mEmailPartOneCharacters.Value("9") = 0
+		  mEmailPartOneCharacters.Value(".") = 0
+		  mEmailPartOneCharacters.Value("!") = 0
+		  mEmailPartOneCharacters.Value("#") = 0
+		  mEmailPartOneCharacters.Value("$") = 0
+		  mEmailPartOneCharacters.Value("%") = 0
+		  mEmailPartOneCharacters.Value("&") = 0
+		  mEmailPartOneCharacters.Value("'") = 0
+		  mEmailPartOneCharacters.Value("*") = 0
+		  mEmailPartOneCharacters.Value("+") = 0
+		  mEmailPartOneCharacters.Value("/") = 0
+		  mEmailPartOneCharacters.Value("=") = 0
+		  mEmailPartOneCharacters.Value("?") = 0
+		  mEmailPartOneCharacters.Value("^") = 0
+		  mEmailPartOneCharacters.Value("_") = 0
+		  mEmailPartOneCharacters.Value("`") = 0
+		  mEmailPartOneCharacters.Value("{") = 0
+		  mEmailPartOneCharacters.Value("|") = 0
+		  mEmailPartOneCharacters.Value("}") = 0
+		  mEmailPartOneCharacters.Value("~") = 0
+		  mEmailPartOneCharacters.Value("-") = 0
 		  
 		End Sub
 	#tag EndMethod
@@ -496,12 +496,11 @@ Protected Class InlineScanner
 		  // --------------------
 		  // "<", email address, ">"
 		  // Email address:
-		  '            [a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?
-		  '            (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$
+		  '      [a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?
+		  '      (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*
+		  // name@
 		  
 		  uri = ""
-		  
-		  #Pragma Error "TODO"
 		  
 		  Dim pos As Integer = startPos
 		  
@@ -511,11 +510,80 @@ Protected Class InlineScanner
 		  Dim done As Boolean = False
 		  While pos < charsUbound
 		    If Not mEmailPartOneCharacters.HasKey(chars(pos)) Then
-		      #Pragma Error "TODO"
+		      Exit
+		    Else
+		      done = True
 		    End If
-		    
 		    pos = pos + 1
 		  Wend
+		  If Not done Then Return 0
+		  
+		  If chars(pos) <> "@" Then Return 0
+		  pos = pos + 1
+		  
+		  // [a-zA-Z0-9]
+		  If pos > charsUbound Then Return 0
+		  c = chars(pos)
+		  If Not Utilities.IsASCIIAlphaChar(c) And Not Utilities.IsDigit(c) Then Return 0
+		  pos = pos + 1
+		  
+		  If pos > charsUbound Then Return 0
+		  
+		  // Is there a dot next?
+		  c = chars(pos)
+		  Dim hadDot As Boolean = If(c = ".", True, False)
+		  Dim dotPosition As Integer = If(hadDot, pos, -1)
+		  
+		  Dim count As Integer
+		  If Not hadDot Then
+		    // Match zero or one times: [a-zA-Z0-9-]{0,61}[a-zA-Z0-9]
+		    count = HTMLScanner.MatchASCIILetterOrDigitOrHyphen(chars, charsUbound, pos, 62)
+		    pos = pos + count
+		    // Need a dot.
+		    If pos > charsUbound Then Return 0
+		    If chars(pos) <> "." Then Return 0
+		    dotPosition = pos
+		    pos = pos + 1
+		  End If
+		  
+		  pos = dotPosition
+		  
+		  
+		  Dim valid As Boolean = False
+		  Do
+		    // Have we found a valid email?
+		    If chars(pos) = ">" Then
+		      If Valid Then
+		        // Construct the URI.
+		        Dim limit As Integer = pos - 1
+		        Dim tmp() As Text
+		        For i As Integer = startPos To limit
+		          tmp.Append(chars(i))
+		        Next i
+		        uri = Text.Join(tmp, "")
+		        Return pos + 1
+		      Else
+		        Return 0
+		      End If
+		    End If
+		    
+		    // Match dot.
+		    If chars(pos) <> "." Then Return 0
+		    pos = pos + 1
+		    
+		    // Match once: [a-zA-Z0-9]
+		    If pos > charsUbound Then Return 0
+		    c = chars(pos)
+		    If Not Utilities.IsASCIIAlphaChar(c) And Not Utilities.IsDigit(c) Then Return 0
+		    pos = pos + 1
+		    If pos > charsUbound Then Return 0
+		    
+		    // Match zero or one times: [a-zA-Z0-9-]{0,61}[a-zA-Z0-9]
+		    count = HTMLScanner.MatchASCIILetterOrDigitOrHyphen(chars, charsUbound, pos, 62)
+		    pos = pos + count
+		    If pos > charsUbound Then Return 0
+		    valid = True
+		  Loop
 		End Function
 	#tag EndMethod
 

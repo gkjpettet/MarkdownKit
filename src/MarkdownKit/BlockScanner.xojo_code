@@ -485,7 +485,7 @@ Protected Class BlockScanner
 		  End If
 		  If pos = 0 Then Return Block.kHTMLBlockTypeNone
 		  
-		  While pos < charsUbound
+		  While pos <= charsUbound
 		    If Not IsWhitespace(chars(pos)) Then Return Block.kHTMLBlockTypeNone
 		    pos = pos + 1
 		  Wend

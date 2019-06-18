@@ -23,6 +23,7 @@ Protected Module MarkdownKit
 		  InitialiseEscapableCharactersDictionary
 		  
 		  BlockScanner.Initialise
+		  InlineScanner.Initialise
 		  
 		  mInitialised = True
 		  

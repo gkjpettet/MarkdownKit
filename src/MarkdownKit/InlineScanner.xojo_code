@@ -186,8 +186,14 @@ Protected Class InlineScanner
 		    If pos > 0 Then
 		      Return New MarkdownKit.InlineLink(startPos, pos - 1, "", uri, uri, b)
 		    Else
-		      // Opening tag?
-		      pos = HTMLScanner.ScanOpenTag(b.RawChars, startPos + 1, tagName, False)
+		      // Email link?
+		      pos = ScanEmailLink(b.RawChars, startPos + 1, rawCharsUbound, uri)
+		      If pos > 0 Then
+		        Return New MarkdownKit.InlineLink(startPos, pos - 1, "", "mailto:" + uri, uri, b)
+		      Else
+		        // Opening tag?
+		        pos = HTMLScanner.ScanOpenTag(b.RawChars, startPos + 1, tagName, False)
+		      End If
 		    End If
 		  End If
 		  
@@ -198,6 +204,81 @@ Protected Class InlineScanner
 		  End If
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Sub Initialise()
+		  If mInitialised Then Return
+		  
+		  InitialiseEmailPartOneDictionary
+		  
+		  mInitialised = True
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Sub InitialiseEmailPartOneDictionary()
+		  mEmailPartOneCharacters = New Xojo.Core.Dictionary
+		  
+		  mEmailPartOneCharacters.Value("a")
+		  mEmailPartOneCharacters.Value("b")
+		  mEmailPartOneCharacters.Value("c")
+		  mEmailPartOneCharacters.Value("d")
+		  mEmailPartOneCharacters.Value("e")
+		  mEmailPartOneCharacters.Value("f")
+		  mEmailPartOneCharacters.Value("g")
+		  mEmailPartOneCharacters.Value("h")
+		  mEmailPartOneCharacters.Value("i")
+		  mEmailPartOneCharacters.Value("j")
+		  mEmailPartOneCharacters.Value("k")
+		  mEmailPartOneCharacters.Value("l")
+		  mEmailPartOneCharacters.Value("m")
+		  mEmailPartOneCharacters.Value("n")
+		  mEmailPartOneCharacters.Value("o")
+		  mEmailPartOneCharacters.Value("p")
+		  mEmailPartOneCharacters.Value("q")
+		  mEmailPartOneCharacters.Value("r")
+		  mEmailPartOneCharacters.Value("s")
+		  mEmailPartOneCharacters.Value("t")
+		  mEmailPartOneCharacters.Value("u")
+		  mEmailPartOneCharacters.Value("v")
+		  mEmailPartOneCharacters.Value("w")
+		  mEmailPartOneCharacters.Value("x")
+		  mEmailPartOneCharacters.Value("y")
+		  mEmailPartOneCharacters.Value("z")
+		  mEmailPartOneCharacters.Value("0")
+		  mEmailPartOneCharacters.Value("1")
+		  mEmailPartOneCharacters.Value("2")
+		  mEmailPartOneCharacters.Value("3")
+		  mEmailPartOneCharacters.Value("4")
+		  mEmailPartOneCharacters.Value("5")
+		  mEmailPartOneCharacters.Value("6")
+		  mEmailPartOneCharacters.Value("7")
+		  mEmailPartOneCharacters.Value("8")
+		  mEmailPartOneCharacters.Value("9")
+		  mEmailPartOneCharacters.Value(".")
+		  mEmailPartOneCharacters.Value("!")
+		  mEmailPartOneCharacters.Value("#")
+		  mEmailPartOneCharacters.Value("$")
+		  mEmailPartOneCharacters.Value("%")
+		  mEmailPartOneCharacters.Value("&")
+		  mEmailPartOneCharacters.Value("'")
+		  mEmailPartOneCharacters.Value("*")
+		  mEmailPartOneCharacters.Value("+")
+		  mEmailPartOneCharacters.Value("/")
+		  mEmailPartOneCharacters.Value("=")
+		  mEmailPartOneCharacters.Value("?")
+		  mEmailPartOneCharacters.Value("^")
+		  mEmailPartOneCharacters.Value("_")
+		  mEmailPartOneCharacters.Value("`")
+		  mEmailPartOneCharacters.Value("{")
+		  mEmailPartOneCharacters.Value("|")
+		  mEmailPartOneCharacters.Value("}")
+		  mEmailPartOneCharacters.Value("~")
+		  mEmailPartOneCharacters.Value("-")
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -306,8 +387,8 @@ Protected Class InlineScanner
 	#tag Method, Flags = &h21
 		Private Shared Function ScanAutoLink(chars() As Text, startPos As Integer, charsUbound As Integer, ByRef uri As Text) As Integer
 		  // Scan the passed array of characters for a valid autolink.
-		  // `pos` points to the character immediately after the opening ">"
-		  // Returns the index in `xhars` of the character immediately following a 
+		  // `pos` points to the character immediately after the opening "<"
+		  // Returns the index in `chars` of the character immediately following a 
 		  // valid autolink or 0 if no match is found.
 		  // Sets the ByRef parameter `uri` to the absolute URI.
 		  // Valid autolink:
@@ -401,6 +482,40 @@ Protected Class InlineScanner
 		    Return -1
 		  End If
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function ScanEmailLink(chars() As Text, startPos As Integer, charsUbound As Integer, ByRef uri As Text) As Integer
+		  // Scan the passed array of characters for a valid email autolink.
+		  // `pos` points to the character immediately after the opening "<"
+		  // Returns the index in `chars` of the character immediately following a 
+		  // valid email autolink or 0 if no match is found.
+		  // Sets the ByRef parameter `uri` to the absolute URI.
+		  // Valid email autolink:
+		  // --------------------
+		  // "<", email address, ">"
+		  // Email address:
+		  '            [a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?
+		  '            (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$
+		  
+		  uri = ""
+		  
+		  #Pragma Error "TODO"
+		  
+		  Dim pos As Integer = startPos
+		  
+		  // Match between 1 and unlimited times, as many times as possible, a character 
+		  // in the set: a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-
+		  Dim c As Text
+		  Dim done As Boolean = False
+		  While pos < charsUbound
+		    If Not mEmailPartOneCharacters.HasKey(chars(pos)) Then
+		      #Pragma Error "TODO"
+		    End If
+		    
+		    pos = pos + 1
+		  Wend
 		End Function
 	#tag EndMethod
 
@@ -657,6 +772,19 @@ Protected Class InlineScanner
 		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h21
+		#tag Note
+			Stores the characters that are valid for the first part of an email autolink:
+			a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-
+		#tag EndNote
+		Private Shared mEmailPartOneCharacters As Xojo.Core.Dictionary
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private Shared mInitialised As Boolean = False
+	#tag EndProperty
 
 
 	#tag Constant, Name = kMaxReferenceLabelLength, Type = Double, Dynamic = False, Default = \"999", Scope = Public

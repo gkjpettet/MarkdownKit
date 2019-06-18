@@ -1,0 +1,6 @@
+<document>
+<paragraph>
+<text>foo </text>
+<html_inline>&lt;!ELEMENT br EMPTY&gt;</html_inline>
+</paragraph>
+</document>

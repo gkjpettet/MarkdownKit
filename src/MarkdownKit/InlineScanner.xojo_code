@@ -554,19 +554,24 @@ Protected Class InlineScanner
 		  // Min valid scheme: aa
 		  If pos + 1 > charsUbound Then Return 0
 		  
-		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) And _
-		  Not Utilities.IsASCIIAlphaChar(chars(pos + 1)) Then Return 0
+		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
+		  
+		  Dim c As Text = chars(pos + 1)
+		  If Not Utilities.IsASCIIAlphaChar(c) And Not Utilities.IsDigit(c) And _
+		    c <> "+" And c<> "." And c <> "-" Then
+		    Return 0
+		  End If
+		  
 		  pos = pos + 2
 		  
-		  // Upto 30 more ASCII letters, digits, +, . or -
+		  // Up to 30 more ASCII letters, digits, +, . or -
 		  Dim count As Integer = 1
 		  
-		  Dim c As Text
-		  While count <= 30
+		  While pos <= charsUbound And count <= 30
 		    c = chars(pos)
 		    
 		    If Not Utilities.IsASCIIAlphaChar(c) And Not Utilities.IsDigit(c) And _
-		      c <> "." And c <> "." And c <> "-" Then
+		      c <> "+" And c <> "." And c <> "-" Then
 		      Return pos
 		    End If
 		    

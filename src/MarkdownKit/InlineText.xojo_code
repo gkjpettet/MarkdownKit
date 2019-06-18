@@ -75,9 +75,9 @@ Inherits MarkdownKit.Inline
 				"3 - CodeSpan"
 				"4 - HTML"
 				"5 - Softbreak"
-				"6 - Linebreak"
-				"7 - Link"
-				"8 - Image"
+				"6 - Link"
+				"7 - Image"
+				"8 - Hardbreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

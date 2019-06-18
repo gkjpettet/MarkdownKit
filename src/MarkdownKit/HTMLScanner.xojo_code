@@ -207,7 +207,7 @@ Protected Class HTMLScanner
 		    If chars(startPos + 2) = "-" And chars(startPos + 3) = ">" Then Return 0 // Or "->"
 		    
 		    For pos = startPos + 2 To charsUbound
-		      If chars(pos) = "-" And pos + 2 < charsUbound And chars(pos + 1) = "-" Then
+		      If chars(pos) = "-" And pos + 2 <= charsUbound And chars(pos + 1) = "-" Then
 		        If chars(pos + 2) = ">" Then
 		          Return pos + 3
 		        Else // The contents can't contain "--"

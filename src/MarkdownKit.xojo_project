@@ -74,6 +74,7 @@ Class=Phase2TestController;Testing/Phase 2/Phase2TestController.xojo_code;&h0000
 Class=Phase2TestGroup;Testing/Phase 2/Phase2TestGroup.xojo_code;&h000000002F4E67FF;&h00000000286DCFFF;false
 Class=Phase2CodespanTests;Testing/Phase 2/Phase2CodespanTests.xojo_code;&h00000000718BAFFF;&h00000000286DCFFF;false
 Class=Phase2InlineHTMLTests;Testing/Phase 2/Phase2InlineHTMLTests.xojo_code;&h0000000053FF27FF;&h00000000286DCFFF;false
+Class=Phase2HardLinebreakTests;Testing/Phase 2/Phase2HardLinebreakTests.xojo_code;&h000000005EBADFFF;&h00000000286DCFFF;false
 Class=Softbreak;MarkdownKit/Softbreak.xojo_code;&h0000000050FF3FFF;&h00000000214287FF;false
 Class=Hardbreak;MarkdownKit/Hardbreak.xojo_code;&h00000000731047FF;&h00000000214287FF;false
 DefaultWindow=WinTests

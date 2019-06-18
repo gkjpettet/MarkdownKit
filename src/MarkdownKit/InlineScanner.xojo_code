@@ -66,9 +66,11 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Sub CloseBuffer(ByRef buffer As MarkdownKit.Inline, container As MarkdownKit.InlineContainerBlock)
+		Private Shared Sub CloseBuffer(ByRef buffer As MarkdownKit.Inline, container As MarkdownKit.InlineContainerBlock, stripTrailingWhitespace As Boolean = False)
 		  // There's an open preceding text inline. Close it.
 		  buffer.Close
+		  
+		  If stripTrailingWhitespace Then MarkdownKit.StripTrailingWhitespace(buffer.Chars)
 		  
 		  // Add the buffer to the container block before the code span.
 		  container.Inlines.Append(buffer)
@@ -253,14 +255,19 @@ Protected Class InlineScanner
 		      End If
 		      
 		    ElseIf c = &u000A Then // Hard or soft break?
-		      If buffer <> Nil Then CloseBuffer(buffer, b)
-		      If pos - 1 >= 0 And b.RawChars(pos - 1) = "\" Then
+		      If pos - 1 >= 0 And b.RawChars(pos - 1) = "\" And Not Escaped(b.RawChars, pos - 1) Then
+		        If buffer <> Nil Then
+		          buffer.EndPos = buffer.EndPos - 1 // Remove the trailing backslash.
+		          CloseBuffer(buffer, b)
+		        End If
 		        b.Inlines.Append(New Hardbreak(b))
 		        pos = pos + 1
 		      ElseIf pos - 2 >= 0 And b.RawChars(pos - 2) = &u0020 And b.RawChars(pos - 1) = &u0020 Then
+		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
 		        b.Inlines.Append(New Hardbreak(b))
 		        pos = pos + 1
 		      Else
+		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
 		        b.Inlines.Append(New Softbreak(b))
 		        pos = pos + 1
 		      End If

@@ -396,12 +396,6 @@ Protected Class InlineScanner
 		  // (or the first element if stackBottom = -1).
 		  Dim currentPosition As Integer = If(stackBottom = -1, 0, stackBottom + 1)
 		  
-		  // We keep track of the openersBottom for each delimiter type (*, _) 
-		  // and each length of the closing delimiter run (modulo 3). 
-		  // Initialize this to stackBottom.
-		  Dim openersBottomStar As Integer = stackBottom
-		  Dim openersBottomUnderscore As Integer = stackBottom
-		  
 		  // Move currentPosition forward in the delimiter stack until we find the first potential 
 		  // closer with delimiter * or _. (This will be the potential closer closest to the 
 		  // beginning of the input – the first one in parse order).
@@ -421,116 +415,107 @@ Protected Class InlineScanner
 		      
 		      For i As Integer = currentPosition - 1 DownTo (stackBottom + 1)
 		        openerNode = delimiterStack(i)
-		        If i > If(openerNode.Delimiter = "*", openersBottomStar, openersBottomUnderscore) Then
-		          If Not openerNode.Ignore And openerNode.CanOpen And openerNode.Delimiter = closerNode.Delimiter Then
-		            // Strong or regular emphasis? If both closer and opener spans have length >= 2, 
-		            // we have strong, otherwise regular.
-		            Dim emphasis As MarkdownKit.Inline
-		            If closerNode.CurrentLength >= 2 And openerNode.CurrentLength >= 2 Then
-		              // Strong.
-		              emphasis = New MarkdownKit.InlineStrong(container, openerNode.Delimiter, openerNode.CurrentLength)
-		            Else
-		              // Regular. 
-		              emphasis = New MarkdownKit.InlineEmphasis(container, openerNode.Delimiter, openerNode.CurrentLength)
-		            End If
-		            // Insert the newly created emphasis node, after the text node corresponding to the opener.
-		            // Get the index of the opener text node in the container's `Inlines` array.
-		            Dim openerTextNodeIndex As Integer = _
+		        If Not openerNode.Ignore And openerNode.CanOpen And openerNode.Delimiter = closerNode.Delimiter Then
+		          // Strong or regular emphasis? If both closer and opener spans have length >= 2, 
+		          // we have strong, otherwise regular.
+		          Dim emphasis As MarkdownKit.Inline
+		          If closerNode.CurrentLength >= 2 And openerNode.CurrentLength >= 2 Then
+		            // Strong.
+		            emphasis = New MarkdownKit.InlineStrong(container, openerNode.Delimiter, openerNode.CurrentLength)
+		          Else
+		            // Regular. 
+		            emphasis = New MarkdownKit.InlineEmphasis(container, openerNode.Delimiter, openerNode.CurrentLength)
+		          End If
+		          // Insert the newly created emphasis node, after the text node corresponding to the opener.
+		          // Get the index of the opener text node in the container's `Inlines` array.
+		          Dim openerTextNodeIndex As Integer = _
+		          container.Inlines.IndexOf(Markdownkit.Inline(openerNode.TextNodePointer.Value))
+		          If openerTextNodeIndex = -1 Then
+		            Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
+		            "text node.")
+		          End If
+		          container.Inlines.Insert(openerTextNodeIndex + 1, emphasis)
+		          
+		          // Get the index of the closer text node in the container's `Inlines` array.
+		          Dim closerTextNodeIndex As Integer = _
+		          container.Inlines.IndexOf(Markdownkit.Inline(closerNode.TextNodePointer.Value))
+		          If closerTextNodeIndex = -1 Then
+		            Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
+		            "text node.")
+		          End If
+		          
+		          // Need to move all inline nodes that occur between `openerTextNodeIndex` and `closerTextNodeIndex` 
+		          // into this emphasis node's `Children` array and remove them from the container's 
+		          // `Inlines` array.
+		          If emphasis IsA MarkdownKit.InlineEmphasis Then
+		            For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
+		              MarkdownKit.InlineEmphasis(emphasis).Children.Append(container.Inlines(x))
+		            Next x
+		          ElseIf emphasis IsA MarkdownKit.InlineStrong Then
+		            For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
+		              MarkdownKit.InlineStrong(emphasis).Children.Append(container.Inlines(x))
+		            Next x
+		          End If
+		          
+		          // Remove the transposed inlines from the container.
+		          Dim numToTranspose As Integer = closerTextNodeIndex - openerTextNodeIndex - 2
+		          While numToTranspose > 0
+		            container.Inlines.Remove(openerTextNodeIndex + 2)
+		            numToTranspose = numToTranspose - 1
+		          Wend
+		          
+		          // Remove any delimiters between the opener and closer from the delimiter stack.
+		          // We do this by setting their `ignore` flag to True.
+		          Dim limit As Integer = delimiterStack.IndexOf(closerNode) - 1
+		          For j As Integer = i + 1 To limit
+		            delimiterStack(j).Ignore = True
+		          Next j
+		          // Remove 1 (for regular emph) or 2 (for strong emph) delimiters from the opening 
+		          // and closing text nodes. 
+		          If closerNode.CurrentLength >= 2 Then
+		            // Strong.
+		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
+		          Else
+		            // Regular. 
+		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
+		          End If
+		          
+		          // If the text node becomes empty as a result, remove it and 
+		          // remove the corresponding element of the delimiter stack. 
+		          If MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
+		            openerTextNodeIndex = _
 		            container.Inlines.IndexOf(Markdownkit.Inline(openerNode.TextNodePointer.Value))
 		            If openerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            container.Inlines.Insert(openerTextNodeIndex + 1, emphasis)
-		            
-		            // Get the index of the closer text node in the container's `Inlines` array.
-		            Dim closerTextNodeIndex As Integer = _
+		            container.Inlines.Remove(openerTextNodeIndex)
+		            openerNode.Ignore = True
+		          End If
+		          
+		          If MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
+		            closerTextNodeIndex = _
 		            container.Inlines.IndexOf(Markdownkit.Inline(closerNode.TextNodePointer.Value))
 		            If closerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            
-		            // Need to move all inline nodes that occur between `openerTextNodeIndex` and `closerTextNodeIndex` 
-		            // into this emphasis node's `Children` array and remove them from the container's 
-		            // `Inlines` array.
-		            If emphasis IsA MarkdownKit.InlineEmphasis Then
-		              For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
-		                MarkdownKit.InlineEmphasis(emphasis).Children.Append(container.Inlines(x))
-		              Next x
-		            ElseIf emphasis IsA MarkdownKit.InlineStrong Then
-		              For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
-		                MarkdownKit.InlineStrong(emphasis).Children.Append(container.Inlines(x))
-		              Next x
-		            End If
-		            
-		            // Remove the transposed inlines from the container.
-		            Dim numToTranspose As Integer = closerTextNodeIndex - openerTextNodeIndex - 2
-		            While numToTranspose > 0
-		              container.Inlines.Remove(openerTextNodeIndex + 2)
-		              numToTranspose = numToTranspose - 1
-		            Wend
-		            
-		            // Remove any delimiters between the opener and closer from the delimiter stack.
-		            // We do this by setting their `ignore` flag to True.
-		            For j As Integer = i + 1 To currentPosition - 1
-		              delimiterStack(j).Ignore = True
-		            Next j
-		            // Remove 1 (for regular emph) or 2 (for strong emph) delimiters from the opening 
-		            // and closing text nodes. 
-		            If closerNode.CurrentLength >= 2 Then
-		              // Strong.
-		              Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
-		              Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
-		              Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
-		              Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
-		            Else
-		              // Regular. 
-		              Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
-		              Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
-		            End If
-		            
-		            // If the text node becomes empty as a result, remove it and 
-		            // remove the corresponding element of the delimiter stack. 
-		            If MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
-		              openerTextNodeIndex = _
-		              container.Inlines.IndexOf(Markdownkit.Inline(openerNode.TextNodePointer.Value))
-		              If openerTextNodeIndex = -1 Then
-		                Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
-		                "text node.")
-		              End If
-		              container.Inlines.Remove(openerTextNodeIndex)
-		              openerNode.Ignore = True
-		            End If
-		            
-		            If MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
-		              closerTextNodeIndex = _
-		              container.Inlines.IndexOf(Markdownkit.Inline(closerNode.TextNodePointer.Value))
-		              If closerTextNodeIndex = -1 Then
-		                Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
-		                "text node.")
-		              End If
-		              container.Inlines.Remove(closerTextNodeIndex)
-		              closerNode.Ignore = True
-		            End If
-		            
-		            Exit
-		            
-		          Else
-		            // Set openersBottom to the element before currentPosition. 
-		            // (We know that there are no openers for this kind of closer up to and including this point, 
-		            // so this puts a lower bound on future searches).
-		            If openerNode.Delimiter = "*" Then
-		              openersBottomStar = currentPosition + 1
-		            Else
-		              openersBottomUnderscore = currentPosition + 1
-		            End If
-		            // If the closer at currentPosition is not a potential opener, remove it from the 
-		            // delimiter stack (since we know it can’t be a closer either).
-		            If Not closerNode.CanOpen Then closerNode.Ignore = True
-		            
-		            currentPosition = currentPosition + 1
+		            container.Inlines.Remove(closerTextNodeIndex)
+		            closerNode.Ignore = True
 		          End If
+		          
+		          Exit
+		          
+		        Else
+		          // If the closer at currentPosition is not a potential opener, remove it from the 
+		          // delimiter stack (since we know it can’t be a closer either).
+		          If Not closerNode.CanOpen Then closerNode.Ignore = True
+		          
+		          currentPosition = currentPosition + 1
 		        End If
 		      Next i
 		    Else

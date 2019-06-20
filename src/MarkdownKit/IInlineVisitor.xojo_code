@@ -19,6 +19,12 @@ Protected Interface IInlineVisitor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitInlineEmphasis(e As MarkdownKit.InlineEmphasis)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitInlineHTML(h As MarkdownKit.InlineHTML)
 		  
 		End Sub
@@ -26,6 +32,12 @@ Protected Interface IInlineVisitor
 
 	#tag Method, Flags = &h0
 		Sub VisitInlineLink(l As MarkdownKit.InlineLink)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitInlineStrong(s As MarkdownKit.InlineStrong)
 		  
 		End Sub
 	#tag EndMethod

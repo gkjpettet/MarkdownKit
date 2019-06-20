@@ -263,12 +263,13 @@ Inherits MarkdownKit.Block
 		  // where appropriate.
 		  
 		  Dim stack() As MarkdownKit.Block
+		  Dim delimiterStack() As MarkdownKit.DelimiterStackNode
 		  
 		  Dim b As MarkdownKit.Block = Self
 		  
 		  While b <> Nil
 		    If b IsA MarkdownKit.InlineContainerBlock And _
-		    b.RawChars.Ubound > -1 Then InlineScanner.ParseInlines(InlineContainerBlock(b))
+		    b.RawChars.Ubound > -1 Then InlineScanner.ParseInlines(InlineContainerBlock(b), delimiterStack)
 		    
 		    If b.FirstChild <> Nil Then
 		      If b.NextSibling <> Nil Then stack.Append(b.NextSibling)

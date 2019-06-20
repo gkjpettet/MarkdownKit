@@ -54,6 +54,20 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function IsPunctuation(char As Text) As Boolean
+		  Select Case char
+		  Case "!", """", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", _
+		    "/", ":", ";", "<", "=", ">", "?", "@", "[", "\", "]", "^", "_", "`", _
+		    "{", "|", "}", "~"
+		    Return True
+		  Else
+		    Return False
+		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function IsUppercaseASCIIChar(c As Text) As Boolean
 		  // Returns True if the passed character `c` is an uppercase ASCII character.
 		  
@@ -65,6 +79,18 @@ Protected Class Utilities
 		      Return False
 		    End Select
 		  Next codePoint
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function IsWhitespace(char As Text) As Boolean
+		  Select Case char
+		  Case " ", &u0009, &u000A, ""
+		    Return True
+		  Else
+		    Return False
+		  End Select
 		  
 		End Function
 	#tag EndMethod

@@ -1,6 +1,6 @@
 #tag Class
 Protected Class Phase2Printer
-Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
+Implements Global.MarkdownKit.IBlockVisitor,Global.MarkdownKit.IInlineVisitor
 	#tag Method, Flags = &h21
 		Private Function CurrentIndent() As Text
 		  // Given the current indentation level (specified by mCurrentIndent), this 
@@ -261,6 +261,24 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub VisitInlineEmphasis(e As MarkdownKit.InlineEmphasis)
+		  // Part of the IBlockVisitor interface.
+		  
+		  mOutput.Append(CurrentIndent + "<emph>")
+		  mOutput.Append(EOL)
+		  
+		  For Each c As MarkdownKit.Inline In e.Children
+		    IncreaseIndent
+		    c.Accept(Self)
+		    DecreaseIndent
+		  Next c
+		  
+		  mOutput.Append(CurrentIndent + "</emph>")
+		  mOutput.Append(EOL)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub VisitInlineHTML(h As MarkdownKit.InlineHTML)
 		  mOutput.Append(CurrentIndent + "<html_inline>")
 		  
@@ -293,6 +311,24 @@ Implements  Global.MarkdownKit.IBlockVisitor,  Global.MarkdownKit.IInlineVisitor
 		  mOutput.Append(CurrentIndent + "</link>")
 		  mOutput.Append(EOL)
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub VisitInlineStrong(s As MarkdownKit.InlineStrong)
+		  // Part of the IBlockVisitor interface.
+		  
+		  mOutput.Append(CurrentIndent + "<strong>")
+		  mOutput.Append(EOL)
+		  
+		  For Each c As MarkdownKit.Inline In s.Children
+		    IncreaseIndent
+		    c.Accept(Self)
+		    DecreaseIndent
+		  Next c
+		  
+		  mOutput.Append(CurrentIndent + "</strong>")
+		  mOutput.Append(EOL)
 		End Sub
 	#tag EndMethod
 

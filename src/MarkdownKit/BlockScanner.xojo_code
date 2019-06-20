@@ -149,7 +149,7 @@ Protected Class BlockScanner
 		    0 = BlockScanner.ScanThematicBreak(chars, pos)) Then
 		    pos = pos + 1
 		    
-		    If pos <= charsUbound And Not IsWhitespace(chars(pos)) Then Return 0
+		    If pos <= charsUbound And Not Utilities.IsWhitespace(chars(pos)) Then Return 0
 		    
 		    If interruptsParagraph And _
 		    BlockScanner.ScanSpaceChars(chars, pos + 1) = (charsUbound + 1) - pos Then Return 0
@@ -186,7 +186,7 @@ Protected Class BlockScanner
 		    pos = pos + 1
 		    
 		    // The next character must be whitespace (unless this is the EOL).
-		    If pos <= charsUbound And Not IsWhiteSpace(chars(pos)) Then Return 0
+		    If pos <= charsUbound And Not Utilities.IsWhitespace(chars(pos)) Then Return 0
 		    
 		    If interruptsParagraph And _
 		      (start <> 1 Or _
@@ -433,7 +433,7 @@ Protected Class BlockScanner
 		  // `pos` points to the character immediately following the tag name.
 		  c = If (pos < charsUbound, chars(pos), "")
 		  If maybeType1 Then
-		    If IsWhitespace(c) Or c = ">" Then
+		    If Utilities.IsWhitespace(c) Or c = ">" Then
 		      type = Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
 		      Return Block.kHTMLBlockTypeInterruptingBlockWithEmptyLines
 		    Else
@@ -441,7 +441,7 @@ Protected Class BlockScanner
 		      Return Block.kHTMLBlockTypeNone
 		    End If
 		  ElseIf maybeType6 Then // Type 6?
-		    If IsWhitespace(c) Or c = ">" Or (c = "/" And pos + 1 <= charsUbound And chars(pos + 1) = ">") Then
+		    If Utilities.IsWhitespace(c) Or c = ">" Or (c = "/" And pos + 1 <= charsUbound And chars(pos + 1) = ">") Then
 		      type = Block.kHTMLBlockTypeInterruptingBlock
 		      Return Block.kHTMLBlockTypeInterruptingBlock
 		    Else
@@ -486,7 +486,7 @@ Protected Class BlockScanner
 		  If pos = 0 Then Return Block.kHTMLBlockTypeNone
 		  
 		  While pos <= charsUbound
-		    If Not IsWhitespace(chars(pos)) Then Return Block.kHTMLBlockTypeNone
+		    If Not Utilities.IsWhitespace(chars(pos)) Then Return Block.kHTMLBlockTypeNone
 		    pos = pos + 1
 		  Wend
 		  
@@ -594,7 +594,7 @@ Protected Class BlockScanner
 		      c = chars(i)
 		      If c = &u000A And Not seenNewline Then
 		        seenNewline = True
-		      ElseIf Not IsWhitespace(c) Then
+		      ElseIf Not Utilities.IsWhitespace(c) Then
 		        If Not seenNewline Then
 		          // The only way this can still be a valid reference def is if this 
 		          // title begins on a newline (in which case we treat it as a 
@@ -722,7 +722,7 @@ Protected Class BlockScanner
 		  
 		  Dim i As Integer
 		  For i = pos To charsUbound
-		    If Not IsWhiteSpace(chars(pos)) Then Return i - pos
+		    If Not Utilities.IsWhitespace(chars(pos)) Then Return i - pos
 		  Next i
 		  
 		  Return (charsUbound + 1)- pos

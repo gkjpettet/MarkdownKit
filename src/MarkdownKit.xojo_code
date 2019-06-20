@@ -101,18 +101,6 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function IsWhitespace(char As Text) As Boolean
-		  Select Case char
-		  Case " ", &u0009, &u000A, ""
-		    Return True
-		  Else
-		    Return False
-		  End Select
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h1
 		Protected Sub RemoveLeft(Extends source() As Text, length As Integer)
 		  // Removes `length` elements from the start of the passed array.
 		  

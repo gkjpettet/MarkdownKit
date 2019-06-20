@@ -265,10 +265,10 @@ Protected Class HTMLScanner
 		    Next pos
 		    
 		    // Must see whitespace at `pos`.
-		    If Not MarkdownKit.IsWhitespace(chars(pos)) Then Return 0
+		    If Not MarkdownKit.Utilities.IsWhitespace(chars(pos)) Then Return 0
 		    // Consume the contiguous whitespace.
 		    For pos = pos + 1 to charsUbound
-		      If Not MarkdownKit.IsWhitespace(chars(pos)) Then Exit
+		      If Not MarkdownKit.Utilities.IsWhitespace(chars(pos)) Then Exit
 		    Next pos
 		    
 		    If pos >= charsUbound Then Return 0
@@ -503,7 +503,7 @@ Protected Class HTMLScanner
 		Shared Function SkipWhitespace(chars() As Text, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As Text) As Boolean
 		  Dim matched As Boolean = False
 		  
-		  While IsWhitespace(currentChar) And pos < charsUbound
+		  While Utilities.IsWhitespace(currentChar) And pos < charsUbound
 		    pos = pos + 1
 		    currentChar = chars(pos)
 		    matched = True

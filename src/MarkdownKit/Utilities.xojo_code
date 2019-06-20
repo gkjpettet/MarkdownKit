@@ -85,6 +85,10 @@ Protected Class Utilities
 
 	#tag Method, Flags = &h0
 		Shared Function IsWhitespace(char As Text, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
+		  // Returns True if the passed character is whitespace.
+		  // If the optional `nonBreakingSpaceIsWhitespace` is True then we also 
+		  // consider a non-breaking space (&u0A0) to be whitespace.
+		  
 		  Select Case char
 		  Case &u0020, &u0009, &u000A
 		    Return True

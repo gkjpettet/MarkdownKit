@@ -472,7 +472,7 @@ Protected Class InlineScanner
 		          Next j
 		          // Remove 1 (for regular emph) or 2 (for strong emph) delimiters from the opening 
 		          // and closing text nodes. 
-		          If closerNode.CurrentLength >= 2 Then
+		          If emphasis IsA MarkdownKit.InlineStrong Then
 		            // Strong.
 		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
 		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop

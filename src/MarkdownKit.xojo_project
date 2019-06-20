@@ -81,6 +81,7 @@ Class=Phase2HardLinebreakTests;Testing/Phase 2/Phase2HardLinebreakTests.xojo_cod
 Class=Phase2SoftLinebreakTests;Testing/Phase 2/Phase2SoftLinebreakTests.xojo_code;&h000000007DE797FF;&h00000000286DCFFF;false
 Class=Phase2TextualContentTests;Testing/Phase 2/Phase2TextualContentTests.xojo_code;&h0000000075822FFF;&h00000000286DCFFF;false
 Class=Phase2AutolinkTests;Testing/Phase 2/Phase2AutolinkTests.xojo_code;&h000000007E398FFF;&h00000000286DCFFF;false
+Class=Phase2EmphasisTests;Testing/Phase 2/Phase2EmphasisTests.xojo_code;&h0000000068EA37FF;&h00000000286DCFFF;false
 Class=Softbreak;MarkdownKit/Softbreak.xojo_code;&h0000000050FF3FFF;&h00000000214287FF;false
 Class=Hardbreak;MarkdownKit/Hardbreak.xojo_code;&h00000000731047FF;&h00000000214287FF;false
 Class=DelimiterStackNode;MarkdownKit/DelimiterStackNode.xojo_code;&h000000006C5DDFFF;&h00000000214287FF;false

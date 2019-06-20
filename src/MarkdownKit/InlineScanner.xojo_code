@@ -412,6 +412,13 @@ Protected Class InlineScanner
 		    If Not closerNode.Ignore And (closerNode.Delimiter = "*" Or closerNode.Delimiter = "_") And closerNode.CanClose Then
 		      // Look back in the stack (staying above stackBottom and the openersBottom for this 
 		      // delimiter type) for the first matching potential opener (“matching” means same delimiter).
+		      
+		      // Prevent an infinite loop...
+		      If (currentPosition - 1) < (stackBottom + 1) Then
+		        currentPosition = currentPosition + 1
+		        Continue
+		      End If
+		      
 		      For i As Integer = currentPosition - 1 DownTo (stackBottom + 1)
 		        openerNode = delimiterStack(i)
 		        If i > If(openerNode.Delimiter = "*", openersBottomStar, openersBottomUnderscore) Then
@@ -526,7 +533,6 @@ Protected Class InlineScanner
 		          End If
 		        End If
 		      Next i
-		      
 		    Else
 		      currentPosition = currentPosition + 1
 		    End If

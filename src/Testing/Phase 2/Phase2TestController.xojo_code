@@ -7,6 +7,7 @@ Inherits TestController
 		  
 		  Dim group As TestGroup
 		  
+		  group = New Phase2EmphasisTests(Self, "Emphasis")
 		  group = New Phase2AutolinkTests(Self, "Auto Links")
 		  group = New Phase2TextualContentTests(Self, "Textual Content")
 		  group = New Phase2SoftLinebreakTests(Self, "Soft Line Breaks")

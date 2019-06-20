@@ -682,14 +682,14 @@ Protected Class InlineScanner
 		  If startPos = 0 Then
 		    beforeIsWhitespace = True
 		  Else
-		    beforeIsWhitespace = If(Utilities.IsWhitespace(chars(startPos- 1 )), True, False)
+		    beforeIsWhitespace = If(Utilities.IsWhitespace(chars(startPos - 1 ), True), True, False)
 		  End If
 		  
 		  Dim afterIsWhitespace As Boolean
 		  If pos >= charsUbound Then
 		    afterIsWhitespace = True
 		  Else
-		    afterIsWhitespace = If(Utilities.IsWhitespace(chars(pos)), True, False)
+		    afterIsWhitespace = If(Utilities.IsWhitespace(chars(pos), True), True, False)
 		  End If
 		  
 		  Dim beforeIsPunctuation As Boolean = If(startPos = 0 Or Not Utilities.IsPunctuation(chars(startPos - 1)), False, True)

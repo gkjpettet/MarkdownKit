@@ -84,12 +84,16 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function IsWhitespace(char As Text) As Boolean
+		Shared Function IsWhitespace(char As Text, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
 		  Select Case char
-		  Case " ", &u0009, &u000A, ""
+		  Case &u0020, &u0009, &u000A
 		    Return True
 		  Else
-		    Return False
+		    If nonBreakingSpaceIsWhitespace And char = &u00A0 Then
+		      Return True
+		    Else
+		      Return False
+		    End If
 		  End Select
 		  
 		End Function

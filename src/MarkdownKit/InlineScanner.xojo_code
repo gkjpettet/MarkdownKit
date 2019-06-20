@@ -416,6 +416,21 @@ Protected Class InlineScanner
 		      For i As Integer = currentPosition - 1 DownTo (stackBottom + 1)
 		        openerNode = delimiterStack(i)
 		        If Not openerNode.Ignore And openerNode.CanOpen And openerNode.Delimiter = closerNode.Delimiter Then
+		          
+		          // Can this opener and closer delimiter pair combination open emphasis?
+		          If (openerNode.CanClose And openerNode.CanOpen) Or _
+		            (closerNode.CanClose And closerNode.CanOpen) Then
+		            If (openerNode.OriginalLength + closerNode.OriginalLength) Mod 3 = 0 Then
+		              If openerNode.OriginalLength Mod 3 <> 0 Or closerNode.OriginalLength Mod 3 <> 0 Then
+		                // If the closer at currentPosition is not a potential opener, remove it from the 
+		                // delimiter stack (since we know it can’t be a closer either).
+		                If Not closerNode.CanOpen Then closerNode.Ignore = True
+		                currentPosition = currentPosition + 1
+		                Continue
+		              End If
+		            End If
+		          End If
+		          
 		          // Strong or regular emphasis? If both closer and opener spans have length >= 2, 
 		          // we have strong, otherwise regular.
 		          Dim emphasis As MarkdownKit.Inline

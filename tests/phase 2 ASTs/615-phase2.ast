@@ -1,5 +1,7 @@
 <document>
 <paragraph>
-<text><a h*#ref="hi"></text>
+<text><a•h</text>
+<text>*</text>
+<text>#ref="hi"></text>
 </paragraph>
 </document>

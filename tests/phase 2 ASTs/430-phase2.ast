@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<strong>
+<text>foo </text>
+<emph>
+<text>bar</text>
+</emph>
+</strong>
+</paragraph>
+</document>

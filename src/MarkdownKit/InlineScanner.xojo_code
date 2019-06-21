@@ -401,7 +401,11 @@ Protected Class InlineScanner
 		  // beginning of the input – the first one in parse order).
 		  Dim closerNode As MarkdownKit.DelimiterStackNode
 		  Dim openerNode As MarkdownKit.DelimiterStackNode
+		  
+		  Dim incrementCurrentPosition As Boolean = False
+		  
 		  While currentPosition <= delimiterStack.Ubound
+		    
 		    closerNode = delimiterStack(currentPosition)
 		    If Not closerNode.Ignore And (closerNode.Delimiter = "*" Or closerNode.Delimiter = "_") And closerNode.CanClose Then
 		      // Look back in the stack (staying above stackBottom and the openersBottom for this 
@@ -529,12 +533,16 @@ Protected Class InlineScanner
 		          // If the closer at currentPosition is not a potential opener, remove it from the 
 		          // delimiter stack (since we know it can’t be a closer either).
 		          If Not closerNode.CanOpen Then closerNode.Ignore = True
-		          
-		          currentPosition = currentPosition + 1
+		          incrementCurrentPosition = True
 		        End If
 		      Next i
 		    Else
 		      currentPosition = currentPosition + 1
+		    End If
+		    
+		    If incrementCurrentPosition Then
+		      currentPosition = currentPosition + 1
+		      incrementCurrentPosition = False
 		    End If
 		  Wend
 		  

@@ -26,7 +26,7 @@ Protected Class InlineScanner
 		  chars.Remove(0)
 		  Call chars.Pop
 		  
-		  Unescape(chars)
+		  Utilities.Unescape(chars)
 		  ReplaceCharacterReferences(chars)
 		  
 		  // Remove leading whitespace from the title.
@@ -59,7 +59,7 @@ Protected Class InlineScanner
 		    Call chars.Pop
 		  End If
 		  
-		  Unescape(chars)
+		  Utilities.Unescape(chars)
 		  ReplaceCharacterReferences(chars)
 		  
 		End Sub
@@ -1064,26 +1064,6 @@ Protected Class InlineScanner
 		  Return result
 		  
 		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Sub Unescape(chars() As Text)
-		  // Converts backslash escaped characters to their literal character value.
-		  // Mutates alters the passed array.
-		  
-		  Dim pos As Integer = 0
-		  Dim c As Text
-		  Do Until pos > chars.Ubound
-		    c = chars(pos)
-		    If c = "\" And pos < chars.Ubound And _
-		      MarkdownKit.IsEscapable(chars(pos + 1)) Then
-		      // Remove the backslash from the array.
-		      chars.Remove(pos)
-		    End If
-		    pos = pos + 1
-		  Loop
-		  
-		End Sub
 	#tag EndMethod
 
 

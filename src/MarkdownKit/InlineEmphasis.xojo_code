@@ -10,6 +10,7 @@ Inherits MarkdownKit.Inline
 	#tag Method, Flags = &h0
 		Sub Close()
 		  #Pragma Warning "TODO"
+		  
 		End Sub
 	#tag EndMethod
 

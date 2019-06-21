@@ -17,6 +17,8 @@ Inherits MarkdownKit.Inline
 		  
 		  Self.IsOpen = False
 		  
+		  // Unescape backslash-escaped characters.
+		  Utilities.Unescape(Self.Chars)
 		End Sub
 	#tag EndMethod
 

@@ -103,6 +103,28 @@ Protected Class Utilities
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Shared Sub Unescape(chars() As Text)
+		  // Converts backslash escaped characters to their literal character value.
+		  // Mutates alters the passed array.
+		  
+		  If chars.IndexOf("\") = -1 Then Return
+		  
+		  Dim pos As Integer = 0
+		  Dim c As Text
+		  Do Until pos > chars.Ubound
+		    c = chars(pos)
+		    If c = "\" And pos < chars.Ubound And _
+		      MarkdownKit.IsEscapable(chars(pos + 1)) Then
+		      // Remove the backslash from the array.
+		      chars.Remove(pos)
+		    End If
+		    pos = pos + 1
+		  Loop
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

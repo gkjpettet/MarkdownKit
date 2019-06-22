@@ -38,33 +38,15 @@ Inherits MarkdownKit.Inline
 
 	#tag ViewBehavior
 		#tag ViewProperty
-			Name="IsLastLineBlank"
+			Name="StartPos"
 			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="StartColumn"
-			Group="Behavior"
-			InitialValue="1"
+			InitialValue="-1"
 			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="LineNumber"
+			Name="EndPos"
 			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="StartPosition"
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="HTMLBlockType"
-			Group="Behavior"
-			InitialValue="kHTMLBlockTypeNone"
+			InitialValue="-1"
 			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -104,25 +86,18 @@ Inherits MarkdownKit.Inline
 			Name="Type"
 			Group="Behavior"
 			InitialValue="MarkdownKit.InlineType.Textual"
-			Type="MarkdownKit.BlockType"
+			Type="MarkdownKit.InlineType"
 			EditorType="Enum"
 			#tag EnumValues
-				"0 - Document"
-				"1 - BlockQuote"
-				"2 - List"
-				"3 - ListItem"
-				"4 - FencedCode"
-				"5 - IndentedCode"
-				"6 - HtmlBlock"
-				"7 - Paragraph"
-				"8 - AtxHeading"
-				"9 - SetextHeading"
-				"10 - ThematicBreak"
-				"11 - ReferenceDefinition"
-				"12 - Block"
-				"13 - TextBlock"
-				"14 - Softbreak"
-				"15 - Hardbreak"
+				"0 - Textual"
+				"1 - Emphasis"
+				"2 - Strong"
+				"3 - CodeSpan"
+				"4 - HTML"
+				"5 - Softbreak"
+				"6 - Link"
+				"7 - Image"
+				"8 - Hardbreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

@@ -510,7 +510,7 @@ Protected Class BlockScanner
 		  Dim pos As Integer = 0
 		  
 		  // Parse the label.
-		  Dim labelCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkLabel(chars)
+		  Dim labelCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkLabel(chars, pos)
 		  If labelCR.Length = -1 Then Return // Invalid.
 		  
 		  pos = labelCR.Start + labelCR.Length

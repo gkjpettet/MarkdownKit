@@ -206,6 +206,24 @@ Protected Class InlineScanner
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Shared Function HandleLeftSquareBracket(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.Inline
+		  // We know that index `startPos` in `b.RawChars` is a "[".
+		  // Look to see if it represents the start of an inline link or link reference.
+		  // If it does then it create and return an inline link. Otherwise return Nil.
+		  // NB: The EndPos of the returned inline link block is the position of the closing "]" or ")".
+		  // NB: Full inline links (i.e: `[]()`) supercede link references (i.e: (`[]`).
+		  // NB: Link text may contain inline content.
+		  
+		  // Bare minimum valid inline link is: [a]
+		  If startPos + 1 > rawCharsUbound Then Return Nil
+		  
+		  // Parse the link text.
+		  #Pragma Warning "TODO"
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Shared Sub Initialise()
 		  If mInitialised Then Return
@@ -359,6 +377,20 @@ Protected Class InlineScanner
 		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
 		        b.Inlines.Append(New Softbreak(b))
 		        pos = pos + 1
+		      End If
+		      
+		    ElseIf c = "[" And Not Escaped(b.RawChars, pos) Then
+		      // ========= Inline link? =========
+		      result = HandleLeftSquareBracket(b, pos, rawCharsUbound)
+		      If result <> Nil Then
+		        // Found inline link.
+		        If buffer <> Nil Then CloseBuffer(buffer, b)
+		        // Add the inline link.
+		        b.Inlines.Append(result)
+		        // Advance the position.
+		        pos = result.EndPos + 1
+		      Else
+		        NotInlineStarter(buffer, pos, b) 
 		      End If
 		      
 		    ElseIf (c = "*" Or c = "_") And Not Escaped(b.RawChars, pos) Then
@@ -919,10 +951,10 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanLinkLabel(chars() As Text) As MarkdownKit.CharacterRun
+		Shared Function ScanLinkLabel(chars() As Text, pos As Integer) As MarkdownKit.CharacterRun
 		  // Scans the contents of `chars` for a link reference definition label.
-		  // Assumes chars starts with a "[".
-		  // Assumes chars.Ubound >=3.
+		  // Assumes chars(pos) = "[".
+		  // Assumes `chars.Ubound` >=3.
 		  // Returns a CharacterRun. If no valid label is found then the CharacterRun's
 		  // `start` and `finish` properties will be set to -1.
 		  // Does NOT mutate the passed array.
@@ -943,7 +975,7 @@ Protected Class InlineScanner
 		  Dim limit As Integer = Xojo.Math.Min(charsUbound, kMaxReferenceLabelLength + 1)
 		  Dim i As Integer
 		  Dim seenNonWhitespace As Boolean = False
-		  For i = 1 To limit
+		  For i = (pos + 1) To limit
 		    Select Case chars(i)
 		    Case "["
 		      // Unescaped square brackets are not allowed.

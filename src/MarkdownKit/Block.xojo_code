@@ -43,10 +43,9 @@ Protected Class Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(lineNumber As Integer, startPos As Integer, startColumn As Integer)
+		Sub Constructor(lineNumber As Integer, startPos As Integer)
 		  Self.LineNumber = lineNumber
 		  Self.StartPosition = startPos
-		  Self.StartColumn = startColumn
 		  SetType
 		  Self.ListData = New MarkdownKit.ListData
 		  
@@ -211,10 +210,6 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		StartColumn As Integer = 1
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
 		StartPosition As Integer = 0
 	#tag EndProperty
 
@@ -303,12 +298,6 @@ Protected Class Block
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="StartColumn"
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LineNumber"

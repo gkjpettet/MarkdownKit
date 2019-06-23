@@ -50,7 +50,7 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub Constructor(source As Text)
-		  Super.Constructor(1, 0, 1)
+		  Super.Constructor(1, 0)
 		  
 		  // Document Blocks act as the root of the block tree. 
 		  Self.Root = Self
@@ -124,7 +124,7 @@ Inherits MarkdownKit.Block
 		  End If
 		  
 		  // Create a new SetextHeading block to replace the paragraph.
-		  Dim stx As New MarkdownKit.SetextHeading(p.LineNumber, p.StartPosition, p.StartColumn)
+		  Dim stx As New MarkdownKit.SetextHeading(p.LineNumber, p.StartPosition)
 		  
 		  // Set the root.
 		  stx.Root = p.Root
@@ -168,7 +168,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 416464732061206E657720626C6F636B206173206368696C64206F6620616E6F746865722E2052657475726E7320746865206368696C642E
-		Shared Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, startPos As Integer, startColumn As Integer) As MarkdownKit.Block
+		Shared Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, startPos As Integer) As MarkdownKit.Block
 		  // Create a new Block of the specified type, add it as a child of theParent and 
 		  // return the newly created child.
 		  
@@ -183,25 +183,25 @@ Inherits MarkdownKit.Block
 		  Dim child As MarkdownKit.Block
 		  Select Case childType
 		  Case BlockType.BlockQuote
-		    child = New MarkdownKit.BlockQuote(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.BlockQuote(line.Number, startPos)
 		  Case BlockType.Paragraph
-		    child = New MarkdownKit.Paragraph(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.Paragraph(line.Number, startPos)
 		  Case BlockType.IndentedCode
-		    child = New MarkdownKit.IndentedCode(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.IndentedCode(line.Number, startPos)
 		  Case BlockType.FencedCode
-		    child = New MarkdownKit.FencedCode(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.FencedCode(line.Number, startPos)
 		  Case BlockType.ATXHeading
-		    child = New MarkdownKit.ATXHeading(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.ATXHeading(line.Number, startPos)
 		  Case BlockType.SetextHeading
-		    child = New MarkdownKit.SetextHeading(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.SetextHeading(line.Number, startPos)
 		  Case BlockType.ThematicBreak
-		    child = New MarkdownKit.ThematicBreak(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.ThematicBreak(line.Number, startPos)
 		  Case BlockType.ListItem
-		    child = New MarkdownKit.ListItem(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.ListItem(line.Number, startPos)
 		  Case BlockType.List
-		    child = New MarkdownKit.List(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.List(line.Number, startPos)
 		  Case BlockType.HtmlBlock
-		    child = New MarkdownKit.HTML(line.Number, startPos, startColumn)
+		    child = New MarkdownKit.HTML(line.Number, startPos)
 		  Else
 		    Dim err As New Xojo.Core.UnsupportedOperationException
 		    err.Reason = childType.ToText + " blocks are not yet supported"
@@ -401,7 +401,7 @@ Inherits MarkdownKit.Block
 		      container.Type <> BlockType.SetextHeading Then
 		      // Create a paragraph container for this line.
 		      container = CreateChildBlock(container, line, BlockType.Paragraph, _
-		      line.NextNWS, line.NextNWSColumn)
+		      line.NextNWS)
 		      container.AddLine(line, line.NextNWS)
 		      
 		    Else
@@ -452,8 +452,7 @@ Inherits MarkdownKit.Block
 		      // ============= New blockquote =============
 		      line.AdvanceOffset(line.NextNWS + 1 - line.Offset, False)
 		      Call line.AdvanceOptionalSpace
-		      container = CreateChildBlock(container, line, BlockType.BlockQuote, line.NextNWS, _
-		      line.NextNWSColumn)
+		      container = CreateChildBlock(container, line, BlockType.BlockQuote, line.NextNWS)
 		      
 		    ElseIf Not indented And line.CurrentChar = "#" And _
 		      0 <> BlockScanner.ScanAtxHeadingStart(line.Chars, line.NextNWS, _ 
@@ -461,16 +460,14 @@ Inherits MarkdownKit.Block
 		      // ============= New ATX heading =============
 		      line.AdvanceOffset(line.NextNWS + tmpInt2 - line.Offset, False)
 		      
-		      container = CreateChildBlock(container, line, BlockType.AtxHeading, line.NextNWS, _
-		      line.NextNWSColumn)
+		      container = CreateChildBlock(container, line, BlockType.AtxHeading, line.NextNWS)
 		      ATXHeading(container).Level = tmpInt1
 		      
 		    ElseIf Not indented And _
 		      (line.CurrentChar = "`" Or line.CurrentChar = "~") And _ 
 		      0 <> BlockScanner.ScanOpenCodeFence(line.Chars, line.NextNWS, tmpInt1) Then
 		      // ============= New fenced code block =============
-		      container = CreateChildBlock(container, line, BlockType.FencedCode, line.NextNWS, _
-		      line.NextNWSColumn)
+		      container = CreateChildBlock(container, line, BlockType.FencedCode, line.NextNWS)
 		      FencedCode(container).FenceChar = line.CurrentChar
 		      FencedCode(container).FenceLength = tmpInt1
 		      FencedCode(container).FenceOffset = line.NextNWS - line.Offset
@@ -481,8 +478,7 @@ Inherits MarkdownKit.Block
 		      Or (container.Type <> BlockType.Paragraph And _
 		      Block.kHTMLBlockTypeNone <> BlockScanner.ScanHtmlBlockType7Start(line, line.NextNWS, tmpInt1))) Then
 		      // ============= New HTML block =============
-		      container = CreateChildBlock(container, line, BlockType.HTMLBlock, line.NextNWS, _
-		      line.NextNWSColumn)
+		      container = CreateChildBlock(container, line, BlockType.HTMLBlock, line.NextNWS)
 		      container.HtmlBlockType = tmpInt1
 		      // NB: We don't adjust offset because the tag is part of the text.
 		      
@@ -507,7 +503,7 @@ Inherits MarkdownKit.Block
 		      // ============= New thematic break =============
 		      // It's only now that we know that the line is not part of a setext heading.
 		      container = CreateChildBlock(container, line, BlockType.ThematicBreak, _
-		      line.NextNWS, line.NextNWSColumn)
+		      line.NextNWS)
 		      container.Finalise(line)
 		      container = container.Parent
 		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
@@ -546,18 +542,18 @@ Inherits MarkdownKit.Block
 		      tmpData.MarkerOffset = indent
 		      
 		      If container.Type <> BlockType.List Or Not ListsMatch(container.ListData, tmpData) Then
-		        container = CreateChildBlock(container, line, BlockType.List, line.NextNWS, line.NextNWSColumn)
+		        container = CreateChildBlock(container, line, BlockType.List, line.NextNWS)
 		        container.ListData = tmpData
 		      End If
 		      
 		      // Add the list item.
-		      container = CreateChildBlock(container, line, BlockType.ListItem, line.NextNWS, line.NextNWSColumn)
+		      container = CreateChildBlock(container, line, BlockType.ListItem, line.NextNWS)
 		      container.ListData = tmpData
 		      
 		    ElseIf indented And Not maybeLazy And Not blank Then
 		      // ============= New indented code block =============
 		      line.AdvanceOffset(kCodeIndent, True)
-		      container = CreateChildBlock(container, line, BlockType.IndentedCode, line.Offset, 0)
+		      container = CreateChildBlock(container, line, BlockType.IndentedCode, line.Offset)
 		      
 		    Else
 		      Exit

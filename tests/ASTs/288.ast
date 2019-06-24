@@ -2,7 +2,7 @@
 <list type="bullet" tight="true">
 <item>
 <paragraph>
-<raw_text>a</raw_text>
+<text>a</text>
 </paragraph>
 </item>
 <item>
@@ -14,7 +14,7 @@
 </item>
 <item>
 <paragraph>
-<raw_text>c</raw_text>
+<text>c</text>
 </paragraph>
 </item>
 </list>

@@ -6,7 +6,7 @@
 <list type="ordered" start="2" tight="true" delimiter="period">
 <item>
 <paragraph>
-<raw_text>foo</raw_text>
+<text>foo</text>
 </paragraph>
 </item>
 </list>

@@ -4,8 +4,9 @@
 <item>
 <block_quote>
 <paragraph>
-<raw_text>Blockquote
-continued here.</raw_text>
+<text>Blockquote</text>
+<softbreak />
+<text>continued here.</text>
 </paragraph>
 </block_quote>
 </item>

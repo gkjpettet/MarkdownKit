@@ -2,10 +2,10 @@
 <list type="bullet" tight="false">
 <item>
 <paragraph>
-<raw_text>foo</raw_text>
+<text>foo</text>
 </paragraph>
 <paragraph>
-<raw_text>bar</raw_text>
+<text>bar</text>
 </paragraph>
 </item>
 </list>

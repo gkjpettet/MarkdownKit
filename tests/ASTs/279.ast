@@ -2,15 +2,15 @@
 <list type="bullet" tight="false">
 <item>
 <paragraph>
-<raw_text>foo</raw_text>
+<text>foo</text>
 </paragraph>
 <paragraph>
-<raw_text>notcode</raw_text>
+<text>notcode</text>
 </paragraph>
 </item>
 <item>
 <paragraph>
-<raw_text>foo</raw_text>
+<text>foo</text>
 </paragraph>
 </item>
 </list>

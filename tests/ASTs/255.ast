@@ -1,10 +1,12 @@
 <document>
 <paragraph>
-<raw_text>foo
-*</raw_text>
+<text>foo</text>
+<softbreak />
+<text>*</text>
 </paragraph>
 <paragraph>
-<raw_text>foo
-1.</raw_text>
+<text>foo</text>
+<softbreak />
+<text>1.</text>
 </paragraph>
 </document>

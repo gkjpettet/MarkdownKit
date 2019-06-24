@@ -5,7 +5,7 @@
 <text>indented code</text>
 </indented_code_block>
 <paragraph>
-<raw_text>paragraph</raw_text>
+<text>paragraph</text>
 </paragraph>
 <indented_code_block>
 <text>more code</text>

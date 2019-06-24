@@ -2,12 +2,12 @@
 <list type="ordered" start="1" tight="false" delimiter="period">
 <item>
 <paragraph>
-<raw_text>a</raw_text>
+<text>a</text>
 </paragraph>
 </item>
 <item>
 <paragraph>
-<raw_text>b</raw_text>
+<text>b</text>
 </paragraph>
 </item>
 </list>

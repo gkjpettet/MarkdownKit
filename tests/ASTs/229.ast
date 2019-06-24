@@ -4,10 +4,10 @@
 <list type="ordered" start="1" tight="false" delimiter="period">
 <item>
 <paragraph>
-<raw_text>one</raw_text>
+<text>one</text>
 </paragraph>
 <paragraph>
-<raw_text>two</raw_text>
+<text>two</text>
 </paragraph>
 </item>
 </list>

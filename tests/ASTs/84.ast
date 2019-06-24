@@ -3,6 +3,6 @@
 <text>foo</text>
 </indented_code_block>
 <paragraph>
-<raw_text>bar</raw_text>
+<text>bar</text>
 </paragraph>
 </document>

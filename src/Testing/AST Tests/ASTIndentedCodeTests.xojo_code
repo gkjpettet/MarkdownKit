@@ -39,7 +39,7 @@ Inherits ASTTestGroup
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example79Test()
-		  Run(78)
+		  Run(79)
 		End Sub
 	#tag EndMethod
 

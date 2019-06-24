@@ -15,8 +15,8 @@ Inherits TestController
 		  // group = New ASTSetextTests(Self, "Setext Headings")
 		  // group = New ASTThematicBreakTests(Self, "Thematic Breaks")
 		  // group = New ASTBlockquoteTests(Self, "Blockquotes")
-		  group = New ASTATXTests(Self, "ATX Headings")
-		  // group = New ASTIndentedCodeTests(Self, "Indented Code Blocks")
+		  // group = New ASTATXTests(Self, "ATX Headings")
+		  group = New ASTIndentedCodeTests(Self, "Indented Code Blocks")
 		  // group = New ASTFencedCodeTests(Self, "Fenced Code Blocks")
 		  // group = New ASTBlankLineTests(Self, "Blank Lines")
 		  

@@ -1,12 +1,12 @@
 <document>
 <thematic_break />
 <heading level="2">
-<raw_text>Foo</raw_text>
+<text>Foo</text>
 </heading>
 <heading level="2">
-<raw_text>Bar</raw_text>
+<text>Bar</text>
 </heading>
 <paragraph>
-<raw_text>Baz</raw_text>
+<text>Baz</text>
 </paragraph>
 </document>

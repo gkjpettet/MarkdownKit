@@ -1,8 +1,11 @@
 <document>
 <paragraph>
-<raw_text>Foo
-bar
-\---
-baz</raw_text>
+<text>Foo</text>
+<softbreak•/>
+<text>bar</text>
+<softbreak•/>
+<text>---</text>
+<softbreak•/>
+<text>baz</text>
 </paragraph>
 </document>

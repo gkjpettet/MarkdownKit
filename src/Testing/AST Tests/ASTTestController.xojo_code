@@ -11,9 +11,11 @@ Inherits TestController
 		  // group = New ASTHTMLBlockTests(Self, "HTML Blocks")
 		  // group = New ASTParagraphTests(Self, "Paragraph Tests")
 		  // group = New ASTReferenceLinkTests(Self, "Reference Links")
-		  group = New ASTListTests(Self, "Lists")
+		  // group = New ASTListTests(Self, "Lists")
 		  // group = New ASTSetextTests(Self, "Setext Headings")
-		  // group = New ASTThematicBreakTests(Self, "Thematic Breaks")
+		  
+		  group = New ASTThematicBreakTests(Self, "Thematic Breaks")
+		  
 		  // group = New ASTBlockquoteTests(Self, "Blockquotes")
 		  // group = New ASTATXTests(Self, "ATX Headings")
 		  // group = New ASTIndentedCodeTests(Self, "Indented Code Blocks")

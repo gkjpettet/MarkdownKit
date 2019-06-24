@@ -1,6 +1,10 @@
 <document>
 <heading level="1">
-<raw_text>Foo *bar
-baz*</raw_text>
+<text>Foo </text>
+<emph>
+<text>bar</text>
+<softbreak />
+<text>baz</text>
+</emph>
 </heading>
 </document>

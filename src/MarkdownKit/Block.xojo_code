@@ -415,6 +415,20 @@ Protected Class Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function NextSibling() As MarkdownKit.Block
+		  If Self.Parent = Nil Then Return Nil
+		  
+		  Dim myIndex As Integer = Self.Parent.Children.IndexOf(Self)
+		  If myIndex = -1 Then Return Nil
+		  If myIndex = Self.Parent.Children.Ubound Then
+		    Return Nil
+		  Else
+		    Return Self.Parent.Children(myIndex + 1)
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub RemoveChild(child As MarkdownKit.Block)
 		  // Removes the passed child block from this block.
 		  // Only looks at the top level children of this block.
@@ -495,10 +509,6 @@ Protected Class Block
 
 	#tag Property, Flags = &h0
 		Name As Text
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 546865206E657874207369626C696E67206F66207468697320626C6F636B20656C656D656E742E204E696C206966207468697320697320746865206C61737420656C656D656E742E
-		NextSibling As MarkdownKit.Block
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0

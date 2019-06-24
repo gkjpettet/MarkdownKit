@@ -1,6 +1,7 @@
 <document>
 <heading level="2">
-<raw_text>Foo
-Bar</raw_text>
+<text>Foo</text>
+<softbreak />
+<text>Bar</text>
 </heading>
 </document>

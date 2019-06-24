@@ -1,14 +1,14 @@
 <document>
-<heading level="2">
-<raw_text>`Foo</raw_text>
+<heading•level="2">
+<text>`Foo</text>
 </heading>
 <paragraph>
-<raw_text>`</raw_text>
+<text>`</text>
 </paragraph>
-<heading level="2">
-<raw_text><a•title="a•lot</raw_text>
+<heading•level="2">
+<text><a•title="a•lot</text>
 </heading>
 <paragraph>
-<raw_text>of•dashes"/></raw_text>
+<text>of•dashes"/></text>
 </paragraph>
 </document>

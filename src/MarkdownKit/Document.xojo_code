@@ -177,12 +177,6 @@ Inherits MarkdownKit.Block
 		  Dim child As New MarkdownKit.Block(childType, Xojo.Core.WeakRef.Create(theParent))
 		  child.Root = theParent.Root
 		  
-		  Dim mLastChild As MarkdownKit.Block = theParent.LastChild
-		  If mLastChild <> Nil Then
-		    mLastChild.NextSibling = child
-		    child.Previous = mLastChild
-		  End If
-		  
 		  // Insert the child into the parent's tree.
 		  theParent.Children.Append(child)
 		  
@@ -236,6 +230,7 @@ Inherits MarkdownKit.Block
 		  While b <> Nil
 		    Select Case b.Type
 		    Case BlockType.AtxHeading, BlockType.Paragraph, BlockType.SetextHeading
+		      Redim delimiterStack(-1) // Each block gets a new delimiter stack.
 		      If b.Chars.Ubound > -1 Then InlineScanner.ParseInlines(b, delimiterStack)
 		    End Select
 		    

@@ -1,5 +1,9 @@
 <document>
 <heading•level="1">
-<raw_text>foo•*bar*•\*baz\*</raw_text>
+<text>foo </text>
+<emph>
+<text>bar</text>
+</emph>
+<text> *baz*</text>
 </heading>
 </document>

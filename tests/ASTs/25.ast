@@ -1,11 +1,18 @@
 <document>
 <paragraph>
-<raw_text>_ _ _ _ a</raw_text>
+<text>_</text>
+<text> </text>
+<text>_</text>
+<text> </text>
+<text>_</text>
+<text> </text>
+<text>_</text>
+<text> a</text>
 </paragraph>
 <paragraph>
-<raw_text>a------</raw_text>
+<text>a------</text>
 </paragraph>
 <paragraph>
-<raw_text>---a---</raw_text>
+<text>---a---</text>
 </paragraph>
 </document>

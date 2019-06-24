@@ -1,8 +1,8 @@
 <document>
 <heading level="2">
-<raw_text>Foo</raw_text>
+<text>Foo</text>
 </heading>
 <paragraph>
-<raw_text>bar</raw_text>
+<text>bar</text>
 </paragraph>
 </document>

@@ -1,6 +1,7 @@
 <document>
 <paragraph>
-<raw_text>``` ```
-aaa</raw_text>
+<code> </code>
+<softbreak />
+<text>aaa</text>
 </paragraph>
 </document>

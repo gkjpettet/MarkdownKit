@@ -1,7 +1,5 @@
 <document>
 <paragraph>
-<raw_text>``
-foo
-``</raw_text>
+<code>foo</code>
 </paragraph>
 </document>

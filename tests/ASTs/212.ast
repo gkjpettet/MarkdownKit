@@ -1,12 +1,12 @@
 <document>
 <block_quote>
 <paragraph>
-<raw_text>foo</raw_text>
+<text>foo</text>
 </paragraph>
 </block_quote>
 <block_quote>
 <paragraph>
-<raw_text>bar</raw_text>
+<text>bar</text>
 </paragraph>
 </block_quote>
 </document>

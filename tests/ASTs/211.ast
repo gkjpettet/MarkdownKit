@@ -1,7 +1,7 @@
 <document>
 <block_quote>
 <paragraph>
-<raw_text>foo</raw_text>
+<text>foo</text>
 </paragraph>
 </block_quote>
 </document>

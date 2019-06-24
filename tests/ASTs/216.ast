@@ -1,13 +1,13 @@
 <document>
 <block_quote>
 <paragraph>
-<raw_text>aaa</raw_text>
+<text>aaa</text>
 </paragraph>
 </block_quote>
 <thematic_break />
 <block_quote>
 <paragraph>
-<raw_text>bbb</raw_text>
+<text>bbb</text>
 </paragraph>
 </block_quote>
 </document>

@@ -1,8 +1,9 @@
 <document>
 <block_quote>
 <paragraph>
-<raw_text>bar
-baz</raw_text>
+<text>bar</text>
+<softbreak />
+<text>baz</text>
 </paragraph>
 </block_quote>
 </document>

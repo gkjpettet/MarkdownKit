@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<text>[foo]:•</text>
+<html_inline>&lt;bar&gt;</html_inline>
+<text>(baz)</text>
+</paragraph>
+<paragraph>
+<text>[foo]</text>
+</paragraph>
+</document>

@@ -2,17 +2,8 @@
 Protected Class App
 Inherits Application
 	#tag MenuHandler
-		Function WindowEditorPhase1() As Boolean Handles WindowEditorPhase1.Action
-			WinPhase1Editor.Show
-			
-			Return True
-			
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
 		Function WindowEditorPhase2() As Boolean Handles WindowEditorPhase2.Action
-			WinPhase2Editor.Show
+			WinEditor.Show
 			
 			Return True
 			

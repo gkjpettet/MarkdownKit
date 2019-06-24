@@ -1,0 +1,8 @@
+<document>
+<fenced_code_block>
+<text>[foo]: /url</text>
+</fenced_code_block>
+<paragraph>
+<text>[foo]</text>
+</paragraph>
+</document>

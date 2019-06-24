@@ -1,0 +1,11 @@
+<document>
+<paragraph>
+<text>[foo]: /url 'title</text>
+</paragraph>
+<paragraph>
+<text>with blank line'</text>
+</paragraph>
+<paragraph>
+<text>[foo]</text>
+</paragraph>
+</document>

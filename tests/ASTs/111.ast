@@ -1,0 +1,11 @@
+<document>
+<heading level="2">
+<raw_text>foo</raw_text>
+</heading>
+<fenced_code_block>
+<text>bar</text>
+</fenced_code_block>
+<heading level="1">
+<raw_text>baz</raw_text>
+</heading>
+</document>

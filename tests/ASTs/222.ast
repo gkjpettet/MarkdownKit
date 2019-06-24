@@ -1,0 +1,12 @@
+<document>
+<block_quote>
+<indented_code_block>
+<text>code</text>
+</indented_code_block>
+</block_quote>
+<block_quote>
+<paragraph>
+<raw_text>not code</raw_text>
+</paragraph>
+</block_quote>
+</document>

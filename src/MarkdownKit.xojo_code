@@ -246,10 +246,17 @@ Protected Module MarkdownKit
 		  Block
 		  TextBlock
 		  Softbreak
-		Hardbreak
+		  Hardbreak
+		  InlineText
+		  Emphasis
+		  Strong
+		  Codespan
+		  InlineHTML
+		  InlineLink
+		InlineImage
 	#tag EndEnum
 
-	#tag Enum, Name = InlineType, Type = Integer, Flags = &h1
+	#tag Enum, Name = InlineType, Flags = &h1
 		Textual
 		  Emphasis
 		  Strong

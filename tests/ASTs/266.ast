@@ -1,0 +1,16 @@
+<document>
+<list type="ordered" start="10" tight="true" delimiter="paren">
+<item>
+<paragraph>
+<raw_text>foo</raw_text>
+</paragraph>
+<list type="bullet" tight="true">
+<item>
+<paragraph>
+<raw_text>bar</raw_text>
+</paragraph>
+</item>
+</list>
+</item>
+</list>
+</document>

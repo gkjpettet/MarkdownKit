@@ -2,12 +2,6 @@
 Protected Class Document
 Inherits MarkdownKit.Block
 	#tag Method, Flags = &h0
-		Sub Accept(visitor As MarkdownKit.IBlockVisitor)
-		  visitor.VisitDocument(Self)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Shared Function AcceptsLines(type As MarkdownKit.BlockType) As Boolean
 		  // Returns True if the queried Block type accepts lines.
 		  
@@ -50,7 +44,7 @@ Inherits MarkdownKit.Block
 
 	#tag Method, Flags = &h0
 		Sub Constructor(source As Text)
-		  Super.Constructor(1, 0)
+		  Super.Constructor(MarkdownKit.BlockType.Document, Nil)
 		  
 		  // Document Blocks act as the root of the block tree. 
 		  Self.Root = Self
@@ -124,13 +118,13 @@ Inherits MarkdownKit.Block
 		  End If
 		  
 		  // Create a new SetextHeading block to replace the paragraph.
-		  Dim stx As New MarkdownKit.SetextHeading(p.LineNumber, p.StartPosition)
+		  Dim stx As New MarkdownKit.Block(BlockType.SetextHeading, Xojo.Core.WeakRef.Create(p.Parent))
 		  
 		  // Set the root.
 		  stx.Root = p.Root
 		  
 		  // Copy the paragraph's raw character array to this SetextHeading.
-		  stx.RawChars = MarkdownKit.Paragraph(p).RawChars
+		  stx.Chars = p.Chars
 		  
 		  // Edge case:
 		  // It's possible for the contents of this setext heading to be a reference link definition only.
@@ -138,7 +132,7 @@ Inherits MarkdownKit.Block
 		  // appropriate), add the setext heading line as content to this paragraph and raise 
 		  // an EdgeCase exception.
 		  stx.Finalise(line)
-		  If stx.RawChars.Ubound = -1 Then
+		  If stx.Chars.Ubound = -1 Then
 		    p.AddLine(line, 0)
 		    #Pragma BreakOnExceptions False
 		    Raise New MarkdownKit.EdgeCase
@@ -180,35 +174,7 @@ Inherits MarkdownKit.Block
 		  Wend
 		  
 		  // Create the child block.
-		  Dim child As MarkdownKit.Block
-		  Select Case childType
-		  Case BlockType.BlockQuote
-		    child = New MarkdownKit.BlockQuote(line.Number, startPos)
-		  Case BlockType.Paragraph
-		    child = New MarkdownKit.Paragraph(line.Number, startPos)
-		  Case BlockType.IndentedCode
-		    child = New MarkdownKit.IndentedCode(line.Number, startPos)
-		  Case BlockType.FencedCode
-		    child = New MarkdownKit.FencedCode(line.Number, startPos)
-		  Case BlockType.ATXHeading
-		    child = New MarkdownKit.ATXHeading(line.Number, startPos)
-		  Case BlockType.SetextHeading
-		    child = New MarkdownKit.SetextHeading(line.Number, startPos)
-		  Case BlockType.ThematicBreak
-		    child = New MarkdownKit.ThematicBreak(line.Number, startPos)
-		  Case BlockType.ListItem
-		    child = New MarkdownKit.ListItem(line.Number, startPos)
-		  Case BlockType.List
-		    child = New MarkdownKit.List(line.Number, startPos)
-		  Case BlockType.HtmlBlock
-		    child = New MarkdownKit.HTML(line.Number, startPos)
-		  Else
-		    Dim err As New Xojo.Core.UnsupportedOperationException
-		    err.Reason = childType.ToText + " blocks are not yet supported"
-		    Raise err
-		  End Select
-		  
-		  child.Parent = theParent
+		  Dim child As New MarkdownKit.Block(childType, Xojo.Core.WeakRef.Create(theParent))
 		  child.Root = theParent.Root
 		  
 		  Dim mLastChild As MarkdownKit.Block = theParent.LastChild
@@ -268,8 +234,10 @@ Inherits MarkdownKit.Block
 		  Dim b As MarkdownKit.Block = Self
 		  
 		  While b <> Nil
-		    If b IsA MarkdownKit.InlineContainerBlock And _
-		    b.RawChars.Ubound > -1 Then InlineScanner.ParseInlines(InlineContainerBlock(b), delimiterStack)
+		    Select Case b.Type
+		    Case BlockType.AtxHeading, BlockType.Paragraph, BlockType.SetextHeading
+		      If b.Chars.Ubound > -1 Then InlineScanner.ParseInlines(b, delimiterStack)
+		    End Select
 		    
 		    If b.FirstChild <> Nil Then
 		      If b.NextSibling <> Nil Then stack.Append(b.NextSibling)
@@ -356,7 +324,7 @@ Inherits MarkdownKit.Block
 		    currentBlock.AddLine(line, line.Offset)
 		    
 		  Else // This is NOT a lazy continuation line.
-		    // Finalise any blocks that were not matched and set `curentBlock` to `container`.
+		    // Finalise any blocks that were not matched and set `currentBlock` to `container`.
 		    While currentBlock <> lastMatchedContainer
 		      currentBlock.Finalise(line)
 		      currentBlock = currentBlock.Parent
@@ -372,10 +340,10 @@ Inherits MarkdownKit.Block
 		      container.AddLine(line, line.Offset)
 		      
 		    ElseIf container.Type = MarkdownKit.BlockType.FencedCode Then
-		      If (indent <= 3 And line.CurrentChar = FencedCode(container).FenceChar) And _
-		        0 <> BlockScanner.ScanCloseCodeFence(line.Chars, line.NextNWS, FencedCode(container).FenceLength) Then
+		      If (indent <= 3 And line.CurrentChar = container.FenceChar) And _
+		        0 <> BlockScanner.ScanCloseCodeFence(line.Chars, line.NextNWS, container.FenceLength) Then
 		        // If it's a closing fence, set the fence length to -1. It will be closed when the next line is processed. 
-		        FencedCode(container).FenceLength = -1
+		        container.FenceLength = -1
 		      Else
 		        container.AddLine(line, line.Offset)
 		      End If
@@ -461,16 +429,16 @@ Inherits MarkdownKit.Block
 		      line.AdvanceOffset(line.NextNWS + tmpInt2 - line.Offset, False)
 		      
 		      container = CreateChildBlock(container, line, BlockType.AtxHeading, line.NextNWS)
-		      ATXHeading(container).Level = tmpInt1
+		      container.Level = tmpInt1
 		      
 		    ElseIf Not indented And _
 		      (line.CurrentChar = "`" Or line.CurrentChar = "~") And _ 
 		      0 <> BlockScanner.ScanOpenCodeFence(line.Chars, line.NextNWS, tmpInt1) Then
 		      // ============= New fenced code block =============
 		      container = CreateChildBlock(container, line, BlockType.FencedCode, line.NextNWS)
-		      FencedCode(container).FenceChar = line.CurrentChar
-		      FencedCode(container).FenceLength = tmpInt1
-		      FencedCode(container).FenceOffset = line.NextNWS - line.Offset
+		      container.FenceChar = line.CurrentChar
+		      container.FenceLength = tmpInt1
+		      container.FenceOffset = line.NextNWS - line.Offset
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
 		      
 		    ElseIf Not indented And line.CurrentChar = "<" And _
@@ -488,7 +456,7 @@ Inherits MarkdownKit.Block
 		      // ============= New setext heading =============
 		      Try
 		        container = ConvertParagraphBlockToSetextHeading(container, line)
-		        MarkdownKit.SetextHeading(container).Level = tmpInt1
+		        container.Level = tmpInt1
 		      Catch e As MarkdownKit.EdgeCase
 		        // This happens when the entire contents of the setext heading is a 
 		        // reference link definition. In this scenario, `container` remains a 
@@ -629,12 +597,12 @@ Inherits MarkdownKit.Block
 		      
 		    Case BlockType.FencedCode
 		      // -1 means we've seen closer 
-		      If MarkdownKit.FencedCode(container).FenceLength = -1 Then
+		      If container.FenceLength = -1 Then
 		        line.AllMatched = False
 		        If blank Then container.IsLastLineBlank = True
 		      Else
 		        // Skip optional spaces of fence offset.
-		        Dim i As Integer = MarkdownKit.FencedCode(container).FenceOffset
+		        Dim i As Integer = container.FenceOffset
 		        While i > 0 And line.Offset <= line.CharsUbound And _
 		          line.Chars(line.Offset) = " "
 		          line.Offset = line.Offset + 1
@@ -676,12 +644,26 @@ Inherits MarkdownKit.Block
 		Private LinesUbound As Integer = -1
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 4B6579203D205265666572656E6365206C696E6B206E616D652C2056616C7565203D204D61726B646F776E4B69742E5265666572656E63654C696E6B446566696E6974696F6E
-		ReferenceMap As Xojo.Core.Dictionary
-	#tag EndProperty
-
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="StartPos"
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="EndPos"
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Level"
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="HTMLBlockType"
 			Group="Behavior"
@@ -693,24 +675,6 @@ Inherits MarkdownKit.Block
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="StartColumn"
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LineNumber"
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="StartPosition"
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Type"
@@ -734,6 +698,13 @@ Inherits MarkdownKit.Block
 				"13 - TextBlock"
 				"14 - Softbreak"
 				"15 - Hardbreak"
+				"16 - InlineText"
+				"17 - Emphasis"
+				"18 - Strong"
+				"19 - Codespan"
+				"20 - InlineHTML"
+				"21 - InlineLink"
+				"22 - InlineImage"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

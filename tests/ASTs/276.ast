@@ -1,0 +1,19 @@
+<document>
+<list type="bullet" tight="false">
+<item>
+<paragraph>
+<raw_text>foo</raw_text>
+</paragraph>
+</item>
+<item>
+<paragraph>
+<raw_text>bar</raw_text>
+</paragraph>
+</item>
+<item>
+<paragraph>
+<raw_text>baz</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

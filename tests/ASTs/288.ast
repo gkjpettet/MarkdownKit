@@ -1,0 +1,21 @@
+<document>
+<list type="bullet" tight="true">
+<item>
+<paragraph>
+<raw_text>a</raw_text>
+</paragraph>
+</item>
+<item>
+<fenced_code_block>
+<text>b</text>
+<text></text>
+<text></text>
+</fenced_code_block>
+</item>
+<item>
+<paragraph>
+<raw_text>c</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

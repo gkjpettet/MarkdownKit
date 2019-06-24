@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<text>Foo</text>
+<softbreak•/>
+<text>[bar]:•/baz</text>
+</paragraph>
+<paragraph>
+<text>[bar]</text>
+</paragraph>
+</document>

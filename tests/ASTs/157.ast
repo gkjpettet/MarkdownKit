@@ -1,0 +1,10 @@
+<document>
+<html_block>&lt;div&gt;</html_block>
+<paragraph>
+<emph>
+<text>Emphasized</text>
+</emph>
+<text> text.</text>
+</paragraph>
+<html_block>&lt;/div&gt;</html_block>
+</document>

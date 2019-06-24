@@ -1,0 +1,21 @@
+<document>
+<list type="ordered" start="1" tight="true" delimiter="period">
+<item>
+<paragraph>
+<raw_text>foo</raw_text>
+</paragraph>
+</item>
+<item>
+<paragraph>
+<raw_text>bar</raw_text>
+</paragraph>
+</item>
+</list>
+<list type="ordered" start="3" tight="true" delimiter="paren">
+<item>
+<paragraph>
+<raw_text>baz</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

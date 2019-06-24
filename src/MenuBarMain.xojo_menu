@@ -137,16 +137,6 @@ Begin Menu MenuBarMain
       Index = -2147483648
       AutoEnable = True
       Visible = True
-      Begin MenuItem WindowEditorPhase1
-         SpecialMenu = 0
-         Text = "Phase 1 Editor"
-         Index = -2147483648
-         ShortcutKey = "1"
-         Shortcut = "Cmd+1"
-         MenuModifier = True
-         AutoEnable = True
-         Visible = True
-      End
       Begin MenuItem WindowEditorPhase2
          SpecialMenu = 0
          Text = "Phase 2 Editor"

@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<link destination="mailto:foo@bar.example.com" title="">
+<text>foo@bar.example.com</text>
+</link>
+</paragraph>
+</document>

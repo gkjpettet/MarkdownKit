@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<raw_text>Foo
+= =</raw_text>
+</paragraph>
+<paragraph>
+<raw_text>Foo</raw_text>
+</paragraph>
+<thematic_break />
+</document>

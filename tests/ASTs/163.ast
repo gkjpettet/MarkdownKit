@@ -1,0 +1,13 @@
+<document>
+<paragraph>
+<text>[Foo</text>
+<text>*</text>
+<text>bar]]</text>
+</paragraph>
+</document>
+
+<reference_definition>
+<name>Foo*bar\]</name>
+<destination>my_(url)</destination>
+<title>title (with parens)</title>
+</reference_definition>

@@ -1,0 +1,17 @@
+<document>
+<paragraph>
+<raw_text>Foo</raw_text>
+</paragraph>
+<list type="bullet" tight="true">
+<item>
+<paragraph>
+<raw_text>bar</raw_text>
+</paragraph>
+</item>
+<item>
+<paragraph>
+<raw_text>baz</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

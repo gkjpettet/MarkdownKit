@@ -1,0 +1,9 @@
+<document>
+<html_block>&lt;del&gt;</html_block>
+<paragraph>
+<emph>
+<text>foo</text>
+</emph>
+</paragraph>
+<html_block>&lt;/del&gt;</html_block>
+</document>

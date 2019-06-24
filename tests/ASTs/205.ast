@@ -1,0 +1,18 @@
+<document>
+<block_quote>
+<list type="bullet" tight="true">
+<item>
+<paragraph>
+<raw_text>foo</raw_text>
+</paragraph>
+</item>
+</list>
+</block_quote>
+<list type="bullet" tight="true">
+<item>
+<paragraph>
+<raw_text>bar</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

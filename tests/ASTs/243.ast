@@ -1,0 +1,15 @@
+<document>
+<list type="ordered" start="1" tight="false" delimiter="period">
+<item>
+<indented_code_block>
+<text>indented code</text>
+</indented_code_block>
+<paragraph>
+<raw_text>paragraph</raw_text>
+</paragraph>
+<indented_code_block>
+<text>more code</text>
+</indented_code_block>
+</item>
+</list>
+</document>

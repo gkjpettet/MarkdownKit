@@ -1,0 +1,14 @@
+<document>
+<block_quote>
+<list type="ordered" start="1" tight="true" delimiter="period">
+<item>
+<block_quote>
+<paragraph>
+<raw_text>Blockquote
+continued here.</raw_text>
+</paragraph>
+</block_quote>
+</item>
+</list>
+</block_quote>
+</document>

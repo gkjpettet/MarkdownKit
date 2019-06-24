@@ -1,0 +1,5 @@
+<document>
+<html_block>&lt;a href=&quot;foo&quot;&gt;
+*bar*
+&lt;/a&gt;</html_block>
+</document>

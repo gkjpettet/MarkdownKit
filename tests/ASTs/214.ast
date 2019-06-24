@@ -1,0 +1,10 @@
+<document>
+<block_quote>
+<paragraph>
+<raw_text>foo</raw_text>
+</paragraph>
+<paragraph>
+<raw_text>bar</raw_text>
+</paragraph>
+</block_quote>
+</document>

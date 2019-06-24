@@ -1,0 +1,12 @@
+<document>
+<paragraph>
+<raw_text>The number of windows in my house is</raw_text>
+</paragraph>
+<list type="ordered" start="1" tight="true" delimiter="period">
+<item>
+<paragraph>
+<raw_text>The number of doors is 6.</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

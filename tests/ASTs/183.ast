@@ -1,0 +1,15 @@
+<document>
+<heading level="1">
+<text>[Foo]</text>
+</heading>
+<block_quote>
+<paragraph>
+<text>bar</text>
+</paragraph>
+</block_quote>
+</document>
+
+<reference_definition>
+<name>foo</name>
+<destination>/url</destination>
+</reference_definition>

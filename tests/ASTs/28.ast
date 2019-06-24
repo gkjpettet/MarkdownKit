@@ -1,0 +1,9 @@
+<document>
+<paragraph>
+<raw_text>Foo</raw_text>
+</paragraph>
+<thematic_break />
+<paragraph>
+<raw_text>bar</raw_text>
+</paragraph>
+</document>

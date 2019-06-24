@@ -66,14 +66,14 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Sub CloseBuffer(ByRef buffer As MarkdownKit.Inline, container As MarkdownKit.InlineContainerBlock, stripTrailingWhitespace As Boolean = False)
+		Private Shared Sub CloseBuffer(ByRef buffer As MarkdownKit.Block, container As MarkdownKit.Block, stripTrailingWhitespace As Boolean = False)
 		  // There's an open preceding text inline. Close it.
 		  buffer.Close
 		  
 		  If stripTrailingWhitespace Then MarkdownKit.StripTrailingWhitespace(buffer.Chars)
 		  
 		  // Add the buffer to the container block before the code span.
-		  container.Inlines.Append(buffer)
+		  container.Children.Append(buffer)
 		  
 		  buffer = Nil
 		End Sub
@@ -120,7 +120,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function HandleBackticks(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.InlineCodespan
+		Private Shared Function HandleBackticks(b As MarkdownKit.Block, startPos As Integer, charsUbound As Integer) As MarkdownKit.Block
 		  // We know that index `startPos` in `b.RawChars` is a backtick. 
 		  // Look to see if it represents the start of a valid inline code span.
 		  // If it does then it creates and returns an inline code span. Otherwise 
@@ -129,12 +129,12 @@ Protected Class InlineScanner
 		  Dim pos As Integer
 		  
 		  pos = startPos + 1
-		  While pos <= rawCharsUbound
-		    If b.RawChars(pos) <> "`" Then Exit
+		  While pos <= charsUbound
+		    If b.Chars(pos) <> "`" Then Exit
 		    pos = pos + 1
 		  Wend
 		  
-		  If pos = rawCharsUbound Then Return Nil
+		  If pos = charsUbound Then Return Nil
 		  
 		  // `pos` now points to the first character immediately following the opening 
 		  // backtick string.
@@ -144,18 +144,23 @@ Protected Class InlineScanner
 		  
 		  // Find the start position of the closing backtick string (if there is one).
 		  Dim closingStartPos As Integer = ScanClosingBacktickString(b, backtickStringLen, _
-		  contentStartPos, rawCharsUbound)
+		  contentStartPos, charsUbound)
 		  
 		  If closingStartPos = - 1 Then Return Nil
 		  
 		  // We've found a code span.
-		  Return New MarkdownKit.InlineCodespan(contentStartPos, closingStartPos - 1, b, backtickStringLen)
+		  Dim result As New MarkdownKit.Block(BlockType.Codespan, Xojo.Core.WeakRef.Create(b))
+		  result.StartPos = contentStartPos
+		  result.EndPos = closingStartPos - 1
+		  result.DelimiterLength = backtickStringLen
+		  result.Close
+		  Return result
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function HandleLeftAngleBracket(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.Inline
+		Private Shared Function HandleLeftAngleBracket(b As MarkdownKit.Block, startPos As Integer, charsUbound As Integer) As MarkdownKit.Block
 		  // We know that index `startPos` in `b.RawChars` is a "<".
 		  // Look to see if it represents the start of inline HTML.
 		  // If it does then it creates and returns an inline HTML block. Otherwise 
@@ -163,36 +168,52 @@ Protected Class InlineScanner
 		  // NB: The EndPos of the returned inline HTML block is the position of the closing ">"
 		  
 		  // Bare minimum valid HTML tag is: <a>
-		  If startPos + 2 > rawCharsUbound Then Return Nil
+		  If startPos + 2 > charsUbound Then Return Nil
+		  
+		  Dim result As MarkdownKit.Block
 		  
 		  Dim pos As Integer = 0
-		  Dim c As Text = b.RawChars(startPos + 1)
+		  Dim c As Text = b.Chars(startPos + 1)
 		  
 		  Dim tagName As Text
 		  
 		  If c = "/" Then
 		    // Closing tag?
-		    pos = HTMLScanner.ScanClosingTag(b.RawChars, startPos + 2, tagName)
+		    pos = HTMLScanner.ScanClosingTag(b.Chars, startPos + 2, tagName)
 		  ElseIf c = "?" Then
 		    // Processing instruction?
-		    pos = HTMLScanner.ScanProcessingInstruction(b.RawChars, startPos + 2, rawCharsUbound)
+		    pos = HTMLScanner.ScanProcessingInstruction(b.Chars, startPos + 2, charsUbound)
 		  ElseIf c = "!" Then
 		    // Comment, declaration or CDATA section?
-		    pos = HTMLScanner.ScanDeclarationCommentOrCData(b.RawChars, startPos + 2, rawCharsUbound)
+		    pos = HTMLScanner.ScanDeclarationCommentOrCData(b.Chars, startPos + 2, charsUbound)
 		  Else
 		    // Autolink?
 		    Dim uri As Text
-		    pos = ScanAutoLink(b.RawChars, startPos + 1, rawCharsUbound, uri)
+		    pos = ScanAutoLink(b.Chars, startPos + 1, charsUbound, uri)
 		    If pos > 0 Then
-		      Return New MarkdownKit.InlineLink(startPos, pos - 1, "", uri, uri, b)
+		      result = New MarkdownKit.Block(BlockType.InlineLink, Xojo.Core.WeakRef.Create(b))
+		      result.StartPos = startPos
+		      result.EndPos = pos - 1
+		      result.Title = ""
+		      result.Destination = uri
+		      result.Label = uri
+		      result.Close
+		      Return result
 		    Else
 		      // Email link?
-		      pos = ScanEmailLink(b.RawChars, startPos + 1, rawCharsUbound, uri)
+		      pos = ScanEmailLink(b.Chars, startPos + 1, charsUbound, uri)
 		      If pos > 0 Then
-		        Return New MarkdownKit.InlineLink(startPos, pos - 1, "", "mailto:" + uri, uri, b)
+		        result = New MarkdownKit.Block(BlockType.InlineLink, Xojo.Core.WeakRef.Create(b))
+		        result.StartPos = startPos
+		        result.EndPos = pos - 1
+		        result.Title = ""
+		        result.Destination = "mailto:" + uri
+		        result.Label = uri
+		        result.Close
+		        Return result
 		      Else
 		        // Opening tag?
-		        pos = HTMLScanner.ScanOpenTag(b.RawChars, startPos + 1, tagName, False)
+		        pos = HTMLScanner.ScanOpenTag(b.Chars, startPos + 1, tagName, False)
 		      End If
 		    End If
 		  End If
@@ -200,14 +221,18 @@ Protected Class InlineScanner
 		  If pos = 0 Then
 		    Return Nil
 		  Else
-		    Return New MarkdownKit.InlineHTML(startPos, pos - 1, b)
+		    result = New MarkdownKit.Block(BlockType.InlineHTML, Xojo.Core.WeakRef.Create(b))
+		    result.StartPos = startPos
+		    result.EndPos = pos - 1
+		    result.Close
+		    Return result
 		  End If
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function HandleLeftSquareBracket(b As MarkdownKit.InlineContainerBlock, startPos As Integer, rawCharsUbound As Integer) As MarkdownKit.Inline
+		Private Shared Function HandleLeftSquareBracket(b As MarkdownKit.Block, startPos As Integer, charsUbound As Integer) As MarkdownKit.Block
 		  // We know that index `startPos` in `b.RawChars` is a "[".
 		  // Look to see if it represents the start of an inline link or link reference.
 		  // If it does then it create and return an inline link. Otherwise return Nil.
@@ -216,7 +241,7 @@ Protected Class InlineScanner
 		  // NB: Link text may contain inline content.
 		  
 		  // Bare minimum valid inline link is: [a]
-		  If startPos + 1 > rawCharsUbound Then Return Nil
+		  If startPos + 1 > charsUbound Then Return Nil
 		  
 		  // Parse the link text.
 		  #Pragma Warning "TODO"
@@ -300,14 +325,16 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub NotInlineStarter(ByRef buffer As MarkdownKit.Inline, ByRef pos As Integer, container As MarkdownKit.InlineContainerBlock)
+		Shared Sub NotInlineStarter(ByRef buffer As MarkdownKit.Block, ByRef pos As Integer, container As MarkdownKit.Block)
 		  // Called when parsing the raw characters of an inline container block and we have 
 		  // come across a character that does NOT represent the start of new inline content.
 		  
 		  If buffer <> Nil Then
 		    buffer.EndPos = pos
 		  Else
-		    buffer = New MarkdownKit.InlineText(pos, pos, container)
+		    buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(container))
+		    buffer.StartPos = pos
+		    buffer.EndPos = pos
 		  End If
 		  
 		  pos = pos + 1
@@ -315,46 +342,45 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub ParseInlines(b As MarkdownKit.InlineContainerBlock, ByRef delimiterStack() As MarkdownKit.DelimiterStackNode)
+		Shared Sub ParseInlines(b As MarkdownKit.Block, ByRef delimiterStack() As MarkdownKit.DelimiterStackNode)
 		  // We know that `b` is an inline container block (i.e: a paragraph, ATX heading or 
 		  // setext heading) that has at least one character of content in its `RawChars` array.
 		  // This method steps through the raw characters, populating the block's Inlines() array 
 		  // with any inline elements it encounters.
 		  
 		  Dim pos As Integer = 0
-		  Dim rawCharsUbound As Integer = b.RawChars.Ubound
+		  Dim charsUbound As Integer = b.Chars.Ubound
 		  Dim c, lastChar As Text = ""
-		  Dim buffer As MarkdownKit.Inline
-		  Dim result As MarkdownKit.Inline
+		  Dim buffer, result As MarkdownKit.Block
 		  Dim dsn As MarkdownKit.DelimiterStackNode
 		  
-		  While pos <= rawCharsUbound
+		  While pos <= charsUbound
 		    
 		    lastChar = c
-		    c = b.RawChars(pos)
+		    c = b.Chars(pos)
 		    
-		    If c = "`" And Not Escaped(b.RawChars, pos) Then
+		    If c = "`" And Not Escaped(b.Chars, pos) Then
 		      // ========= Code spans =========
-		      result = HandleBackticks(b, pos, rawCharsUbound)
+		      result = HandleBackticks(b, pos, charsUbound)
 		      If result <> Nil And lastChar <> "`" Then
 		        // Found a code span.
 		        If buffer <> Nil Then CloseBuffer(buffer, b)
 		        // Add the code span.
-		        b.Inlines.Append(result)
+		        b.Children.Append(result)
 		        // Advance the position.
-		        pos = result.EndPos + MarkdownKit.InlineCodespan(result).DelimiterLength + 1
+		        pos = result.EndPos + result.DelimiterLength + 1
 		      Else
 		        NotInlineStarter(buffer, pos, b) 
 		      End If
 		      
-		    ElseIf c = "<" And Not Escaped(b.RawChars, pos) Then
+		    ElseIf c = "<" And Not Escaped(b.Chars, pos) Then
 		      // ========= Inline HTML =========
-		      result = HandleLeftAngleBracket(b, pos, rawCharsUbound)
+		      result = HandleLeftAngleBracket(b, pos, charsUbound)
 		      If result <> Nil Then
 		        // Found inline HTML.
 		        If buffer <> Nil Then CloseBuffer(buffer, b)
 		        // Add the inline HTML.
-		        b.Inlines.Append(result)
+		        b.Children.Append(result)
 		        // Advance the position.
 		        pos = result.EndPos + 1
 		      Else
@@ -362,42 +388,44 @@ Protected Class InlineScanner
 		      End If
 		      
 		    ElseIf c = &u000A Then // Hard or soft break?
-		      If pos - 1 >= 0 And b.RawChars(pos - 1) = "\" And Not Escaped(b.RawChars, pos - 1) Then
+		      If pos - 1 >= 0 And b.Chars(pos - 1) = "\" And Not Escaped(b.Chars, pos - 1) Then
 		        If buffer <> Nil Then
 		          buffer.EndPos = buffer.EndPos - 1 // Remove the trailing backslash.
 		          CloseBuffer(buffer, b)
 		        End If
-		        b.Inlines.Append(New Hardbreak(b))
+		        b.Children.Append(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
 		        pos = pos + 1
-		      ElseIf pos - 2 >= 0 And b.RawChars(pos - 2) = &u0020 And b.RawChars(pos - 1) = &u0020 Then
+		      ElseIf pos - 2 >= 0 And b.Chars(pos - 2) = &u0020 And b.Chars(pos - 1) = &u0020 Then
 		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
-		        b.Inlines.Append(New Hardbreak(b))
+		        b.Children.Append(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
 		        pos = pos + 1
 		      Else
 		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
-		        b.Inlines.Append(New Softbreak(b))
+		        b.Children.Append(New MarkdownKit.Block(BlockType.Softbreak, Xojo.Core.WeakRef.Create(b)))
 		        pos = pos + 1
 		      End If
 		      
-		    ElseIf c = "[" And Not Escaped(b.RawChars, pos) Then
+		    ElseIf c = "[" And Not Escaped(b.Chars, pos) Then
 		      // ========= Inline link? =========
-		      result = HandleLeftSquareBracket(b, pos, rawCharsUbound)
+		      result = HandleLeftSquareBracket(b, pos, charsUbound)
 		      If result <> Nil Then
 		        // Found inline link.
 		        If buffer <> Nil Then CloseBuffer(buffer, b)
 		        // Add the inline link.
-		        b.Inlines.Append(result)
+		        b.Children.Append(result)
 		        // Advance the position.
 		        pos = result.EndPos + 1
 		      Else
 		        NotInlineStarter(buffer, pos, b) 
 		      End If
 		      
-		    ElseIf (c = "*" Or c = "_") And Not Escaped(b.RawChars, pos) Then
+		    ElseIf (c = "*" Or c = "_") And Not Escaped(b.Chars, pos) Then
 		      // ========= Emphasis? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
-		      dsn = ScanDelimiterRun(b.RawChars, rawCharsUbound, pos, c)
-		      buffer = New MarkdownKit.InlineText(pos, pos + dsn.OriginalLength - 1, b)
+		      dsn = ScanDelimiterRun(b.Chars, charsUbound, pos, c)
+		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		      buffer.StartPos = pos
+		      buffer.EndPos = pos + dsn.OriginalLength - 1
 		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + dsn.OriginalLength
@@ -418,7 +446,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Sub ProcessEmphasis(ByRef container As MarkdownKit.InlineContainerBlock, ByRef delimiterStack() As MarkdownKit.DelimiterStackNode, stackBottom As Integer)
+		Private Shared Sub ProcessEmphasis(ByRef container As MarkdownKit.Block, ByRef delimiterStack() As MarkdownKit.DelimiterStackNode, stackBottom As Integer)
 		  // `stackBottom` sets a lower bound to how far we descend in the delimiter stack. If it's -1, 
 		  // we can go all the way to the bottom. Otherwise, we stop before visiting stackBottom.
 		  
@@ -469,27 +497,31 @@ Protected Class InlineScanner
 		          
 		          // Strong or regular emphasis? If both closer and opener spans have length >= 2, 
 		          // we have strong, otherwise regular.
-		          Dim emphasis As MarkdownKit.Inline
+		          Dim emphasis As MarkdownKit.Block
 		          If closerNode.CurrentLength >= 2 And openerNode.CurrentLength >= 2 Then
 		            // Strong.
-		            emphasis = New MarkdownKit.InlineStrong(container, openerNode.Delimiter, openerNode.CurrentLength)
+		            emphasis = New MarkdownKit.Block(BlockType.Strong, Xojo.Core.WeakRef.Create(container))
+		            emphasis.Delimiter = openerNode.Delimiter
+		            emphasis.DelimiterLength = openerNode.CurrentLength
 		          Else
 		            // Regular. 
-		            emphasis = New MarkdownKit.InlineEmphasis(container, openerNode.Delimiter, openerNode.CurrentLength)
+		            emphasis = New MarkdownKit.Block(BlockType.Emphasis, Xojo.Core.WeakRef.Create(container))
+		            emphasis.Delimiter = openerNode.Delimiter
+		            emphasis.DelimiterLength = openerNode.CurrentLength
 		          End If
 		          // Insert the newly created emphasis node, after the text node corresponding to the opener.
 		          // Get the index of the opener text node in the container's `Inlines` array.
 		          Dim openerTextNodeIndex As Integer = _
-		          container.Inlines.IndexOf(Markdownkit.Inline(openerNode.TextNodePointer.Value))
+		          container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
 		          If openerTextNodeIndex = -1 Then
 		            Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		            "text node.")
 		          End If
-		          container.Inlines.Insert(openerTextNodeIndex + 1, emphasis)
+		          container.Children.Insert(openerTextNodeIndex + 1, emphasis)
 		          
 		          // Get the index of the closer text node in the container's `Inlines` array.
 		          Dim closerTextNodeIndex As Integer = _
-		          container.Inlines.IndexOf(Markdownkit.Inline(closerNode.TextNodePointer.Value))
+		          container.Children.IndexOf(Markdownkit.Block(closerNode.TextNodePointer.Value))
 		          If closerTextNodeIndex = -1 Then
 		            Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		            "text node.")
@@ -498,20 +530,14 @@ Protected Class InlineScanner
 		          // Need to move all inline nodes that occur between `openerTextNodeIndex` and `closerTextNodeIndex` 
 		          // into this emphasis node's `Children` array and remove them from the container's 
 		          // `Inlines` array.
-		          If emphasis IsA MarkdownKit.InlineEmphasis Then
-		            For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
-		              MarkdownKit.InlineEmphasis(emphasis).Children.Append(container.Inlines(x))
-		            Next x
-		          ElseIf emphasis IsA MarkdownKit.InlineStrong Then
-		            For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
-		              MarkdownKit.InlineStrong(emphasis).Children.Append(container.Inlines(x))
-		            Next x
-		          End If
+		          For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
+		            emphasis.Children.Append(container.Children(x))
+		          Next x
 		          
 		          // Remove the transposed inlines from the container.
 		          Dim numToTranspose As Integer = closerTextNodeIndex - openerTextNodeIndex - 2
 		          While numToTranspose > 0
-		            container.Inlines.Remove(openerTextNodeIndex + 2)
+		            container.Children.Remove(openerTextNodeIndex + 2)
 		            numToTranspose = numToTranspose - 1
 		          Wend
 		          
@@ -523,39 +549,39 @@ Protected Class InlineScanner
 		          Next j
 		          // Remove 1 (for regular emph) or 2 (for strong emph) delimiters from the opening 
 		          // and closing text nodes. 
-		          If emphasis IsA MarkdownKit.InlineStrong Then
+		          If emphasis.Type = BlockType.Strong Then
 		            // Strong.
-		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
-		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
-		            Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
-		            Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.Block(openerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.Block(openerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.Block(closerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.Block(closerNode.TextNodePointer.Value).Chars.Pop
 		          Else
 		            // Regular. 
-		            Call MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Pop
-		            Call MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.Block(openerNode.TextNodePointer.Value).Chars.Pop
+		            Call MarkdownKit.Block(closerNode.TextNodePointer.Value).Chars.Pop
 		          End If
 		          
 		          // If the text node becomes empty as a result, remove it and 
 		          // remove the corresponding element of the delimiter stack. 
-		          If MarkdownKit.InlineText(openerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
+		          If MarkdownKit.Block(openerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
 		            openerTextNodeIndex = _
-		            container.Inlines.IndexOf(Markdownkit.Inline(openerNode.TextNodePointer.Value))
+		            container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
 		            If openerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            container.Inlines.Remove(openerTextNodeIndex)
+		            container.Children.Remove(openerTextNodeIndex)
 		            openerNode.Ignore = True
 		          End If
 		          
-		          If MarkdownKit.InlineText(closerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
+		          If MarkdownKit.Block(closerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
 		            closerTextNodeIndex = _
-		            container.Inlines.IndexOf(Markdownkit.Inline(closerNode.TextNodePointer.Value))
+		            container.Children.IndexOf(MarkdownKit.Block(closerNode.TextNodePointer.Value))
 		            If closerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            container.Inlines.Remove(closerTextNodeIndex)
+		            container.Children.Remove(closerTextNodeIndex)
 		            closerNode.Ignore = True
 		          End If
 		          
@@ -643,26 +669,26 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanClosingBacktickString(b As MarkdownKit.InlineContainerBlock, backtickStringLen As Integer, startPos As Integer, rawCharsUbound As Integer) As Integer
+		Private Shared Function ScanClosingBacktickString(b As MarkdownKit.Block, backtickStringLen As Integer, startPos As Integer, charsUbound As Integer) As Integer
 		  // Beginning at `startPos` in `b.RawChars`, scan for a closing code span backtick string 
 		  // of `backtickStringLen` characters. If found, return the position of the backtick 
 		  // which forms the beginning of the closing backtick string. Otherwise return -1.
 		  // Assumes `startPos` points at the character immediately following the last backtick of the 
 		  // opening backtick string.
 		  
-		  If startPos + backtickStringLen > rawCharsUbound Then Return -1
+		  If startPos + backtickStringLen > charsUbound Then Return -1
 		  
 		  Dim contiguousBackticks As Integer = 0
 		  Dim closingBacktickStringStartPos As Integer = -1
-		  For i As Integer = startPos To rawCharsUbound
-		    If b.RawChars(i) = "`" Then
+		  For i As Integer = startPos To charsUbound
+		    If b.Chars(i) = "`" Then
 		      If contiguousBackticks = 0 Then
 		        // Might be the beginning of the closing sequence.
 		        closingBacktickStringStartPos = i
 		        contiguousBackticks = contiguousBackticks + 1
 		        If backtickStringLen = 1 Then
 		          // We may have found the closer. Check the next character isn't a backtick.
-		          If i + 1 > rawCharsUbound Or b.RawChars(i + 1) <> "`" Then
+		          If i + 1 > charsUbound Or b.Chars(i + 1) <> "`" Then
 		            // Success!
 		            Return closingBacktickStringStartPos
 		          End If
@@ -672,7 +698,7 @@ Protected Class InlineScanner
 		        contiguousBackticks = contiguousBackticks + 1
 		        If contiguousBackticks = backtickStringLen Then
 		          // We may have found the closer. Check the next character isn't a backtick.
-		          If i + 1 > rawCharsUbound Or b.RawChars(i + 1) <> "`" Then
+		          If i + 1 > charsUbound Or b.Chars(i + 1) <> "`" Then
 		            // Success!
 		            Return closingBacktickStringStartPos
 		          End If

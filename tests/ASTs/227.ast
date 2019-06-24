@@ -1,0 +1,12 @@
+<document>
+<list type="bullet" tight="true">
+<item>
+<paragraph>
+<raw_text>one</raw_text>
+</paragraph>
+</item>
+</list>
+<indented_code_block>
+<text> two</text>
+</indented_code_block>
+</document>

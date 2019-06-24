@@ -1,0 +1,17 @@
+<document>
+<list type="bullet" tight="true">
+<item>
+<heading level="1">
+<raw_text>Foo</raw_text>
+</heading>
+</item>
+<item>
+<heading level="2">
+<raw_text>Bar</raw_text>
+</heading>
+<paragraph>
+<raw_text>baz</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

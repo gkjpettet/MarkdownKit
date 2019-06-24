@@ -1,0 +1,19 @@
+<document>
+<list type="ordered" start="1" tight="false" delimiter="period">
+<item>
+<paragraph>
+<raw_text>a</raw_text>
+</paragraph>
+</item>
+<item>
+<paragraph>
+<raw_text>b</raw_text>
+</paragraph>
+</item>
+<item>
+<paragraph>
+<raw_text>c</raw_text>
+</paragraph>
+</item>
+</list>
+</document>

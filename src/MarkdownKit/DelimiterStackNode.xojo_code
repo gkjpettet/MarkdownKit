@@ -4,7 +4,7 @@ Protected Class DelimiterStackNode
 		Function CurrentLength() As Integer
 		  If TextNodePointer.Value = Nil Then Return 0
 		  
-		  Return Markdownkit.InlineText(TextNodePointer.Value).Chars.Ubound + 1
+		  Return Markdownkit.Block(TextNodePointer.Value).Chars.Ubound + 1
 		End Function
 	#tag EndMethod
 
@@ -86,6 +86,24 @@ Protected Class DelimiterStackNode
 			Name="Active"
 			Group="Behavior"
 			InitialValue="True"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="CanClose"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="CanOpen"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Ignore"
+			Group="Behavior"
+			InitialValue="False"
 			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior

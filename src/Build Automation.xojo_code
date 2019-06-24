@@ -6,23 +6,17 @@
 			Begin BuildStepList Mac OS X
 				Begin BuildProjectStep Build
 				End
-				Begin CopyFilesBuildStep CopyPhase1ASTs
-					AppliesTo = 0
-					Destination = 1
-					Subdirectory = 
-					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UlMjAxJTIwQVNUcy8=
-				End
-				Begin CopyFilesBuildStep CopyPhase2ASTs
-					AppliesTo = 0
-					Destination = 1
-					Subdirectory = 
-					FolderItem = Li4vLi4vdGVzdHMvcGhhc2UlMjAyJTIwQVNUcy8=
-				End
 				Begin CopyFilesBuildStep CopyTestMarkdownSource
 					AppliesTo = 0
 					Destination = 1
 					Subdirectory = 
 					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
+				End
+				Begin CopyFilesBuildStep CopyASTs
+					AppliesTo = 0
+					Destination = 1
+					Subdirectory = 
+					FolderItem = Li4vLi4vdGVzdHMvQVNUcy8=
 				End
 			End
 			Begin BuildStepList Windows

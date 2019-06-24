@@ -1,0 +1,11 @@
+<document>
+<paragraph>
+<text>[foo]</text>
+</paragraph>
+</document>
+
+<reference_definition>
+<name>foo</name>
+<destination>/url\bar*baz</destination>
+<title>foo"bar\baz</title>
+</reference_definition>

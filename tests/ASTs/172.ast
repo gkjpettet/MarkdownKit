@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<text>[foo]</text>
+</paragraph>
+</document>
+
+<reference_definition>
+<name>foo</name>
+<destination>url</destination>
+</reference_definition>

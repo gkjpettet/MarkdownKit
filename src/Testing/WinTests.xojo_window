@@ -606,10 +606,9 @@ Begin Window WinTests
       TabPanelIndex   =   0
       Visible         =   True
    End
-   Begin Phase2TestController Controller
+   Begin ASTTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
-      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -1139,7 +1138,7 @@ End
 
 	#tag MenuHandler
 		Function WindowEditor() As Boolean Handles WindowEditor.Action
-			WinPhase1Editor.Show
+			WinEditor.Show
 			
 			Return True
 			
@@ -1552,8 +1551,8 @@ End
 		    // Read the contents of the file containing the input Markdown for this test 
 		    // and assign it to the relevant text area.
 		    Dim md As Text
-		    Call Phase1TestController.GetTestMarkdown(testNumber + ".md", md)
-		    Phase1TestController.TransformWhitespace(md)
+		    Call ASTTestController.GetTestMarkdown(testNumber + ".md", md)
+		    ASTTestController.TransformWhitespace(md)
 		    TestInputMarkdown.Text = md
 		  Catch e
 		    // Ignore.

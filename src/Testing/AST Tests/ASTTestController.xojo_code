@@ -8,26 +8,26 @@ Inherits TestController
 		  Dim group As TestGroup
 		  
 		  // Block structure.
-		  // group = New ASTHTMLBlockTests(Self, "HTML Blocks")
-		  // group = New ASTParagraphTests(Self, "Paragraph Tests")
-		  // group = New ASTReferenceLinkTests(Self, "Reference Links")
-		  // group = New ASTListTests(Self, "Lists")
-		  // group = New ASTSetextTests(Self, "Setext Headings")
-		  // group = New ASTThematicBreakTests(Self, "Thematic Breaks")
-		  // group = New ASTBlockquoteTests(Self, "Blockquotes")
-		  // group = New ASTATXTests(Self, "ATX Headings")
-		  // group = New ASTIndentedCodeTests(Self, "Indented Code Blocks")
+		  group = New ASTHTMLBlockTests(Self, "HTML Blocks")
+		  group = New ASTParagraphTests(Self, "Paragraph Tests")
+		  group = New ASTReferenceLinkTests(Self, "Reference Links")
+		  group = New ASTListTests(Self, "Lists")
+		  group = New ASTSetextTests(Self, "Setext Headings")
+		  group = New ASTThematicBreakTests(Self, "Thematic Breaks")
+		  group = New ASTBlockquoteTests(Self, "Blockquotes")
+		  group = New ASTATXTests(Self, "ATX Headings")
+		  group = New ASTIndentedCodeTests(Self, "Indented Code Blocks")
 		  group = New ASTFencedCodeTests(Self, "Fenced Code Blocks")
-		  // group = New ASTBlankLineTests(Self, "Blank Lines")
+		  group = New ASTBlankLineTests(Self, "Blank Lines")
 		  
 		  // Inlines.
-		  // group = New ASTEmphasisTests(Self, "Emphasis")
-		  // group = New ASTAutolinkTests(Self, "Auto Links")
-		  // group = New ASTTextualContentTests(Self, "Textual Content")
-		  // group = New ASTSoftLinebreakTests(Self, "Soft Line Breaks")
-		  // group = New ASTHardLinebreakTests(Self, "Hard Line Breaks")
-		  // group = New ASTInlineHTMLTests(Self, "Inline HTML")
-		  // group = New ASTCodespanTests(Self, "Code Spans")
+		  group = New ASTEmphasisTests(Self, "Emphasis")
+		  group = New ASTAutolinkTests(Self, "Auto Links")
+		  group = New ASTTextualContentTests(Self, "Textual Content")
+		  group = New ASTSoftLinebreakTests(Self, "Soft Line Breaks")
+		  group = New ASTHardLinebreakTests(Self, "Hard Line Breaks")
+		  group = New ASTInlineHTMLTests(Self, "Inline HTML")
+		  group = New ASTCodespanTests(Self, "Code Spans")
 		  
 		End Sub
 	#tag EndEvent

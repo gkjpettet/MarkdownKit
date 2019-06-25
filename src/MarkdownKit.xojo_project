@@ -41,6 +41,7 @@ Class=ASTEmphasisTests;../../../../../../../..;&h000000005E49C7FF;&h000000002169
 Class=ASTTestGroup;../../../../../../../..;&h0000000006BC4FFF;&h0000000021694FFF;false
 Class=ASTTestController;../../../../../../../..;&h0000000043D54FFF;&h0000000021694FFF;false
 Class=ASTCodespanTests;../../../../../../../..;&h000000003D18D7FF;&h0000000021694FFF;false
+Class=ASTLinkTests;Testing/AST Tests/ASTLinkTests.xojo_code;&h000000000C35DFFF;&h0000000021694FFF;false
 Class=ASTInlineHTMLTests;../../../../../../../..;&h0000000038B797FF;&h0000000021694FFF;false
 Class=ASTHardLinebreakTests;../../../../../../../..;&h0000000028F3D7FF;&h0000000021694FFF;false
 Class=ASTSoftLinebreakTests;../../../../../../../..;&h000000000E4CA7FF;&h0000000021694FFF;false

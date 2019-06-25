@@ -695,12 +695,12 @@ Protected Class InlineScanner
 		      // delimiter type) for the first matching potential opener (“matching” means same delimiter).
 		      
 		      // Prevent an infinite loop...
-		      If (currentPosition - 1) < (stackBottom + 1) Then
+		      If currentPosition < stackBottom + 2 Then
 		        currentPosition = currentPosition + 1
 		        Continue
 		      End If
 		      
-		      For i As Integer = currentPosition - 1 DownTo (stackBottom + 1)
+		      For i As Integer = currentPosition - 1 DownTo stackBottom + 1
 		        openerNode = delimiterStack(i)
 		        If Not openerNode.Ignore And openerNode.CanOpen And openerNode.Delimiter = closerNode.Delimiter Then
 		          
@@ -734,17 +734,22 @@ Protected Class InlineScanner
 		          End If
 		          // Insert the newly created emphasis node, after the text node corresponding to the opener.
 		          // Get the index of the opener text node in the container's `Inlines` array.
-		          Dim openerTextNodeIndex As Integer = _
-		          container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
+		          Dim openerTextNode As MarkdownKit.Block = MarkdownKit.Block(openerNode.TextNodePointer.Value)
+		          Dim openerTextNodeIndex As Integer = openerTextNode.Parent.Children.IndexOf(openerTextNode)
+		          // Dim openerTextNodeIndex As Integer = _
+		          // container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
 		          If openerTextNodeIndex = -1 Then
 		            Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		            "text node.")
 		          End If
-		          container.Children.Insert(openerTextNodeIndex + 1, emphasis)
+		          // container.Children.Insert(openerTextNodeIndex + 1, emphasis)
+		          openerTextNode.Parent.Children.Insert(openerTextNodeIndex + 1, emphasis)
 		          
 		          // Get the index of the closer text node in the container's `Children` array.
-		          Dim closerTextNodeIndex As Integer = _
-		          container.Children.IndexOf(Markdownkit.Block(closerNode.TextNodePointer.Value))
+		          Dim closerTextNode As MarkdownKit.Block = MarkdownKit.Block(closerNode.TextNodePointer.Value)
+		          Dim closerTextNodeIndex As Integer = closerTextNode.Parent.Children.IndexOf(closerTextNode)
+		          // Dim closerTextNodeIndex As Integer = _
+		          // container.Children.IndexOf(Markdownkit.Block(closerNode.TextNodePointer.Value))
 		          If closerTextNodeIndex = -1 Then
 		            Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		            "text node.")
@@ -755,12 +760,14 @@ Protected Class InlineScanner
 		          // `Inlines` array.
 		          For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
 		            emphasis.Children.Append(container.Children(x))
+		            emphasis.Children(emphasis.Children.Ubound).Parent = emphasis
 		          Next x
 		          
 		          // Remove the transposed inlines from the container.
 		          Dim numToTranspose As Integer = closerTextNodeIndex - openerTextNodeIndex - 2
 		          While numToTranspose > 0
-		            container.Children.Remove(openerTextNodeIndex + 2)
+		            // container.Children.Remove(openerTextNodeIndex + 2)
+		            openerTextNode.Parent.Children.Remove(openerTextNodeIndex + 2)
 		            numToTranspose = numToTranspose - 1
 		          Wend
 		          
@@ -785,26 +792,32 @@ Protected Class InlineScanner
 		          End If
 		          
 		          // If the text node becomes empty as a result, remove it and 
-		          // remove the corresponding element of the delimiter stack. 
-		          If MarkdownKit.Block(openerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
-		            openerTextNodeIndex = _
-		            container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
+		          // remove the corresponding element of the delimiter stack.
+		          openerTextNode = MarkdownKit.Block(openerNode.TextNodePointer.Value)
+		          If openerTextNode.Chars.Ubound < 0 Then
+		            openerTextNodeIndex = openerTextNode.Parent.Children.IndexOf(openerTextNode)
+		            // openerTextNodeIndex = _
+		            // container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
 		            If openerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            container.Children.Remove(openerTextNodeIndex)
+		            // container.Children.Remove(openerTextNodeIndex)
+		            openerTextNode.Parent.Children.Remove(openerTextNodeIndex)
 		            openerNode.Ignore = True
 		          End If
 		          
-		          If MarkdownKit.Block(closerNode.TextNodePointer.Value).Chars.Ubound < 0 Then
-		            closerTextNodeIndex = _
-		            container.Children.IndexOf(MarkdownKit.Block(closerNode.TextNodePointer.Value))
+		          closerTextNode = MarkdownKit.Block(closerNode.TextNodePointer.Value)
+		          If closerTextNode.Chars.Ubound < 0 Then
+		            closerTextNodeIndex = closerTextNode.Parent.Children.IndexOf(closerTextNode)
+		            // closerTextNodeIndex = _
+		            // container.Children.IndexOf(MarkdownKit.Block(closerNode.TextNodePointer.Value))
 		            If closerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            container.Children.Remove(closerTextNodeIndex)
+		            // container.Children.Remove(closerTextNodeIndex)
+		            closerTextNode.Parent.Children.Remove(closerTextNodeIndex)
 		            closerNode.Ignore = True
 		          End If
 		          
@@ -827,6 +840,10 @@ Protected Class InlineScanner
 		    End If
 		  Wend
 		  
+		  // Remove all delimiters above stackBottom from the delimiter stack.
+		  For i As Integer = stackBottom + 1 To delimiterStack.Ubound
+		    delimiterStack(i).Ignore = True
+		  Next i
 		End Sub
 	#tag EndMethod
 

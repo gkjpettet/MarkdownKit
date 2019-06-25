@@ -477,7 +477,7 @@ Protected Class InlineScanner
 		    If dsn.Delimiter = "[" Then
 		      // Parse ahead to see if we have an inline link, reference link, 
 		      // compact reference link, or shortcut reference link.
-		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container)
+		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos)
 		      If result = Nil Then
 		        // Didn't find a valid link. Remove the opening delimiter from the stack.
 		        dsn.Ignore = True
@@ -1114,11 +1114,12 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanForInlineLinkOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block) As MarkdownKit.InlineLinkData
+		Private Shared Function ScanForInlineLinkOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineLinkData
 		  // Scans through the passed array of characters for a valid inline link.
 		  // Assumes `startPos` points to the beginning "[".
 		  // Returns Nil if no valid link is found, otherwise creates and returns a new 
 		  // inline link block with the passed container as its parent.
+		  // `closerCharPos` is the index in chars() of the closing "]" character.
 		  
 		  Dim pos As Integer = startPos
 		  Dim charsUbound As Integer = chars.Ubound
@@ -1137,7 +1138,7 @@ Protected Class InlineScanner
 		  Dim closeSquareBracketCount As Integer = 0
 		  Dim hasUnescapedBracket As Boolean = False
 		  Dim c As Text
-		  For i As Integer = pos To charsUbound
+		  For i As Integer = pos To closerCharPos
 		    c = chars(i)
 		    If c = "]" And Not Escaped(chars, i) Then
 		      hasUnescapedBracket = True
@@ -1155,7 +1156,7 @@ Protected Class InlineScanner
 		  If Not hasUnescapedBracket And openSquareBracketCount <> closeSquareBracketCount Then Return Nil
 		  
 		  // Remove characters from `part1RawChars` from the closing "]" onwards.
-		  Dim charsToRemove As Integer = charsUbound - indexOfLastClosingSquareBracket
+		  Dim charsToRemove As Integer = closerCharPos - indexOfLastClosingSquareBracket
 		  For i As Integer = 1 To charsToRemove
 		    Call part1RawChars.Pop
 		  Next i

@@ -255,6 +255,7 @@ End
 		  Dim renderer As New ASTRenderer
 		  renderer.Pretty = True
 		  renderer.ShowWhitespace = True
+		  renderer.ListReferences = True
 		  renderer.VisitDocument(doc)
 		  Output.Text = renderer.Output
 		  

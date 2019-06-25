@@ -1277,6 +1277,7 @@ Protected Class InlineScanner
 		  End If
 		  
 		  // Scenario 2:
+		  dim lastMatchedClosingParensIndex As Integer = -1
 		  Dim openParensCount, closeParensCount As Integer = 0
 		  For i = startPos To charsUbound
 		    c = chars(i)
@@ -1285,6 +1286,9 @@ Protected Class InlineScanner
 		      If Not Escaped(chars, i) Then openParensCount = openParensCount + 1
 		    Case ")"
 		      If Not Escaped(chars, i) Then closeParensCount = closeParensCount + 1
+		      If openParensCount = (closeParensCount - 1) Then
+		        lastMatchedClosingParensIndex = i
+		      End If
 		      If i = charsUbound Or chars(i + 1) = &u000A Then
 		        If openParensCount <> (closeParensCount - 1) Then
 		          Return ""
@@ -1308,10 +1312,15 @@ Protected Class InlineScanner
 		  Next i
 		  
 		  If openParensCount <> (closeParensCount - 1) Then
-		    Return ""
+		    If lastMatchedClosingParensIndex = -1 Then
+		      Return ""
+		    Else
+		      pos = lastMatchedClosingParensIndex
+		      Return chars.ToText(startPos, lastMatchedClosingParensIndex - startPos)
+		    End If
 		  Else
-		    pos = charsUbound
-		    Return chars.ToText(startPos, charsUbound - startPos)
+		    pos = lastMatchedClosingParensIndex
+		    Return chars.ToText(startPos, lastMatchedClosingParensIndex - startPos)
 		  End If
 		  
 		End Function

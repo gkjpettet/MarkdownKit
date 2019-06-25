@@ -1,8 +1,12 @@
 <document>
 <paragraph>
-<text>[foo]:</text>
+<text>[</text>
+<text>foo</text>
+<text>]:</text>
 </paragraph>
 <paragraph>
-<text>[foo]</text>
+<text>[</text>
+<text>foo</text>
+<text>]</text>
 </paragraph>
 </document>

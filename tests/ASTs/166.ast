@@ -1,11 +1,15 @@
 <document>
 <paragraph>
-<text>[foo]: /url 'title</text>
+<text>[</text>
+<text>foo</text>
+<text>]: /url 'title</text>
 </paragraph>
 <paragraph>
 <text>with blank line'</text>
 </paragraph>
 <paragraph>
-<text>[foo]</text>
+<text>[</text>
+<text>foo</text>
+<text>]</text>
 </paragraph>
 </document>

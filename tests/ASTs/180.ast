@@ -3,6 +3,8 @@
 <text>[foo]: /url "title"</text>
 </indented_code_block>
 <paragraph>
-<text>[foo]</text>
+<text>[</text>
+<text>foo</text>
+<text>]</text>
 </paragraph>
 </document>

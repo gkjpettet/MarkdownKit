@@ -1,6 +1,8 @@
 <document>
 <heading level="1">
-<text>[Foo]</text>
+<link destination="/url" title="">
+<text>Foo</text>
+</link>
 </heading>
 <block_quote>
 <paragraph>
@@ -8,8 +10,3 @@
 </paragraph>
 </block_quote>
 </document>
-
-<reference_definition>
-<name>foo</name>
-<destination>/url</destination>
-</reference_definition>

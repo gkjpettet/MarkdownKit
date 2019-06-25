@@ -1,10 +1,14 @@
 <document>
 <paragraph>
 <text>Foo</text>
-<softbreak•/>
-<text>[bar]:•/baz</text>
+<softbreak />
+<text>[</text>
+<text>bar</text>
+<text>]: /baz</text>
 </paragraph>
 <paragraph>
-<text>[bar]</text>
+<text>[</text>
+<text>bar</text>
+<text>]</text>
 </paragraph>
 </document>

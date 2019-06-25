@@ -1,13 +1,9 @@
 <document>
 <paragraph>
-<text>[Foo</text>
+<link destination="my_(url)" title="title (with parens)">
+<text>Foo</text>
 <text>*</text>
-<text>bar]]</text>
+<text>bar]</text>
+</link>
 </paragraph>
 </document>
-
-<reference_definition>
-<name>Foo*bar\]</name>
-<destination>my_(url)</destination>
-<title>title (with parens)</title>
-</reference_definition>

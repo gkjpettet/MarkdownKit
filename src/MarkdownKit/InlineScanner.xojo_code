@@ -1267,7 +1267,7 @@ Protected Class InlineScanner
 		      c = chars(i)
 		      If c = ">" And Not Escaped(chars, i) Then
 		        pos = i + 1
-		        Return chars.ToText(startPos, i - startPos + 1)
+		        Return chars.ToText(startPos + 1, i - startPos - 1)
 		      End If
 		      If c = "<" And Not Escaped(chars, i) Then Return ""
 		      If c = &u000A Then Return ""

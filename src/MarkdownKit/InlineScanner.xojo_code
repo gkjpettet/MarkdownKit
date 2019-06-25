@@ -280,6 +280,7 @@ Protected Class InlineScanner
 		    pos = ScanAutoLink(b.Chars, startPos + 1, charsUbound, uri)
 		    If pos > 0 Then
 		      result = New MarkdownKit.Block(BlockType.InlineLink, Xojo.Core.WeakRef.Create(b))
+		      result.IsAutoLink = True
 		      result.StartPos = startPos
 		      result.EndPos = pos - 1
 		      result.Title = ""
@@ -292,6 +293,7 @@ Protected Class InlineScanner
 		      pos = ScanEmailLink(b.Chars, startPos + 1, charsUbound, uri)
 		      If pos > 0 Then
 		        result = New MarkdownKit.Block(BlockType.InlineLink, Xojo.Core.WeakRef.Create(b))
+		        result.IsAutoLink = True
 		        result.StartPos = startPos
 		        result.EndPos = pos - 1
 		        result.Title = ""

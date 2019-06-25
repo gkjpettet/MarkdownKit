@@ -483,6 +483,10 @@ Protected Class Block
 		InfoString As Text
 	#tag EndProperty
 
+	#tag Property, Flags = &h0
+		IsAutoLink As Boolean = False
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 49662054727565207468656E20746865206C617374206C696E65206F66207468697320636F6E7461696E657220697320626C616E6B2E
 		IsLastLineBlank As Boolean = False
 	#tag EndProperty

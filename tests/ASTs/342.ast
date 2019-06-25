@@ -1,6 +1,7 @@
 <document>
 <paragraph>
-<text>[not a </text>
+<text>[</text>
+<text>not a </text>
 <code>link](/foo</code>
 <text>)</text>
 </paragraph>

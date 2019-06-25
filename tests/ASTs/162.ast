@@ -1,11 +1,7 @@
 <document>
 <paragraph>
-<text>[foo]</text>
+<link destination="/url" title="the title">
+<text>foo</text>
+</link>
 </paragraph>
 </document>
-
-<reference_definition>
-<name>foo</name>
-<destination>/url</destination>
-<title>the title</title>
-</reference_definition>

@@ -162,7 +162,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 416464732061206E657720626C6F636B206173206368696C64206F6620616E6F746865722E2052657475726E7320746865206368696C642E
-		Shared Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType, startPos As Integer) As MarkdownKit.Block
+		Shared Function CreateChildBlock(theParent As MarkdownKit.Block, line As MarkdownKit.LineInfo, childType As MarkdownKit.BlockType) As MarkdownKit.Block
 		  // Create a new Block of the specified type, add it as a child of theParent and 
 		  // return the newly created child.
 		  
@@ -363,8 +363,7 @@ Inherits MarkdownKit.Block
 		    ElseIf container.Type <> BlockType.ThematicBreak And _ 
 		      container.Type <> BlockType.SetextHeading Then
 		      // Create a paragraph container for this line.
-		      container = CreateChildBlock(container, line, BlockType.Paragraph, _
-		      line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.Paragraph)
 		      container.AddLine(line, line.NextNWS)
 		      
 		    Else
@@ -415,7 +414,7 @@ Inherits MarkdownKit.Block
 		      // ============= New blockquote =============
 		      line.AdvanceOffset(line.NextNWS + 1 - line.Offset, False)
 		      Call line.AdvanceOptionalSpace
-		      container = CreateChildBlock(container, line, BlockType.BlockQuote, line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.BlockQuote)
 		      
 		    ElseIf Not indented And line.CurrentChar = "#" And _
 		      0 <> BlockScanner.ScanAtxHeadingStart(line.Chars, line.NextNWS, _ 
@@ -423,14 +422,14 @@ Inherits MarkdownKit.Block
 		      // ============= New ATX heading =============
 		      line.AdvanceOffset(line.NextNWS + tmpInt2 - line.Offset, False)
 		      
-		      container = CreateChildBlock(container, line, BlockType.AtxHeading, line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.AtxHeading)
 		      container.Level = tmpInt1
 		      
 		    ElseIf Not indented And _
 		      (line.CurrentChar = "`" Or line.CurrentChar = "~") And _ 
 		      0 <> BlockScanner.ScanOpenCodeFence(line.Chars, line.NextNWS, tmpInt1) Then
 		      // ============= New fenced code block =============
-		      container = CreateChildBlock(container, line, BlockType.FencedCode, line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.FencedCode)
 		      container.FenceChar = line.CurrentChar
 		      container.FenceLength = tmpInt1
 		      container.FenceOffset = line.NextNWS - line.Offset
@@ -441,7 +440,7 @@ Inherits MarkdownKit.Block
 		      Or (container.Type <> BlockType.Paragraph And _
 		      Block.kHTMLBlockTypeNone <> BlockScanner.ScanHtmlBlockType7Start(line, line.NextNWS, tmpInt1))) Then
 		      // ============= New HTML block =============
-		      container = CreateChildBlock(container, line, BlockType.HTMLBlock, line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.HTMLBlock)
 		      container.HtmlBlockType = tmpInt1
 		      // NB: We don't adjust offset because the tag is part of the text.
 		      
@@ -465,8 +464,7 @@ Inherits MarkdownKit.Block
 		      0 <> BlockScanner.ScanThematicBreak(line.Chars, line.NextNWS) Then
 		      // ============= New thematic break =============
 		      // It's only now that we know that the line is not part of a setext heading.
-		      container = CreateChildBlock(container, line, BlockType.ThematicBreak, _
-		      line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.ThematicBreak)
 		      container.Finalise(line)
 		      container = container.Parent
 		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
@@ -505,18 +503,18 @@ Inherits MarkdownKit.Block
 		      tmpData.MarkerOffset = indent
 		      
 		      If container.Type <> BlockType.List Or Not ListsMatch(container.ListData, tmpData) Then
-		        container = CreateChildBlock(container, line, BlockType.List, line.NextNWS)
+		        container = CreateChildBlock(container, line, BlockType.List)
 		        container.ListData = tmpData
 		      End If
 		      
 		      // Add the list item.
-		      container = CreateChildBlock(container, line, BlockType.ListItem, line.NextNWS)
+		      container = CreateChildBlock(container, line, BlockType.ListItem)
 		      container.ListData = tmpData
 		      
 		    ElseIf indented And Not maybeLazy And Not blank Then
 		      // ============= New indented code block =============
 		      line.AdvanceOffset(kCodeIndent, True)
-		      container = CreateChildBlock(container, line, BlockType.IndentedCode, line.Offset)
+		      container = CreateChildBlock(container, line, BlockType.IndentedCode)
 		      
 		    Else
 		      Exit

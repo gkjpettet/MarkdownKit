@@ -418,6 +418,7 @@ Protected Class InlineScanner
 		  
 		  // Optional link destination?
 		  Dim destination As Text = ScanInlineLinkDestination(chars, charsUbound, pos)
+		  Utilities.Unescape(destination)
 		  
 		  If pos >= charsUbound Then
 		    Return CreateInlineLinkData(linkTextChars, destination, "", pos)

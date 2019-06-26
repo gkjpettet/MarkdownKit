@@ -465,8 +465,10 @@ Protected Class InlineScanner
 		  Dim openerIndex, openerPos As Integer
 		  For i As Integer = delimiterStackUbound DownTo 0
 		    dsn = delimiterStack(i)
-		    If Not dsn.Ignore And (dsn.Delimiter = "[" Or dsn.Delimiter = "![") And Not dsn.Active Then
-		      // Remove this inactive delimiter from the stack.
+		    
+		    If dsn.Ignore Then Continue
+		    If Not (dsn.Delimiter = "[" Or dsn.Delimiter = "![") Then Continue
+		    If Not dsn.Active Then
 		      dsn.Ignore = True
 		      Return False
 		    End If

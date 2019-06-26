@@ -1299,9 +1299,10 @@ Protected Class InlineScanner
 		        End If
 		      End If
 		    Case &u0000, &u0009
-		      Return result
-		    Case &u000A
 		      Return ""
+		    Case &u000A
+		      pos = i
+		      Return chars.ToText(startPos, i - startPos)
 		    Case " "
 		      If openParensCount <> closeParensCount Then
 		        Return ""

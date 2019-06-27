@@ -1211,7 +1211,7 @@ Protected Class InlineScanner
 		  End If
 		  
 		  // Collapsed reference link?
-		  If validLinkLabel And Not Peek(chars, pos, "(") Then
+		  If validLinkLabel Then
 		    If pos + 1 <= charsUbound And chars(pos) = "[" And chars(pos + 1) = "]" Then
 		      // Found a collapsed reference link.
 		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos + 1)
@@ -1222,7 +1222,14 @@ Protected Class InlineScanner
 		  If pos > charsUbound Then Return Nil
 		  If chars(pos) = "(" Then
 		    // Could be an inline link.
-		    Return InlineLinkData(chars, charsUbound, part1RawChars, pos, closerCharPos)
+		    Dim result As MarkdownKit.InlineLinkData = _
+		    InlineLinkData(chars, charsUbound, part1RawChars, pos, closerCharPos)
+		    If result = Nil And validLinkLabel Then
+		      // Edge case: Could still be a shortcut reference link immediately followed by a "(".
+		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		    Else
+		      Return result
+		    End If
 		  ElseIf chars(pos) = "[" Then
 		    // Could be a full reference link.
 		    Return FullReferenceLinkData(container, chars, charsUbound, part1RawChars, pos)

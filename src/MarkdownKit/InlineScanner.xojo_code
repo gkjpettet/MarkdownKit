@@ -214,13 +214,13 @@ Protected Class InlineScanner
 		  // `startPos` points to the index of the "[" immediately after the closing imageDescription "]".
 		  // Full reference image: imageDescription, VALID linkLabel
 		  
-		  // We know that `startPos` points to a "!".
-		  If startPos + 2 > charsUbound Then Return Nil
+		  // We know that `startPos` points to a "[".
+		  If startPos + 1 > charsUbound Then Return Nil
 		  
 		  // Scan for a valid link label.
 		  Dim c, linkLabelChars() As Text
 		  Dim indexOfClosingBracket As Integer = -1
-		  For i As Integer = startPos + 2 To charsUbound
+		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
 		    If c = "]" And Not Escaped(chars, i) Then
 		      indexOfClosingBracket = i

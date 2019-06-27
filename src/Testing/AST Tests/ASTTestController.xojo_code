@@ -8,7 +8,7 @@ Inherits TestController
 		  Dim group As TestGroup
 		  
 		  // Current test.
-		  group = New ASTImageTests(Self, "Image Tests")
+		  group = New ASTBackslashEscapeTests(Self, "Backslash Escape Tests")
 		  
 		  // Block structure.
 		  group = New ASTHTMLBlockTests(Self, "HTML Blocks")
@@ -24,6 +24,7 @@ Inherits TestController
 		  group = New ASTBlankLineTests(Self, "Blank Lines")
 		  
 		  // Inlines.
+		  group = New ASTImageTests(Self, "Image Tests")
 		  group = New ASTLinkTests(Self, "Link Tests")
 		  group = New ASTEmphasisTests(Self, "Emphasis")
 		  group = New ASTAutolinkTests(Self, "Auto Links")
@@ -32,6 +33,7 @@ Inherits TestController
 		  group = New ASTHardLinebreakTests(Self, "Hard Line Breaks")
 		  group = New ASTInlineHTMLTests(Self, "Inline HTML")
 		  group = New ASTCodespanTests(Self, "Code Spans")
+		  group = New ASTInlineTests(Self, "Inline Tests")
 		  
 		End Sub
 	#tag EndEvent

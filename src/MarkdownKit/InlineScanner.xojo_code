@@ -109,6 +109,23 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Shared Function CreateInlineImageData(imageDescriptionChars() As Text, destination As Text, title As Text, endPos As Integer) As MarkdownKit.InlineImageData
+		  // `endPos` is the position in `container.Chars` of the closing ")".
+		  // The contents of `imageDescriptionChars` are used as the images's 
+		  // `alt` attribute text and need to be parsed as inlines.
+		  
+		  Dim data As New MarkdownKit.InlineImageData
+		  
+		  data.EndPos = endPos
+		  data.Destination = destination
+		  data.LinkTitle = title
+		  data.ImageDescriptionChars = imageDescriptionChars
+		  
+		  Return data
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Shared Function CreateInlineLinkData(linkTextChars() As Text, destination As Text, title As Text, endPos As Integer) As MarkdownKit.InlineLinkData
 		  // `endPos` is the position in `container.Chars` of the closing ")".
 		  // The contents of `linkTextChars` are used as the link's text and need to be parsed 
@@ -122,6 +139,30 @@ Protected Class InlineScanner
 		  data.LinkTextChars = linkTextChars
 		  
 		  Return data
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function CreateReferenceImageData(ByRef container As MarkdownKit.Block, linkLabel As Text, descriptionChars() As Text, endPos As Integer) As MarkdownKit.InlineImageData
+		  // linkLabelChars is a character array containing a validated link label (excluding the 
+		  // flanking "[" and "]"). 
+		  // `endPos` is the position in `container.Chars` of the closing "]".
+		  // The contents of `descriptionChars` are used as the images's `alt` attrubute 
+		  // and need to be parsed as inlines.
+		  
+		  Dim data As New MarkdownKit.InlineImageData
+		  data.EndPos = endPos
+		  
+		  // Get the reference destination and title from the document's reference map.
+		  Dim ref As MarkdownKit.LinkReferenceDefinition = _
+		  MarkdownKit.LinkReferenceDefinition(container.Root.ReferenceMap.Value(linkLabel))
+		  data.Destination = ref.Destination
+		  data.LinkTitle = ref.Title
+		  
+		  data.ImageDescriptionChars = descriptionChars
+		  
+		  Return data
+		  
 		End Function
 	#tag EndMethod
 
@@ -161,6 +202,52 @@ Protected Class InlineScanner
 		  Else
 		    Return False
 		  End If
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function FullReferenceImageData(ByRef container As markdownKit.Block, chars() As Text, charsUbound As Integer, imageDescriptionChars() As Text, startPos As Integer) As MarkdownKit.InlineImageData
+		  // Returns either an inline image or Nil if a valid full reference image cannot be constructed.
+		  // `imageDescriptionChars` are the raw characters representing this images's 
+		  // `alt` attribute. They are to be parsed as inlines.
+		  // `startPos` points to the index of the "[" immediately after the closing imageDescription "]".
+		  // Full reference image: imageDescription, VALID linkLabel
+		  
+		  // We know that `startPos` points to a "!".
+		  If startPos + 2 > charsUbound Then Return Nil
+		  
+		  // Scan for a valid link label.
+		  Dim c, linkLabelChars() As Text
+		  Dim indexOfClosingBracket As Integer = -1
+		  For i As Integer = startPos + 2 To charsUbound
+		    c = chars(i)
+		    If c = "]" And Not Escaped(chars, i) Then
+		      indexOfClosingBracket = i
+		      Exit
+		    Else
+		      linkLabelChars.Append(c)
+		    End If
+		  Next i
+		  If Not indexOfClosingBracket = -1 Then Return Nil
+		  
+		  // A valid label must contain at least one non-whitespace character.
+		  Dim seenNonWhitespace As Boolean = False
+		  Dim linkLabelCharsUbound As Integer = linkLabelChars.Ubound
+		  For i As Integer = 0 To linkLabelCharsUbound
+		    If Not Utilities.IsWhitespace(linkLabelChars(i)) Then
+		      seenNonWhitespace = True
+		      Exit
+		    End If
+		  Next i
+		  If Not seenNonWhitespace Then Return Nil
+		  
+		  // Does the document's reference map contain a reference with the same label?
+		  Dim linkLabel As Text = Text.Join(linkLabelChars, "")
+		  If Not container.Root.ReferenceMap.HasKey(linkLabel) Then Return Nil
+		  
+		  // Construct this reference image.
+		  Return CreateReferenceImageData(container, linkLabel, imageDescriptionChars, indexOfClosingBracket)
 		  
 		End Function
 	#tag EndMethod
@@ -402,6 +489,57 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Shared Function InlineImageData(chars() As Text, charsUbound As Integer, imageDescriptionChars() As Text, startPos As Integer, closerCharPos As Integer) As MarkdownKit.InlineImageData
+		  // Returns either an inline image or Nil if a valid inline image cannot be constructed.
+		  // `imageDescriptionChars` are the raw characters representing this images's 
+		  // `alt` attribute. They are to be parsed as inlines.
+		  // `startPos` points to the index of the "(" immediately after the closing imageDescription "]".
+		  
+		  // Inline image: imageDescription, "(", optional whitespace, optional link destination, 
+		  //              optional linkTitle, optional whitespace, ")"
+		  
+		  // We know that `startPos` points at the opening "(" so move past it.
+		  Dim pos As Integer = startPos + 1
+		  
+		  // Advance past any optional whitespace.
+		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
+		    pos = pos + 1
+		  Wend
+		  
+		  // Optional link destination?
+		  Dim destination As Text = ScanInlineLinkDestination(chars, charsUbound, pos)
+		  Utilities.Unescape(destination)
+		  
+		  If pos >= charsUbound Then
+		    Return CreateInlineImageData(imageDescriptionChars, destination, "", pos)
+		  End If
+		  
+		  Dim seenWhiteSpace As Boolean = False
+		  // Advance past any optional whitespace.
+		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
+		    seenWhiteSpace = True
+		    pos = pos + 1
+		  Wend
+		  
+		  // Optional link title?
+		  Dim title As Text = ScanInlineLinkTitle(chars, charsUbound, pos)
+		  
+		  // Advance past any optional whitespace.
+		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
+		    pos = pos + 1
+		  Wend
+		  
+		  // Need to see the closing ")".
+		  If pos > charsUbound Then Return Nil
+		  If chars(pos) <> ")" Then Return Nil
+		  
+		  // We've found a valid inline link.
+		  Return CreateInlineImageData(imageDescriptionChars, destination, title, pos)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Shared Function InlineLinkData(chars() As Text, charsUbound As Integer, linkTextChars() As Text, startPos As Integer, closerCharPos As Integer) As MarkdownKit.InlineLinkData
 		  // Returns either an inline link or Nil if a valid inline link cannot be constructed.
 		  // `linkTextChars` are the raw characters representing this link's text. They are to 
@@ -466,7 +604,8 @@ Protected Class InlineScanner
 		  // for an opening "[" or "![" delimiter.
 		  Dim delimiterStackUbound As Integer = delimiterStack.Ubound
 		  Dim dsn As MarkdownKit.DelimiterStackNode
-		  Dim result As MarkdownKit.InlineLinkData
+		  Dim linkData As MarkdownKit.InlineLinkData
+		  Dim imageData As MarkdownKit.InlineImageData
 		  Dim openerIndex, openerPos As Integer
 		  For i As Integer = delimiterStackUbound DownTo 0
 		    dsn = delimiterStack(i)
@@ -485,8 +624,8 @@ Protected Class InlineScanner
 		    If dsn.Delimiter = "[" Then
 		      // Parse ahead to see if we have an inline link, reference link, 
 		      // compact reference link, or shortcut reference link.
-		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos, False)
-		      If result = Nil Then
+		      linkData = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos)
+		      If linkData = Nil Then
 		        // Didn't find a valid link. Remove the opening delimiter from the stack.
 		        dsn.Ignore = True
 		        Return False
@@ -494,9 +633,9 @@ Protected Class InlineScanner
 		        // Create a new link node with the container as its parent.
 		        Dim link As New MarkdownKit.Block(BlockType.InlineLink, _ 
 		        Xojo.Core.WeakRef.Create(container))
-		        link.Title = result.LinkTitle
-		        link.Destination = result.Destination
-		        link.Chars = result.LinkTextChars
+		        link.Title = linkData.LinkTitle
+		        link.Destination = linkData.Destination
+		        link.Chars = linkData.LinkTextChars
 		        
 		        // The children of this link are the child blocks of this container 
 		        // AFTER the text node pointed to by the opening delimiter.
@@ -528,12 +667,12 @@ Protected Class InlineScanner
 		        
 		        // Set all "[" delimiters before the opening delimiter to inactive.
 		        // This prevents links within links.
-		        For x As Integer = 0 to i
-		          delimiterStack(x).Active = False
+		        For x As Integer = 0 to i - 1
+		          If delimiterStack(x).Delimiter = "[" Then delimiterStack(x).Active = False
 		        Next x
 		        
 		        // Update the position.
-		        pos = result.EndPos + 1
+		        pos = linkData.EndPos + 1
 		        
 		        Return True
 		      End If
@@ -541,8 +680,8 @@ Protected Class InlineScanner
 		    ElseIf dsn.Delimiter = "![" Then
 		      // Parse ahead to see if we have an inline image, reference image, 
 		      // compact reference image, or shortcut reference image.
-		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos, True)
-		      If result = Nil Then
+		      imageData = ScanForInlineImageOfAnyType(container.Chars, openerPos, container, pos)
+		      If imageData = Nil Then
 		        // Didn't find a valid image. Remove the opening delimiter from the stack.
 		        dsn.Ignore = True
 		        Return False
@@ -550,9 +689,9 @@ Protected Class InlineScanner
 		        // Create a new image node with the container as its parent.
 		        Dim image As New MarkdownKit.Block(BlockType.InlineImage, _ 
 		        Xojo.Core.WeakRef.Create(container))
-		        image.Title = result.LinkTitle
-		        image.Destination = result.Destination
-		        image.Chars = result.LinkTextChars
+		        image.Title = imageData.LinkTitle
+		        image.Destination = imageData.Destination
+		        image.Chars = imageData.ImageDescriptionChars
 		        
 		        // The children of this image are the child blocks of this container 
 		        // AFTER the text node pointed to by the opening delimiter.
@@ -567,7 +706,6 @@ Protected Class InlineScanner
 		          image.Children.Append(container.Children(x))
 		          image.Children(image.Children.Ubound).Parent = image
 		        Next x
-		        // For x As Integer = openerIndex + 1 To limit
 		        For x As Integer = openerIndex + 1 To limit
 		          Call container.Children.Pop
 		        Next x
@@ -583,10 +721,12 @@ Protected Class InlineScanner
 		        dsn.Ignore = True
 		        
 		        // Update the position.
-		        pos = result.EndPos + 1
+		        pos = imageData.EndPos + 1
 		        
 		        Return True
 		      End If
+		      
+		      
 		    End If
 		  Next i
 		  
@@ -1201,9 +1341,109 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanForInlineLinkOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer, scanImage As Boolean) As MarkdownKit.InlineLinkData
+		Private Shared Function ScanForInlineImageOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineImageData
+		  // Scans through the passed array of characters for a valid inline image.
+		  // Assumes `startPos` points to the beginning "!".
+		  // Returns Nil if no valid image is found, otherwise creates and returns a new 
+		  // inline image block with the passed container as its parent.
+		  // `closerCharPos` is the index in chars() of the closing "]" character.
+		  
+		  Dim pos As Integer = startPos
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  // Skip past the opening "![".
+		  pos = pos + 2
+		  If pos > charsUbound Then Return Nil
+		  
+		  // Valid images start with either an imageDescription or a linkLabel.
+		  // linkLabels are not allowed to contain unescaped brackets and 
+		  // must contain at least one non-whitespace character.
+		  Dim part1RawChars() As Text
+		  Dim indexOfLastClosingSquareBracket As Integer = -1
+		  Dim openSquareBracketCount As Integer = 1
+		  Dim closeSquareBracketCount As Integer = 0
+		  Dim hasUnescapedBracket As Boolean = False
+		  Dim c As Text
+		  For i As Integer = 0 To closerCharPos
+		    c = chars(i)
+		    If c = "]" And Not Escaped(chars, i) Then
+		      hasUnescapedBracket = True
+		      indexOfLastClosingSquareBracket = i
+		      closeSquareBracketCount = closeSquareBracketCount + 1
+		    ElseIf c = "[" And Not Escaped(chars, i) Then
+		      hasUnescapedBracket = True
+		      openSquareBracketCount = openSquareBracketCount + 1
+		    ElseIf i > startPos + 1 Then // Only add characters occurring after the start position.
+		      part1RawChars.Append(c)
+		    End If
+		  Next i
+		  
+		  If indexOfLastClosingSquareBracket = -1 Then Return Nil
+		  If Not hasUnescapedBracket And openSquareBracketCount <> closeSquareBracketCount Then Return Nil
+		  
+		  // Remove characters from `part1RawChars` from the closing "]" onwards.
+		  Dim charsToRemove As Integer = closerCharPos - indexOfLastClosingSquareBracket
+		  For i As Integer = 1 To charsToRemove
+		    Call part1RawChars.Pop
+		  Next i
+		  
+		  // Is part1 a valid linkLabel?
+		  Dim validLinkLabel As Boolean = False
+		  If part1RawChars.Ubound > -1 Then
+		    If container.Root.ReferenceMap.HasKey(Text.Join(part1RawChars, "")) Then
+		      validLinkLabel = True
+		    End If
+		  End If
+		  
+		  // Move past the closing part1 square bracket.
+		  pos = indexOfLastClosingSquareBracket + 1
+		  
+		  // Shortcut reference image?
+		  If validLinkLabel And Not Peek(chars, pos, "(") Then
+		    If pos >= charsUbound Or pos + 1 > charsUbound Then
+		      // Found a shortcut reference image.
+		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		    ElseIf chars(pos) <> "[" And chars(pos + 1) <> "]" Then
+		      // Found a shortcut reference link.
+		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		    End If
+		  End If
+		  
+		  // Collapsed reference image?
+		  If validLinkLabel Then
+		    If pos + 1 <= charsUbound And chars(pos) = "[" And chars(pos + 1) = "]" Then
+		      // Found a collapsed reference image.
+		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos + 1)
+		    End If
+		  End If
+		  
+		  // At this point, we know that part1 must represent an imageDescription rather than a linkLabel.
+		  If pos > charsUbound Then Return Nil
+		  If chars(pos) = "(" Then
+		    // Could be an inline image.
+		    Dim result As MarkdownKit.InlineImageData = _
+		    InlineImageData(chars, charsUbound, part1RawChars, pos, closerCharPos)
+		    If result = Nil And validLinkLabel Then
+		      // Edge case: Could still be a shortcut reference image immediately followed by a "(".
+		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		    Else
+		      Return result
+		    End If
+		  ElseIf chars(pos) = "[" Then
+		    // Could be a full reference image.
+		    Return FullReferenceImageData(container, chars, charsUbound, part1RawChars, pos)
+		  Else
+		    Return Nil
+		  End If
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Shared Function ScanForInlineLinkOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineLinkData
 		  // Scans through the passed array of characters for a valid inline link.
-		  // Assumes `startPos` points to the beginning "[" for links or "!" for images.
+		  // Assumes `startPos` points to the beginning "[".
 		  // Returns Nil if no valid link is found, otherwise creates and returns a new 
 		  // inline link block with the passed container as its parent.
 		  // `closerCharPos` is the index in chars() of the closing "]" character.
@@ -1211,8 +1451,8 @@ Protected Class InlineScanner
 		  Dim pos As Integer = startPos
 		  Dim charsUbound As Integer = chars.Ubound
 		  
-		  // Skip past the opening "[" or "![".
-		  pos = If(scanImage, pos + 2, pos + 1)
+		  // Skip past the opening "[".
+		  pos = pos + 1
 		  If pos > charsUbound Then Return Nil
 		  
 		  // Valid links start with either linkText or a linkLabel.
@@ -1226,7 +1466,6 @@ Protected Class InlineScanner
 		  Dim hasUnescapedBracket As Boolean = False
 		  Dim c As Text
 		  For i As Integer = 0 To closerCharPos
-		    // For i As Integer = pos To closerCharPos
 		    c = chars(i)
 		    If c = "]" And Not Escaped(chars, i) Then
 		      hasUnescapedBracket = True

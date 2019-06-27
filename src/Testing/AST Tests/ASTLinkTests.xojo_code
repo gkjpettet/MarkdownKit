@@ -194,6 +194,12 @@ Inherits ASTTestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub Example516Test()
+		  Run(516)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example517Test()
 		  Run(517)
 		End Sub

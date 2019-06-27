@@ -485,7 +485,7 @@ Protected Class InlineScanner
 		    If dsn.Delimiter = "[" Then
 		      // Parse ahead to see if we have an inline link, reference link, 
 		      // compact reference link, or shortcut reference link.
-		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos)
+		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos, False)
 		      If result = Nil Then
 		        // Didn't find a valid link. Remove the opening delimiter from the stack.
 		        dsn.Ignore = True
@@ -541,7 +541,7 @@ Protected Class InlineScanner
 		    ElseIf dsn.Delimiter = "![" Then
 		      // Parse ahead to see if we have an inline image, reference image, 
 		      // compact reference image, or shortcut reference image.
-		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos)
+		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos, True)
 		      If result = Nil Then
 		        // Didn't find a valid image. Remove the opening delimiter from the stack.
 		        dsn.Ignore = True
@@ -1201,9 +1201,9 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanForInlineLinkOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function ScanForInlineLinkOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer, scanImage As Boolean) As MarkdownKit.InlineLinkData
 		  // Scans through the passed array of characters for a valid inline link.
-		  // Assumes `startPos` points to the beginning "[".
+		  // Assumes `startPos` points to the beginning "[" for links or "!" for images.
 		  // Returns Nil if no valid link is found, otherwise creates and returns a new 
 		  // inline link block with the passed container as its parent.
 		  // `closerCharPos` is the index in chars() of the closing "]" character.
@@ -1211,8 +1211,8 @@ Protected Class InlineScanner
 		  Dim pos As Integer = startPos
 		  Dim charsUbound As Integer = chars.Ubound
 		  
-		  // Skip past the opening "[".
-		  pos = pos + 1
+		  // Skip past the opening "[" or "![".
+		  pos = If(scanImage, pos + 2, pos + 1)
 		  If pos > charsUbound Then Return Nil
 		  
 		  // Valid links start with either linkText or a linkLabel.
@@ -1235,7 +1235,7 @@ Protected Class InlineScanner
 		    ElseIf c = "[" And Not Escaped(chars, i) Then
 		      hasUnescapedBracket = True
 		      openSquareBracketCount = openSquareBracketCount + 1
-		    ElseIf i >= startPos Then // Only add characters occurring after the start position.
+		    ElseIf i > startPos Then // Only add characters occurring after the start position.
 		      part1RawChars.Append(c)
 		    End If
 		  Next i

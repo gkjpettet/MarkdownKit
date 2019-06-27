@@ -730,6 +730,12 @@ Protected Class Block
 			InitialValue="0"
 			Type="Integer"
 		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsAutoLink"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
 #tag EndClass

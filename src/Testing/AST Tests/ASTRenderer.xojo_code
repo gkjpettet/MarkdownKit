@@ -140,7 +140,7 @@ Implements Global.MarkdownKit.IRenderer
 		  mOutput.Append(CurrentIndent + "</document>")
 		  
 		  // Display the reference link map.
-		  If d.ReferenceMap.Count > 0 Then
+		  If ListReferences And d.ReferenceMap.Count > 0 Then
 		    // Since iterating through a dictionary does not guarantee order, 
 		    // we will get the keys (definition names) as an array and sort 
 		    // them alphabetically.
@@ -301,11 +301,18 @@ Implements Global.MarkdownKit.IRenderer
 		  mOutput.Append("""" + EncodePredefinedEntities(l.Title) + """" + ">")
 		  mOutput.Append(EOL)
 		  
-		  IncreaseIndent
-		  mOutput.Append(CurrentIndent + "<text>" + EncodePredefinedEntities(l.Label) + "</text>")
-		  DecreaseIndent
+		  If l.IsAutoLink Then
+		    // The contents of autolinks are not inlines and are stored in the `Label` property of the link.
+		    mOutput.Append(CurrentIndent + "<text>" + EncodePredefinedEntities(l.Label) + "</text>")
+		    mOutput.Append(EOL)
+		  Else
+		    For Each child As MarkdownKit.Block In l.Children
+		      IncreaseIndent
+		      child.Accept(Self)
+		      DecreaseIndent
+		    Next child
+		  End If
 		  
-		  mOutput.Append(EOL)
 		  mOutput.Append(CurrentIndent + "</link>")
 		  mOutput.Append(EOL)
 		  
@@ -495,6 +502,10 @@ Implements Global.MarkdownKit.IRenderer
 		#tag EndSetter
 		Private EOL As Text
 	#tag EndComputedProperty
+
+	#tag Property, Flags = &h0
+		ListReferences As Boolean = False
+	#tag EndProperty
 
 	#tag Property, Flags = &h21
 		Private mCurrentIndent As Integer = 0

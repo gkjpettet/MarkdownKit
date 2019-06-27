@@ -7,6 +7,9 @@ Inherits TestController
 		  
 		  Dim group As TestGroup
 		  
+		  // Current test.
+		  group = New ASTLinkTests(Self, "Link Tests")
+		  
 		  // Block structure.
 		  group = New ASTHTMLBlockTests(Self, "HTML Blocks")
 		  group = New ASTParagraphTests(Self, "Paragraph Tests")

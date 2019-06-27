@@ -397,7 +397,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function InlineLinkData(chars() As Text, charsUbound As Integer, linkTextChars() As Text, startPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function InlineLinkData(chars() As Text, charsUbound As Integer, linkTextChars() As Text, startPos As Integer, closerCharPos As Integer) As MarkdownKit.InlineLinkData
 		  // Returns either an inline link or Nil if a valid inline link cannot be constructed.
 		  // `linkTextChars` are the raw characters representing this link's text. They are to 
 		  // be parsed as inlines.
@@ -502,10 +502,11 @@ Protected Class InlineScanner
 		          "in the container's children.")
 		        End if
 		        Dim limit As Integer = container.Children.Ubound
-		        For x As Integer = openerIndex + 1 To container.Children.Ubound
+		        For x As Integer = openerIndex + 1 To limit
 		          link.Children.Append(container.Children(x))
 		          link.Children(link.Children.Ubound).Parent = link
 		        Next x
+		        // For x As Integer = openerIndex + 1 To limit
 		        For x As Integer = openerIndex + 1 To limit
 		          Call container.Children.Pop
 		        Next x
@@ -523,7 +524,7 @@ Protected Class InlineScanner
 		        // Set all "[" delimiters before the opening delimiter to inactive.
 		        // This prevents links within links.
 		        For x As Integer = 0 to i
-		          delimiterStack(i).Active = False
+		          delimiterStack(x).Active = False
 		        Next x
 		        
 		        // Update the position.
@@ -1158,7 +1159,8 @@ Protected Class InlineScanner
 		  Dim closeSquareBracketCount As Integer = 0
 		  Dim hasUnescapedBracket As Boolean = False
 		  Dim c As Text
-		  For i As Integer = pos To closerCharPos
+		  For i As Integer = 0 To closerCharPos
+		    // For i As Integer = pos To closerCharPos
 		    c = chars(i)
 		    If c = "]" And Not Escaped(chars, i) Then
 		      hasUnescapedBracket = True
@@ -1167,7 +1169,7 @@ Protected Class InlineScanner
 		    ElseIf c = "[" And Not Escaped(chars, i) Then
 		      hasUnescapedBracket = True
 		      openSquareBracketCount = openSquareBracketCount + 1
-		    Else
+		    ElseIf i >= startPos Then // Only add characters occurring after the start position.
 		      part1RawChars.Append(c)
 		    End If
 		  Next i
@@ -1215,7 +1217,7 @@ Protected Class InlineScanner
 		  If pos > charsUbound Then Return Nil
 		  If chars(pos) = "(" Then
 		    // Could be an inline link.
-		    Return InlineLinkData(chars, charsUbound, part1RawChars, pos)
+		    Return InlineLinkData(chars, charsUbound, part1RawChars, pos, closerCharPos)
 		  ElseIf chars(pos) = "[" Then
 		    // Could be a full reference link.
 		    Return FullReferenceLinkData(container, chars, charsUbound, part1RawChars, pos)
@@ -1261,7 +1263,6 @@ Protected Class InlineScanner
 		  Dim c As Text
 		  
 		  Dim startPos As Integer = pos
-		  Dim result As Text
 		  
 		  // Scenario 1:
 		  If chars(pos) = "<" Then
@@ -1280,25 +1281,27 @@ Protected Class InlineScanner
 		  End If
 		  
 		  // Scenario 2:
-		  dim lastMatchedClosingParensIndex As Integer = -1
-		  Dim openParensCount, closeParensCount As Integer = 0
+		  Dim unmatchedOpenParens As Integer = 1 // Account for the opening parens we've already seen.
 		  For i = startPos To charsUbound
 		    c = chars(i)
 		    Select Case c
 		    Case "("
-		      If Not Escaped(chars, i) Then openParensCount = openParensCount + 1
+		      If Escaped(chars, i) Then Continue
+		      unmatchedOpenParens = unmatchedOpenParens + 1
 		    Case ")"
-		      If Not Escaped(chars, i) Then closeParensCount = closeParensCount + 1
-		      If openParensCount = (closeParensCount - 1) Then
-		        lastMatchedClosingParensIndex = i
-		      End If
+		      If Escaped(chars, i) Then Continue
+		      unmatchedOpenParens = unmatchedOpenParens - 1
 		      If i = charsUbound Or chars(i + 1) = &u000A Then
-		        If openParensCount <> (closeParensCount - 1) Then
-		          Return ""
-		        Else
+		        If unmatchedOpenParens = 0 Then
 		          pos = i
 		          Return chars.ToText(startPos, i - startPos)
+		        Else
+		          Return ""
 		        End If
+		      End If
+		      If unmatchedOpenParens = 0 Then
+		        pos = i
+		        Return chars.ToText(startPos, i - startPos)
 		      End If
 		    Case &u0000, &u0009
 		      Return ""
@@ -1306,25 +1309,20 @@ Protected Class InlineScanner
 		      pos = i
 		      Return chars.ToText(startPos, i - startPos)
 		    Case " "
-		      If openParensCount <> closeParensCount Then
-		        Return ""
-		      Else
+		      If unmatchedOpenParens = 1 Then
 		        pos = i
 		        Return chars.ToText(startPos, i - startPos)
+		      Else
+		        Return ""
 		      End If
 		    End Select
 		  Next i
 		  
-		  If openParensCount <> (closeParensCount - 1) Then
-		    If lastMatchedClosingParensIndex = -1 Then
-		      Return ""
-		    Else
-		      pos = lastMatchedClosingParensIndex
-		      Return chars.ToText(startPos, lastMatchedClosingParensIndex - startPos)
-		    End If
+		  If unmatchedOpenParens = 0 Then
+		    pos = i
+		    Return chars.ToText(startPos, pos - startPos)
 		  Else
-		    pos = lastMatchedClosingParensIndex
-		    Return chars.ToText(startPos, lastMatchedClosingParensIndex - startPos)
+		    Return ""
 		  End If
 		  
 		End Function

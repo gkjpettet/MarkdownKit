@@ -95,6 +95,7 @@ Protected Class InlineScanner
 		        chars.Remove(i)
 		        i = i - 1
 		      Else
+		        If c <> " "  Then chars(i) = " " // Convert newlines, tabs, etc to spaces.
 		        collapse = True
 		      End If
 		    Else

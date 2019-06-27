@@ -190,7 +190,7 @@ Protected Class InlineScanner
 		  Dim seenNonWhitespace As Boolean = False
 		  Dim linkLabelCharsUbound As Integer = linkLabelChars.Ubound
 		  For i As Integer = 0 To linkLabelCharsUbound
-		    If Utilities.IsWhitespace(linkLabelChars(i)) Then
+		    If Not Utilities.IsWhitespace(linkLabelChars(i)) Then
 		      seenNonWhitespace = True
 		      Exit
 		    End If

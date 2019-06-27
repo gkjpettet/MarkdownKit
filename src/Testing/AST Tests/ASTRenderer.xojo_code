@@ -286,7 +286,28 @@ Implements Global.MarkdownKit.IRenderer
 
 	#tag Method, Flags = &h0
 		Sub VisitInlineImage(image As MarkdownKit.Block)
-		  #Pragma Warning "TODO"
+		  // Part of the Global.MarkdownKit.IRenderer interface.
+		  
+		  mOutput.Append(CurrentIndent + "<image destination=")
+		  mOutput.Append("""")
+		  mOutput.Append(EncodePredefinedEntities(image.Destination) + """" + " title=")
+		  mOutput.Append("""" + EncodePredefinedEntities(image.Title) + """" + ">")
+		  mOutput.Append(EOL)
+		  
+		  // If l.IsAutoLink Then
+		  // // The contents of autolinks are not inlines and are stored in the `Label` property of the link.
+		  // mOutput.Append(CurrentIndent + "<text>" + EncodePredefinedEntities(l.Label) + "</text>")
+		  // mOutput.Append(EOL)
+		  // Else
+		  For Each child As MarkdownKit.Block In image.Children
+		    IncreaseIndent
+		    child.Accept(Self)
+		    DecreaseIndent
+		  Next child
+		  'End If
+		  
+		  mOutput.Append(CurrentIndent + "</image>")
+		  mOutput.Append(EOL)
 		  
 		End Sub
 	#tag EndMethod
@@ -590,6 +611,12 @@ Implements Global.MarkdownKit.IRenderer
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="ShowWhitespace"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ListReferences"
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"

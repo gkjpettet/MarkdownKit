@@ -539,7 +539,54 @@ Protected Class InlineScanner
 		      End If
 		      
 		    ElseIf dsn.Delimiter = "![" Then
-		      #Pragma Warning "TODO"
+		      // Parse ahead to see if we have an inline image, reference image, 
+		      // compact reference image, or shortcut reference image.
+		      result = ScanForInlineLinkOfAnyType(container.Chars, openerPos, container, pos)
+		      If result = Nil Then
+		        // Didn't find a valid image. Remove the opening delimiter from the stack.
+		        dsn.Ignore = True
+		        Return False
+		      Else
+		        // Create a new image node with the container as its parent.
+		        Dim image As New MarkdownKit.Block(BlockType.InlineImage, _ 
+		        Xojo.Core.WeakRef.Create(container))
+		        image.Title = result.LinkTitle
+		        image.Destination = result.Destination
+		        image.Chars = result.LinkTextChars
+		        
+		        // The children of this image are the child blocks of this container 
+		        // AFTER the text node pointed to by the opening delimiter.
+		        Dim openerTextNode As MarkdownKit.Block = MarkdownKit.Block(dsn.TextNodePointer.Value)
+		        openerIndex = container.Children.IndexOf(openerTextNode)
+		        If openerIndex = -1 Then
+		          Raise New MarkdownKit.MarkdownException("Could not find the opener text node " + _
+		          "in the container's children.")
+		        End if
+		        Dim limit As Integer = container.Children.Ubound
+		        For x As Integer = openerIndex + 1 To limit
+		          image.Children.Append(container.Children(x))
+		          image.Children(image.Children.Ubound).Parent = image
+		        Next x
+		        // For x As Integer = openerIndex + 1 To limit
+		        For x As Integer = openerIndex + 1 To limit
+		          Call container.Children.Pop
+		        Next x
+		        
+		        // Add this image as the last child of this container.
+		        container.Children.Append(image)
+		        
+		        // Process emphasis on the image's children.
+		        ProcessEmphasis(image, delimiterStack, i)
+		        
+		        // Remove the opening delimiter.
+		        container.Children.Remove(openerIndex)
+		        dsn.Ignore = True
+		        
+		        // Update the position.
+		        pos = result.EndPos + 1
+		        
+		        Return True
+		      End If
 		    End If
 		  Next i
 		  
@@ -634,13 +681,27 @@ Protected Class InlineScanner
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
 		      buffer.StartPos = pos
-		      buffer.EndPos = pos // one character long.
+		      buffer.EndPos = pos // One character long.
 		      dsn = New MarkdownKit.DelimiterStackNode
 		      dsn.Delimiter = "["
 		      dsn.OriginalLength = 1
 		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + 1
+		      delimiterStack.Append(dsn)
+		      
+		    ElseIf c = "!" And Not Escaped(b.Chars, pos) And Peek(b.Chars, pos + 1, "[") Then
+		      // ========= Start of inline image? =========
+		      If buffer <> Nil Then CloseBuffer(buffer, b)
+		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		      buffer.StartPos = pos
+		      buffer.EndPos = pos + 1 // Two characters long.
+		      dsn = New MarkdownKit.DelimiterStackNode
+		      dsn.Delimiter = "!["
+		      dsn.OriginalLength = 2
+		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
+		      CloseBuffer(buffer, b)
+		      pos = pos + 2
 		      delimiterStack.Append(dsn)
 		      
 		    ElseIf c = "]" And Not Escaped(b.Chars, pos) Then

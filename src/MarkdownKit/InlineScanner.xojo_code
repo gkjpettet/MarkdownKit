@@ -152,11 +152,15 @@ Protected Class InlineScanner
 	#tag Method, Flags = &h0
 		Shared Function Escaped(chars() As Text, pos As Integer) As Boolean
 		  // Returns True if the character at zero-based position `pos` is escaped.
-		  // (i.e: preceded by a backslash character).
+		  // (i.e: preceded by a (non-escaped) backslash character).
 		  
 		  If pos > chars.Ubound or pos = 0 Then Return False
 		  
-		  Return If(chars(pos - 1) = "\", True, False)
+		  If chars(pos - 1) = "\" And Not Escaped(chars, pos - 1) Then
+		    Return True
+		  Else
+		    Return False
+		  End If
 		  
 		End Function
 	#tag EndMethod

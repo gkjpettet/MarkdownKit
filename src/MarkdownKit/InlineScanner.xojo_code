@@ -1200,7 +1200,7 @@ Protected Class InlineScanner
 		  pos = indexOfLastClosingSquareBracket + 1
 		  
 		  // Shortcut reference link?
-		  If validLinkLabel Then
+		  If validLinkLabel And Not Peek(chars, pos, "(") Then
 		    If pos >= charsUbound Or pos + 1 > charsUbound Then
 		      // Found a shortcut reference link.
 		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
@@ -1211,7 +1211,7 @@ Protected Class InlineScanner
 		  End If
 		  
 		  // Collapsed reference link?
-		  If validLinkLabel Then
+		  If validLinkLabel And Not Peek(chars, pos, "(") Then
 		    If pos + 1 <= charsUbound And chars(pos) = "[" And chars(pos + 1) = "]" Then
 		      // Found a collapsed reference link.
 		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos + 1)

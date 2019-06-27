@@ -101,6 +101,15 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function Peek(chars() As Text, pos As Integer, char As Text) As Boolean
+		  // Returns True if the character at position `pos` is `char`.
+		  
+		  If pos < 0 Or pos > chars.Ubound Then Return False
+		  Return If(chars(pos) = char, True, False)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Sub RemoveLeft(Extends source() As Text, length As Integer)
 		  // Removes `length` elements from the start of the passed array.
 		  

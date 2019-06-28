@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<link destination="http://example.com?find=\*" title="">
+<text>http://example.com?find=\*</text>
+</link>
+</paragraph>
+</document>

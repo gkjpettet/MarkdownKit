@@ -283,6 +283,7 @@ Protected Class Block
 		      Dim tb As MarkdownKit.Block = FirstChild
 		      If Not tb.Chars.IsBlank Then
 		        InfoString = Text.Join(tb.Chars, "").Trim
+		        Utilities.Unescape(InfoString)
 		      End If
 		      Children.Remove(0)
 		    End If

@@ -523,6 +523,7 @@ Protected Class InlineScanner
 		  
 		  // Optional link title?
 		  Dim title As Text = ScanInlineLinkTitle(chars, charsUbound, pos)
+		  Utilities.Unescape(title)
 		  
 		  // Advance past any optional whitespace.
 		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
@@ -576,6 +577,7 @@ Protected Class InlineScanner
 		  
 		  // Optional link title?
 		  Dim title As Text = ScanInlineLinkTitle(chars, charsUbound, pos)
+		  Utilities.Unescape(title)
 		  
 		  // Advance past any optional whitespace.
 		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))

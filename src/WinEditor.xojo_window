@@ -240,16 +240,22 @@ End
 
 	#tag Method, Flags = &h0
 		Sub Parse()
+		  Dim start As Double = Microseconds
+		  
 		  // Create a new Markdown document.
 		  Dim doc As New MarkdownKit.Document(Source.Text.ToText)
 		  doc.ParseBlockStructure
 		  doc.ParseInlines
+		  
+		  Dim parseTime As Double = Microseconds - start
 		  
 		  // Clear out the old AST.
 		  Output.Text = ""
 		  
 		  // Remove any earlier warnings.
 		  Info.Text = ""
+		  
+		  start = Microseconds
 		  
 		  // Print out the document's AST.
 		  Dim renderer As New ASTRenderer
@@ -258,6 +264,12 @@ End
 		  'renderer.ListReferences = True
 		  renderer.VisitDocument(doc)
 		  Output.Text = renderer.Output
+		  
+		  Dim renderTime As Double = Microseconds - start
+		  
+		  Dim parseTimeMS As Integer = parseTime / 1000
+		  Dim renderTimeMS As Integer = renderTime / 1000
+		  Info.Text = "Parsed in " + parseTimeMS.ToText + " ms. Rendered in " + renderTimeMS.ToText + "ms."
 		  
 		  // If an exception occurs, display the error message.
 		  Exception e As MarkdownKit.MarkdownException

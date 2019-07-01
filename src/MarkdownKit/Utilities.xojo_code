@@ -2307,6 +2307,7 @@ Protected Class Utilities
 		  Dim tmp() As Text
 		  Dim i As Integer = start
 		  Dim xLimit As Integer
+		  Dim codePoint As Integer
 		  While i < chars.Ubound
 		    Redim tmp(-1)
 		    c = chars(i)
@@ -2360,6 +2361,7 @@ Protected Class Utilities
 		        For x As Integer = 1 To tmp.Ubound + 5
 		          chars.Remove(start)
 		        Next x
+		        
 		        chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromHex(Text.Join(tmp, ""))))
 		        
 		        // Any other potential references?
@@ -2396,7 +2398,10 @@ Protected Class Utilities
 		        For x As Integer = 1 To tmp.Ubound + 4
 		          chars.Remove(start)
 		        Next x
-		        chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromText(Text.Join(tmp, ""))))
+		        codePoint = Integer.FromText(Text.Join(tmp, ""))
+		        // For security reasons, the code point U+0000 is replaced by U+FFFD.
+		        If codePoint = 0 Then codePoint = &hFFFD
+		        chars.Insert(start, Text.FromUnicodeCodepoint(codePoint))
 		        
 		        // Any other potential references?
 		        start = chars.IndexOf("&")

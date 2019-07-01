@@ -175,11 +175,11 @@ Protected Class Block
 		    
 		    Self.IsOpen = False
 		    
-		    // Unescape backslash-escaped characters.
-		    Utilities.Unescape(Self.Chars)
-		    
 		    // Replace entity and numeric character references
 		    Utilities.ReplaceEntities(Self.Chars)
+		    
+		    // Unescape backslash-escaped characters.
+		    Utilities.Unescape(Self.Chars)
 		    
 		  End Select
 		End Sub

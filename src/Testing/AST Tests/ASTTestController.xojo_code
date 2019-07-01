@@ -8,7 +8,7 @@ Inherits TestController
 		  Dim group As TestGroup
 		  
 		  // Current test.
-		  group = New ASTBackslashEscapeTests(Self, "Backslash Escape Tests")
+		  group = New ASTCharacterReferenceTests(Self, "Character Reference Tests")
 		  
 		  // Block structure.
 		  group = New ASTHTMLBlockTests(Self, "HTML Blocks")
@@ -24,6 +24,7 @@ Inherits TestController
 		  group = New ASTBlankLineTests(Self, "Blank Lines")
 		  
 		  // Inlines.
+		  group = New ASTBackslashEscapeTests(Self, "Backslash Escape Tests")
 		  group = New ASTImageTests(Self, "Image Tests")
 		  group = New ASTLinkTests(Self, "Link Tests")
 		  group = New ASTEmphasisTests(Self, "Emphasis")

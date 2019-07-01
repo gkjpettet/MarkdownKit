@@ -24,6 +24,7 @@ Protected Module MarkdownKit
 		  
 		  BlockScanner.Initialise
 		  InlineScanner.Initialise
+		  Utilities.Initialise
 		  
 		  mInitialised = True
 		  

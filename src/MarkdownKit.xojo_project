@@ -38,6 +38,7 @@ Interface=IRenderer;MarkdownKit/IRenderer.xojo_code;&h0000000070D81FFF;&h0000000
 Folder=AST Tests;Testing/AST Tests;&h0000000021694FFF;&h0000000065A43FFF;false
 Class=ASTRenderer;Testing/AST Tests/ASTRenderer.xojo_code;&h0000000028F4EFFF;&h0000000021694FFF;false
 Class=ASTEmphasisTests;Testing/AST Tests/ASTEmphasisTests.xojo_code;&h000000005E49C7FF;&h0000000021694FFF;false
+Class=ASTCharacterReferenceTests;Testing/AST Tests/ASTCharacterReferenceTests.xojo_code;&h00000000265667FF;&h0000000021694FFF;false
 Class=ASTTestGroup;Testing/AST Tests/ASTTestGroup.xojo_code;&h0000000006BC4FFF;&h0000000021694FFF;false
 Class=ASTTestController;Testing/AST Tests/ASTTestController.xojo_code;&h0000000043D54FFF;&h0000000021694FFF;false
 Class=ASTCodespanTests;Testing/AST Tests/ASTCodespanTests.xojo_code;&h000000003D18D7FF;&h0000000021694FFF;false

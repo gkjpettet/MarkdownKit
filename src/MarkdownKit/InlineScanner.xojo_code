@@ -190,22 +190,6 @@ Protected Class InlineScanner
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Shared Function Escaped(chars() As Text, pos As Integer) As Boolean
-		  // Returns True if the character at zero-based position `pos` is escaped.
-		  // (i.e: preceded by a (non-escaped) backslash character).
-		  
-		  If pos > chars.Ubound or pos = 0 Then Return False
-		  
-		  If chars(pos - 1) = "\" And Not Escaped(chars, pos - 1) Then
-		    Return True
-		  Else
-		    Return False
-		  End If
-		  
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h21
 		Private Shared Function FullReferenceImageData(ByRef container As markdownKit.Block, chars() As Text, charsUbound As Integer, imageDescriptionChars() As Text, startPos As Integer) As MarkdownKit.InlineImageData
 		  // Returns either an inline image or Nil if a valid full reference image cannot be constructed.
@@ -222,7 +206,7 @@ Protected Class InlineScanner
 		  Dim indexOfClosingBracket As Integer = -1
 		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
-		    If c = "]" And Not Escaped(chars, i) Then
+		    If c = "]" And Not Utilities.Escaped(chars, i) Then
 		      indexOfClosingBracket = i
 		      Exit
 		    Else
@@ -269,7 +253,7 @@ Protected Class InlineScanner
 		  Dim indexOfClosingBracket As Integer = -1
 		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
-		    If c = "]" And Not Escaped(chars, i) Then
+		    If c = "]" And Not Utilities.Escaped(chars, i) Then
 		      indexOfClosingBracket = i
 		      Exit
 		    Else
@@ -772,7 +756,7 @@ Protected Class InlineScanner
 		    lastChar = c
 		    c = b.Chars(pos)
 		    
-		    If c = "`" And Not Escaped(b.Chars, pos) Then
+		    If c = "`" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= Code spans =========
 		      result = HandleBackticks(b, pos, charsUbound)
 		      If result <> Nil And lastChar <> "`" Then
@@ -786,7 +770,7 @@ Protected Class InlineScanner
 		        NotInlineStarter(buffer, pos, b) 
 		      End If
 		      
-		    ElseIf c = "<" And Not Escaped(b.Chars, pos) Then
+		    ElseIf c = "<" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= Inline HTML =========
 		      result = HandleLeftAngleBracket(b, pos, charsUbound)
 		      If result <> Nil Then
@@ -801,7 +785,7 @@ Protected Class InlineScanner
 		      End If
 		      
 		    ElseIf c = &u000A Then // Hard or soft break?
-		      If pos - 1 >= 0 And b.Chars(pos - 1) = "\" And Not Escaped(b.Chars, pos - 1) Then
+		      If pos - 1 >= 0 And b.Chars(pos - 1) = "\" And Not Utilities.Escaped(b.Chars, pos - 1) Then
 		        If buffer <> Nil Then
 		          buffer.EndPos = buffer.EndPos - 1 // Remove the trailing backslash.
 		          CloseBuffer(buffer, b)
@@ -818,7 +802,7 @@ Protected Class InlineScanner
 		        pos = pos + 1
 		      End If
 		      
-		    ElseIf c = "[" And Not Escaped(b.Chars, pos) Then
+		    ElseIf c = "[" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= Start of inline link? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
@@ -832,7 +816,7 @@ Protected Class InlineScanner
 		      pos = pos + 1
 		      delimiterStack.Append(dsn)
 		      
-		    ElseIf c = "!" And Not Escaped(b.Chars, pos) And Peek(b.Chars, pos + 1, "[") Then
+		    ElseIf c = "!" And Not Utilities.Escaped(b.Chars, pos) And Peek(b.Chars, pos + 1, "[") Then
 		      // ========= Start of inline image? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
@@ -846,7 +830,7 @@ Protected Class InlineScanner
 		      pos = pos + 2
 		      delimiterStack.Append(dsn)
 		      
-		    ElseIf c = "]" And Not Escaped(b.Chars, pos) Then
+		    ElseIf c = "]" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= End of inline link or image? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      If Not LookForLinkOrImage(b, delimiterStack, pos) Then
@@ -854,7 +838,7 @@ Protected Class InlineScanner
 		        NotInlineStarter(buffer, pos, b)
 		      End If
 		      
-		    ElseIf (c = "*" Or c = "_") And Not Escaped(b.Chars, pos) Then
+		    ElseIf (c = "*" Or c = "_") And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= Emphasis? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      dsn = ScanDelimiterRun(b.Chars, charsUbound, pos, c)
@@ -1368,11 +1352,11 @@ Protected Class InlineScanner
 		  Dim c As Text
 		  For i As Integer = 0 To closerCharPos
 		    c = chars(i)
-		    If c = "]" And Not Escaped(chars, i) Then
+		    If c = "]" And Not Utilities.Escaped(chars, i) Then
 		      hasUnescapedBracket = True
 		      indexOfLastClosingSquareBracket = i
 		      closeSquareBracketCount = closeSquareBracketCount + 1
-		    ElseIf c = "[" And Not Escaped(chars, i) Then
+		    ElseIf c = "[" And Not Utilities.Escaped(chars, i) Then
 		      hasUnescapedBracket = True
 		      openSquareBracketCount = openSquareBracketCount + 1
 		    ElseIf i > startPos + 1 Then // Only add characters occurring after the start position.
@@ -1469,11 +1453,11 @@ Protected Class InlineScanner
 		  Dim c As Text
 		  For i As Integer = 0 To closerCharPos
 		    c = chars(i)
-		    If c = "]" And Not Escaped(chars, i) Then
+		    If c = "]" And Not Utilities.Escaped(chars, i) Then
 		      hasUnescapedBracket = True
 		      indexOfLastClosingSquareBracket = i
 		      closeSquareBracketCount = closeSquareBracketCount + 1
-		    ElseIf c = "[" And Not Escaped(chars, i) Then
+		    ElseIf c = "[" And Not Utilities.Escaped(chars, i) Then
 		      hasUnescapedBracket = True
 		      openSquareBracketCount = openSquareBracketCount + 1
 		    ElseIf i > startPos Then // Only add characters occurring after the start position.
@@ -1571,11 +1555,11 @@ Protected Class InlineScanner
 		    i = pos + 1
 		    While i <= charsUbound
 		      c = chars(i)
-		      If c = ">" And Not Escaped(chars, i) Then
+		      If c = ">" And Not Utilities.Escaped(chars, i) Then
 		        pos = i + 1
 		        Return chars.ToText(startPos + 1, i - startPos - 1)
 		      End If
-		      If c = "<" And Not Escaped(chars, i) Then Return ""
+		      If c = "<" And Not Utilities.Escaped(chars, i) Then Return ""
 		      If c = &u000A Then Return ""
 		      i = i + 1
 		    Wend
@@ -1588,10 +1572,10 @@ Protected Class InlineScanner
 		    c = chars(i)
 		    Select Case c
 		    Case "("
-		      If Escaped(chars, i) Then Continue
+		      If Utilities.Escaped(chars, i) Then Continue
 		      unmatchedOpenParens = unmatchedOpenParens + 1
 		    Case ")"
-		      If Escaped(chars, i) Then Continue
+		      If Utilities.Escaped(chars, i) Then Continue
 		      unmatchedOpenParens = unmatchedOpenParens - 1
 		      If i = charsUbound Or chars(i + 1) = &u000A Then
 		        If unmatchedOpenParens = 0 Then
@@ -1663,7 +1647,7 @@ Protected Class InlineScanner
 		  
 		  For i As Integer = pos + 1 To charsUbound
 		    c = chars(i)
-		    If c = delimiter And Not Escaped(chars, i) Then
+		    If c = delimiter And Not Utilities.Escaped(chars, i) Then
 		      pos = i + 1
 		      Return chars.ToText(startPos + 1, i - startPos - 1)
 		    End If
@@ -1703,12 +1687,12 @@ Protected Class InlineScanner
 		    i = startPos + 1
 		    While i <= charsUbound
 		      c = chars(i)
-		      If c = ">" And Not Escaped(chars, i) Then
+		      If c = ">" And Not Utilities.Escaped(chars, i) Then
 		        result.Length = i - startPos + 1
 		        result.Finish = i
 		        Return result
 		      End If
-		      If c = "<" And Not Escaped(chars, i) Then Return result
+		      If c = "<" And Not Utilities.Escaped(chars, i) Then Return result
 		      If c = &u000A Then Return result
 		      i = i + 1
 		    Wend
@@ -1721,9 +1705,9 @@ Protected Class InlineScanner
 		    c = chars(i)
 		    Select Case c
 		    Case "("
-		      If Not Escaped(chars, i) Then openParensCount = openParensCount + 1
+		      If Not Utilities.Escaped(chars, i) Then openParensCount = openParensCount + 1
 		    Case ")"
-		      If Not Escaped(chars, i) Then closeParensCount = closeParensCount + 1
+		      If Not Utilities.Escaped(chars, i) Then closeParensCount = closeParensCount + 1
 		    Case &u0000, &u0009
 		      Return result
 		    Case &u000A
@@ -1788,10 +1772,10 @@ Protected Class InlineScanner
 		    Select Case chars(i)
 		    Case "["
 		      // Unescaped square brackets are not allowed.
-		      If Not Escaped(chars, i) Then Return result
+		      If Not Utilities.Escaped(chars, i) Then Return result
 		      seenNonWhitespace = True
 		    Case "]"
-		      If Escaped(chars, i) Then
+		      If Utilities.Escaped(chars, i) Then
 		        seenNonWhitespace = True
 		        Continue
 		      ElseIf seenNonWhitespace Then
@@ -1894,7 +1878,7 @@ Protected Class InlineScanner
 		  
 		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
-		    If c = delimiter And Not Escaped(chars, i) Then
+		    If c = delimiter And Not Utilities.Escaped(chars, i) Then
 		      result.Length = i - startPos + 1
 		      result.Finish = i
 		      result.Invalid = False

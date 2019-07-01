@@ -206,6 +206,7 @@ End
 		  Source.SmartQuotes = False
 		  
 		  Info.Text = ""
+		  
 		End Sub
 	#tag EndEvent
 

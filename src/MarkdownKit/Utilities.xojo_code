@@ -54,6 +54,22 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function IsHexDigit(c As Text) As Boolean
+		  // Returns True if the passed character `c` is A-F, a-f or 0-9.
+		  
+		  For Each codePoint As UInt32 In c.Codepoints
+		    Select Case codePoint
+		    Case 65 To 70, 97 To 102, 48 To 57
+		      Return True
+		    Else
+		      Return False
+		    End Select
+		  Next codePoint
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function IsPunctuation(char As Text) As Boolean
 		  Select Case char
 		  Case "!", """", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", _
@@ -101,6 +117,150 @@ Protected Class Utilities
 		  End Select
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Sub ReplaceEntities(chars() As Text)
+		  // Scans the characters in the passed array of characters for valid entity and numeric character 
+		  // references.
+		  // If one is found, the characters representing the reference are replaced with the 
+		  // corresponding unicode character.
+		  // The document https://html.spec.whatwg.org/multipage/entities.json is used as an authoritative 
+		  // source for the valid entity references and their corresponding code points.
+		  
+		  // Entity reference: 
+		  // "&", a valid HTML5 entity name, ";"
+		  
+		  // Decimal numeric character reference:
+		  // &#[0-9]{1–7};
+		  // Invalid Unicode code points will be replaced by the REPLACEMENT CHARACTER (&uFFFD). 
+		  // For security reasons, the code point &u0000 will also be replaced by &uFFFD.
+		  
+		  // Hexadecimal numeric character reference:
+		  // &#[Xx][a-fA-F0-9]{1-6};
+		  
+		  // Quick check to see if we can bail early.
+		  Dim start As Integer = chars.IndexOf("&")
+		  If start = -1 Or chars.IndexOf(";") = -1 Then Return
+		  
+		  Dim c As Text
+		  Dim tmp() As Text
+		  Dim i As Integer = start
+		  Dim xLimit As Integer
+		  While i < chars.Ubound
+		    Redim tmp(-1)
+		    c = chars(i)
+		    
+		    // Expect &
+		    If chars(i) <> "&" Then Return
+		    
+		    i = i + 1
+		    If i > chars.Ubound Then Return
+		    c = chars(i)
+		    
+		    If c = "#" Then
+		      i = i + 1
+		      If i > chars.Ubound Then Return
+		      c = chars(i)
+		      
+		      If c = "X" Then
+		        // Hex reference?
+		        xLimit = Xojo.Math.Min(chars.Ubound, i + 7)
+		        If i + 1 > chars.Ubound Then Return
+		        For x As Integer = i + 1 To xLimit
+		          c = chars(x)
+		          If Utilities.IsHexDigit(c) Then
+		            tmp.Append(c)
+		          ElseIf c = ";" Then
+		            Exit
+		          Else
+		            // Any other potential references?
+		            start = chars.IndexOf("&", i)
+		            If start = -1 Then
+		              Return
+		            Else
+		              i = start
+		              Continue While
+		            End If
+		          End If
+		        Next x
+		        // `tmp` contains the hex value of the codepoint.
+		        // Remove the characters in `chars` that make up this reference.
+		        For x As Integer = 1 To tmp.Ubound + 5
+		          chars.Remove(start)
+		        Next x
+		        chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromHex(Text.Join(tmp, ""))))
+		        
+		        // Any other potential references?
+		        start = chars.IndexOf("&")
+		        If start = -1 Then
+		          Return
+		        Else
+		          i = start
+		          Continue While
+		        End If
+		      ElseIf Utilities.IsDigit(c) Then
+		        // Decimal reference?
+		        xLimit = Xojo.Math.Min(chars.Ubound, i + 6)
+		        If i + 1 > chars.Ubound Then Return
+		        For x As Integer = i To xLimit
+		          c = chars(x)
+		          If Utilities.IsDigit(c) Then
+		            tmp.Append(c)
+		          ElseIf c = ";" Then
+		            Exit
+		          Else
+		            // Any other potential references?
+		            start = chars.IndexOf("&", i)
+		            If start = -1 Then
+		              Return
+		            Else
+		              i = start
+		              Continue While
+		            End If
+		          End If
+		        Next x
+		        // `tmp` contains the decimal value of the codepoint.
+		        // Remove the characters in `chars` that make up this reference.
+		        For x As Integer = 1 To tmp.Ubound + 4
+		          chars.Remove(start)
+		        Next x
+		        chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromText(Text.Join(tmp, ""))))
+		        
+		        // Any other potential references?
+		        start = chars.IndexOf("&")
+		        If start = -1 Then
+		          Return
+		        Else
+		          i = start
+		          Continue While
+		        End If
+		        
+		      Else
+		        start = chars.IndexOf("&", i)
+		        If start = -1 Then
+		          Return
+		        Else
+		          i = start
+		          Continue While
+		        End If
+		      End If
+		      
+		    ElseIf Utilities.IsASCIIAlphaChar(c) Then
+		      // Entity reference?
+		      
+		    Else
+		      // Any other potential references?
+		      start = chars.IndexOf("&", i)
+		      If start = -1 Then
+		        Return
+		      Else
+		        i = start
+		      End If
+		    End If
+		    
+		  Wend
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0

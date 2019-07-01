@@ -169,8 +169,6 @@ Protected Class Block
 		    Next i
 		    
 		  Case MarkdownKit.BlockType.InlineText
-		    #Pragma Warning "TODO: Encode entities, etc"
-		    
 		    For x As Integer = Self.StartPos To Self.EndPos
 		      Self.Chars.Append(Self.Parent.Chars(x))
 		    Next x
@@ -180,7 +178,8 @@ Protected Class Block
 		    // Unescape backslash-escaped characters.
 		    Utilities.Unescape(Self.Chars)
 		    
-		    
+		    // Replace entity and numeric character references
+		    Utilities.ReplaceEntities(Self.Chars)
 		    
 		  End Select
 		End Sub

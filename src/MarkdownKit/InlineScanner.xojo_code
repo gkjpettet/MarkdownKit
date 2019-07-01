@@ -1543,18 +1543,6 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanInlineImage(chars() As Text, startPos As Integer, container As MarkdownKit.Block) As MarkdownKit.Block
-		  // Scans through the passed array of characters for a valid inline image.
-		  // Assumes `startPos` points to the beginning "[".
-		  // Returns Nil if no valid link is found, otherwise creates and returns a new 
-		  // inline image block with the passed container as its parent.
-		  
-		  #Pragma Warning "TODO"
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
 		Private Shared Function ScanInlineLinkDestination(chars() As Text, charsUbound As Integer, ByRef pos As Integer) As Text
 		  // Scans the passed array of characters for a valid link URL.
 		  // Begins at the zero-based `pos` (passed by reference).

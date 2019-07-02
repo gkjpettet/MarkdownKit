@@ -294,17 +294,11 @@ Implements Global.MarkdownKit.IRenderer
 		  mOutput.Append("""" + EncodePredefinedEntities(image.Title) + """" + ">")
 		  mOutput.Append(EOL)
 		  
-		  // If l.IsAutoLink Then
-		  // // The contents of autolinks are not inlines and are stored in the `Label` property of the link.
-		  // mOutput.Append(CurrentIndent + "<text>" + EncodePredefinedEntities(l.Label) + "</text>")
-		  // mOutput.Append(EOL)
-		  // Else
 		  For Each child As MarkdownKit.Block In image.Children
 		    IncreaseIndent
 		    child.Accept(Self)
 		    DecreaseIndent
 		  Next child
-		  'End If
 		  
 		  mOutput.Append(CurrentIndent + "</image>")
 		  mOutput.Append(EOL)

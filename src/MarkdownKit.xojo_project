@@ -65,6 +65,7 @@ Class=ASTHTMLBlockTests;Testing/AST Tests/ASTHTMLBlockTests.xojo_code;&h00000000
 Class=LinkReferenceDefinition;MarkdownKit/LinkReferenceDefinition.xojo_code;&h000000005F59A7FF;&h00000000214287FF;false
 Class=InlineLinkData;MarkdownKit/InlineLinkData.xojo_code;&h0000000058D7B7FF;&h00000000214287FF;false
 Class=InlineImageData;MarkdownKit/InlineImageData.xojo_code;&h000000001FA977FF;&h00000000214287FF;false
+Class=HTMLRenderer;MarkdownKit/HTMLRenderer.xojo_code;&h000000005E11CFFF;&h00000000214287FF;false
 DefaultWindow=WinTests
 AppMenuBar=MenuBarMain
 MajorVersion=1

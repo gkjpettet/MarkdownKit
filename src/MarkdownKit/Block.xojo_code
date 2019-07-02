@@ -375,6 +375,14 @@ Protected Class Block
 		    // was a reference link.
 		    If Chars.Ubound = -1 Then Self.Parent.RemoveChild(Self)
 		    
+		    // Is this paragraph a child of a list item?
+		    Dim p As MarkdownKit.Block = Self.Parent
+		    If p.Type = BlockType.ListItem Then
+		      Self.IsChildOfListItem = True
+		      // Is the list tight?
+		      Self.IsChildOfTightList = p.Parent.ListData.IsTight
+		    End If
+		    
 		  Case MarkdownKit.BlockType.SetextHeading
 		    // ===== Setext heading =====
 		    If Chars.Ubound < 0 Then Return
@@ -492,6 +500,14 @@ Protected Class Block
 
 	#tag Property, Flags = &h0
 		IsAutoLink As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		IsChildOfListItem As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		IsChildOfTightList As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 49662054727565207468656E20746865206C617374206C696E65206F66207468697320636F6E7461696E657220697320626C616E6B2E

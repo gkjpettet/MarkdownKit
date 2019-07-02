@@ -284,18 +284,17 @@ Implements IRenderer
 		Sub VisitParagraph(p As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  Dim isChildOfList As Boolean = If(p.Parent.Type = BlockType.ListItem, True, False)
-		  Dim isChildOfTightList As Boolean = If(isChildOfList And p.Parent.Parent.ListData.IsTight, True, False)
+		  #Pragma Error "Not handling tight/loose lists correctly"
 		  
-		  If Not isChildOfTightList Then mOutput.Append("<p>")
+		  If Not p.IsChildOfTightList Then mOutput.Append("<p>")
 		  
 		  For Each child As MarkdownKit.Block In p.Children
 		    child.Accept(Self)
 		  Next child
 		  
-		  If Not isChildOfTightList Then mOutput.Append("</p>")
+		  If Not p.IsChildOfTightList Then mOutput.Append("</p>")
 		  
-		  If Not isChildOfList Then mOutput.Append(&u000A)
+		  If Not p.IsChildOfListItem Then mOutput.Append(&u000A)
 		End Sub
 	#tag EndMethod
 

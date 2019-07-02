@@ -242,15 +242,17 @@ Implements IRenderer
 		  Dim listTag As Text
 		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
 		    listTag = "ol"
+		    mOutput.Append("<ol start=")
+		    mOutput.Append("""")
+		    mOutput.Append(theList.ListData.Start.ToText)
+		    mOutput.Append("""")
+		    mOutput.Append(">")
+		    mOutput.Append(&u000A)
 		  Else
 		    listTag = "ul"
+		    mOutput.Append("<ul>")
+		    mOutput.Append(&u000A)
 		  End If
-		  
-		  // Open the list.
-		  mOutput.Append("<")
-		  mOutput.Append(listTag)
-		  mOutput.Append(">")
-		  mOutput.Append(&u000A)
 		  
 		  // Print the list items.
 		  For Each b As MarkdownKit.Block In theList.Children

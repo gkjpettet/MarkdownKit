@@ -1,6 +1,14 @@
 #tag Class
 Protected Class App
 Inherits Application
+	#tag Event
+		Sub Open()
+		  // Initialise MarkdownKit.
+		  MarkdownKit.Initialise
+		End Sub
+	#tag EndEvent
+
+
 	#tag MenuHandler
 		Function WindowEditorPhase2() As Boolean Handles WindowEditorPhase2.Action
 			WinEditor.Show

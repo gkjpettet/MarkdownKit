@@ -2308,8 +2308,10 @@ Protected Class Utilities
 		  Dim i As Integer = start
 		  Dim xLimit As Integer
 		  Dim codePoint As Integer
+		  Dim seenSemiColon As Boolean = False
 		  While i < chars.Ubound
 		    Redim tmp(-1)
+		    seenSemiColon = False
 		    c = chars(i)
 		    
 		    // Expect an unescaped "&".
@@ -2344,10 +2346,11 @@ Protected Class Utilities
 		          If Utilities.IsHexDigit(c) Then
 		            tmp.Append(c)
 		          ElseIf c = ";" Then
+		            seenSemiColon = True
 		            Exit
 		          Else
 		            // Any other potential references?
-		            start = chars.IndexOf("&", i)
+		            start = chars.IndexOf("&", x)
 		            If start = -1 Then
 		              Return
 		            Else
@@ -2356,13 +2359,35 @@ Protected Class Utilities
 		            End If
 		          End If
 		        Next x
-		        // `tmp` contains the hex value of the codepoint.
-		        // Remove the characters in `chars` that make up this reference.
-		        For x As Integer = 1 To tmp.Ubound + 5
-		          chars.Remove(start)
-		        Next x
-		        
-		        chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromHex(Text.Join(tmp, ""))))
+		        If seenSemiColon And tmp.Ubound > -1 Then
+		          // `tmp` contains the hex value of the codepoint.
+		          // Remove the characters in `chars` that make up this reference.
+		          For x As Integer = 1 To tmp.Ubound + 5
+		            chars.Remove(start)
+		          Next x
+		          chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromHex(Text.Join(tmp, ""))))
+		          // Any other potential references?
+		          i = start + 1
+		          If i > chars.Ubound Then Return
+		          start = chars.IndexOf("&", i)
+		          If start = -1 Then
+		            Return
+		          Else
+		            i = start
+		            Continue While
+		          End If
+		        Else
+		          // Any other potential references?
+		          i = i + 1
+		          If i > chars.Ubound Then Return
+		          start = chars.IndexOf("&", i)
+		          If start = -1 Then
+		            Return
+		          Else
+		            i = start
+		            Continue While
+		          End If
+		        End If
 		        
 		        // Any other potential references?
 		        start = chars.IndexOf("&")
@@ -2381,10 +2406,11 @@ Protected Class Utilities
 		          If Utilities.IsDigit(c) Then
 		            tmp.Append(c)
 		          ElseIf c = ";" Then
+		            seenSemiColon = True
 		            Exit
 		          Else
 		            // Any other potential references?
-		            start = chars.IndexOf("&", i)
+		            start = chars.IndexOf("&", x)
 		            If start = -1 Then
 		              Return
 		            Else
@@ -2393,23 +2419,38 @@ Protected Class Utilities
 		            End If
 		          End If
 		        Next x
-		        // `tmp` contains the decimal value of the codepoint.
-		        // Remove the characters in `chars` that make up this reference.
-		        For x As Integer = 1 To tmp.Ubound + 4
-		          chars.Remove(start)
-		        Next x
-		        codePoint = Integer.FromText(Text.Join(tmp, ""))
-		        // For security reasons, the code point U+0000 is replaced by U+FFFD.
-		        If codePoint = 0 Then codePoint = &hFFFD
-		        chars.Insert(start, Text.FromUnicodeCodepoint(codePoint))
 		        
-		        // Any other potential references?
-		        start = chars.IndexOf("&")
-		        If start = -1 Then
-		          Return
+		        If seenSemiColon And tmp.Ubound > -1 Then
+		          // `tmp` contains the decimal value of the codepoint.
+		          // Remove the characters in `chars` that make up this reference.
+		          For x As Integer = 1 To tmp.Ubound + 4
+		            chars.Remove(start)
+		          Next x
+		          codePoint = Integer.FromText(Text.Join(tmp, ""))
+		          // For security reasons, the code point U+0000 is replaced by U+FFFD.
+		          If codePoint = 0 Then codePoint = &hFFFD
+		          chars.Insert(start, Text.FromUnicodeCodepoint(codePoint))
+		          // Any other potential references?
+		          i = start + 1
+		          If i > chars.Ubound Then Return
+		          start = chars.IndexOf("&", i)
+		          If start = -1 Then
+		            Return
+		          Else
+		            i = start
+		            Continue While
+		          End If
 		        Else
-		          i = start
-		          Continue While
+		          // Any other potential references?
+		          i = i + 1
+		          If i > chars.Ubound Then Return
+		          start = chars.IndexOf("&", i)
+		          If start = -1 Then
+		            Return
+		          Else
+		            i = start
+		            Continue While
+		          End If
 		        End If
 		        
 		      Else
@@ -2432,10 +2473,11 @@ Protected Class Utilities
 		        If Utilities.IsASCIIAlphaChar(c) Or Utilities.IsDigit(c) Then
 		          tmp.Append(c)
 		        ElseIf c = ";" Then
+		          seenSemiColon = True
 		          Exit
 		        Else
 		          // Any other potential references?
-		          start = chars.IndexOf("&", i)
+		          start = chars.IndexOf("&", x)
 		          If start = -1 Then
 		            Return
 		          Else
@@ -2444,6 +2486,7 @@ Protected Class Utilities
 		          End If
 		        End If
 		      Next x
+		      If Not seenSemiColon Then Return
 		      // `tmp` contains the HTML entity reference name.
 		      // Is this a valid entity name?
 		      Dim entityName As Text = Text.Join(tmp, "")
@@ -2456,7 +2499,9 @@ Protected Class Utilities
 		      End If
 		      
 		      // Any other potential references?
-		      start = chars.IndexOf("&")
+		      i = start + 1
+		      If i > chars.Ubound Then Return
+		      start = chars.IndexOf("&", i)
 		      If start = -1 Then
 		        Return
 		      Else

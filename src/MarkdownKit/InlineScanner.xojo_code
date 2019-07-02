@@ -1580,14 +1580,16 @@ Protected Class InlineScanner
 		      If i = charsUbound Or chars(i + 1) = &u000A Then
 		        If unmatchedOpenParens = 0 Then
 		          pos = i
-		          Return chars.ToText(startPos, i - startPos)
+		          Dim destination As Text = chars.ToText(startPos, i - startPos)
+		          Return Utilities.ReplaceEntities(destination)
 		        Else
 		          Return ""
 		        End If
 		      End If
 		      If unmatchedOpenParens = 0 Then
 		        pos = i
-		        Return chars.ToText(startPos, i - startPos)
+		        Dim destination As Text = chars.ToText(startPos, i - startPos)
+		        Return Utilities.ReplaceEntities(destination)
 		      End If
 		    Case &u0000, &u0009
 		      Return ""
@@ -1597,7 +1599,8 @@ Protected Class InlineScanner
 		    Case " "
 		      If unmatchedOpenParens = 1 Then
 		        pos = i
-		        Return chars.ToText(startPos, i - startPos)
+		        Dim destination As Text = chars.ToText(startPos, i - startPos)
+		        Return Utilities.ReplaceEntities(destination)
 		      Else
 		        Return ""
 		      End If
@@ -1606,7 +1609,8 @@ Protected Class InlineScanner
 		  
 		  If unmatchedOpenParens = 0 Then
 		    pos = i
-		    Return chars.ToText(startPos, pos - startPos)
+		    Dim destination As Text = chars.ToText(startPos, pos - startPos)
+		    Return Utilities.ReplaceEntities(destination)
 		  Else
 		    Return ""
 		  End If
@@ -1649,7 +1653,8 @@ Protected Class InlineScanner
 		    c = chars(i)
 		    If c = delimiter And Not Utilities.Escaped(chars, i) Then
 		      pos = i + 1
-		      Return chars.ToText(startPos + 1, i - startPos - 1)
+		      Dim title As Text = chars.ToText(startPos + 1, i - startPos - 1)
+		      Return Utilities.ReplaceEntities(title)
 		    End If
 		  Next i
 		  

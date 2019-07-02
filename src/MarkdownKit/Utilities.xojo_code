@@ -2524,6 +2524,19 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function ReplaceEntities(t As Text) As Text
+		  If t.IndexOf("&") = -1 Or t.IndexOf(";") = -1 Then
+		    Return t
+		  Else
+		    Dim tmp() As Text = t.Split
+		    Utilities.ReplaceEntities(tmp)
+		    Return Text.Join(tmp, "")
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Sub Unescape(ByRef t As Text)
 		  // Converts backslash escaped characters in the passed Text object to their 
 		  // literal character value.

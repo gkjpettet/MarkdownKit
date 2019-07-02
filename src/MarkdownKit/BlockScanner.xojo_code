@@ -15,14 +15,16 @@ Protected Class BlockScanner
 		  // ##### DESTINATION #####
 		  Dim urlChars() As Text = destinationCR.ToArray(chars)
 		  InlineScanner.CleanURL(urlChars)
-		  Dim url As Text = Text.Join(urlChars, "")
+		  // Dim url As Text = Text.Join(urlChars, "")
+		  Dim url As Text = Utilities.ReplaceEntities(Text.Join(urlChars, ""))
 		  
 		  // ##### TITLE #####
 		  Dim title As Text = ""
 		  If titleCR <> Nil Then
 		    Dim titleChars() As Text = titleCR.ToArray(chars)
 		    InlineScanner.CleanLinkTitle(titleChars)
-		    title = Text.Join(titleChars, "")
+		    // title = Text.Join(titleChars, "")
+		    title = Utilities.ReplaceEntities(Text.Join(titleChars, ""))
 		  End If
 		  
 		  // Only add this reference to the document if it's the first time we've encountered 

@@ -168,6 +168,9 @@ Protected Class Block
 		      chars.Append(Parent.Chars(i))
 		    Next i
 		    
+		    // Replace entity and numeric character references
+		    Utilities.ReplaceEntities(Self.Chars)
+		    
 		  Case MarkdownKit.BlockType.InlineText
 		    For x As Integer = Self.StartPos To Self.EndPos
 		      Self.Chars.Append(Self.Parent.Chars(x))
@@ -291,6 +294,9 @@ Protected Class Block
 		    // ===== HTML block =====
 		    If Chars.Ubound < 0 Then Return
 		    If Chars(Chars.Ubound) = &u000A Then Call Chars.Pop
+		    
+		    // Replace entity and numeric character references
+		    Utilities.ReplaceEntities(Chars)
 		    
 		  Case MarkdownKit.BlockType.IndentedCode
 		    // ===== Indented code =====

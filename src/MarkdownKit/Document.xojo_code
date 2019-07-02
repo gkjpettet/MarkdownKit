@@ -200,6 +200,12 @@ Inherits MarkdownKit.Block
 		  // Process each line to determine the overall block structure of this 
 		  // Markdown document.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Dim currentBlock As MarkdownKit.Block = Self
 		  
 		  For i As Integer = 0 To LinesUbound
@@ -221,6 +227,12 @@ Inherits MarkdownKit.Block
 		Sub ParseInlines()
 		  // Walks this document and its children parsing raw text content into inline content 
 		  // where appropriate.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim stack() As MarkdownKit.Block
 		  Dim delimiterStack() As MarkdownKit.DelimiterStackNode
@@ -281,6 +293,12 @@ Inherits MarkdownKit.Block
 		  // We've tried matching against the open blocks and we've opened any required 
 		  // new blocks. What now remains at the offset is a text line. Add it to the 
 		  // appropriate container.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  line.FindNextNonWhitespace
 		  Dim indent As Integer = line.NextNWSColumn - line.Column
@@ -395,6 +413,12 @@ Inherits MarkdownKit.Block
 		Private Sub TryNewBlocks(line As MarkdownKit.LineInfo, ByRef container As MarkdownKit.Block, ByRef maybeLazy As Boolean)
 		  // Unless the last matched container is code or HTML block, 
 		  // try to start a new container block.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Const kCodeIndent = 4
 		  Dim indent, tmpInt1, tmpInt2 As Integer
@@ -537,6 +561,12 @@ Inherits MarkdownKit.Block
 		  // this line meets the required condition to keep the block open.
 		  // `container`: This will be set to the Block which last had a match to the line.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Const kCodeIndent = 4
 		  Dim indent As Integer
 		  Dim blank As Boolean
@@ -639,6 +669,58 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="FenceChar"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FenceLength"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FenceOffset"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="InfoString"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Destination"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Label"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Title"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Delimiter"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="DelimiterLength"
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsAutoLink"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StartPos"
 			Group="Behavior"

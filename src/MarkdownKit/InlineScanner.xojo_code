@@ -27,7 +27,6 @@ Protected Class InlineScanner
 		  Call chars.Pop
 		  
 		  Utilities.Unescape(chars)
-		  ReplaceCharacterReferences(chars)
 		  
 		  // Remove leading whitespace from the title.
 		  StripLeadingWhitespace(chars)
@@ -60,7 +59,7 @@ Protected Class InlineScanner
 		  End If
 		  
 		  Utilities.Unescape(chars)
-		  ReplaceCharacterReferences(chars)
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -83,6 +82,12 @@ Protected Class InlineScanner
 		Shared Sub CollapseInternalWhitespace(chars() As Text)
 		  // Collapses consecutive whitespace within the passed character array to a single space.
 		  // Mutates the passed array.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim i As Integer = 0
 		  Dim collapse As Boolean = False
@@ -198,6 +203,12 @@ Protected Class InlineScanner
 		  // `startPos` points to the index of the "[" immediately after the closing imageDescription "]".
 		  // Full reference image: imageDescription, VALID linkLabel
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  // We know that `startPos` points to a "[".
 		  If startPos + 1 > charsUbound Then Return Nil
 		  
@@ -245,6 +256,12 @@ Protected Class InlineScanner
 		  // Full reference link: linkText, VALID linkLabel
 		  // The contents of linkText are parsed as inlines and used as the link's text.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  // We know that `startPos` points to a "[".
 		  If startPos + 1 > charsUbound Then Return Nil
 		  
@@ -289,6 +306,12 @@ Protected Class InlineScanner
 		  // Look to see if it represents the start of a valid inline code span.
 		  // If it does then it creates and returns an inline code span. Otherwise 
 		  // it returns Nil.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim pos As Integer
 		  
@@ -473,7 +496,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function InlineImageData(chars() As Text, charsUbound As Integer, imageDescriptionChars() As Text, startPos As Integer, closerCharPos As Integer) As MarkdownKit.InlineImageData
+		Private Shared Function InlineImageData(chars() As Text, charsUbound As Integer, imageDescriptionChars() As Text, startPos As Integer) As MarkdownKit.InlineImageData
 		  // Returns either an inline image or Nil if a valid inline image cannot be constructed.
 		  // `imageDescriptionChars` are the raw characters representing this images's 
 		  // `alt` attribute. They are to be parsed as inlines.
@@ -481,6 +504,12 @@ Protected Class InlineScanner
 		  
 		  // Inline image: imageDescription, "(", optional whitespace, optional link destination, 
 		  //              optional linkTitle, optional whitespace, ")"
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  // We know that `startPos` points at the opening "(" so move past it.
 		  Dim pos As Integer = startPos + 1
@@ -525,7 +554,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function InlineLinkData(chars() As Text, charsUbound As Integer, linkTextChars() As Text, startPos As Integer, closerCharPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function InlineLinkData(chars() As Text, charsUbound As Integer, linkTextChars() As Text, startPos As Integer) As MarkdownKit.InlineLinkData
 		  // Returns either an inline link or Nil if a valid inline link cannot be constructed.
 		  // `linkTextChars` are the raw characters representing this link's text. They are to 
 		  // be parsed as inlines.
@@ -535,6 +564,12 @@ Protected Class InlineScanner
 		  //              optional linkTitle, optional whitespace, ")"
 		  
 		  // The contents of linkText are parsed as inlines and used as the link's text.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  // We know that `startPos` points at the opening "(" so move past it.
 		  Dim pos As Integer = startPos + 1
@@ -586,6 +621,12 @@ Protected Class InlineScanner
 		  // If a valid link/image is found the a new block is created of the appropriate 
 		  // type, inserted into the container and any inlines it containes are handled.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  // Starting at the top of the delimiter stack, we look backwards through 
 		  // for an opening "[" or "![" delimiter.
 		  Dim delimiterStackUbound As Integer = delimiterStack.Ubound
@@ -593,6 +634,8 @@ Protected Class InlineScanner
 		  Dim linkData As MarkdownKit.InlineLinkData
 		  Dim imageData As MarkdownKit.InlineImageData
 		  Dim openerIndex, openerPos As Integer
+		  Dim link, openerTextNode, image As MarkdownKit.Block
+		  Dim limit As Integer
 		  For i As Integer = delimiterStackUbound DownTo 0
 		    dsn = delimiterStack(i)
 		    
@@ -617,7 +660,7 @@ Protected Class InlineScanner
 		        Return False
 		      Else
 		        // Create a new link node with the container as its parent.
-		        Dim link As New MarkdownKit.Block(BlockType.InlineLink, _ 
+		        link = New MarkdownKit.Block(BlockType.InlineLink, _ 
 		        Xojo.Core.WeakRef.Create(container))
 		        link.Title = linkData.LinkTitle
 		        link.Destination = linkData.Destination
@@ -625,13 +668,13 @@ Protected Class InlineScanner
 		        
 		        // The children of this link are the child blocks of this container 
 		        // AFTER the text node pointed to by the opening delimiter.
-		        Dim openerTextNode As MarkdownKit.Block = MarkdownKit.Block(dsn.TextNodePointer.Value)
+		        openerTextNode = MarkdownKit.Block(dsn.TextNodePointer.Value)
 		        openerIndex = container.Children.IndexOf(openerTextNode)
 		        If openerIndex = -1 Then
 		          Raise New MarkdownKit.MarkdownException("Could not find the opener text node " + _
 		          "in the container's children.")
 		        End if
-		        Dim limit As Integer = container.Children.Ubound
+		        limit = container.Children.Ubound
 		        For x As Integer = openerIndex + 1 To limit
 		          link.Children.Append(container.Children(x))
 		          link.Children(link.Children.Ubound).Parent = link
@@ -673,7 +716,7 @@ Protected Class InlineScanner
 		        Return False
 		      Else
 		        // Create a new image node with the container as its parent.
-		        Dim image As New MarkdownKit.Block(BlockType.InlineImage, _ 
+		        image = New MarkdownKit.Block(BlockType.InlineImage, _ 
 		        Xojo.Core.WeakRef.Create(container))
 		        image.Title = imageData.LinkTitle
 		        image.Destination = imageData.Destination
@@ -681,13 +724,13 @@ Protected Class InlineScanner
 		        
 		        // The children of this image are the child blocks of this container 
 		        // AFTER the text node pointed to by the opening delimiter.
-		        Dim openerTextNode As MarkdownKit.Block = MarkdownKit.Block(dsn.TextNodePointer.Value)
+		        openerTextNode = MarkdownKit.Block(dsn.TextNodePointer.Value)
 		        openerIndex = container.Children.IndexOf(openerTextNode)
 		        If openerIndex = -1 Then
 		          Raise New MarkdownKit.MarkdownException("Could not find the opener text node " + _
 		          "in the container's children.")
 		        End if
-		        Dim limit As Integer = container.Children.Ubound
+		        limit = container.Children.Ubound
 		        For x As Integer = openerIndex + 1 To limit
 		          image.Children.Append(container.Children(x))
 		          image.Children(image.Children.Ubound).Parent = image
@@ -722,28 +765,17 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub NotInlineStarter(ByRef buffer As MarkdownKit.Block, ByRef pos As Integer, container As MarkdownKit.Block)
-		  // Called when parsing the raw characters of an inline container block and we have 
-		  // come across a character that does NOT represent the start of new inline content.
-		  
-		  If buffer <> Nil Then
-		    buffer.EndPos = pos
-		  Else
-		    buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(container))
-		    buffer.StartPos = pos
-		    buffer.EndPos = pos
-		  End If
-		  
-		  pos = pos + 1
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Shared Sub ParseInlines(b As MarkdownKit.Block, ByRef delimiterStack() As MarkdownKit.DelimiterStackNode)
 		  // We know that `b` is an inline container block (i.e: a paragraph, ATX heading or 
 		  // setext heading) that has at least one character of content in its `RawChars` array.
 		  // This method steps through the raw characters, populating the block's Inlines() array 
 		  // with any inline elements it encounters.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim pos As Integer = 0
 		  Dim charsUbound As Integer = b.Chars.Ubound
@@ -767,7 +799,14 @@ Protected Class InlineScanner
 		        // Advance the position.
 		        pos = result.EndPos + result.DelimiterLength + 1
 		      Else
-		        NotInlineStarter(buffer, pos, b) 
+		        If buffer <> Nil Then
+		          buffer.EndPos = pos
+		        Else
+		          buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		          buffer.StartPos = pos
+		          buffer.EndPos = pos
+		        End If
+		        pos = pos + 1
 		      End If
 		      
 		    ElseIf c = "<" And Not Utilities.Escaped(b.Chars, pos) Then
@@ -781,7 +820,14 @@ Protected Class InlineScanner
 		        // Advance the position.
 		        pos = result.EndPos + 1
 		      Else
-		        NotInlineStarter(buffer, pos, b) 
+		        If buffer <> Nil Then
+		          buffer.EndPos = pos
+		        Else
+		          buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		          buffer.StartPos = pos
+		          buffer.EndPos = pos
+		        End If
+		        pos = pos + 1
 		      End If
 		      
 		    ElseIf c = &u000A Then // Hard or soft break?
@@ -835,7 +881,14 @@ Protected Class InlineScanner
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      If Not LookForLinkOrImage(b, delimiterStack, pos) Then
 		        // Add a literal "]" text node.
-		        NotInlineStarter(buffer, pos, b)
+		        If buffer <> Nil Then
+		          buffer.EndPos = pos
+		        Else
+		          buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		          buffer.StartPos = pos
+		          buffer.EndPos = pos
+		        End If
+		        pos = pos + 1
 		      End If
 		      
 		    ElseIf (c = "*" Or c = "_") And Not Utilities.Escaped(b.Chars, pos) Then
@@ -854,7 +907,14 @@ Protected Class InlineScanner
 		      // This character is not the start of any inline content. If there is an 
 		      // open inline text block then append this character to it, otherwise create a 
 		      // new open inline text block and append this character to it.
-		      NotInlineStarter(buffer, pos, b)
+		      If buffer <> Nil Then
+		        buffer.EndPos = pos
+		      Else
+		        buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		        buffer.StartPos = pos
+		        buffer.EndPos = pos
+		      End If
+		      pos = pos + 1
 		    End If
 		  Wend
 		  
@@ -869,6 +929,12 @@ Protected Class InlineScanner
 		  // `stackBottom` sets a lower bound to how far we descend in the delimiter stack. If it's -1, 
 		  // we can go all the way to the bottom. Otherwise, we stop before visiting stackBottom.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  If delimiterStack.Ubound < 0 Then Return
 		  
 		  // Let currentPosition point to the element on the delimiter stack just above stackBottom 
@@ -882,6 +948,9 @@ Protected Class InlineScanner
 		  Dim openerNode As MarkdownKit.DelimiterStackNode
 		  
 		  Dim incrementCurrentPosition As Boolean = False
+		  
+		  Dim openerTextNode, closerTextNode, emphasis As MarkdownKit.Block
+		  Dim openerTextNodeIndex, closerTextNodeIndex, numToTranspose, limit As Integer
 		  
 		  While currentPosition <= delimiterStack.Ubound
 		    
@@ -916,7 +985,6 @@ Protected Class InlineScanner
 		          
 		          // Strong or regular emphasis? If both closer and opener spans have length >= 2, 
 		          // we have strong, otherwise regular.
-		          Dim emphasis As MarkdownKit.Block
 		          If closerNode.CurrentLength >= 2 And openerNode.CurrentLength >= 2 Then
 		            // Strong.
 		            emphasis = New MarkdownKit.Block(BlockType.Strong, Xojo.Core.WeakRef.Create(container))
@@ -930,8 +998,8 @@ Protected Class InlineScanner
 		          End If
 		          // Insert the newly created emphasis node, after the text node corresponding to the opener.
 		          // Get the index of the opener text node in the container's `Inlines` array.
-		          Dim openerTextNode As MarkdownKit.Block = MarkdownKit.Block(openerNode.TextNodePointer.Value)
-		          Dim openerTextNodeIndex As Integer = openerTextNode.Parent.Children.IndexOf(openerTextNode)
+		          openerTextNode = MarkdownKit.Block(openerNode.TextNodePointer.Value)
+		          openerTextNodeIndex = openerTextNode.Parent.Children.IndexOf(openerTextNode)
 		          // Dim openerTextNodeIndex As Integer = _
 		          // container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
 		          If openerTextNodeIndex = -1 Then
@@ -942,8 +1010,8 @@ Protected Class InlineScanner
 		          openerTextNode.Parent.Children.Insert(openerTextNodeIndex + 1, emphasis)
 		          
 		          // Get the index of the closer text node in the container's `Children` array.
-		          Dim closerTextNode As MarkdownKit.Block = MarkdownKit.Block(closerNode.TextNodePointer.Value)
-		          Dim closerTextNodeIndex As Integer = closerTextNode.Parent.Children.IndexOf(closerTextNode)
+		          closerTextNode = MarkdownKit.Block(closerNode.TextNodePointer.Value)
+		          closerTextNodeIndex = closerTextNode.Parent.Children.IndexOf(closerTextNode)
 		          // Dim closerTextNodeIndex As Integer = _
 		          // container.Children.IndexOf(Markdownkit.Block(closerNode.TextNodePointer.Value))
 		          If closerTextNodeIndex = -1 Then
@@ -960,7 +1028,7 @@ Protected Class InlineScanner
 		          Next x
 		          
 		          // Remove the transposed inlines from the container.
-		          Dim numToTranspose As Integer = closerTextNodeIndex - openerTextNodeIndex - 2
+		          numToTranspose = closerTextNodeIndex - openerTextNodeIndex - 2
 		          While numToTranspose > 0
 		            // container.Children.Remove(openerTextNodeIndex + 2)
 		            openerTextNode.Parent.Children.Remove(openerTextNodeIndex + 2)
@@ -969,7 +1037,7 @@ Protected Class InlineScanner
 		          
 		          // Remove any delimiters between the opener and closer from the delimiter stack.
 		          // We do this by setting their `ignore` flag to True.
-		          Dim limit As Integer = delimiterStack.IndexOf(closerNode) - 1
+		          limit = delimiterStack.IndexOf(closerNode) - 1
 		          For j As Integer = i + 1 To limit
 		            delimiterStack(j).Ignore = True
 		          Next j
@@ -1043,17 +1111,6 @@ Protected Class InlineScanner
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Shared Sub ReplaceCharacterReferences(chars() As Text)
-		  // Replaces valid HTML entity and numeric character references within the 
-		  // passed array of characters with their corresponding unicode character.
-		  // Mutates the passed array.
-		  // CommonMark 0.29 section 6.2.
-		  #Pragma Warning "Needs implementing"
-		  
-		End Sub
-	#tag EndMethod
-
 	#tag Method, Flags = &h21
 		Private Shared Function ScanAutoLink(chars() As Text, startPos As Integer, charsUbound As Integer, ByRef uri As Text) As Integer
 		  // Scan the passed array of characters for a valid autolink.
@@ -1066,6 +1123,12 @@ Protected Class InlineScanner
 		  // "<", absolute URI, ">"
 		  // Absolute URI = scheme, :, >=0 characters (not WS, <, >)
 		  // Scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  uri = ""
 		  
@@ -1083,11 +1146,12 @@ Protected Class InlineScanner
 		  // Skip over any characters that aren't whitespace, "<" or ">"
 		  If pos >= charsUbound Then Return 0
 		  Dim c As Text
+		  Dim limit As Integer
 		  For pos = pos To charsUbound
 		    c = chars(pos)
 		    If c = ">" Then
 		      // Valid autolink. Construct the URI.
-		      Dim limit As Integer = pos - 1
+		      limit = pos - 1
 		      Dim tmp() As Text
 		      For i As Integer = startPos To limit
 		        tmp.Append(chars(i))
@@ -1111,6 +1175,12 @@ Protected Class InlineScanner
 		  // which forms the beginning of the closing backtick string. Otherwise return -1.
 		  // Assumes `startPos` points at the character immediately following the last backtick of the 
 		  // opening backtick string.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  If startPos + backtickStringLen > charsUbound Then Return -1
 		  
@@ -1163,6 +1233,12 @@ Protected Class InlineScanner
 		  // Returns a DelimiterStackElement which contains information about the 
 		  // delimiter type, delimiter length and whether it's a potential opener, closer 
 		  // or both.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim startPos As integer = pos
 		  
@@ -1239,6 +1315,12 @@ Protected Class InlineScanner
 		  '      (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*
 		  // name@
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  uri = ""
 		  
 		  Dim pos As Integer = startPos
@@ -1289,13 +1371,15 @@ Protected Class InlineScanner
 		  
 		  
 		  Dim valid As Boolean = False
+		  Dim limit As Integer
+		  Dim tmp() As Text
 		  Do
 		    // Have we found a valid email?
 		    If chars(pos) = ">" Then
 		      If Valid Then
 		        // Construct the URI.
-		        Dim limit As Integer = pos - 1
-		        Dim tmp() As Text
+		        limit = pos - 1
+		        Redim tmp(-1)
 		        For i As Integer = startPos To limit
 		          tmp.Append(chars(i))
 		        Next i
@@ -1333,6 +1417,12 @@ Protected Class InlineScanner
 		  // Returns Nil if no valid image is found, otherwise creates and returns a new 
 		  // inline image block with the passed container as its parent.
 		  // `closerCharPos` is the index in chars() of the closing "]" character.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim pos As Integer = startPos
 		  Dim charsUbound As Integer = chars.Ubound
@@ -1408,7 +1498,7 @@ Protected Class InlineScanner
 		  If chars(pos) = "(" Then
 		    // Could be an inline image.
 		    Dim result As MarkdownKit.InlineImageData = _
-		    InlineImageData(chars, charsUbound, part1RawChars, pos, closerCharPos)
+		    InlineImageData(chars, charsUbound, part1RawChars, pos)
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference image immediately followed by a "(".
 		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
@@ -1433,6 +1523,12 @@ Protected Class InlineScanner
 		  // Returns Nil if no valid link is found, otherwise creates and returns a new 
 		  // inline link block with the passed container as its parent.
 		  // `closerCharPos` is the index in chars() of the closing "]" character.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim pos As Integer = startPos
 		  Dim charsUbound As Integer = chars.Ubound
@@ -1509,7 +1605,7 @@ Protected Class InlineScanner
 		  If chars(pos) = "(" Then
 		    // Could be an inline link.
 		    Dim result As MarkdownKit.InlineLinkData = _
-		    InlineLinkData(chars, charsUbound, part1RawChars, pos, closerCharPos)
+		    InlineLinkData(chars, charsUbound, part1RawChars, pos)
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference link immediately followed by a "(".
 		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
@@ -1544,6 +1640,12 @@ Protected Class InlineScanner
 		  // Since we are looking for an inline link destination, we may encounter either a 
 		  // closing ")" (representing the end of the inline link definition without providing 
 		  // a title) or whitespace followed by the " character (indicating a trailing title).
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim i As Integer
 		  Dim c As Text
@@ -1632,6 +1734,12 @@ Protected Class InlineScanner
 		  // 3. >= 0 characters between matching parentheses ((...)), 
 		  //    including a ( or ) character only if it is backslash-escaped.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Dim startPos As Integer = pos
 		  
 		  // Sanity check.
@@ -1680,6 +1788,12 @@ Protected Class InlineScanner
 		  // NB: If isReferenceLink is True then we are scanning for a reference link 
 		  // destination. In this case, we regard a newline character as marking the 
 		  // end of the line (whereas inline link destinations cannot contain a newline).
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  Dim i As Integer
@@ -1763,6 +1877,12 @@ Protected Class InlineScanner
 		  // (1) [a link `with a ](/url)` character
 		  // (2) [a link *with emphasized ](/url) text*
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Dim result As New MarkdownKit.CharacterRun(0, -1, -1)
 		  
 		  Dim charsUbound As Integer = chars.Ubound
@@ -1808,6 +1928,12 @@ Protected Class InlineScanner
 		  // Returns the position of the character immediately following the scheme if 
 		  // found, otherwise returns 0.
 		  // Valid scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  // Min valid scheme: aa
 		  If pos + 1 > charsUbound Then Return 0
@@ -1856,6 +1982,12 @@ Protected Class InlineScanner
 		  //    it is backslash-escaped
 		  // 3. >= 0 characters between matching parentheses ((...)), 
 		  //    including a ( or ) character only if it is backslash-escaped.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
 		  result.Invalid = True

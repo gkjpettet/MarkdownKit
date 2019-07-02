@@ -525,7 +525,7 @@ Protected Class Block
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  If mParent = Nil Or mParent.Value = Nil Then
+			  If mParent = Nil Then
 			    Return Nil
 			  Else
 			    Return MarkdownKit.Block(mParent.Value)

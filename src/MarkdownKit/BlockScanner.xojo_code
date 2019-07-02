@@ -132,6 +132,12 @@ Protected Class BlockScanner
 		  // data with the details.  On failure it returns 0.
 		  // Also populates the ByRef `length` parameter to the computed length.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Dim c As Text
 		  Dim startPos As Integer
 		  data = Nil
@@ -221,6 +227,12 @@ Protected Class BlockScanner
 		  // The method assumes that leading spaces have been skipped over during 
 		  // calculation of `pos` so the first character should be a #.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  
 		  // Reset the ByRef variables.
@@ -271,6 +283,12 @@ Protected Class BlockScanner
 	#tag Method, Flags = &h0
 		Shared Function ScanCloseCodeFence(chars() As Text, pos As Integer, length As Integer) As Integer
 		  // Scan for a closing fence of at least length `length`.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  
@@ -333,6 +351,12 @@ Protected Class BlockScanner
 		  // Also sets the ByRef `type` parameter to the same value as the returned value.
 		  // There are 7 kinds of HTML block. See the note "HTML Block Types" in this class 
 		  // for more detail.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim chars() As Text = line.Chars
 		  Dim charsUbound As Integer = chars.Ubound
@@ -466,6 +490,12 @@ Protected Class BlockScanner
 		  // Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
 		  //         {closingTag}[•→]+|⮐$
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  // Reset the ByRef type parameter.
 		  type = Block.kHTMLBlockTypeNone
 		  
@@ -507,6 +537,12 @@ Protected Class BlockScanner
 		  // Document's reference map dictionary.
 		  // If we don't find a valid reference then we leave chars alone.
 		  // Assumes doc <> Nil.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  Dim pos As Integer = 0
@@ -627,6 +663,12 @@ Protected Class BlockScanner
 		  // Additionally mutates the ByRef `length` variable to the length of the 
 		  // found (or not found) code fence length.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  
 		  length = 0
@@ -675,6 +717,12 @@ Protected Class BlockScanner
 		  ' ^[=]+[ ]*$
 		  ' ^[-]+[ ]*$
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  // Reset the ByRef parameter.
 		  level = 0
 		  
@@ -718,6 +766,12 @@ Protected Class BlockScanner
 		Shared Function ScanSpaceChars(chars() As Text, pos As Integer) As Integer
 		  // Match space and tab characters.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  
 		  If pos > charsUbound Then Return 0
@@ -742,6 +796,12 @@ Protected Class BlockScanner
 		  ' ^([_][ ]*){3,}[\s]*$"
 		  ' ^([\*][ ]*){3,}[\s]*$"
 		  // Returns the length of the matching thematic break.
+		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  

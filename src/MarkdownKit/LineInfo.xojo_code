@@ -83,6 +83,12 @@ Protected Class LineInfo
 
 	#tag Method, Flags = &h0
 		Sub Constructor(lineText As Text, lineNumber As Integer)
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  Value = lineText
 		  Chars = lineText.Split
 		  CharsUbound = Chars.Ubound
@@ -270,18 +276,6 @@ Protected Class LineInfo
 			Name="CurrentChar"
 			Group="Behavior"
 			Type="Text"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsBlank"
-			Group="Behavior"
-			InitialValue="True"
-			Type="Boolean"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsEmpty"
-			Group="Behavior"
-			InitialValue="True"
-			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="NextNWS"

@@ -15,7 +15,7 @@ Implements IRenderer
 		    child.Accept(Self)
 		  Next child
 		  
-		  mOutput.Append("</")
+		  mOutput.Append("</h")
 		  mOutput.Append(level)
 		  mOutput.Append(">")
 		  mOutput.Append(&u000A)

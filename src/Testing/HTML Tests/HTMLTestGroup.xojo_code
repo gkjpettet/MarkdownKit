@@ -2,7 +2,9 @@
 Protected Class HTMLTestGroup
 Inherits TestGroup
 	#tag Method, Flags = &h0
-		Sub Run(testNumber As Integer)
+		Sub Run(methodName As Text)
+		  Dim testNumber As Integer = Integer.FromText(methodName.Replace("HTMLTests.Example", "").Replace("Test", ""))
+		  
 		  // Get the names of the files containing the test Markdown and expected HTML output.
 		  Dim mdName As Text = testNumber.ToText + ".md"
 		  Dim htmlNAme As Text = testNumber.ToText + ".html"

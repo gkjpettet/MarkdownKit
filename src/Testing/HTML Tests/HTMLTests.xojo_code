@@ -3,9 +3,7 @@ Protected Class HTMLTests
 Inherits HTMLTestGroup
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub Example1Test()
-		  Dim num As Integer = Integer.FromText(CurrentMethodName.ToText.Replace("HTMLTests.Example", "").Replace("Test", ""))
-		  
-		  Run(num)
+		  Run(CurrentMethodName.ToText)
 		End Sub
 	#tag EndMethod
 

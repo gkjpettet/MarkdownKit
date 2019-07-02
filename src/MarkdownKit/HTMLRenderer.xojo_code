@@ -272,19 +272,21 @@ Implements IRenderer
 		  mOutput.Append("<li>")
 		  
 		  For Each b As MarkdownKit.Block In li.Children
+		    b.IsChildOfTightList = li.IsChildOfTightList
+		    b.IsChildOfListItem = True
+		    If Not li.IsChildOfTightList Then mOutput.Append(&u000A)
 		    b.Accept(Self)
+		    If Not li.IsChildOfTightList Then mOutput.Append(&u000A)
 		  Next b
 		  
 		  mOutput.Append("</li>")
-		  mOutput.Append(&U000A)
+		  mOutput.Append(&u000A)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub VisitParagraph(p As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
-		  
-		  #Pragma Error "Not handling tight/loose lists correctly"
 		  
 		  If Not p.IsChildOfTightList Then mOutput.Append("<p>")
 		  
@@ -344,15 +346,6 @@ Implements IRenderer
 		  
 		  mOutput.Append("</strong>")
 		  mOutput.Append(&u000A)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub VisitTextBlock(tb As MarkdownKit.Block)
-		  // Part of the IRenderer interface.
-		  
-		  #Pragma Warning "TODO"
-		  
 		End Sub
 	#tag EndMethod
 

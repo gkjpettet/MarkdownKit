@@ -43,8 +43,6 @@ Protected Class Block
 		    visitor.VisitParagraph(Self)
 		  Case MarkdownKit.BlockType.SetextHeading
 		    visitor.VisitSetextHeading(Self)
-		  Case MarkdownKit.BlockType.TextBlock
-		    visitor.VisitTextBlock(Self)
 		  Case MarkdownKit.BlockType.ThematicBreak
 		    visitor.VisitThematicBreak(Self)
 		  Else
@@ -230,6 +228,12 @@ Protected Class Block
 		  // upon block closure.
 		  // `line` is the line that triggered the Finalise call.
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  
 		  If Not IsOpen Then
 		    Return
 		  Else
@@ -357,6 +361,20 @@ Protected Class Block
 		      item = item.NextSibling
 		    Wend
 		    
+		    Dim i As Integer
+		    Dim childrenUbound As Integer = Self.Children.Ubound
+		    For i = 0 To childrenUbound
+		      Self.Children(i).IsChildOfTightList = Self.ListData.IsTight
+		    Next i
+		    
+		  Case MarkdownKit.BlockType.ListItem
+		    // ===== List items =====
+		    Dim i As Integer
+		    Dim childrenUbound As Integer = Self.Children.Ubound
+		    For i = 0 To childrenUbound
+		      Self.Children(i).IsChildOfListItem = True
+		    Next i
+		    
 		  Case MarkdownKit.BlockType.Paragraph
 		    // ===== Paragraph blocks =====
 		    If Chars.Ubound < 0 Then Return
@@ -374,14 +392,6 @@ Protected Class Block
 		    // Do we need to remove this paragraph entirely? This occurs when its only content 
 		    // was a reference link.
 		    If Chars.Ubound = -1 Then Self.Parent.RemoveChild(Self)
-		    
-		    // Is this paragraph a child of a list item?
-		    Dim p As MarkdownKit.Block = Self.Parent
-		    If p.Type = BlockType.ListItem Then
-		      Self.IsChildOfListItem = True
-		      // Is the list tight?
-		      Self.IsChildOfTightList = p.Parent.ListData.IsTight
-		    End If
 		    
 		  Case MarkdownKit.BlockType.SetextHeading
 		    // ===== Setext heading =====
@@ -755,6 +765,18 @@ Protected Class Block
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsAutoLink"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfListItem"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfTightList"
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"

@@ -127,12 +127,6 @@ Protected Interface IRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub VisitTextBlock(tb As MarkdownKit.Block)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub VisitThematicBreak(tb As MarkdownKit.Block)
 		  
 		End Sub

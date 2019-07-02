@@ -484,15 +484,6 @@ Implements Global.MarkdownKit.IRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub VisitTextBlock(tb As MarkdownKit.Block)
-		  mOutput.Append(CurrentIndent + "<text>")
-		  mOutput.Append(Text.Join(tb.Chars, ""))
-		  mOutput.Append("</text>")
-		  mOutput.Append(EOL)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub VisitThematicBreak(tb As MarkdownKit.Block)
 		  // Part of the Global.MarkdownKit.IRenderer interface.
 		  

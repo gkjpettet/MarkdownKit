@@ -1,5 +1,5 @@
 #tag Window
-Begin Window WinTests
+Begin Window WinHTMLTests
    BackColor       =   &cFFFFFF00
    Backdrop        =   0
    CloseButton     =   True
@@ -23,7 +23,7 @@ Begin Window WinTests
    MinWidth        =   64
    Placement       =   0
    Resizeable      =   True
-   Title           =   "Tests"
+   Title           =   "HTML Tests"
    Visible         =   True
    Width           =   1090
    Begin Listbox TestGroupList
@@ -606,7 +606,7 @@ Begin Window WinTests
       TabPanelIndex   =   0
       Visible         =   True
    End
-   Begin ASTTestController Controller
+   Begin HTMLTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
       FailedCount     =   0
@@ -849,7 +849,7 @@ Begin Window WinTests
          TabIndex        =   4
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "Expected AST (""truth""):"
+         Text            =   "Expected HTML (""truth""):"
          TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
@@ -968,7 +968,7 @@ Begin Window WinTests
          TabIndex        =   8
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "AST produced by MarkdownKit (""actual""):"
+         Text            =   "HTML produced by MarkdownKit (""actual""):"
          TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
@@ -1137,8 +1137,8 @@ End
 	#tag EndMenuHandler
 
 	#tag MenuHandler
-		Function WindowEditor() As Boolean Handles WindowEditor.Action
-			WinEditor.Show
+		Function WindowASTTests() As Boolean Handles WindowASTTests.Action
+			WinASTTests.Show
 			
 			Return True
 			
@@ -1146,8 +1146,8 @@ End
 	#tag EndMenuHandler
 
 	#tag MenuHandler
-		Function WindowTests() As Boolean Handles WindowTests.Action
-			WinTests.Show
+		Function WindowEditor() As Boolean Handles WindowEditor.Action
+			WinEditor.Show
 			
 			Return True
 			

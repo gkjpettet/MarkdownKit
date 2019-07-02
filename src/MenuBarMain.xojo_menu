@@ -147,9 +147,9 @@ Begin Menu MenuBarMain
          AutoEnable = True
          Visible = True
       End
-      Begin MenuItem WindowTests
+      Begin MenuItem WindowASTTests
          SpecialMenu = 0
-         Text = "Tests"
+         Text = "AST Tests"
          Index = -2147483648
          ShortcutKey = "3"
          Shortcut = "Cmd+3"

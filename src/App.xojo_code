@@ -10,8 +10,8 @@ Inherits Application
 
 
 	#tag MenuHandler
-		Function WindowEditorPhase2() As Boolean Handles WindowEditorPhase2.Action
-			WinEditor.Show
+		Function WindowASTTests() As Boolean Handles WindowASTTests.Action
+			WinASTTests.Show
 			
 			Return True
 			
@@ -19,8 +19,8 @@ Inherits Application
 	#tag EndMenuHandler
 
 	#tag MenuHandler
-		Function WindowTests() As Boolean Handles WindowTests.Action
-			WinTests.Show
+		Function WindowEditorPhase2() As Boolean Handles WindowEditorPhase2.Action
+			WinEditor.Show
 			
 			Return True
 			

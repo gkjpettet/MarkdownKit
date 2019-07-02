@@ -231,7 +231,7 @@ End
 
 	#tag MenuHandler
 		Function WindowTests() As Boolean Handles WindowTests.Action
-			WinTests.Show
+			WinASTTests.Show
 			
 			Return True
 			

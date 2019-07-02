@@ -18,6 +18,12 @@
 					Subdirectory = 
 					FolderItem = Li4vLi4vdGVzdHMvQVNUcy8=
 				End
+				Begin CopyFilesBuildStep CopyHTML
+					AppliesTo = 0
+					Destination = 1
+					Subdirectory = 
+					FolderItem = Li4vLi4vdGVzdHMvSFRNTC8=
+				End
 			End
 			Begin BuildStepList Windows
 				Begin BuildProjectStep Build

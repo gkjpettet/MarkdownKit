@@ -98,7 +98,16 @@ Implements IRenderer
 		    mOutput.Append("<code class=")
 		    mOutput.Append("""")
 		    mOutput.Append("language-")
-		    mOutput.Append(fc.InfoString)
+		    
+		    // When rendering the info string, use only the first word.
+		    Dim wsIndex As Integer = fc.InfoString.IndexOf(" ")
+		    If wsIndex = -1 Then wsIndex = fc.InfoString.IndexOf(&u0009)
+		    If wsIndex = -1 Then
+		      mOutput.Append(fc.InfoString)
+		    Else
+		      mOutput.Append(fc.InfoString.Left(wsIndex))
+		    End If
+		    
 		    mOutput.Append("""")
 		    mOutput.Append(">")
 		  End If

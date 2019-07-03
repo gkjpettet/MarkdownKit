@@ -7,7 +7,7 @@ Inherits TestGroup
 		  
 		  // Get the names of the files containing the test Markdown and expected HTML output.
 		  Dim mdName As Text = testNumber.ToText + ".md"
-		  Dim htmlNAme As Text = testNumber.ToText + ".html"
+		  Dim htmlName As Text = testNumber.ToText + ".html"
 		  
 		  // Get the example Markdown file.
 		  Dim md As Text

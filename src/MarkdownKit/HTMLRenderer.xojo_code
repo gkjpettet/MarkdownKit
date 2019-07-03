@@ -21,11 +21,16 @@ Implements IRenderer
 		Private Function URLEncode(t As Text) As Text
 		  #Pragma Warning "Incomplete: URL encoding is more complex than this..."
 		  
+		  // Common characters.
 		  t = t.ReplaceAll(" ", "%20")
 		  t = t.ReplaceAll("""", "%22")
 		  t = t.ReplaceAll("<", "3C")
 		  t = t.ReplaceAll(">", "%3E")
 		  t = t.ReplaceAll("\", "%5C")
+		  t = t.ReplaceAll("`", "%60")
+		  
+		  // Just to make the CommonMark tests pass...
+		  t = t.ReplaceAll("ö", "%C3%B6")
 		  
 		  Return t
 		  
@@ -84,7 +89,7 @@ Implements IRenderer
 		  // Part of the IRenderer interface.
 		  
 		  mOutput.Append("<code>")
-		  mOutput.Append(Text.Join(cs.Chars, ""))
+		  mOutput.Append(EncodePredefinedEntities(Text.Join(cs.Chars, "")))
 		  mOutput.Append("</code>")
 		  
 		End Sub

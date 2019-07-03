@@ -8,7 +8,7 @@ Implements IRenderer
 		  
 		  t = t.ReplaceAll("&", "&amp;")
 		  t = t.ReplaceAll("""", "&quot;")
-		  t = t.ReplaceAll("'", "&apos;")
+		  't = t.ReplaceAll("'", "&apos;")
 		  t = t.ReplaceAll("<", "&lt;")
 		  t = t.ReplaceAll(">", "&gt;")
 		  
@@ -258,7 +258,7 @@ Implements IRenderer
 		Sub VisitInlineText(t As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append(Text.Join(t.Chars, ""))
+		  mOutput.Append(EncodePredefinedEntities(Text.Join(t.Chars, "")))
 		  
 		End Sub
 	#tag EndMethod

@@ -23,7 +23,6 @@ Protected Class BlockScanner
 		  If titleCR <> Nil Then
 		    Dim titleChars() As Text = titleCR.ToArray(chars)
 		    InlineScanner.CleanLinkTitle(titleChars)
-		    // title = Text.Join(titleChars, "")
 		    title = Utilities.ReplaceEntities(Text.Join(titleChars, ""))
 		  End If
 		  

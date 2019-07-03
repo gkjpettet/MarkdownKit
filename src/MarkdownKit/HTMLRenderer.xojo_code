@@ -1,6 +1,34 @@
 #tag Class
 Protected Class HTMLRenderer
 Implements IRenderer
+	#tag Method, Flags = &h21
+		Private Function EncodePredefinedEntities(t As Text) As Text
+		  // Encodes the 5 predefined entities to make them XML-safe.
+		  // https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML
+		  
+		  t = t.ReplaceAll("&", "&amp;")
+		  t = t.ReplaceAll("""", "&quot;")
+		  t = t.ReplaceAll("'", "&apos;")
+		  t = t.ReplaceAll("<", "&lt;")
+		  t = t.ReplaceAll(">", "&gt;")
+		  
+		  Return t
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function URLEncode(t As Text) As Text
+		  #Pragma Warning "Incomplete: URL encoding is more complex than this..."
+		  
+		  t = t.ReplaceAll(" ", "%20")
+		  t = t.ReplaceAll("""", "%22")
+		  t = t.ReplaceAll("<", "3C")
+		  t = t.ReplaceAll(">", "%3E")
+		  t = t.ReplaceAll("\", "%5C")
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub VisitAtxHeading(atx As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
@@ -112,7 +140,7 @@ Implements IRenderer
 		  End If
 		  
 		  For Each b As MarkdownKit.Block In fc.Children
-		    mOutput.Append(Text.Join(b.Chars, ""))
+		    mOutput.Append(EncodePredefinedEntities(Text.Join(b.Chars, "")))
 		    mOutput.Append(&u000A)
 		  Next b
 		  
@@ -150,7 +178,7 @@ Implements IRenderer
 		  mOutput.Append("<pre><code>")
 		  
 		  For Each b As MarkdownKit.Block In ic.Children
-		    mOutput.Append(Text.Join(b.Chars, ""))
+		    mOutput.Append(EncodePredefinedEntities(Text.Join(b.Chars, "")))
 		    mOutput.Append(&u000A)
 		  Next b
 		  
@@ -175,7 +203,7 @@ Implements IRenderer
 		  
 		  mOutput.Append("<a href=")
 		  mOutput.Append("""")
-		  mOutput.Append(image.Destination)
+		  mOutput.Append(URLEncode(image.Destination))
 		  mOutput.Append("""")
 		  
 		  If image.Title <> "" Then
@@ -203,7 +231,7 @@ Implements IRenderer
 		  
 		  mOutput.Append("<a href=")
 		  mOutput.Append("""")
-		  mOutput.Append(l.Destination)
+		  mOutput.Append(URLEncode(l.Destination))
 		  mOutput.Append("""")
 		  
 		  If l.Title <> "" Then

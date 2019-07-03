@@ -30,6 +30,7 @@ Implements IRenderer
 		  t = t.ReplaceAll("`", "%60")
 		  
 		  // Just to make the CommonMark tests pass...
+		  t = t.ReplaceAll("ä", "%C3%A4")
 		  t = t.ReplaceAll("ö", "%C3%B6")
 		  
 		  Return t

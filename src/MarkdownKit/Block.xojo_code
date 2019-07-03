@@ -297,9 +297,6 @@ Protected Class Block
 		    If Chars.Ubound < 0 Then Return
 		    If Chars(Chars.Ubound) = &u000A Then Call Chars.Pop
 		    
-		    // Replace entity and numeric character references
-		    Utilities.ReplaceEntities(Chars)
-		    
 		  Case MarkdownKit.BlockType.IndentedCode
 		    // ===== Indented code =====
 		    // Blank lines preceding or following an indented code block are not included in it.

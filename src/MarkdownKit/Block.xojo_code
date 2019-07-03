@@ -166,9 +166,6 @@ Protected Class Block
 		      chars.Append(Parent.Chars(i))
 		    Next i
 		    
-		    // Replace entity and numeric character references
-		    Utilities.ReplaceEntities(Self.Chars)
-		    
 		  Case MarkdownKit.BlockType.InlineText
 		    For x As Integer = Self.StartPos To Self.EndPos
 		      Self.Chars.Append(Self.Parent.Chars(x))

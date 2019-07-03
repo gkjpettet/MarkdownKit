@@ -26,6 +26,9 @@ Implements IRenderer
 		  t = t.ReplaceAll("<", "3C")
 		  t = t.ReplaceAll(">", "%3E")
 		  t = t.ReplaceAll("\", "%5C")
+		  
+		  Return t
+		  
 		End Function
 	#tag EndMethod
 
@@ -221,7 +224,6 @@ Implements IRenderer
 		  Next child
 		  
 		  mOutput.Append("</a>")
-		  mOutput.Append(&u000A)
 		End Sub
 	#tag EndMethod
 
@@ -249,7 +251,6 @@ Implements IRenderer
 		  Next child
 		  
 		  mOutput.Append("</a>")
-		  mOutput.Append(&u000A)
 		End Sub
 	#tag EndMethod
 

@@ -55,7 +55,7 @@ Implements IRenderer
 		  mOutput.Append("<code>")
 		  mOutput.Append(Text.Join(cs.Chars, ""))
 		  mOutput.Append("</code>")
-		  mOutput.Append(&u000A)
+		  
 		End Sub
 	#tag EndMethod
 

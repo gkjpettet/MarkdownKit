@@ -258,14 +258,6 @@ End
 		  
 		  start = Microseconds
 		  
-		  // // Print out the document's AST.
-		  // Dim renderer As New ASTRenderer
-		  // renderer.Pretty = True
-		  // renderer.ShowWhitespace = True
-		  // 'renderer.ListReferences = True
-		  // renderer.VisitDocument(doc)
-		  // Output.Text = renderer.Output
-		  
 		  // Print out HTML.
 		  Dim renderer As New MarkdownKit.HTMLRenderer
 		  renderer.VisitDocument(doc)

@@ -27,9 +27,12 @@ Implements IRenderer
 		  t = t.ReplaceAll("<", "3C")
 		  t = t.ReplaceAll(">", "%3E")
 		  t = t.ReplaceAll("\", "%5C")
+		  t = t.ReplaceAll("[", "%5B")
+		  t = t.ReplaceAll("]", "%5D")
 		  t = t.ReplaceAll("`", "%60")
 		  
 		  // Just to make the CommonMark tests pass...
+		  t = t.Replace(&u00A0, "%C2%A0")
 		  t = t.ReplaceAll("ä", "%C3%A4")
 		  t = t.ReplaceAll("ö", "%C3%B6")
 		  
@@ -209,26 +212,59 @@ Implements IRenderer
 		Sub VisitInlineImage(image As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<a href=")
+		  mOutput.Append("<img src=")
 		  mOutput.Append("""")
 		  mOutput.Append(URLEncode(image.Destination))
 		  mOutput.Append("""")
 		  
+		  // The `alt` attribute is constructed from this image block's children.
+		  // Only render the plain text content (ignoring emphasis, etc).
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  Dim stack() As MarkdownKit.Block
+		  Dim b As MarkdownKit.Block = image.FirstChild
+		  
+		  Dim alt() As Text
+		  Dim i As Integer
+		  Dim charsUbound As Integer
+		  While b <> Nil
+		    Select Case b.Type
+		    Case MarkdownKit.BlockType.InlineText
+		      charsUbound = b.Chars.Ubound
+		      For i = 0 To charsUbound
+		        alt.Append(b.Chars(i))
+		      Next i
+		    End Select
+		    
+		    If b.FirstChild <> Nil Then
+		      If b.NextSibling <> Nil Then stack.Append(b.NextSibling)
+		      b = b.FirstChild
+		    ElseIf b.NextSibling <> Nil Then
+		      b = b.NextSibling
+		    ElseIf stack.Ubound > -1 Then
+		      b = stack.Pop
+		    Else
+		      b = Nil
+		    End If
+		  Wend
+		  
+		  mOutput.Append(" alt=")
+		  mOutput.Append("""")
+		  If alt.Ubound > -1 Then mOutput.Append(Text.Join(alt, ""))
+		  mOutput.Append("""")
+		  
+		  // Image title.
 		  If image.Title <> "" Then
 		    mOutput.Append(" title=")
 		    mOutput.Append("""")
 		    mOutput.Append(EncodePredefinedEntities(image.Title))
 		    mOutput.Append("""")
-		    mOutput.Append(">")
-		  Else
-		    mOutput.Append(">")
 		  End If
 		  
-		  For Each child As MarkdownKit.Block In image.Children
-		    child.Accept(Self)
-		  Next child
-		  
-		  mOutput.Append("</a>")
+		  mOutput.Append(" />")
 		End Sub
 	#tag EndMethod
 

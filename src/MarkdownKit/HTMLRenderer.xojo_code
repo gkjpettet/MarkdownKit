@@ -212,7 +212,7 @@ Implements IRenderer
 		  If image.Title <> "" Then
 		    mOutput.Append(" title=")
 		    mOutput.Append("""")
-		    mOutput.Append(image.Title)
+		    mOutput.Append(EncodePredefinedEntities(image.Title))
 		    mOutput.Append("""")
 		    mOutput.Append(">")
 		  Else
@@ -239,7 +239,7 @@ Implements IRenderer
 		  If l.Title <> "" Then
 		    mOutput.Append(" title=")
 		    mOutput.Append("""")
-		    mOutput.Append(l.Title)
+		    mOutput.Append(EncodePredefinedEntities(l.Title))
 		    mOutput.Append("""")
 		    mOutput.Append(">")
 		  Else

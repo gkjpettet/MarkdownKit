@@ -168,7 +168,6 @@ Implements IRenderer
 		Sub VisitHTMLBlock(h As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  If h.IsChildOfListItem Then mOutput.Append(&u000A)
 		  mOutput.Append(Text.Join(h.Chars, ""))
 		  mOutput.Append(&u000A)
 		End Sub
@@ -246,9 +245,13 @@ Implements IRenderer
 		    mOutput.Append(">")
 		  End If
 		  
-		  For Each child As MarkdownKit.Block In l.Children
-		    child.Accept(Self)
-		  Next child
+		  If l.IsAutoLink Then
+		    mOutput.Append(l.Label)
+		  Else
+		    For Each child As MarkdownKit.Block In l.Children
+		      child.Accept(Self)
+		    Next child
+		  End If
 		  
 		  mOutput.Append("</a>")
 		End Sub
@@ -286,16 +289,14 @@ Implements IRenderer
 		      mOutput.Append(theList.ListData.Start.ToText)
 		      mOutput.Append("""")
 		      mOutput.Append(">")
-		      mOutput.Append(&u000A)
 		    Else
 		      mOutput.Append("<ol>")
-		      mOutput.Append(&u000A)
 		    End If
 		  Else
 		    listTag = "ul"
 		    mOutput.Append("<ul>")
-		    mOutput.Append(&u000A)
 		  End If
+		  mOutput.Append(&u000A)
 		  
 		  // Print the list items.
 		  For Each b As MarkdownKit.Block In theList.Children
@@ -316,13 +317,13 @@ Implements IRenderer
 		  
 		  mOutput.Append("<li>")
 		  
-		  For Each b As MarkdownKit.Block In li.Children
-		    b.IsChildOfTightList = li.IsChildOfTightList
-		    b.IsChildOfListItem = True
-		    If Not li.IsChildOfTightList Then mOutput.Append(&u000A)
-		    b.Accept(Self)
-		    If Not li.IsChildOfTightList Then mOutput.Append(&u000A)
-		  Next b
+		  Dim i As Integer
+		  Dim childrenUbound As Integer = li.Children.Ubound
+		  For i = 0 To childrenUbound
+		    li.Children(i).IsChildOfTightList = li.IsChildOfTightList
+		    li.Children(i).IsChildOfListItem = True
+		    li.Children(i).Accept(Self)
+		  Next i
 		  
 		  mOutput.Append("</li>")
 		  mOutput.Append(&u000A)
@@ -341,7 +342,7 @@ Implements IRenderer
 		  
 		  If Not p.IsChildOfTightList Then mOutput.Append("</p>")
 		  
-		  If Not p.IsChildOfListItem Then mOutput.Append(&u000A)
+		  mOutput.Append(&u000A)
 		End Sub
 	#tag EndMethod
 
@@ -383,14 +384,12 @@ Implements IRenderer
 		  // Part of the IRenderer interface.
 		  
 		  mOutput.Append("<strong>")
-		  mOutput.Append(&u000A)
 		  
 		  For Each child As MarkdownKit.Block In s.Children
 		    child.Accept(Self)
 		  Next child
 		  
 		  mOutput.Append("</strong>")
-		  mOutput.Append(&u000A)
 		End Sub
 	#tag EndMethod
 

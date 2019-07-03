@@ -137,6 +137,7 @@ Implements IRenderer
 		Sub VisitHTMLBlock(h As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
+		  If h.IsChildOfListItem Then mOutput.Append(&u000A)
 		  mOutput.Append(Text.Join(h.Chars, ""))
 		  mOutput.Append(&u000A)
 		End Sub

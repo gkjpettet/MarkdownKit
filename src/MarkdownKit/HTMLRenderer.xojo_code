@@ -280,12 +280,17 @@ Implements IRenderer
 		  Dim listTag As Text
 		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
 		    listTag = "ol"
-		    mOutput.Append("<ol start=")
-		    mOutput.Append("""")
-		    mOutput.Append(theList.ListData.Start.ToText)
-		    mOutput.Append("""")
-		    mOutput.Append(">")
-		    mOutput.Append(&u000A)
+		    If theList.ListData.Start <> 1 Then
+		      mOutput.Append("<ol start=")
+		      mOutput.Append("""")
+		      mOutput.Append(theList.ListData.Start.ToText)
+		      mOutput.Append("""")
+		      mOutput.Append(">")
+		      mOutput.Append(&u000A)
+		    Else
+		      mOutput.Append("<ol>")
+		      mOutput.Append(&u000A)
+		    End If
 		  Else
 		    listTag = "ul"
 		    mOutput.Append("<ul>")

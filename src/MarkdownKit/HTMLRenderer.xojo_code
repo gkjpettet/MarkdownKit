@@ -75,14 +75,13 @@ Implements IRenderer
 		  // Part of the IRenderer interface.
 		  
 		  mOutput.Append("<em>")
-		  mOutput.Append(&u000A)
 		  
 		  For Each child As MarkdownKit.Block In e.Children
 		    child.Accept(Self)
 		  Next child
 		  
 		  mOutput.Append("</em>")
-		  mOutput.Append(&u000A)
+		  
 		End Sub
 	#tag EndMethod
 

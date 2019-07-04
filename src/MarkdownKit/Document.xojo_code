@@ -214,7 +214,7 @@ Inherits MarkdownKit.Block
 		  
 		  // Finalise all blocks in the tree.
 		  While currentBlock <> Nil
-		    currentBlock.Finalise(Lines(LinesUbound))
+		    If LinesUbound > -1 Then currentBlock.Finalise(Lines(LinesUbound))
 		    currentBlock = currentBlock.Parent
 		  Wend
 		  

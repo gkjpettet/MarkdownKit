@@ -225,11 +225,9 @@ Protected Class Block
 		  // upon block closure.
 		  // `line` is the line that triggered the Finalise call.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  If Not IsOpen Then
 		    Return

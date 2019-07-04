@@ -200,11 +200,9 @@ Inherits MarkdownKit.Block
 		  // Process each line to determine the overall block structure of this 
 		  // Markdown document.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim currentBlock As MarkdownKit.Block = Self
 		  
@@ -228,11 +226,9 @@ Inherits MarkdownKit.Block
 		  // Walks this document and its children parsing raw text content into inline content 
 		  // where appropriate.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim stack() As MarkdownKit.Block
 		  Dim delimiterStack() As MarkdownKit.DelimiterStackNode
@@ -294,11 +290,9 @@ Inherits MarkdownKit.Block
 		  // new blocks. What now remains at the offset is a text line. Add it to the 
 		  // appropriate container.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  line.FindNextNonWhitespace
 		  Dim indent As Integer = line.NextNWSColumn - line.Column
@@ -414,11 +408,9 @@ Inherits MarkdownKit.Block
 		  // Unless the last matched container is code or HTML block, 
 		  // try to start a new container block.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Const kCodeIndent = 4
 		  Dim indent, tmpInt1, tmpInt2 As Integer
@@ -561,11 +553,9 @@ Inherits MarkdownKit.Block
 		  // this line meets the required condition to keep the block open.
 		  // `container`: This will be set to the Block which last had a match to the line.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Const kCodeIndent = 4
 		  Dim indent As Integer
@@ -669,6 +659,18 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsChildOfListItem"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfTightList"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FenceChar"
 			Group="Behavior"

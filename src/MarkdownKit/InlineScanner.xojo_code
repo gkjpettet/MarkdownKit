@@ -83,6 +83,7 @@ Protected Class InlineScanner
 		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim i As Integer = 0
 		  Dim collapse As Boolean = False
@@ -198,11 +199,9 @@ Protected Class InlineScanner
 		  // `startPos` points to the index of the "[" immediately after the closing imageDescription "]".
 		  // Full reference image: imageDescription, VALID linkLabel
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  // We know that `startPos` points to a "[".
 		  If startPos + 1 > charsUbound Then Return Nil
@@ -251,11 +250,9 @@ Protected Class InlineScanner
 		  // Full reference link: linkText, VALID linkLabel
 		  // The contents of linkText are parsed as inlines and used as the link's text.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  // We know that `startPos` points to a "[".
 		  If startPos + 1 > charsUbound Then Return Nil
@@ -302,11 +299,9 @@ Protected Class InlineScanner
 		  // If it does then it creates and returns an inline code span. Otherwise 
 		  // it returns Nil.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim pos As Integer
 		  
@@ -500,11 +495,9 @@ Protected Class InlineScanner
 		  // Inline image: imageDescription, "(", optional whitespace, optional link destination, 
 		  //              optional linkTitle, optional whitespace, ")"
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  // We know that `startPos` points at the opening "(" so move past it.
 		  Dim pos As Integer = startPos + 1
@@ -560,11 +553,9 @@ Protected Class InlineScanner
 		  
 		  // The contents of linkText are parsed as inlines and used as the link's text.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  // We know that `startPos` points at the opening "(" so move past it.
 		  Dim pos As Integer = startPos + 1
@@ -616,11 +607,9 @@ Protected Class InlineScanner
 		  // If a valid link/image is found the a new block is created of the appropriate 
 		  // type, inserted into the container and any inlines it containes are handled.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  // Starting at the top of the delimiter stack, we look backwards through 
 		  // for an opening "[" or "![" delimiter.
@@ -766,11 +755,9 @@ Protected Class InlineScanner
 		  // This method steps through the raw characters, populating the block's Inlines() array 
 		  // with any inline elements it encounters.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim pos As Integer = 0
 		  Dim charsUbound As Integer = b.Chars.Ubound
@@ -924,11 +911,9 @@ Protected Class InlineScanner
 		  // `stackBottom` sets a lower bound to how far we descend in the delimiter stack. If it's -1, 
 		  // we can go all the way to the bottom. Otherwise, we stop before visiting stackBottom.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  If delimiterStack.Ubound < 0 Then Return
 		  
@@ -1119,11 +1104,9 @@ Protected Class InlineScanner
 		  // Absolute URI = scheme, :, >=0 characters (not WS, <, >)
 		  // Scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  uri = ""
 		  
@@ -1176,6 +1159,7 @@ Protected Class InlineScanner
 		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  If startPos + backtickStringLen > charsUbound Then Return -1
 		  
@@ -1229,11 +1213,9 @@ Protected Class InlineScanner
 		  // delimiter type, delimiter length and whether it's a potential opener, closer 
 		  // or both.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim startPos As integer = pos
 		  
@@ -1310,11 +1292,9 @@ Protected Class InlineScanner
 		  '      (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*
 		  // name@
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  uri = ""
 		  
@@ -1413,11 +1393,9 @@ Protected Class InlineScanner
 		  // inline image block with the passed container as its parent.
 		  // `closerCharPos` is the index in chars() of the closing "]" character.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim pos As Integer = startPos
 		  Dim charsUbound As Integer = chars.Ubound
@@ -1519,11 +1497,9 @@ Protected Class InlineScanner
 		  // inline link block with the passed container as its parent.
 		  // `closerCharPos` is the index in chars() of the closing "]" character.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim pos As Integer = startPos
 		  Dim charsUbound As Integer = chars.Ubound
@@ -1636,11 +1612,9 @@ Protected Class InlineScanner
 		  // closing ")" (representing the end of the inline link definition without providing 
 		  // a title) or whitespace followed by the " character (indicating a trailing title).
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim i As Integer
 		  Dim c As Text
@@ -1729,11 +1703,9 @@ Protected Class InlineScanner
 		  // 3. >= 0 characters between matching parentheses ((...)), 
 		  //    including a ( or ) character only if it is backslash-escaped.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim startPos As Integer = pos
 		  
@@ -1784,11 +1756,9 @@ Protected Class InlineScanner
 		  // destination. In this case, we regard a newline character as marking the 
 		  // end of the line (whereas inline link destinations cannot contain a newline).
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  Dim i As Integer
@@ -1872,11 +1842,9 @@ Protected Class InlineScanner
 		  // (1) [a link `with a ](/url)` character
 		  // (2) [a link *with emphasized ](/url) text*
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim result As New MarkdownKit.CharacterRun(0, -1, -1)
 		  
@@ -1924,11 +1892,9 @@ Protected Class InlineScanner
 		  // found, otherwise returns 0.
 		  // Valid scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  // Min valid scheme: aa
 		  If pos + 1 > charsUbound Then Return 0
@@ -1978,11 +1944,9 @@ Protected Class InlineScanner
 		  // 3. >= 0 characters between matching parentheses ((...)), 
 		  //    including a ( or ) character only if it is backslash-escaped.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
 		  result.Invalid = True

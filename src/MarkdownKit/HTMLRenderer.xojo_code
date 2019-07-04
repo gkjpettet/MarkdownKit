@@ -222,11 +222,10 @@ Implements IRenderer
 		  
 		  // The `alt` attribute is constructed from this image block's children.
 		  // Only render the plain text content (ignoring emphasis, etc).
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #Endif
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  Dim stack() As MarkdownKit.Block
 		  Dim b As MarkdownKit.Block = image.FirstChild
 		  

@@ -41,8 +41,62 @@ from the left side). Here's a code sample:
 As you probably guessed, indented 4 spaces. By the way, instead of
 indenting the block, you can use delimited blocks, if you like:
 
+Roo Code:
+```roo
+# A comment.
+12 # Inline comment.
+100.54
+3e10
+4.5e-10
+0xffaa00
+0b1001
+0o2345
+
+var a = 100
+var b = "Double quoted string"
+var c = 'Single quoted string'
+var d = "Single 'quotes' inside"
+var e = 'Double "quotes" inside'
+
+# Operators.
+# +, -, /, *, %, &, =>, !, ^, : ,
+# ., =, ==, >, <>, <, >=, <=, -=
+# +=, /=, *=, %=, |, &, >>, >>
+
+# Keywords.
+# and, break, class, def, else, exit, for, if
+# module, not, or, pass, quit, require, return
+# self, static, super, var, while
+
+def test(a, b):
+  pass
+
+class Doctor < Person:
+  def init(name):
+    pass
+
+module Sonos:
+  class Player:
+    pass
+
+print("Test")
+
+if a.length > 100:
+  pass
+
+if name.starts_with?("Dr")
+```
+
+Xojo Code:
 ~~~xojo
-Dim f As Xojo.IO.FolderItem
+Dim f As Xojo.IO.FolderItem // Comment
+t = "Hello"
+1 + 100.5
+If write("something") Then
+  Break
+End If
+#Pragma Warning "TODO"
+Dim c As Color = &cFF0022
 ~~~
 
 (which makes copying & pasting easier). Note that you can also optionally mark the

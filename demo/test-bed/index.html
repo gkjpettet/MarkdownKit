@@ -1,0 +1,172 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>MarkdownKit Demo</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="assets/css/dark.css">
+<!-- 	<link rel="stylesheet" href="assets/css/light.css">	 -->
+	<link rel="stylesheet" href="assets/css/rainbow-dark.css">	
+<!-- 	<link rel="stylesheet" href="assets/css/rainbow-light.css">	 -->
+
+</head>
+
+<body>
+
+<div id="wrap">
+
+<h1>H1 header</h1>
+<p>Paragraphs are separated by a blank line.</p>
+<p>2nd paragraph. <em>Italic</em>, <strong>bold</strong>, and <code>monospace</code>. Itemized lists
+look like:</p>
+<ul>
+<li>this one
+</li>
+<li>that one
+</li>
+<li>the other one
+</li>
+</ul>
+<p>Note that (not considering the asterisk) the actual text
+content starts at 4-columns in.</p>
+<blockquote>
+<p>Block quotes are
+written like so.</p>
+<p>They can span multiple paragraphs,
+if you like.</p>
+</blockquote>
+<p>Full unicode character support 😀👍</p>
+<h2>H2 header</h2>
+<p>Here's a numbered list:</p>
+<ol>
+<li>first item
+</li>
+<li>second item
+</li>
+<li>third item
+</li>
+</ol>
+<p>Note again how the actual text starts at 4 columns in (4 characters
+from the left side). Here's a code sample:</p>
+<pre><code>// A little loop.
+For i As Integer = 0 To 10
+  MsgBox(Str(i))
+Next i
+</code></pre>
+<p>As you probably guessed, indented 4 spaces. By the way, instead of
+indenting the block, you can use delimited blocks, if you like:</p>
+<p>Roo Code:</p>
+<pre><code class="language-roo"># A comment.
+12 # Inline comment.
+100.54
+3e10
+4.5e-10
+0xffaa00
+0b1001
+0o2345
+
+var a = 100
+var b = &quot;Double quoted string&quot;
+var c = 'Single quoted string'
+var d = &quot;Single 'quotes' inside&quot;
+var e = 'Double &quot;quotes&quot; inside'
+
+# Operators.
+# +, -, /, *, %, &amp;, =&gt;, !, ^, : ,
+# ., =, ==, &gt;, &lt;&gt;, &lt;, &gt;=, &lt;=, -=
+# +=, /=, *=, %=, |, &amp;, &gt;&gt;, &gt;&gt;
+
+# Keywords.
+# and, break, class, def, else, exit, for, if
+# module, not, or, pass, quit, require, return
+# self, static, super, var, while
+
+def test(a, b):
+  pass
+
+class Doctor &lt; Person:
+  def init(name):
+    pass
+
+module Sonos:
+  class Player:
+    pass
+
+print(&quot;Test&quot;)
+
+if a.length &gt; 100:
+  pass
+
+if name.starts_with?(&quot;Dr&quot;)
+</code></pre>
+<p>Xojo Code:</p>
+<pre><code class="language-xojo">Dim f As Xojo.IO.FolderItem // Comment
+t = &quot;Hello&quot;
+1 + 100.5
+If write(&quot;something&quot;) Then
+  Break
+End If
+#Pragma Warning &quot;TODO&quot;
+Dim c As Color = &amp;cFF0022
+</code></pre>
+<p>(which makes copying &amp; pasting easier). Note that you can also optionally mark the
+delimited block for syntax highlighters (seen above and below):</p>
+<pre><code class="language-python">import time
+# Quick, count to ten!
+for i in range(10):
+    # (but not *too* quick)
+    time.sleep(0.5)
+    print(i)
+</code></pre>
+<p>Note how I used <code>```</code> to fence out the code block instead of <code>~~~</code>. Either works fine. Flanking text between backticks results in a <code>code span</code>.</p>
+<h3>H3 ATX-style header</h3>
+<p>Now a nested list:</p>
+<ol>
+<li><p>First, get these ingredients:</p>
+<ul>
+<li>carrots
+</li>
+<li>celery
+</li>
+<li>lentils
+</li>
+</ul>
+</li>
+<li><p>Boil some water.</p>
+</li>
+<li><p>Dump everything in the pot and follow
+this algorithm:</p>
+<pre><code>find wooden spoon
+uncover pot
+stir
+cover pot
+balance wooden spoon precariously on pot handle
+wait 10 minutes
+goto first step (or shut off burner when done)
+</code></pre>
+<p>Do not bump wooden spoon or it will fall.</p>
+</li>
+</ol>
+<p>Notice again how text always lines up on 4-space indents (including
+that last line which continues item 3 above).</p>
+<p>Here's a link to <a href="https://garrypettet.com">a website</a>. Here's a reference <a href="https://xojo.com">style link</a>. Typing a link between <code>&lt;</code> and <code>&gt;</code> will create an autolink: <a href="https://google.com">https://google.com</a>.</p>
+<p>A horizontal rule follows.</p>
+<hr />
+<p>Images can be specified like so:</p>
+<p><img src="https://www.xojo.com/account/mwx/mwx_long.png" alt="xojo image" title="Made with Xojo" /></p>
+<p>Note that you can backslash-escape any punctuation characters
+which you wish to be displayed literally, e.g: `foo`, *bar*, etc.</p>
+<p>You can use valid HTML entity references inline: &amp;, ©, ö. This includes decimal character references (Ӓ) and hexadecimal references (ಫ).</p>
+<p>Raw HTML can be included as a block:</p>
+<aside>
+<p>Some Text</p>
+</aside>
+<p>And inline <del>like this</del></p>
+
+</div><!-- /#wrap -->
+
+<script type="text/javascript" src="assets/js/rainbow.js"></script>
+
+</body>
+
+</html>

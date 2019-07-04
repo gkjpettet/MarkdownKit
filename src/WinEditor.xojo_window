@@ -241,36 +241,24 @@ End
 
 	#tag Method, Flags = &h0
 		Sub Parse()
-		  Dim start As Double = Microseconds
-		  
-		  // Create a new Markdown document.
-		  Dim doc As New MarkdownKit.Document(Source.Text.ToText)
-		  doc.ParseBlockStructure
-		  doc.ParseInlines
-		  
-		  Dim parseTime As Double = Microseconds - start
-		  
-		  // Clear out the old AST.
+		  // Clear out the old HTML.
 		  Output.Text = ""
 		  
 		  // Remove any earlier warnings.
 		  Info.Text = ""
 		  
-		  start = Microseconds
+		  Dim start As Double = Microseconds
 		  
-		  // Print out HTML.
-		  Dim renderer As New MarkdownKit.HTMLRenderer
-		  renderer.VisitDocument(doc)
-		  Output.Text = renderer.Output
+		  // Convert to HTML.
+		  Output.Text = MarkdownKit.ToHTML(Source.Text.ToText)
 		  
-		  Dim renderTime As Double = Microseconds - start
+		  Dim finish As Double = Microseconds - start
 		  
-		  Dim parseTimeMS As Integer = parseTime / 1000
-		  Dim renderTimeMS As Integer = renderTime / 1000
-		  Info.Text = "Parsed in " + parseTimeMS.ToText + " ms. Rendered in " + renderTimeMS.ToText + "ms."
+		  Dim timeMS As Integer = finish / 1000
+		  Info.Text = "Conversion took " + timeMS.ToText + " ms."
 		  
 		  // If an exception occurs, display the error message.
-		  Exception e As MarkdownKit.MarkdownException
+		  Exception e
 		    Info.Text = e.Reason
 		    Output.Text = ""
 		    

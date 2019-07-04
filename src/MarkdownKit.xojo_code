@@ -1,7 +1,7 @@
 #tag Module
 Protected Module MarkdownKit
-	#tag Method, Flags = &h1
-		Protected Sub AppendArray(Extends array1() As Text, array2() As Text)
+	#tag Method, Flags = &h21
+		Private Sub AppendArray(Extends array1() As Text, array2() As Text)
 		  // Appends the contents of array2 to array1.
 		  // Has no effect on array2 but mutates array2.
 		  
@@ -73,8 +73,8 @@ Protected Module MarkdownKit
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function IsBlank(Extends chars() As Text) As Boolean
+	#tag Method, Flags = &h21
+		Private Function IsBlank(Extends chars() As Text) As Boolean
 		  // Returns True if this array of characters is empty or contains only whitespace.
 		  If chars.Ubound = - 1 Then Return True
 		  
@@ -94,15 +94,15 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function IsEscapable(char As Text) As Boolean
+	#tag Method, Flags = &h21
+		Private Function IsEscapable(char As Text) As Boolean
 		  // Is the passed character a backslash-escapable character?
 		  Return mEscapableCharacters.HasKey(char)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function Peek(chars() As Text, pos As Integer, char As Text) As Boolean
+	#tag Method, Flags = &h21
+		Private Function Peek(chars() As Text, pos As Integer, char As Text) As Boolean
 		  // Returns True if the character at position `pos` is `char`.
 		  
 		  If pos < 0 Or pos > chars.Ubound Then Return False
@@ -110,8 +110,8 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Sub RemoveLeft(Extends source() As Text, length As Integer)
+	#tag Method, Flags = &h21
+		Private Sub RemoveLeft(Extends source() As Text, length As Integer)
 		  // Removes `length` elements from the start of the passed array.
 		  
 		  If length <= 0 Or (length - 1) > source.Ubound Then
@@ -127,8 +127,8 @@ Protected Module MarkdownKit
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Sub StripLeadingWhitespace(chars() As Text)
+	#tag Method, Flags = &h21
+		Private Sub StripLeadingWhitespace(chars() As Text)
 		  // Takes a ByRef array of characters and removes contiguous whitespace 
 		  // characters from the beginning of it.
 		  // Whitespace characters are &u0020, &u0009.
@@ -148,8 +148,8 @@ Protected Module MarkdownKit
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Sub StripTrailingWhitespace(chars() As Text)
+	#tag Method, Flags = &h21
+		Private Sub StripTrailingWhitespace(chars() As Text)
 		  // Takes an array of characters and removes contiguous whitespace 
 		  // characters from the end of it.
 		  // Whitespace characters are &u0020, &u0009.
@@ -170,8 +170,34 @@ Protected Module MarkdownKit
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function ToText(Extends type As MarkdownKit.BlockType) As Text
+	#tag Method, Flags = &h1
+		Protected Function ToHTML(markdown As Text) As Text
+		  // Takes Markdown source as Text and returns it as raw HTML.
+		  
+		  // Create a new Markdown document.
+		  Dim doc As New MarkdownKit.Document(markdown)
+		  
+		  // Create the AST.
+		  doc.ParseBlockStructure
+		  doc.ParseInlines
+		  
+		  // Create a HTML renderer to walk the AST.
+		  Dim renderer As New MarkdownKit.HTMLRenderer
+		  renderer.VisitDocument(doc)
+		  
+		  Return renderer.Output
+		  
+		  // If an exception occurs, display the error message.
+		  Exception e As MarkdownKit.MarkdownException
+		    Raise e
+		  Exception e
+		    Raise New MarkdownKit.MarkdownException(e.Reason)
+		    
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function ToText(Extends type As MarkdownKit.BlockType) As Text
 		  // Returns a Text representation of the passed MarkdownKit.BlockType.
 		  
 		  Select Case type
@@ -208,8 +234,8 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function ToText(Extends chars() As Text, start As Integer, length As Integer) As Text
+	#tag Method, Flags = &h21
+		Private Function ToText(Extends chars() As Text, start As Integer, length As Integer) As Text
 		  // Grabs `length` characters from the passed character array beginning at `start` 
 		  // and returns them as concatenated Text.
 		  // If any of the passed parameters are out of range then we return "".
@@ -230,6 +256,16 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function Version() As Text
+		  Dim major As Integer = kVersionMajor
+		  Dim minor As Integer = kVersionMinor
+		  Dim bug As Integer = kVersionBug
+		  
+		  Return major.ToText + "." + minor.ToText + "." + bug.ToText
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h21, Description = 412064696374696F6E617279206F6620746865206368617261637465727320746861742061726520657363617061626C65206279206120707265636564696E67206261636B736C617368
 		Private mEscapableCharacters As Xojo.Core.Dictionary
@@ -238,6 +274,16 @@ Protected Module MarkdownKit
 	#tag Property, Flags = &h21
 		Private mInitialised As Boolean = False
 	#tag EndProperty
+
+
+	#tag Constant, Name = kVersionBug, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = kVersionMajor, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = kVersionMinor, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
+	#tag EndConstant
 
 
 	#tag Enum, Name = BlockType, Flags = &h1

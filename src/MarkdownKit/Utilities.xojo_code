@@ -2299,6 +2299,12 @@ Protected Class Utilities
 		  // Hexadecimal numeric character reference:
 		  // &#[Xx][a-fA-F0-9]{1-6};
 		  
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #Endif
+		  #Pragma DisableBoundsChecking
+		  #Pragma StackOverflowChecking False
+		  
 		  // Quick check to see if we can bail early.
 		  Dim start As Integer = chars.IndexOf("&")
 		  If start = -1 Or chars.IndexOf(";") = -1 Then Return

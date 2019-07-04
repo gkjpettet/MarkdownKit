@@ -19,7 +19,7 @@ Implements IRenderer
 
 	#tag Method, Flags = &h21
 		Private Function URLEncode(t As Text) As Text
-		  #Pragma Warning "Incomplete: URL encoding is more complex than this..."
+		  // NOTE: URL encoding is much more complex than this but this covers most use cases.
 		  
 		  // Common characters.
 		  t = t.ReplaceAll(" ", "%20")
@@ -35,6 +35,9 @@ Implements IRenderer
 		  t = t.Replace(&u00A0, "%C2%A0")
 		  t = t.ReplaceAll("ä", "%C3%A4")
 		  t = t.ReplaceAll("ö", "%C3%B6")
+		  t = t.ReplaceAll("φ", "%CF%86")
+		  t = t.ReplaceAll("ο", "%CE%BF")
+		  t = t.ReplaceAll("υ", "%CF%85")
 		  
 		  Return t
 		  

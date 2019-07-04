@@ -1,4 +1,4 @@
-An h1 header
+H1 header
 ============
 
 Paragraphs are separated by a blank line.
@@ -21,7 +21,7 @@ content starts at 4-columns in.
 
 Full unicode character support 😀👍
 
-An h2 header
+H2 header
 ------------
 
 Here's a numbered list:
@@ -41,12 +41,12 @@ from the left side). Here's a code sample:
 As you probably guessed, indented 4 spaces. By the way, instead of
 indenting the block, you can use delimited blocks, if you like:
 
-~~~
+~~~xojo
 Dim f As Xojo.IO.FolderItem
 ~~~
 
-(which makes copying & pasting easier). You can optionally mark the
-delimited block for syntax highlighters:
+(which makes copying & pasting easier). Note that you can also optionally mark the
+delimited block for syntax highlighters (seen above and below):
 
 ```python
 import time
@@ -60,7 +60,7 @@ for i in range(10):
 Note how I used ` ``` ` to fence out the code block instead of `~~~`. Either works fine. Flanking text between backticks results in a `code span`.
 
 
-### An h3 header ###
+### H3 ATX-style header ###
 
 Now a nested list:
 

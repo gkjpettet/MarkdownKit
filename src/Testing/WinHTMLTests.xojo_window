@@ -609,6 +609,7 @@ Begin Window WinHTMLTests
    Begin HTMLTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
+      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -1179,7 +1180,7 @@ End
 		  Dim tmp As Integer
 		  For i As Integer = startPos To chars.Ubound
 		    Try
-		      tmp = Integer.FromText(chars(i))
+		      tmp = Val(chars(i))
 		      result = result + chars(i)
 		    Catch
 		      Exit

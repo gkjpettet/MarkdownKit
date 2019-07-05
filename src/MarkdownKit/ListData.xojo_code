@@ -1,7 +1,7 @@
 #tag Class
 Protected Class ListData
 	#tag Property, Flags = &h0, Description = 54686520636861726163746572207573656420666F7220756E6F726465726564206C697374732E205573656420696620604C697374446174612E4C69737454797065602069732073657420746F20604C697374547970652E42756C6C6574602E
-		BulletChar As Text
+		BulletChar As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit)), Description = 412076616C756520696E6469636174696E67207768657468657220746865206C697374206973207469676874202873756368206C697374732077696C6C206E6F742072656E646572206164646974696F6E616C206578706C696369742070617261677261706820656C656D656E7473292E
@@ -65,6 +65,36 @@ Protected Class ListData
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="MarkerOffset"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="BulletChar"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsTight"
+			Group="Behavior"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ListDelimiter"
+			Group="Behavior"
+			Type="MarkdownKit.ListDelimiter"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ListType"
+			Group="Behavior"
+			Type="MarkdownKit.ListType"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Padding"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Start"
 			Group="Behavior"
 			Type="Integer"
 		#tag EndViewProperty

@@ -30,7 +30,7 @@ Inherits TestGroup
 		  Dim renderer As New MarkdownKit.ASTRenderer
 		  renderer.Pretty = False
 		  renderer.VisitDocument(doc)
-		  Dim actual As Text = renderer.Output
+		  Dim actual As Text = renderer.Output.ToText
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.

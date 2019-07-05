@@ -7,7 +7,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function GetHtmlTagName(chars() As Text, ByRef pos As Integer) As Text
+		Shared Function GetHtmlTagName(chars() As String, ByRef pos As Integer) As String
 		  // Starting at `pos`, read a HTML tag name from the passed character array and return it.
 		  // Increment `pos` so that at the end of the method, it points to the character immediately 
 		  // after the tag name. 
@@ -19,8 +19,8 @@ Protected Class HTMLScanner
 		  
 		  If pos > charsUbound Or Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return ""
 		  
-		  Dim c As Text
-		  Dim tmp() As Text
+		  Dim c As String
+		  Dim tmp() As String
 		  Dim start As Integer = pos
 		  For pos = start To charsUbound
 		    c = chars(pos)
@@ -31,12 +31,12 @@ Protected Class HTMLScanner
 		    End If
 		  Next pos
 		  
-		  Return Text.Join(tmp, "")
+		  Return Join(tmp, "")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function MatchAnythingExcept(chars() As Text, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As Text, invalidChar As Text) As Boolean
+		Shared Function MatchAnythingExcept(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String, invalidChar As String) As Boolean
 		  Dim matched As Boolean = False
 		  
 		  While currentChar <> invalidChar And pos < charsUbound
@@ -51,7 +51,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function MatchAnythingExceptWhitespace(chars() As Text, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As Text, invalid1 As Text, invalid2 As Text, invalid3 As Text, invalid4 As Text, invalid5 As Text, invalid6 As Text) As Boolean
+		Shared Function MatchAnythingExceptWhitespace(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String, invalid1 As String, invalid2 As String, invalid3 As String, invalid4 As String, invalid5 As String, invalid6 As String) As Boolean
 		  Dim matched As Boolean = False
 		  
 		  While currentChar <> invalid1 And _
@@ -74,7 +74,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function MatchASCIILetter(chars() As Text, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As Text, valid1 As Text, valid2 As Text) As Boolean
+		Shared Function MatchASCIILetter(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String, valid1 As String, valid2 As String) As Boolean
 		  // Moves along the given array as long as the current character is an ASCII letter 
 		  // or one of the given additional valid characters.
 		  
@@ -96,7 +96,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function MatchASCIILetterOrDigit(chars() As Text, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As Text, valid1 As Text, valid2 As Text, valid3 As Text, valid4 As Text) As Boolean
+		Shared Function MatchASCIILetterOrDigit(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String, valid1 As String, valid2 As String, valid3 As String, valid4 As String) As Boolean
 		  // Moves along the given array as long as the current character is an ASCII letter 
 		  // or digit or one of the given additional valid characters.
 		  
@@ -121,14 +121,14 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function MatchASCIILetterOrDigitOrHyphen(chars() As Text, charsUbound As Integer, pos As Integer, maxCount As Integer) As Integer
+		Shared Function MatchASCIILetterOrDigitOrHyphen(chars() As String, charsUbound As Integer, pos As Integer, maxCount As Integer) As Integer
 		  // Moves along the given array as long as the current character is an ASCII letter 
 		  // or digit or hyphen ("-").
 		  // Returns the number of matched characters.
 		  // Stops skipping if we match maxCount characters.
 		  
 		  If pos > charsUbound Then Return 0
-		  Dim c As Text = chars(pos)
+		  Dim c As String = chars(pos)
 		  
 		  Dim matched As Integer = 0
 		  
@@ -147,7 +147,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanClosingTag(chars() As Text, pos As integer, ByRef tagName As Text) As Integer
+		Shared Function ScanClosingTag(chars() As String, pos As integer, ByRef tagName As String) As Integer
 		  // Scans the passed line beginning at `pos` for a valid HTML closingTag.
 		  // Returns the zero-based index in line.Chars where the closingTag ends.
 		  // Returns 0 if no valid closingTag is found.
@@ -172,7 +172,7 @@ Protected Class HTMLScanner
 		  If tagName = "" Then Return 0
 		  
 		  // Get the current character.
-		  Dim c As Text = chars(pos)
+		  Dim c As String = chars(pos)
 		  
 		  // Skip optional whitespace.
 		  Call HTMLScanner.SkipWhitespace(chars, charsUbound, pos, c)
@@ -189,7 +189,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanDeclarationCommentOrCData(chars() As Text, startPos As Integer, charsUbound As Integer) As Integer
+		Shared Function ScanDeclarationCommentOrCData(chars() As String, startPos As Integer, charsUbound As Integer) As Integer
 		  // Scans the passed character array `chars` for a valid HTML declaration, comment or CDATA section.
 		  // Assumes `startPos` points at the index of the character immediately following "<!".
 		  // Returns the index of the character immediately after the close of the inline HTML element or 
@@ -223,7 +223,7 @@ Protected Class HTMLScanner
 		  // Shortest valid: <!A A>
 		  If startPos + 3 > charsUbound Then Return 0
 		  
-		  Dim c As Text = chars(startPos)
+		  Dim c As String = chars(startPos)
 		  
 		  Dim pos As Integer
 		  If c = "-" Then
@@ -295,10 +295,10 @@ Protected Class HTMLScanner
 		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
 		  //                  (case-insensitive; it need not match the start tag).
 		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  If t.IndexOf(pos, "</pre>") <> -1 Then Return True
-		  If t.IndexOf(pos, "</style>") <> -1 Then Return True
-		  If t.IndexOf(pos, "</script>") <> -1 Then Return True
+		  Dim t As String = Join(line.Chars, "")
+		  If t.InStr(pos, "</pre>") <> 0 Then Return True
+		  If t.InStr(pos, "</style>") <> 0 Then Return True
+		  If t.InStr(pos, "</script>") <> 0 Then Return True
 		  
 		  Return False
 		  
@@ -313,8 +313,8 @@ Protected Class HTMLScanner
 		  // HTML block type 2:
 		  // End condition: line contains the string "-->"
 		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, "-->") <> -1, True, False)
+		  Dim t As String = Join(line.Chars, "")
+		  Return If(t.InStr(pos, "-->") <> 0, True, False)
 		  
 		  Exception e
 		    Return False
@@ -326,8 +326,8 @@ Protected Class HTMLScanner
 		  // HTML block type 3:
 		  // End condition: line contains the string "?>"
 		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, "?>") <> -1, True, False)
+		  Dim t As String = Join(line.Chars, "")
+		  Return If(t.InStr(pos, "?>") <> 0, True, False)
 		  
 		  Exception e
 		    Return False
@@ -340,8 +340,8 @@ Protected Class HTMLScanner
 		  // HTML block type 4:
 		  // End condition: line contains the character ">".
 		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, ">") <> -1, True, False)
+		  Dim t As String = Join(line.Chars, "")
+		  Return If(t.InStr(pos, ">") <> 0, True, False)
 		  
 		  Exception e
 		    Return False
@@ -354,8 +354,8 @@ Protected Class HTMLScanner
 		  // HTML block type 5:
 		  // End condition: line contains the string "]]>".
 		  
-		  Dim t As Text = Text.Join(line.Chars, "")
-		  Return If(t.IndexOf(pos, "]]>") <> -1, True, False)
+		  Dim t As String = Join(line.Chars, "")
+		  Return If(t.InStr(pos, "]]>") <> 0, True, False)
 		  
 		  Exception e
 		    Return False
@@ -364,7 +364,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanOpenTag(chars() As Text, pos As Integer, ByRef tagName As Text, type7Only As Boolean = True) As Integer
+		Shared Function ScanOpenTag(chars() As String, pos As Integer, ByRef tagName As String, type7Only As Boolean = True) As Integer
 		  // Scans the passed line beginning at `pos` for a valid HTML open tag.
 		  // Returns the zero-based index in line.Chars where the openTag ends.
 		  // Returns 0 if no valid openTag is found.
@@ -404,8 +404,8 @@ Protected Class HTMLScanner
 		  // Loop until the end of the line is reached or the tag is closed.
 		  Dim hadWhitespace As Boolean = False
 		  Dim hadAttribute As Boolean = False
-		  Dim tmpChar As Text
-		  Dim currentChar As Text = chars(pos)
+		  Dim tmpChar As String
+		  Dim currentChar As String = chars(pos)
 		  While pos <= charsUbound
 		    // Skip whitespace.
 		    hadWhitespace = HTMLScanner.SkipWhitespace(chars, charsUbound, pos, currentChar)
@@ -474,7 +474,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanProcessingInstruction(chars() As Text, startPos As Integer, charsUbound As Integer) As Integer
+		Shared Function ScanProcessingInstruction(chars() As String, startPos As Integer, charsUbound As Integer) As Integer
 		  // Scans for a complete inline HTML "processing instruction":
 		  // A processing instruction consists of the string "<?", a string of 
 		  // characters not including the string "?>" and the string "?>".
@@ -500,7 +500,7 @@ Protected Class HTMLScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function SkipWhitespace(chars() As Text, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As Text) As Boolean
+		Shared Function SkipWhitespace(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String) As Boolean
 		  Dim matched As Boolean = False
 		  
 		  While Utilities.IsWhitespace(currentChar) And pos < charsUbound

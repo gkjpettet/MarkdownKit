@@ -82,13 +82,13 @@ Protected Class LineInfo
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(lineText As Text, lineNumber As Integer)
+		Sub Constructor(lineText As String, lineNumber As Integer)
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
 		  Value = lineText
-		  Chars = lineText.Split
+		  Chars = lineText.Split("")
 		  CharsUbound = Chars.Ubound
 		  Number = lineNumber
 		  
@@ -161,7 +161,7 @@ Protected Class LineInfo
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 416E206172726179206F662074686520696E646976696475616C2063686172616374657273206F662074686973206C696E652E
-		Chars() As Text
+		Chars() As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 54686520757070657220626F756E6473206F662074686973206C696E6527732043686172732061727261792E20
@@ -173,7 +173,7 @@ Protected Class LineInfo
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468652063757272656E742063686172616374657220696E20746865206C696E652E
-		CurrentChar As Text
+		CurrentChar As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 41206C696E6520697320636F6E7369646572656420626C616E6B20696620697420697320656D707479206F72206F6E6C7920636F6E7461696E7320776869746573706163652E
@@ -205,7 +205,7 @@ Protected Class LineInfo
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 546865206F726967696E616C20746578742076616C7565206F662074686973206C696E652E
-		Value As Text
+		Value As String
 	#tag EndProperty
 
 

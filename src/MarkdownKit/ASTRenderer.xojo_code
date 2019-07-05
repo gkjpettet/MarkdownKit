@@ -2,18 +2,18 @@
 Protected Class ASTRenderer
 Implements Global.MarkdownKit.IRenderer
 	#tag Method, Flags = &h21
-		Private Function CurrentIndent() As Text
+		Private Function CurrentIndent() As String
 		  // Given the current indentation level (specified by mCurrentIndent), this 
 		  // method returns mCurrentIndent * 4 number of spaces as Text.
 		  
 		  If Not Pretty Then Return ""
 		  
 		  Dim numSpaces As Integer = mCurrentIndent * kSpacesPerIndent
-		  Dim tmp() As Text
+		  Dim tmp() As String
 		  For i As Integer = 1 To numSpaces
 		    tmp.Append(" ")
 		  Next i
-		  Return Text.Join(tmp, "")
+		  Return Join(tmp, "")
 		  
 		End Function
 	#tag EndMethod
@@ -25,7 +25,7 @@ Implements Global.MarkdownKit.IRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function EncodePredefinedEntities(t As Text) As Text
+		Private Function EncodePredefinedEntities(t As String) As String
 		  // Encodes the 5 predefined entities to make them XML-safe.
 		  // https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML
 		  
@@ -47,7 +47,7 @@ Implements Global.MarkdownKit.IRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function TransformWhitespace(t As Text) As Text
+		Private Function TransformWhitespace(t As String) As String
 		  t = t.ReplaceAll(" ", "•")
 		  t = t.ReplaceAll(&u0009, "→")
 		  t = t.ReplaceAll(&u000A, "⮐")
@@ -118,7 +118,7 @@ Implements Global.MarkdownKit.IRenderer
 		  // Part of the Global.MarkdownKit.IRenderer interface.
 		  
 		  mOutput.Append(CurrentIndent + "<code>")
-		  mOutput.Append(Text.Join(cs.Chars, ""))
+		  mOutput.Append(Join(cs.Chars, ""))
 		  mOutput.Append("</code>")
 		  mOutput.Append(EOL)
 		End Sub
@@ -144,7 +144,7 @@ Implements Global.MarkdownKit.IRenderer
 		    // Since iterating through a dictionary does not guarantee order, 
 		    // we will get the keys (definition names) as an array and sort 
 		    // them alphabetically.
-		    Dim keys() As Text
+		    Dim keys() As String
 		    For Each entry As Xojo.Core.DictionaryEntry In d.ReferenceMap
 		      keys.Append(entry.Key)
 		    Next entry
@@ -185,18 +185,18 @@ Implements Global.MarkdownKit.IRenderer
 		Sub VisitFencedCode(fc As MarkdownKit.Block)
 		  // Part of the Global.MarkdownKit.IRenderer interface.
 		  
-		  Dim info As Text = If(fc.InfoString <> "", " info=" + """" + fc.InfoString + """", "")
+		  Dim info As String = If(fc.InfoString <> "", " info=" + """" + fc.InfoString + """", "")
 		  
 		  mOutput.Append(CurrentIndent + "<fenced_code_block" + _
 		  If(info <> "", info, "") + ">")
 		  mOutput.Append(EOL)
 		  
-		  Dim content As Text
+		  Dim content As String
 		  For Each b As MarkdownKit.Block In fc.Children
 		    IncreaseIndent
 		    
 		    mOutput.Append("<text>")
-		    content = Text.Join(b.Chars, "")
+		    content = Join(b.Chars, "")
 		    If ShowWhitespace Then content = TransformWhitespace(content)
 		    mOutput.Append(content)
 		    mOutput.Append("</text>")
@@ -228,7 +228,7 @@ Implements Global.MarkdownKit.IRenderer
 		  
 		  mOutput.Append(CurrentIndent + "<html_block>")
 		  
-		  Dim content As Text = Text.Join(h.Chars, "")
+		  Dim content As String = Join(h.Chars, "")
 		  
 		  // Since the reference AST ( https://spec.commonmark.org/dingus/ ) uses XML, we 
 		  // encode the predefined entities in the content to to match.
@@ -247,12 +247,12 @@ Implements Global.MarkdownKit.IRenderer
 		  mOutput.Append(CurrentIndent + "<indented_code_block>")
 		  mOutput.Append(EOL)
 		  
-		  Dim content As Text
+		  Dim content As String
 		  For Each b As MarkdownKit.Block In ic.Children
 		    IncreaseIndent
 		    
 		    mOutput.Append("<text>")
-		    content = Text.Join(b.Chars, "")
+		    content = Join(b.Chars, "")
 		    If ShowWhitespace Then content = TransformWhitespace(content)
 		    mOutput.Append(content)
 		    mOutput.Append("</text>")
@@ -275,7 +275,7 @@ Implements Global.MarkdownKit.IRenderer
 		  
 		  // Since the reference AST ( https://spec.commonmark.org/dingus/ ) uses XML, we 
 		  // encode the predefined entities in the content to to match.
-		  Dim content As Text = Text.Join(h.Chars, "")
+		  Dim content As String = Join(h.Chars, "")
 		  content = EncodePredefinedEntities(content)
 		  mOutput.Append(content)
 		  
@@ -339,7 +339,7 @@ Implements Global.MarkdownKit.IRenderer
 		  // Part of the Global.MarkdownKit.IRenderer interface.
 		  
 		  mOutput.Append(CurrentIndent + "<text>")
-		  mOutput.Append(Text.Join(t.Chars, ""))
+		  mOutput.Append(Join(t.Chars, ""))
 		  mOutput.Append("</text>")
 		  mOutput.Append(EOL)
 		End Sub
@@ -373,7 +373,7 @@ Implements Global.MarkdownKit.IRenderer
 		  Const Q = """"
 		  
 		  // Construct the list header.
-		  Dim header As Text
+		  Dim header As String
 		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
 		    header = "type=" + Q + "ordered" + Q + " start=" + Q + _
 		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _
@@ -506,7 +506,7 @@ Implements Global.MarkdownKit.IRenderer
 			  // Read only.
 			End Set
 		#tag EndSetter
-		Private EOL As Text
+		Private EOL As String
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0
@@ -518,13 +518,13 @@ Implements Global.MarkdownKit.IRenderer
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mOutput() As Text
+		Private mOutput() As String
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return Text.Join(mOutput, "").Trim
+			  Return Join(mOutput, "").Trim
 			End Get
 		#tag EndGetter
 		#tag Setter
@@ -533,7 +533,7 @@ Implements Global.MarkdownKit.IRenderer
 			  
 			End Set
 		#tag EndSetter
-		Output As Text
+		Output As String
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0

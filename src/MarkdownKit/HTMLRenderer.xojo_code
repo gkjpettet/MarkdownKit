@@ -2,7 +2,7 @@
 Protected Class HTMLRenderer
 Implements IRenderer
 	#tag Method, Flags = &h21
-		Private Function EncodePredefinedEntities(t As Text) As Text
+		Private Function EncodePredefinedEntities(t As String) As String
 		  // Encodes the 5 predefined entities to make them XML-safe.
 		  // https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML
 		  
@@ -18,7 +18,7 @@ Implements IRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function URLEncode(t As Text) As Text
+		Private Function URLEncode(t As String) As String
 		  // NOTE: URL encoding is much more complex than this but this covers most use cases.
 		  
 		  // Common characters.
@@ -48,7 +48,7 @@ Implements IRenderer
 		Sub VisitAtxHeading(atx As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  Dim level As Text = atx.Level.ToText
+		  Dim level As String = atx.Level.ToText
 		  
 		  mOutput.Append("<h")
 		  mOutput.Append(level)
@@ -96,7 +96,7 @@ Implements IRenderer
 		  // Part of the IRenderer interface.
 		  
 		  mOutput.Append("<code>")
-		  mOutput.Append(EncodePredefinedEntities(Text.Join(cs.Chars, "")))
+		  mOutput.Append(EncodePredefinedEntities(Join(cs.Chars, "")))
 		  mOutput.Append("</code>")
 		  
 		End Sub
@@ -142,9 +142,9 @@ Implements IRenderer
 		    mOutput.Append("language-")
 		    
 		    // When rendering the info string, use only the first word.
-		    Dim wsIndex As Integer = fc.InfoString.IndexOf(" ")
-		    If wsIndex = -1 Then wsIndex = fc.InfoString.IndexOf(&u0009)
-		    If wsIndex = -1 Then
+		    Dim wsIndex As Integer = fc.InfoString.InStr(" ")
+		    If wsIndex = 0 Then wsIndex = fc.InfoString.InStr(&u0009)
+		    If wsIndex = 0 Then
 		      mOutput.Append(fc.InfoString)
 		    Else
 		      mOutput.Append(fc.InfoString.Left(wsIndex))
@@ -155,7 +155,7 @@ Implements IRenderer
 		  End If
 		  
 		  For Each b As MarkdownKit.Block In fc.Children
-		    mOutput.Append(EncodePredefinedEntities(Text.Join(b.Chars, "")))
+		    mOutput.Append(EncodePredefinedEntities(Join(b.Chars, "")))
 		    mOutput.Append(&u000A)
 		  Next b
 		  
@@ -180,7 +180,7 @@ Implements IRenderer
 		Sub VisitHTMLBlock(h As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append(Text.Join(h.Chars, ""))
+		  mOutput.Append(Join(h.Chars, ""))
 		  mOutput.Append(&u000A)
 		End Sub
 	#tag EndMethod
@@ -192,7 +192,7 @@ Implements IRenderer
 		  mOutput.Append("<pre><code>")
 		  
 		  For Each b As MarkdownKit.Block In ic.Children
-		    mOutput.Append(EncodePredefinedEntities(Text.Join(b.Chars, "")))
+		    mOutput.Append(EncodePredefinedEntities(Join(b.Chars, "")))
 		    mOutput.Append(&u000A)
 		  Next b
 		  
@@ -206,7 +206,7 @@ Implements IRenderer
 		Sub VisitInlineHTML(h As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append(Text.Join(h.Chars, ""))
+		  mOutput.Append(Join(h.Chars, ""))
 		  
 		End Sub
 	#tag EndMethod
@@ -229,7 +229,7 @@ Implements IRenderer
 		  Dim stack() As MarkdownKit.Block
 		  Dim b As MarkdownKit.Block = image.FirstChild
 		  
-		  Dim alt() As Text
+		  Dim alt() As String
 		  Dim i As Integer
 		  Dim charsUbound As Integer
 		  While b <> Nil
@@ -255,7 +255,7 @@ Implements IRenderer
 		  
 		  mOutput.Append(" alt=")
 		  mOutput.Append("""")
-		  If alt.Ubound > -1 Then mOutput.Append(Text.Join(alt, ""))
+		  If alt.Ubound > -1 Then mOutput.Append(Join(alt, ""))
 		  mOutput.Append("""")
 		  
 		  // Image title.
@@ -305,7 +305,7 @@ Implements IRenderer
 		Sub VisitInlineText(t As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append(EncodePredefinedEntities(Text.Join(t.Chars, "")))
+		  mOutput.Append(EncodePredefinedEntities(Join(t.Chars, "")))
 		  
 		End Sub
 	#tag EndMethod
@@ -324,7 +324,7 @@ Implements IRenderer
 		Sub VisitList(theList As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  Dim listTag As Text
+		  Dim listTag As String
 		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
 		    listTag = "ol"
 		    If theList.ListData.Start <> 1 Then
@@ -394,7 +394,7 @@ Implements IRenderer
 		Sub VisitSetextHeading(stx As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  Dim level As Text = stx.Level.ToText
+		  Dim level As String = stx.Level.ToText
 		  
 		  mOutput.Append("<h")
 		  mOutput.Append(level)
@@ -451,16 +451,16 @@ Implements IRenderer
 
 
 	#tag Property, Flags = &h21
-		Private mOutput() As Text
+		Private mOutput() As String
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return Text.Join(mOutput, "").Trim
+			  Return Join(mOutput, "").Trim
 			End Get
 		#tag EndGetter
-		Output As Text
+		Output As String
 	#tag EndComputedProperty
 
 

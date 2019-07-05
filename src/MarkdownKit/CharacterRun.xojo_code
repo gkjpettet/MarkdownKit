@@ -17,7 +17,7 @@ Protected Class CharacterRun
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ToArray(source() As Text) As Text()
+		Function ToArray(source() As String) As String()
 		  // Copies from the passed array of characters the characters that make up 
 		  // this CharacterRun.
 		  
@@ -29,7 +29,7 @@ Protected Class CharacterRun
 		    "This CharacterRun is incompatible with the passed source array")
 		  End If
 		  
-		  Dim result() As Text
+		  Dim result() As String
 		  If Self.Length = 0 Then Return result
 		  
 		  Dim i, limit As Integer
@@ -118,6 +118,25 @@ Protected Class CharacterRun
 		#tag ViewProperty
 			Name="Start"
 			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Finish"
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Invalid"
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Length"
+			Group="Behavior"
+			InitialValue="-1"
 			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior

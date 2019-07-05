@@ -68,7 +68,7 @@ Protected Class Block
 		  Case MarkdownKit.BlockType.HtmlBlock
 		    // ===== HTML block =====
 		    // Get the characters from the current line offset to the end of the line.
-		    Dim tmp() As Text
+		    Dim tmp() As String
 		    Dim limit As Integer = Xojo.Math.Min(line.Chars.Ubound, startPos + len - 1)
 		    For i As Integer = startPos To limit
 		      tmp.Append(line.Chars(i))
@@ -87,7 +87,7 @@ Protected Class Block
 		    
 		    // Get the characters from the current line offset to the end of the line.
 		    Dim limit As Integer = Xojo.Math.Min(line.Chars.Ubound, startPos + len - 1)
-		    Dim tmp() As Text
+		    Dim tmp() As String
 		    For i As Integer = startPos To limit
 		      tmp.Append(line.Chars(i))
 		    Next i
@@ -103,7 +103,7 @@ Protected Class Block
 		    
 		  Else
 		    // ===== All other block types ====
-		    Dim tmp() As Text
+		    Dim tmp() As String
 		    If len <= 0 Then
 		      // Blank line.
 		      Dim b As New MarkdownKit.Block(BlockType.TextBlock, Xojo.Core.WeakRef.Create(Self))
@@ -283,7 +283,7 @@ Protected Class Block
 		      // The first child (if present) is the info string. It may be empty.
 		      Dim tb As MarkdownKit.Block = FirstChild
 		      If Not tb.Chars.IsBlank Then
-		        InfoString = Text.Join(tb.Chars, "").Trim
+		        InfoString = Join(tb.Chars, "").Trim
 		        InfoString = Utilities.ReplaceEntities(InfoString)
 		        Utilities.Unescape(InfoString)
 		      End If
@@ -457,7 +457,7 @@ Protected Class Block
 
 
 	#tag Property, Flags = &h0
-		Chars() As Text
+		Chars() As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468697320426C6F636B2773206368696C6420426C6F636B732028696620616E79292E
@@ -465,7 +465,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Delimiter As Text
+		Delimiter As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -473,7 +473,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Destination As Text
+		Destination As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -481,7 +481,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		FenceChar As Text
+		FenceChar As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -497,7 +497,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		InfoString As Text
+		InfoString As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -521,7 +521,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Label As Text
+		Label As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -537,7 +537,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Name As Text
+		Name As String
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
@@ -575,7 +575,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Title As Text
+		Title As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

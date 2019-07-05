@@ -2,8 +2,9 @@
 Protected Class MarkdownException
 Inherits RuntimeException
 	#tag Method, Flags = &h0
-		Sub Constructor(reason As Text)
-		  Self.Reason = reason
+		Sub Constructor(message As String)
+		  Self.Message = Message
+		  Self.Reason = message.ToText
 		  
 		End Sub
 	#tag EndMethod

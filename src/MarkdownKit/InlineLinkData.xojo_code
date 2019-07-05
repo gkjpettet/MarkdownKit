@@ -1,7 +1,7 @@
 #tag Class
 Protected Class InlineLinkData
 	#tag Property, Flags = &h0
-		Destination As Text
+		Destination As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -9,15 +9,15 @@ Protected Class InlineLinkData
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		LinkLabel As Text
+		LinkLabel As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		LinkTextChars() As Text
+		LinkTextChars() As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		LinkTitle As Text
+		LinkTitle As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -78,6 +78,11 @@ Protected Class InlineLinkData
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Destination"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkTitle"
 			Group="Behavior"
 			Type="Text"
 		#tag EndViewProperty

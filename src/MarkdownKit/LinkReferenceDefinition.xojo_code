@@ -8,7 +8,7 @@ Protected Class LinkReferenceDefinition
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(name As Text, destination As Text, title As Text)
+		Sub Constructor(name As String, destination As String, title As String)
 		  Self.Name = name
 		  Self.Destination = destination
 		  Self.Title = title
@@ -18,15 +18,15 @@ Protected Class LinkReferenceDefinition
 
 
 	#tag Property, Flags = &h0
-		Destination As Text
+		Destination As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Name As Text
+		Name As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Title As Text
+		Title As String
 	#tag EndProperty
 
 

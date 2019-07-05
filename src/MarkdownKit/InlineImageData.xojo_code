@@ -1,7 +1,7 @@
 #tag Class
 Protected Class InlineImageData
 	#tag Property, Flags = &h0
-		Destination As Text
+		Destination As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -9,15 +9,15 @@ Protected Class InlineImageData
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		ImageDescriptionChars() As Text
+		ImageDescriptionChars() As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		LinkLabel As Text
+		LinkLabel As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		LinkTitle As Text
+		LinkTitle As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

@@ -1,29 +1,29 @@
 #tag Class
 Protected Class BlockScanner
 	#tag Method, Flags = &h0
-		Shared Sub FinaliseLinkReferenceDefinition(ByRef chars() As Text, doc As MarkdownKit.Document, labelCR As MarkdownKit.CharacterRun, destinationCR As MarkdownKit.CharacterRun, titleCR As MarkdownKit.CharacterRun = Nil)
+		Shared Sub FinaliseLinkReferenceDefinition(ByRef chars() As String, doc As MarkdownKit.Document, labelCR As MarkdownKit.CharacterRun, destinationCR As MarkdownKit.CharacterRun, titleCR As MarkdownKit.CharacterRun = Nil)
 		  // Called by the ScanLinkReferenceDefinition method. 
 		  // Handles the addition of this reference definition to the document's reference 
 		  // map (if appropriate) and removing the definition from the raw characters 
 		  // of this paragraph block.
 		  
 		  // ##### LABEL #####
-		  Dim labelChars() As Text = labelCR.ToArray(chars)
+		  Dim labelChars() As String = labelCR.ToArray(chars)
 		  InlineScanner.CleanLinkLabel(labelChars)
-		  Dim label As Text = Text.Join(labelChars, "")
+		  Dim label As String = Join(labelChars, "")
 		  
 		  // ##### DESTINATION #####
-		  Dim urlChars() As Text = destinationCR.ToArray(chars)
+		  Dim urlChars() As String = destinationCR.ToArray(chars)
 		  InlineScanner.CleanURL(urlChars)
-		  // Dim url As Text = Text.Join(urlChars, "")
-		  Dim url As Text = Utilities.ReplaceEntities(Text.Join(urlChars, ""))
+		  // Dim url As String = Join(urlChars, "")
+		  Dim url As String = Utilities.ReplaceEntities(Join(urlChars, ""))
 		  
 		  // ##### TITLE #####
-		  Dim title As Text = ""
+		  Dim title As String = ""
 		  If titleCR <> Nil Then
-		    Dim titleChars() As Text = titleCR.ToArray(chars)
+		    Dim titleChars() As String = titleCR.ToArray(chars)
 		    InlineScanner.CleanLinkTitle(titleChars)
-		    title = Utilities.ReplaceEntities(Text.Join(titleChars, ""))
+		    title = Utilities.ReplaceEntities(Join(titleChars, ""))
 		  End If
 		  
 		  // Only add this reference to the document if it's the first time we've encountered 
@@ -125,7 +125,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ParseListMarker(indented As Boolean, chars() As Text, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
+		Shared Function ParseListMarker(indented As Boolean, chars() As String, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.ListData, ByRef length As Integer) As Integer
 		  // Attempts to parse a ListItem marker (bullet or enumerated).
 		  // On success, it returns the length of the marker, and populates
 		  // data with the details.  On failure it returns 0.
@@ -135,7 +135,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim c As Text
+		  Dim c As String
 		  Dim startPos As Integer
 		  data = Nil
 		  length = 0
@@ -166,7 +166,7 @@ Protected Class BlockScanner
 		  ElseIf c = "0" Or c = "1" Or c = "2" Or c = "3" Or c = "4" Or c = "5" Or _
 		    c = "6" Or c = "7" Or c = "8" Or c = "9" Then
 		    Dim numDigits As Integer = 0
-		    Dim startText As Text
+		    Dim startText As String
 		    Dim limit As Integer = Min(chars.Ubound, startPos + 8)
 		    For i As Integer = startPos To limit
 		      c = chars(i)
@@ -180,7 +180,7 @@ Protected Class BlockScanner
 		        Exit
 		      End Select
 		    Next i
-		    Dim start As Integer = Integer.FromText(startText)
+		    Dim start As Integer = Val(startText)
 		    pos = pos + numDigits
 		    // pos now points to the character after the last digit.
 		    If pos > charsUbound Then Return 0
@@ -217,7 +217,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanATXHeadingStart(chars() As Text, pos As Integer, ByRef headingLevel As Integer, ByRef length As Integer) As Integer
+		Shared Function ScanATXHeadingStart(chars() As String, pos As Integer, ByRef headingLevel As Integer, ByRef length As Integer) As Integer
 		  // Checks to see if there is a valid ATX heading start.
 		  // We are passed the characters of the line as an array and the position we 
 		  // should consider to be the first character. 
@@ -276,7 +276,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanCloseCodeFence(chars() As Text, pos As Integer, length As Integer) As Integer
+		Shared Function ScanCloseCodeFence(chars() As String, pos As Integer, length As Integer) As Integer
 		  // Scan for a closing fence of at least length `length`.
 		  
 		  #Pragma DisableBoundsChecking
@@ -287,14 +287,14 @@ Protected Class BlockScanner
 		  
 		  If pos + (length - 1) > charsUbound Then Return 0
 		  
-		  Dim c1 As Text = chars(pos)
+		  Dim c1 As String = chars(pos)
 		  If c1 <> "`" And c1 <> "~" Then Return 0
 		  
 		  Dim cnt As Integer = 1
 		  Dim spaces As Boolean = False
 		  
 		  Dim i As Integer
-		  Dim c As Text
+		  Dim c As String
 		  For i = pos + 1 To charsUbound
 		    c = chars(i)
 		    
@@ -349,7 +349,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim chars() As Text = line.Chars
+		  Dim chars() As String = line.Chars
 		  Dim charsUbound As Integer = chars.Ubound
 		  
 		  // The shortest opening condition is two characters.
@@ -364,7 +364,7 @@ Protected Class BlockScanner
 		  End If
 		  
 		  pos = pos + 1
-		  Dim c As Text = chars(pos)
+		  Dim c As String = chars(pos)
 		  
 		  // Type 2, 4 or 5?
 		  // 2: <!--
@@ -396,7 +396,7 @@ Protected Class BlockScanner
 		      Return Block.kHTMLBlockTypeNone
 		    End If
 		    
-		    If chars.ToText(pos, 7).Compare("[CDATA[", Text.CompareCaseSensitive) = 0 Then
+		    If chars.ToString(pos, 7).ToText.Compare("[CDATA[", Text.CompareCaseSensitive) = 0 Then
 		      type = Block.kHTMLBlockTypeCData
 		      Return Block.kHTMLBlockTypeCData
 		    End If
@@ -425,7 +425,7 @@ Protected Class BlockScanner
 		  End If
 		  
 		  // `pos` currently points to the first character of a potential tag name.
-		  Dim tagNameArray() As Text
+		  Dim tagNameArray() As String
 		  While pos <= charsUbound And tagNameArray.Ubound < 10
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.CharInHeaderLevelRange(c) Then
@@ -436,7 +436,7 @@ Protected Class BlockScanner
 		    pos = pos + 1
 		  Wend
 		  
-		  Dim tagName As Text = Text.Join(tagNameArray, "")
+		  Dim tagName As String = Join(tagNameArray, "")
 		  If Not mHTMLTagNames.HasKey(tagName) And tagName <> "pre" And tagName <> "script" And tagName <> "style" Then
 		    type = Block.kHTMLBlockTypeNone
 		    Return Block.kHTMLBlockTypeNone
@@ -489,13 +489,13 @@ Protected Class BlockScanner
 		  type = Block.kHTMLBlockTypeNone
 		  
 		  // At least 3 characters are required for a valid type 7 block start.
-		  Dim chars() As Text = line.Chars
+		  Dim chars() As String = line.Chars
 		  Dim charsUbound As Integer = chars.Ubound
 		  If pos + 2 > charsUbound Then Return Block.kHTMLBlockTypeNone
 		  
 		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
 		  
-		  Dim tagName As Text
+		  Dim tagName As String
 		  If chars(pos + 1) = "/" Then
 		    pos = HTMLScanner.ScanClosingTag(chars, pos + 2, tagName)
 		  Else
@@ -518,7 +518,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub ScanLinkReferenceDefinition(ByRef chars() As Text, doc As MarkdownKit.Document)
+		Shared Sub ScanLinkReferenceDefinition(ByRef chars() As String, doc As MarkdownKit.Document)
 		  // Takes an array of characters representing the raw text of a paragraph.
 		  // Assumes that there are at least 4 characters and chars(0) = "[".
 		  // If we find a valid link reference definition then we remove it from the 
@@ -613,7 +613,7 @@ Protected Class BlockScanner
 		  // (i.e: up to the next newline or end of array).
 		  pos = pos + titleCR.Length
 		  seenNewline = False
-		  Dim c As Text
+		  Dim c As String
 		  If pos < charsUbound Then
 		    For i = pos To charsUbound
 		      c = chars(i)
@@ -644,7 +644,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanOpenCodeFence(chars() As Text, pos As Integer, ByRef length As Integer) As Integer
+		Shared Function ScanOpenCodeFence(chars() As String, pos As Integer, ByRef length As Integer) As Integer
 		  // Scans the passed array of characters for an opening code fence.
 		  // Returns the length of the fence if found (0 if not found).
 		  // Additionally mutates the ByRef `length` variable to the length of the 
@@ -660,14 +660,14 @@ Protected Class BlockScanner
 		  
 		  If pos + 2 > charsUbound Then Return 0
 		  
-		  Dim fchar As Text = chars(pos)
+		  Dim fchar As String = chars(pos)
 		  If fchar <> "`" And fchar <> "~" Then Return 0
 		  
 		  length = 1
 		  Dim fenceDone As Boolean = False
 		  
 		  Dim i As Integer
-		  Dim c As Text
+		  Dim c As String
 		  For i = pos + 1 to charsUbound
 		    c = chars(i)
 		    
@@ -695,7 +695,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanSetextHeadingLine(chars() As Text, pos As Integer, ByRef level As Integer) As Integer
+		Shared Function ScanSetextHeadingLine(chars() As String, pos As Integer, ByRef level As Integer) As Integer
 		  // Attempts to match a setext heading line. 
 		  // Returns the heading level (1 or 2) or 0 if this is not a setext heading line.
 		  // We also set the ByRef `level` variable to the heading level or 0.
@@ -712,8 +712,8 @@ Protected Class BlockScanner
 		  Dim charsUbound As Integer = chars.Ubound
 		  If pos > charsUbound Then Return 0
 		  
-		  Dim c As Text = chars(pos)
-		  Dim stxChar As Text
+		  Dim c As String = chars(pos)
+		  Dim stxChar As String
 		  If c <> "=" And c <> "-" Then
 		    Return 0
 		  Else
@@ -746,7 +746,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanSpaceChars(chars() As Text, pos As Integer) As Integer
+		Shared Function ScanSpaceChars(chars() As String, pos As Integer) As Integer
 		  // Match space and tab characters.
 		  
 		  #If Not TargetWeb
@@ -770,7 +770,7 @@ Protected Class BlockScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanThematicBreak(chars() As Text, pos As Integer) As Integer
+		Shared Function ScanThematicBreak(chars() As String, pos As Integer) As Integer
 		  // Scan for a thematic break line.
 		  // Valid thematic break lines consist of >= 3 dashes, underscores or asterixes 
 		  // which may be optionally separated by any amount of spaces or tabs whitespace.
@@ -788,7 +788,7 @@ Protected Class BlockScanner
 		  
 		  Dim count As Integer = 0
 		  Dim i As Integer
-		  Dim c, tbChar As Text
+		  Dim c, tbChar As String
 		  
 		  For i = pos To charsUbound
 		    c = chars(i)

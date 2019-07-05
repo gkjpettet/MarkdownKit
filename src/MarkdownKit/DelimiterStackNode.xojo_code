@@ -22,7 +22,7 @@ Protected Class DelimiterStackNode
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Delimiter As Text
+		Delimiter As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

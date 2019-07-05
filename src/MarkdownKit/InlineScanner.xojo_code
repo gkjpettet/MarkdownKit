@@ -1,7 +1,7 @@
 #tag Class
 Protected Class InlineScanner
 	#tag Method, Flags = &h0
-		Shared Sub CleanLinkLabel(chars() As Text)
+		Shared Sub CleanLinkLabel(chars() As String)
 		  // Cleans up a label parsed by ScanLinkLabel by removing the flanking [].
 		  // Mutates the passed array.
 		  
@@ -16,7 +16,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub CleanLinkTitle(chars() As Text)
+		Shared Sub CleanLinkTitle(chars() As String)
 		  // Takes an array of characters representing a link title that has been parsed by ScanLinkTitle().
 		  // Removes surrounding delimiters, handles backslash-escaped characters and replaces character references.
 		  // NB: Does NOT unescape special characters.
@@ -33,7 +33,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub CleanURL(chars() As Text)
+		Shared Sub CleanURL(chars() As String)
 		  // Takes an array of characters representing a URL that has been parsed by ScanLinkURL().
 		  // Removes surrounding whitespace, surrounding "<" and ">", handles backslash-escaped 
 		  // characters and replaces character references.
@@ -74,7 +74,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub CollapseInternalWhitespace(chars() As Text)
+		Shared Sub CollapseInternalWhitespace(chars() As String)
 		  // Collapses consecutive whitespace within the passed character array to a single space.
 		  // Mutates the passed array.
 		  
@@ -87,7 +87,7 @@ Protected Class InlineScanner
 		  
 		  Dim i As Integer = 0
 		  Dim collapse As Boolean = False
-		  Dim c As Text
+		  Dim c As String
 		  While i < chars.Ubound
 		    c = chars(i)
 		    
@@ -110,7 +110,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function CreateInlineImageData(imageDescriptionChars() As Text, destination As Text, title As Text, endPos As Integer) As MarkdownKit.InlineImageData
+		Private Shared Function CreateInlineImageData(imageDescriptionChars() As String, destination As String, title As String, endPos As Integer) As MarkdownKit.InlineImageData
 		  // `endPos` is the position in `container.Chars` of the closing ")".
 		  // The contents of `imageDescriptionChars` are used as the images's 
 		  // `alt` attribute text and need to be parsed as inlines.
@@ -127,7 +127,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function CreateInlineLinkData(linkTextChars() As Text, destination As Text, title As Text, endPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function CreateInlineLinkData(linkTextChars() As String, destination As String, title As String, endPos As Integer) As MarkdownKit.InlineLinkData
 		  // `endPos` is the position in `container.Chars` of the closing ")".
 		  // The contents of `linkTextChars` are used as the link's text and need to be parsed 
 		  // as inlines.
@@ -144,7 +144,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function CreateReferenceImageData(ByRef container As MarkdownKit.Block, linkLabel As Text, descriptionChars() As Text, endPos As Integer) As MarkdownKit.InlineImageData
+		Private Shared Function CreateReferenceImageData(ByRef container As MarkdownKit.Block, linkLabel As String, descriptionChars() As String, endPos As Integer) As MarkdownKit.InlineImageData
 		  // linkLabelChars is a character array containing a validated link label (excluding the 
 		  // flanking "[" and "]"). 
 		  // `endPos` is the position in `container.Chars` of the closing "]".
@@ -168,7 +168,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function CreateReferenceLinkData(ByRef container As MarkdownKit.Block, linkLabel As Text, linkTextChars() As Text, endPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function CreateReferenceLinkData(ByRef container As MarkdownKit.Block, linkLabel As String, linkTextChars() As String, endPos As Integer) As MarkdownKit.InlineLinkData
 		  // linkLabelChars is a character array containing a validated link label (excluding the 
 		  // flanking "[" and "]"). 
 		  // `endPos` is the position in `container.Chars` of the closing "]".
@@ -192,7 +192,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function FullReferenceImageData(ByRef container As markdownKit.Block, chars() As Text, charsUbound As Integer, imageDescriptionChars() As Text, startPos As Integer) As MarkdownKit.InlineImageData
+		Private Shared Function FullReferenceImageData(ByRef container As markdownKit.Block, chars() As String, charsUbound As Integer, imageDescriptionChars() As String, startPos As Integer) As MarkdownKit.InlineImageData
 		  // Returns either an inline image or Nil if a valid full reference image cannot be constructed.
 		  // `imageDescriptionChars` are the raw characters representing this images's 
 		  // `alt` attribute. They are to be parsed as inlines.
@@ -207,7 +207,7 @@ Protected Class InlineScanner
 		  If startPos + 1 > charsUbound Then Return Nil
 		  
 		  // Scan for a valid link label.
-		  Dim c, linkLabelChars() As Text
+		  Dim c, linkLabelChars() As String
 		  Dim indexOfClosingBracket As Integer = -1
 		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
@@ -232,7 +232,7 @@ Protected Class InlineScanner
 		  If Not seenNonWhitespace Then Return Nil
 		  
 		  // Does the document's reference map contain a reference with the same label?
-		  Dim linkLabel As Text = Text.Join(linkLabelChars, "")
+		  Dim linkLabel As String = Join(linkLabelChars, "")
 		  If Not container.Root.ReferenceMap.HasKey(linkLabel) Then Return Nil
 		  
 		  // Construct this reference image.
@@ -242,7 +242,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function FullReferenceLinkData(ByRef container As markdownKit.Block, chars() As Text, charsUbound As Integer, linkTextChars() As Text, startPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function FullReferenceLinkData(ByRef container As markdownKit.Block, chars() As String, charsUbound As Integer, linkTextChars() As String, startPos As Integer) As MarkdownKit.InlineLinkData
 		  // Returns either an inline link or Nil if a valid full reference link cannot be constructed.
 		  // `linkTextChars` are the raw characters representing this link's text. They are to 
 		  // be parsed as inlines.
@@ -258,7 +258,7 @@ Protected Class InlineScanner
 		  If startPos + 1 > charsUbound Then Return Nil
 		  
 		  // Scan for a valid link label.
-		  Dim c, linkLabelChars() As Text
+		  Dim c, linkLabelChars() As String
 		  Dim indexOfClosingBracket As Integer = -1
 		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
@@ -283,7 +283,7 @@ Protected Class InlineScanner
 		  If Not seenNonWhitespace Then Return Nil
 		  
 		  // Does the document's reference map contain a reference with the same label?
-		  Dim linkLabel As Text = Text.Join(linkLabelChars, "")
+		  Dim linkLabel As String = Join(linkLabelChars, "")
 		  If Not container.Root.ReferenceMap.HasKey(linkLabel) Then Return Nil
 		  
 		  // Construct this reference link.
@@ -350,9 +350,9 @@ Protected Class InlineScanner
 		  Dim result As MarkdownKit.Block
 		  
 		  Dim pos As Integer = 0
-		  Dim c As Text = b.Chars(startPos + 1)
+		  Dim c As String = b.Chars(startPos + 1)
 		  
-		  Dim tagName As Text
+		  Dim tagName As String
 		  
 		  If c = "/" Then
 		    // Closing tag?
@@ -365,7 +365,7 @@ Protected Class InlineScanner
 		    pos = HTMLScanner.ScanDeclarationCommentOrCData(b.Chars, startPos + 2, charsUbound)
 		  Else
 		    // Autolink?
-		    Dim uri As Text
+		    Dim uri As String
 		    pos = ScanAutoLink(b.Chars, startPos + 1, charsUbound, uri)
 		    If pos > 0 Then
 		      result = New MarkdownKit.Block(BlockType.InlineLink, Xojo.Core.WeakRef.Create(b))
@@ -486,7 +486,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function InlineImageData(chars() As Text, charsUbound As Integer, imageDescriptionChars() As Text, startPos As Integer) As MarkdownKit.InlineImageData
+		Private Shared Function InlineImageData(chars() As String, charsUbound As Integer, imageDescriptionChars() As String, startPos As Integer) As MarkdownKit.InlineImageData
 		  // Returns either an inline image or Nil if a valid inline image cannot be constructed.
 		  // `imageDescriptionChars` are the raw characters representing this images's 
 		  // `alt` attribute. They are to be parsed as inlines.
@@ -508,7 +508,7 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link destination?
-		  Dim destination As Text = ScanInlineLinkDestination(chars, charsUbound, pos)
+		  Dim destination As String = ScanInlineLinkDestination(chars, charsUbound, pos)
 		  Utilities.Unescape(destination)
 		  
 		  If pos >= charsUbound Then
@@ -523,7 +523,7 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link title?
-		  Dim title As Text = ScanInlineLinkTitle(chars, charsUbound, pos)
+		  Dim title As String = ScanInlineLinkTitle(chars, charsUbound, pos)
 		  Utilities.Unescape(title)
 		  
 		  // Advance past any optional whitespace.
@@ -542,7 +542,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function InlineLinkData(chars() As Text, charsUbound As Integer, linkTextChars() As Text, startPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function InlineLinkData(chars() As String, charsUbound As Integer, linkTextChars() As String, startPos As Integer) As MarkdownKit.InlineLinkData
 		  // Returns either an inline link or Nil if a valid inline link cannot be constructed.
 		  // `linkTextChars` are the raw characters representing this link's text. They are to 
 		  // be parsed as inlines.
@@ -566,7 +566,7 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link destination?
-		  Dim destination As Text = ScanInlineLinkDestination(chars, charsUbound, pos)
+		  Dim destination As String = ScanInlineLinkDestination(chars, charsUbound, pos)
 		  Utilities.Unescape(destination)
 		  
 		  If pos >= charsUbound Then
@@ -581,7 +581,7 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link title?
-		  Dim title As Text = ScanInlineLinkTitle(chars, charsUbound, pos)
+		  Dim title As String = ScanInlineLinkTitle(chars, charsUbound, pos)
 		  Utilities.Unescape(title)
 		  
 		  // Advance past any optional whitespace.
@@ -761,7 +761,7 @@ Protected Class InlineScanner
 		  
 		  Dim pos As Integer = 0
 		  Dim charsUbound As Integer = b.Chars.Ubound
-		  Dim c, lastChar As Text = ""
+		  Dim c, lastChar As String = ""
 		  Dim buffer, result As MarkdownKit.Block
 		  Dim dsn As MarkdownKit.DelimiterStackNode
 		  
@@ -1092,7 +1092,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanAutoLink(chars() As Text, startPos As Integer, charsUbound As Integer, ByRef uri As Text) As Integer
+		Private Shared Function ScanAutoLink(chars() As String, startPos As Integer, charsUbound As Integer, ByRef uri As String) As Integer
 		  // Scan the passed array of characters for a valid autolink.
 		  // `pos` points to the character immediately after the opening "<"
 		  // Returns the index in `chars` of the character immediately following a 
@@ -1123,18 +1123,18 @@ Protected Class InlineScanner
 		  
 		  // Skip over any characters that aren't whitespace, "<" or ">"
 		  If pos >= charsUbound Then Return 0
-		  Dim c As Text
+		  Dim c As String
 		  Dim limit As Integer
 		  For pos = pos To charsUbound
 		    c = chars(pos)
 		    If c = ">" Then
 		      // Valid autolink. Construct the URI.
 		      limit = pos - 1
-		      Dim tmp() As Text
+		      Dim tmp() As String
 		      For i As Integer = startPos To limit
 		        tmp.Append(chars(i))
 		      Next i
-		      uri = Text.Join(tmp, "")
+		      uri = Join(tmp, "")
 		      Return pos + 1
 		    End If
 		    If MarkdownKit.Utilities.IsWhitespace(c) Then Return 0
@@ -1205,7 +1205,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanDelimiterRun(chars() As Text, charsUbound As Integer, pos As Integer, delimiter As Text) As MarkdownKit.DelimiterStackNode
+		Private Shared Function ScanDelimiterRun(chars() As String, charsUbound As Integer, pos As Integer, delimiter As String) As MarkdownKit.DelimiterStackNode
 		  // Scan the passed array of characters for a run of emphasis.
 		  // `pos` points to the begining of the emphasis run.
 		  // `delimiter` is either "*" or "_".
@@ -1278,7 +1278,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanEmailLink(chars() As Text, startPos As Integer, charsUbound As Integer, ByRef uri As Text) As Integer
+		Private Shared Function ScanEmailLink(chars() As String, startPos As Integer, charsUbound As Integer, ByRef uri As String) As Integer
 		  // Scan the passed array of characters for a valid email autolink.
 		  // `pos` points to the character immediately after the opening "<"
 		  // Returns the index in `chars` of the character immediately following a 
@@ -1302,7 +1302,7 @@ Protected Class InlineScanner
 		  
 		  // Match between 1 and unlimited times, as many times as possible, a character 
 		  // in the set: a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-
-		  Dim c As Text
+		  Dim c As String
 		  Dim done As Boolean = False
 		  While pos < charsUbound
 		    If Not mEmailPartOneCharacters.HasKey(chars(pos)) Then
@@ -1347,7 +1347,7 @@ Protected Class InlineScanner
 		  
 		  Dim valid As Boolean = False
 		  Dim limit As Integer
-		  Dim tmp() As Text
+		  Dim tmp() As String
 		  Do
 		    // Have we found a valid email?
 		    If chars(pos) = ">" Then
@@ -1358,7 +1358,7 @@ Protected Class InlineScanner
 		        For i As Integer = startPos To limit
 		          tmp.Append(chars(i))
 		        Next i
-		        uri = Text.Join(tmp, "")
+		        uri = Join(tmp, "")
 		        Return pos + 1
 		      Else
 		        Return 0
@@ -1386,7 +1386,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanForInlineImageOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineImageData
+		Private Shared Function ScanForInlineImageOfAnyType(chars() As String, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineImageData
 		  // Scans through the passed array of characters for a valid inline image.
 		  // Assumes `startPos` points to the beginning "!".
 		  // Returns Nil if no valid image is found, otherwise creates and returns a new 
@@ -1407,12 +1407,12 @@ Protected Class InlineScanner
 		  // Valid images start with either an imageDescription or a linkLabel.
 		  // linkLabels are not allowed to contain unescaped brackets and 
 		  // must contain at least one non-whitespace character.
-		  Dim part1RawChars() As Text
+		  Dim part1RawChars() As String
 		  Dim indexOfLastClosingSquareBracket As Integer = -1
 		  Dim openSquareBracketCount As Integer = 1
 		  Dim closeSquareBracketCount As Integer = 0
 		  Dim hasUnescapedBracket As Boolean = False
-		  Dim c As Text
+		  Dim c As String
 		  For i As Integer = 0 To closerCharPos
 		    c = chars(i)
 		    If c = "]" And Not Utilities.Escaped(chars, i) Then
@@ -1439,7 +1439,7 @@ Protected Class InlineScanner
 		  // Is part1 a valid linkLabel?
 		  Dim validLinkLabel As Boolean = False
 		  If part1RawChars.Ubound > -1 Then
-		    If container.Root.ReferenceMap.HasKey(Text.Join(part1RawChars, "")) Then
+		    If container.Root.ReferenceMap.HasKey(Join(part1RawChars, "")) Then
 		      validLinkLabel = True
 		    End If
 		  End If
@@ -1451,10 +1451,10 @@ Protected Class InlineScanner
 		  If validLinkLabel And Not Peek(chars, pos, "(") Then
 		    If pos >= charsUbound Or pos + 1 > charsUbound Then
 		      // Found a shortcut reference image.
-		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceImageData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
 		    ElseIf chars(pos) <> "[" And chars(pos + 1) <> "]" Then
 		      // Found a shortcut reference link.
-		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceImageData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
 		    End If
 		  End If
 		  
@@ -1462,7 +1462,7 @@ Protected Class InlineScanner
 		  If validLinkLabel Then
 		    If pos + 1 <= charsUbound And chars(pos) = "[" And chars(pos + 1) = "]" Then
 		      // Found a collapsed reference image.
-		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos + 1)
+		      Return CreateReferenceImageData(container, Join(part1RawChars, ""), part1RawChars, pos + 1)
 		    End If
 		  End If
 		  
@@ -1474,7 +1474,7 @@ Protected Class InlineScanner
 		    InlineImageData(chars, charsUbound, part1RawChars, pos)
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference image immediately followed by a "(".
-		      Return CreateReferenceImageData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceImageData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
 		    Else
 		      Return result
 		    End If
@@ -1490,7 +1490,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanForInlineLinkOfAnyType(chars() As Text, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineLinkData
+		Private Shared Function ScanForInlineLinkOfAnyType(chars() As String, startPos As Integer, ByRef container As MarkdownKit.Block, closerCharPos As Integer) As MarkdownKit.InlineLinkData
 		  // Scans through the passed array of characters for a valid inline link.
 		  // Assumes `startPos` points to the beginning "[".
 		  // Returns Nil if no valid link is found, otherwise creates and returns a new 
@@ -1512,12 +1512,12 @@ Protected Class InlineScanner
 		  // linkLabels are not allowed to contain unescaped brackets and 
 		  // must contain at least one non-whitespace character.
 		  
-		  Dim part1RawChars() As Text
+		  Dim part1RawChars() As String
 		  Dim indexOfLastClosingSquareBracket As Integer = -1
 		  Dim openSquareBracketCount As Integer = 1
 		  Dim closeSquareBracketCount As Integer = 0
 		  Dim hasUnescapedBracket As Boolean = False
-		  Dim c As Text
+		  Dim c As String
 		  For i As Integer = 0 To closerCharPos
 		    c = chars(i)
 		    If c = "]" And Not Utilities.Escaped(chars, i) Then
@@ -1544,7 +1544,7 @@ Protected Class InlineScanner
 		  // Is part1 a valid linkLabel?
 		  Dim validLinkLabel As Boolean = False
 		  If part1RawChars.Ubound > -1 Then
-		    If container.Root.ReferenceMap.HasKey(Text.Join(part1RawChars, "")) Then
+		    If container.Root.ReferenceMap.HasKey(Join(part1RawChars, "")) Then
 		      validLinkLabel = True
 		    End If
 		  End If
@@ -1556,10 +1556,10 @@ Protected Class InlineScanner
 		  If validLinkLabel And Not Peek(chars, pos, "(") Then
 		    If pos >= charsUbound Or pos + 1 > charsUbound Then
 		      // Found a shortcut reference link.
-		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
 		    ElseIf chars(pos) <> "[" And chars(pos + 1) <> "]" Then
 		      // Found a shortcut reference link.
-		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
 		    End If
 		  End If
 		  
@@ -1567,7 +1567,7 @@ Protected Class InlineScanner
 		  If validLinkLabel Then
 		    If pos + 1 <= charsUbound And chars(pos) = "[" And chars(pos + 1) = "]" Then
 		      // Found a collapsed reference link.
-		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos + 1)
+		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos + 1)
 		    End If
 		  End If
 		  
@@ -1579,7 +1579,7 @@ Protected Class InlineScanner
 		    InlineLinkData(chars, charsUbound, part1RawChars, pos)
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference link immediately followed by a "(".
-		      Return CreateReferenceLinkData(container, Text.Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
 		    Else
 		      Return result
 		    End If
@@ -1594,7 +1594,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanInlineLinkDestination(chars() As Text, charsUbound As Integer, ByRef pos As Integer) As Text
+		Private Shared Function ScanInlineLinkDestination(chars() As String, charsUbound As Integer, ByRef pos As Integer) As String
 		  // Scans the passed array of characters for a valid link URL.
 		  // Begins at the zero-based `pos` (passed by reference).
 		  // Returns the URL or "".
@@ -1617,7 +1617,7 @@ Protected Class InlineScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  Dim i As Integer
-		  Dim c As Text
+		  Dim c As String
 		  
 		  Dim startPos As Integer = pos
 		  
@@ -1628,7 +1628,7 @@ Protected Class InlineScanner
 		      c = chars(i)
 		      If c = ">" And Not Utilities.Escaped(chars, i) Then
 		        pos = i + 1
-		        Return chars.ToText(startPos + 1, i - startPos - 1)
+		        Return chars.ToString(startPos + 1, i - startPos - 1)
 		      End If
 		      If c = "<" And Not Utilities.Escaped(chars, i) Then Return ""
 		      If c = &u000A Then Return ""
@@ -1651,7 +1651,7 @@ Protected Class InlineScanner
 		      If i = charsUbound Or chars(i + 1) = &u000A Then
 		        If unmatchedOpenParens = 0 Then
 		          pos = i
-		          Dim destination As Text = chars.ToText(startPos, i - startPos)
+		          Dim destination As String = chars.ToString(startPos, i - startPos)
 		          Return Utilities.ReplaceEntities(destination)
 		        Else
 		          Return ""
@@ -1659,18 +1659,18 @@ Protected Class InlineScanner
 		      End If
 		      If unmatchedOpenParens = 0 Then
 		        pos = i
-		        Dim destination As Text = chars.ToText(startPos, i - startPos)
+		        Dim destination As String = chars.ToString(startPos, i - startPos)
 		        Return Utilities.ReplaceEntities(destination)
 		      End If
 		    Case &u0000, &u0009
 		      Return ""
 		    Case &u000A
 		      pos = i
-		      Return chars.ToText(startPos, i - startPos)
+		      Return chars.ToString(startPos, i - startPos)
 		    Case " "
 		      If unmatchedOpenParens = 1 Then
 		        pos = i
-		        Dim destination As Text = chars.ToText(startPos, i - startPos)
+		        Dim destination As String = chars.ToString(startPos, i - startPos)
 		        Return Utilities.ReplaceEntities(destination)
 		      Else
 		        Return ""
@@ -1680,7 +1680,7 @@ Protected Class InlineScanner
 		  
 		  If unmatchedOpenParens = 0 Then
 		    pos = i
-		    Dim destination As Text = chars.ToText(startPos, pos - startPos)
+		    Dim destination As String = chars.ToString(startPos, pos - startPos)
 		    Return Utilities.ReplaceEntities(destination)
 		  Else
 		    Return ""
@@ -1690,7 +1690,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanInlineLinkTitle(chars() As Text, charsUbound As Integer, ByRef pos As Integer) As Text
+		Private Shared Function ScanInlineLinkTitle(chars() As String, charsUbound As Integer, ByRef pos As Integer) As String
 		  // Scans the passed array of characters for a valid link title.
 		  // Begins at the zero-based `pos` (passed by reference).
 		  // Returns the title or "".
@@ -1714,9 +1714,9 @@ Protected Class InlineScanner
 		    Return ""
 		  End If
 		  
-		  Dim c As Text = chars(pos)
+		  Dim c As String = chars(pos)
 		  
-		  Dim delimiter As Text
+		  Dim delimiter As String
 		  Select Case c
 		  Case """", "'"
 		    delimiter = c
@@ -1728,7 +1728,7 @@ Protected Class InlineScanner
 		    c = chars(i)
 		    If c = delimiter And Not Utilities.Escaped(chars, i) Then
 		      pos = i + 1
-		      Dim title As Text = chars.ToText(startPos + 1, i - startPos - 1)
+		      Dim title As String = chars.ToString(startPos + 1, i - startPos - 1)
 		      Return Utilities.ReplaceEntities(title)
 		    End If
 		  Next i
@@ -1738,7 +1738,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanLinkDestination(chars() As Text, startPos As Integer, isReferenceLink As Boolean) As MarkdownKit.CharacterRun
+		Shared Function ScanLinkDestination(chars() As String, startPos As Integer, isReferenceLink As Boolean) As MarkdownKit.CharacterRun
 		  // Scans the passed array of characters for a valid link URL.
 		  // Begins at the zero-based `startPos`.
 		  // Returns a CharacterRun representing the url.
@@ -1762,7 +1762,7 @@ Protected Class InlineScanner
 		  
 		  Dim charsUbound As Integer = chars.Ubound
 		  Dim i As Integer
-		  Dim c As Text
+		  Dim c As String
 		  
 		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
 		  
@@ -1828,7 +1828,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanLinkLabelDefinition(chars() As Text, pos As Integer) As MarkdownKit.CharacterRun
+		Shared Function ScanLinkLabelDefinition(chars() As String, pos As Integer) As MarkdownKit.CharacterRun
 		  // Scans the contents of `chars` for a link reference definition label.
 		  // Assumes chars(pos) = "[".
 		  // Assumes `chars.Ubound` >=3.
@@ -1886,7 +1886,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function ScanLinkScheme(chars() As Text, pos As Integer, charsUbound As Integer) As Integer
+		Private Shared Function ScanLinkScheme(chars() As String, pos As Integer, charsUbound As Integer) As Integer
 		  // Scans the passed character array for a valid inline link scheme.
 		  // Returns the position of the character immediately following the scheme if 
 		  // found, otherwise returns 0.
@@ -1901,7 +1901,7 @@ Protected Class InlineScanner
 		  
 		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
 		  
-		  Dim c As Text = chars(pos + 1)
+		  Dim c As String = chars(pos + 1)
 		  If Not Utilities.IsASCIIAlphaChar(c) And Not Utilities.IsDigit(c) And _
 		    c <> "+" And c<> "." And c <> "-" Then
 		    Return 0
@@ -1930,7 +1930,7 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ScanLinkTitle(chars() As Text, startPos As Integer) As MarkdownKit.CharacterRun
+		Shared Function ScanLinkTitle(chars() As String, startPos As Integer) As MarkdownKit.CharacterRun
 		  // Scans the passed array of characters beginning at `startPos` for a valid 
 		  // link title.
 		  // Returns a CharacterRun containing the start index and length of the title 
@@ -1959,9 +1959,9 @@ Protected Class InlineScanner
 		    Return result
 		  End If
 		  
-		  Dim c As Text = chars(startPos)
+		  Dim c As String = chars(startPos)
 		  
-		  Dim delimiter As Text
+		  Dim delimiter As String
 		  Select Case c
 		  Case """", "'"
 		    delimiter = c

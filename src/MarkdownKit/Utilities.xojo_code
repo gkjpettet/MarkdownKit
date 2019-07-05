@@ -1,7 +1,7 @@
 #tag Class
 Protected Class Utilities
 	#tag Method, Flags = &h0
-		Shared Function CharInHeaderLevelRange(c As Text) As Boolean
+		Shared Function CharInHeaderLevelRange(c As String) As Boolean
 		  // Returns True if `c` is 1, 2, 3, 4, 5 or 6.
 		  
 		  Select Case c
@@ -22,7 +22,7 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function Escaped(chars() As Text, pos As Integer) As Boolean
+		Shared Function Escaped(chars() As String, pos As Integer) As Boolean
 		  // Returns True if the character at zero-based position `pos` is escaped.
 		  // (i.e: preceded by a (non-escaped) backslash character).
 		  
@@ -2184,55 +2184,49 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function IsASCIIAlphaChar(c As Text) As Boolean
+		Shared Function IsASCIIAlphaChar(c As String) As Boolean
 		  // Returns True if the passed character `c` is A-Z or a-z.
 		  
-		  For Each codePoint As UInt32 In c.Codepoints
-		    Select Case codePoint
-		    Case 65 To 90, 97 To 122
-		      Return True
-		    Else
-		      Return False
-		    End Select
-		  Next codePoint
+		  Select Case Asc(c)
+		  Case 65 To 90, 97 To 122
+		    Return True
+		  Else
+		    Return False
+		  End Select
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function IsDigit(c As Text) As Boolean
+		Shared Function IsDigit(c As String) As Boolean
 		  // Returns True if the passed character `c` a digit 0-9.
 		  
-		  For Each codePoint As UInt32 In c.Codepoints
-		    Select Case codePoint
-		    Case 48 To 57
-		      Return True
-		    Else
-		      Return False
-		    End Select
-		  Next codePoint
+		  Select Case Asc(c)
+		  Case 48 To 57
+		    Return True
+		  Else
+		    Return False
+		  End Select
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function IsHexDigit(c As Text) As Boolean
+		Shared Function IsHexDigit(c As String) As Boolean
 		  // Returns True if the passed character `c` is A-F, a-f or 0-9.
 		  
-		  For Each codePoint As UInt32 In c.Codepoints
-		    Select Case codePoint
-		    Case 65 To 70, 97 To 102, 48 To 57
-		      Return True
-		    Else
-		      Return False
-		    End Select
-		  Next codePoint
+		  Select Case Asc(c)
+		  Case 65 To 70, 97 To 102, 48 To 57
+		    Return True
+		  Else
+		    Return False
+		  End Select
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function IsPunctuation(char As Text) As Boolean
+		Shared Function IsPunctuation(char As String) As Boolean
 		  Select Case char
 		  Case "!", """", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", _
 		    "/", ":", ";", "<", "=", ">", "?", "@", "[", "\", "]", "^", "_", "`", _
@@ -2246,23 +2240,21 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function IsUppercaseASCIIChar(c As Text) As Boolean
+		Shared Function IsUppercaseASCIIChar(c As String) As Boolean
 		  // Returns True if the passed character `c` is an uppercase ASCII character.
 		  
-		  For Each codePoint As UInt32 In c.Codepoints
-		    Select Case codePoint
-		    Case 65 To 90
-		      Return True
-		    Else
-		      Return False
-		    End Select
-		  Next codePoint
+		  Select Case Asc(c)
+		  Case 65 To 90
+		    Return True
+		  Else
+		    Return False
+		  End Select
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function IsWhitespace(char As Text, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
+		Shared Function IsWhitespace(char As String, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
 		  // Returns True if the passed character is whitespace.
 		  // If the optional `nonBreakingSpaceIsWhitespace` is True then we also 
 		  // consider a non-breaking space (&u0A0) to be whitespace.
@@ -2282,7 +2274,7 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub ReplaceEntities(chars() As Text)
+		Shared Sub ReplaceEntities(chars() As String)
 		  // Scans the characters in the passed array of characters for valid entity and numeric character 
 		  // references.
 		  // If one is found, the characters representing the reference are replaced with the 
@@ -2309,8 +2301,8 @@ Protected Class Utilities
 		  Dim start As Integer = chars.IndexOf("&")
 		  If start = -1 Or chars.IndexOf(";") = -1 Then Return
 		  
-		  Dim c As Text
-		  Dim tmp() As Text
+		  Dim c As String
+		  Dim tmp() As String
 		  Dim i As Integer = start
 		  Dim xLimit As Integer
 		  Dim codePoint As Integer
@@ -2371,7 +2363,7 @@ Protected Class Utilities
 		          For x As Integer = 1 To tmp.Ubound + 5
 		            chars.Remove(start)
 		          Next x
-		          chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromHex(Text.Join(tmp, ""))))
+		          chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromHex(Join(tmp, "").ToText)))
 		          // Any other potential references?
 		          i = start + 1
 		          If i > chars.Ubound Then Return
@@ -2432,7 +2424,7 @@ Protected Class Utilities
 		          For x As Integer = 1 To tmp.Ubound + 4
 		            chars.Remove(start)
 		          Next x
-		          codePoint = Integer.FromText(Text.Join(tmp, ""))
+		          codePoint = Val(Join(tmp, ""))
 		          // For security reasons, the code point U+0000 is replaced by U+FFFD.
 		          If codePoint = 0 Then codePoint = &hFFFD
 		          chars.Insert(start, Text.FromUnicodeCodepoint(codePoint))
@@ -2495,7 +2487,7 @@ Protected Class Utilities
 		      If Not seenSemiColon Then Return
 		      // `tmp` contains the HTML entity reference name.
 		      // Is this a valid entity name?
-		      Dim entityName As Text = Text.Join(tmp, "")
+		      Dim entityName As String = Join(tmp, "")
 		      If CharacterReferences.HasKey(entityName) Then
 		        // Remove the characters in `chars` that make up this reference.
 		        For x As Integer = 1 To tmp.Ubound + 3
@@ -2530,29 +2522,29 @@ Protected Class Utilities
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function ReplaceEntities(t As Text) As Text
-		  If t.IndexOf("&") = -1 Or t.IndexOf(";") = -1 Then
+		Shared Function ReplaceEntities(t As String) As String
+		  If t.InStr("&") = 0 Or t.InStr(";") = 0 Then
 		    Return t
 		  Else
-		    Dim tmp() As Text = t.Split
+		    Dim tmp() As String = t.Split("")
 		    Utilities.ReplaceEntities(tmp)
-		    Return Text.Join(tmp, "")
+		    Return Join(tmp, "")
 		  End If
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub Unescape(ByRef t As Text)
+		Shared Sub Unescape(ByRef t As String)
 		  // Converts backslash escaped characters in the passed Text object to their 
 		  // literal character value.
 		  // Mutates the original value.
 		  
-		  If t.IndexOf("\") = -1 Then Return
+		  If t.InStr("\") = 0 Then Return
 		  
-		  Dim chars() As Text = t.Split
+		  Dim chars() As String = t.Split("")
 		  Dim pos As Integer = 0
-		  Dim c As Text
+		  Dim c As String
 		  Do Until pos > chars.Ubound
 		    c = chars(pos)
 		    If c = "\" And pos < chars.Ubound And _
@@ -2563,19 +2555,19 @@ Protected Class Utilities
 		    pos = pos + 1
 		  Loop
 		  
-		  t = Text.Join(chars, "")
+		  t = Join(chars, "")
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub Unescape(chars() As Text)
+		Shared Sub Unescape(chars() As String)
 		  // Converts backslash escaped characters to their literal character value.
 		  // Mutates alters the passed array.
 		  
 		  If chars.IndexOf("\") = -1 Then Return
 		  
 		  Dim pos As Integer = 0
-		  Dim c As Text
+		  Dim c As String
 		  Do Until pos > chars.Ubound
 		    c = chars(pos)
 		    If c = "\" And pos < chars.Ubound And _

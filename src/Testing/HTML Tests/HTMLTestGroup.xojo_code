@@ -3,7 +3,7 @@ Protected Class HTMLTestGroup
 Inherits TestGroup
 	#tag Method, Flags = &h0
 		Sub Run(methodName As Text)
-		  Dim testNumber As Integer = Integer.FromText(methodName.Replace("HTMLTests.Example", "").Replace("Test", ""))
+		  Dim testNumber As Integer = Val(methodName.Replace("HTMLTests.Example", "").Replace("Test", ""))
 		  
 		  // Get the names of the files containing the test Markdown and expected HTML output.
 		  Dim mdName As Text = testNumber.ToText + ".md"
@@ -31,7 +31,7 @@ Inherits TestGroup
 		  // Convert the AST to HTML.
 		  Dim renderer As New MarkdownKit.HTMLRenderer
 		  renderer.VisitDocument(doc)
-		  Dim actual As Text = renderer.Output
+		  Dim actual As Text = renderer.Output.ToText
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.

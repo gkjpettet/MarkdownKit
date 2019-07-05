@@ -67,7 +67,7 @@ Inherits TestController
 		  Dim tmp As Integer
 		  For i As Integer = startPos To chars.Ubound
 		    Try
-		      tmp = Integer.FromText(chars(i))
+		      tmp = Val(chars(i))
 		      result = result + chars(i)
 		    Catch
 		      Exit

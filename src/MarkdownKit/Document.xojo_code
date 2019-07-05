@@ -14,7 +14,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub AddLinkReferenceDefinition(name As Text, destination As Text, title As Text)
+		Sub AddLinkReferenceDefinition(name As String, destination As String, title As String)
 		  // Adds a new link reference definition to this document's reference map.
 		  
 		  // Only add this definition if it's name is unique (case-insensitive) as 
@@ -43,7 +43,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(source As Text)
+		Sub Constructor(source As String)
 		  Super.Constructor(MarkdownKit.BlockType.Document, Nil)
 		  
 		  // Document Blocks act as the root of the block tree. 
@@ -61,7 +61,7 @@ Inherits MarkdownKit.Block
 		  source = ReplaceLineEndings(source, &u000A)
 		  
 		  // Split the source into lines of Text.
-		  Dim tmp() As Text = source.Split(&u000A)
+		  Dim tmp() As String = source.Split(&u000A)
 		  
 		  // Convert each line of text in the temporary array to a LineInfo object.
 		  Dim tmpUbound As Integer = tmp.Ubound
@@ -387,7 +387,7 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function ReplaceLineEndings(t As Text, what As Text) As Text
+		Private Function ReplaceLineEndings(t As String, what As String) As String
 		  // Normalize the line endings first.
 		  t = t.ReplaceAll(&u000D + &u000A, &u000A)
 		  t = t.ReplaceAll(&u000D, &u000A)

@@ -1,7 +1,7 @@
 #tag Module
 Protected Module MarkdownKit
 	#tag Method, Flags = &h21
-		Private Sub AppendArray(Extends array1() As Text, array2() As Text)
+		Private Sub AppendArray(Extends array1() As String, array2() As String)
 		  // Appends the contents of array2 to array1.
 		  // Has no effect on array2 but mutates array2.
 		  
@@ -74,7 +74,7 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function IsBlank(Extends chars() As Text) As Boolean
+		Private Function IsBlank(Extends chars() As String) As Boolean
 		  // Returns True if this array of characters is empty or contains only whitespace.
 		  If chars.Ubound = - 1 Then Return True
 		  
@@ -95,14 +95,14 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function IsEscapable(char As Text) As Boolean
+		Private Function IsEscapable(char As String) As Boolean
 		  // Is the passed character a backslash-escapable character?
 		  Return mEscapableCharacters.HasKey(char)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function Peek(chars() As Text, pos As Integer, char As Text) As Boolean
+		Private Function Peek(chars() As String, pos As Integer, char As String) As Boolean
 		  // Returns True if the character at position `pos` is `char`.
 		  
 		  If pos < 0 Or pos > chars.Ubound Then Return False
@@ -111,7 +111,7 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub RemoveLeft(Extends source() As Text, length As Integer)
+		Private Sub RemoveLeft(Extends source() As String, length As Integer)
 		  // Removes `length` elements from the start of the passed array.
 		  
 		  If length <= 0 Or (length - 1) > source.Ubound Then
@@ -128,13 +128,13 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub StripLeadingWhitespace(chars() As Text)
+		Private Sub StripLeadingWhitespace(chars() As String)
 		  // Takes a ByRef array of characters and removes contiguous whitespace 
 		  // characters from the beginning of it.
 		  // Whitespace characters are &u0020, &u0009.
 		  
 		  Dim i As Integer
-		  Dim c As Text
+		  Dim c As String
 		  For i = chars.Ubound DownTo 0
 		    c = chars(0)
 		    Select Case c
@@ -149,14 +149,14 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub StripTrailingWhitespace(chars() As Text)
+		Private Sub StripTrailingWhitespace(chars() As String)
 		  // Takes an array of characters and removes contiguous whitespace 
 		  // characters from the end of it.
 		  // Whitespace characters are &u0020, &u0009.
 		  // Mutates the passed array.
 		  
 		  Dim i As Integer
-		  Dim c As Text
+		  Dim c As String
 		  For i = chars.Ubound DownTo 0
 		    c = chars(chars.Ubound)
 		    Select Case c
@@ -171,7 +171,7 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function ToHTML(markdown As Text) As Text
+		Protected Function ToHTML(markdown As String) As String
 		  // Takes Markdown source as Text and returns it as raw HTML.
 		  
 		  // Create a new Markdown document.
@@ -197,7 +197,29 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function ToText(Extends type As MarkdownKit.BlockType) As Text
+		Private Function ToString(Extends chars() As String, start As Integer, length As Integer) As String
+		  // Grabs `length` characters from the passed character array beginning at `start` 
+		  // and returns them as concatenated Text.
+		  // If any of the passed parameters are out of range then we return "".
+		  
+		  Dim charsUbound As Integer = chars.Ubound
+		  
+		  If start < 0 Or start > charsUbound Or length <= 0 Or _
+		  (start + length - 1 > charsUbound) Then Return ""
+		  
+		  Dim limit As Integer = start + length - 1
+		  Dim tmp() As String
+		  For i As Integer = start To limit
+		    tmp.Append(chars(i))
+		  Next i
+		  
+		  Return Join(tmp, "")
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function ToText(Extends type As MarkdownKit.BlockType) As String
 		  // Returns a Text representation of the passed MarkdownKit.BlockType.
 		  
 		  Select Case type
@@ -234,30 +256,8 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Function ToText(Extends chars() As Text, start As Integer, length As Integer) As Text
-		  // Grabs `length` characters from the passed character array beginning at `start` 
-		  // and returns them as concatenated Text.
-		  // If any of the passed parameters are out of range then we return "".
-		  
-		  Dim charsUbound As Integer = chars.Ubound
-		  
-		  If start < 0 Or start > charsUbound Or length <= 0 Or _
-		  (start + length - 1 > charsUbound) Then Return ""
-		  
-		  Dim limit As Integer = start + length - 1
-		  Dim tmp() As Text
-		  For i As Integer = start To limit
-		    tmp.Append(chars(i))
-		  Next i
-		  
-		  Return Text.Join(tmp, "")
-		  
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h1
-		Protected Function Version() As Text
+		Protected Function Version() As String
 		  Dim major As Integer = kVersionMajor
 		  Dim minor As Integer = kVersionMinor
 		  Dim bug As Integer = kVersionBug
@@ -282,7 +282,7 @@ Protected Module MarkdownKit
 		returns the HTML as `Text`:
 		
 		```xojo
-		Dim html As Text = MarkdownKit.ToHTML("**Hello** World!") // <p><strong>Hello</strong> World!</p>
+		Dim html As String = MarkdownKit.ToHTML("**Hello** World!") // <p><strong>Hello</strong> World!</p>
 		```
 		
 		If you would like access to the abstract syntax tree (AST) created by the parser 
@@ -300,11 +300,11 @@ Protected Module MarkdownKit
 		// included renderers:
 		Dim astRenderer As New MarkdownKit.ASTRenderer
 		astRenderer.VisitDocument(doc)
-		Dim ast As Text = astRenderer.Output
+		Dim ast As String = astRenderer.Output
 		
 		Dim htmlRenderer As New MarkdownKit.HTMLRenderer
 		htmlRenderer.VisitDocument(doc)
-		Dim html As Text = htmlRenderer.Output
+		Dim html As String = htmlRenderer.Output
 		```
 		
 		One of the powerful and customisable aspects of MarkdownKit is that because you 

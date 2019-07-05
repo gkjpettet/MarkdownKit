@@ -27,7 +27,7 @@ Inherits TestGroup
 		  doc.ParseInlines
 		  
 		  // Convert the phase 2 block structure to Text.
-		  Dim renderer As New ASTRenderer
+		  Dim renderer As New MarkdownKit.ASTRenderer
 		  renderer.Pretty = False
 		  renderer.VisitDocument(doc)
 		  Dim actual As Text = renderer.Output

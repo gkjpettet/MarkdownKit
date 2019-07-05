@@ -267,6 +267,54 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 
+	#tag Note, Name = About
+		MarkdownKit
+		===========
+		
+		MarkdownKit is a 100% native Xojo module for converting Markdown to an 
+		abstract syntax tree (AST) and thereafter to HTML. It is 100% compliant with 
+		the CommonMark 0.29 specification (https://spec.commonmark.org/0.29/). It works 
+		on all platforms supported by Xojo (Mac, Windows, Linux x86/ARM and iOS).
+		
+		## Usage.
+		The easiest way to convert Markdown text to HTML is to use the 
+		`MarkdownKit.ToHTML()` method. This takes the Markdown source code as `Text` and 
+		returns the HTML as `Text`:
+		
+		```xojo
+		Dim html As Text = MarkdownKit.ToHTML("**Hello** World!") // <p><strong>Hello</strong> World!</p>
+		```
+		
+		If you would like access to the abstract syntax tree (AST) created by the parser 
+		you can do so by creating a new `MarkdownKit.Document`:
+		
+		```xojo
+		// Create a new Markdown document with some source code.
+		Dim doc As New MarkdownKit.Document("Some **bold** `Markdown` code.")
+		
+		// Parse the source code into an AST.
+		doc.ParseBlockStructure
+		doc.ParseInlines
+		
+		// `doc` is now essentially an AST. You can print it out using one of the 
+		// included renderers:
+		Dim astRenderer As New MarkdownKit.ASTRenderer
+		astRenderer.VisitDocument(doc)
+		Dim ast As Text = astRenderer.Output
+		
+		Dim htmlRenderer As New MarkdownKit.HTMLRenderer
+		htmlRenderer.VisitDocument(doc)
+		Dim html As Text = htmlRenderer.Output
+		```
+		
+		One of the powerful and customisable aspects of MarkdownKit is that because you 
+		have access to the AST, you could write your own renderer. Perhaps one that outputs 
+		LaText or some other format. You just need to create a new class that implements 
+		the `MarkdownKit.IRenderer` interface.
+		
+	#tag EndNote
+
+
 	#tag Property, Flags = &h21, Description = 412064696374696F6E617279206F6620746865206368617261637465727320746861742061726520657363617061626C65206279206120707265636564696E67206261636B736C617368
 		Private mEscapableCharacters As Xojo.Core.Dictionary
 	#tag EndProperty

@@ -60,9 +60,6 @@ Inherits MarkdownKit.Block
 		  // Standardise the line endings in the passed Markdown to line feeds.
 		  source = ReplaceLineEndings(source, &u000A)
 		  
-		  // Replace insecure characters (spec 0.29 2.3).
-		  source = source.ReplaceAll(&u0000, &uFFFD)
-		  
 		  // Split the source into lines of Text.
 		  Dim tmp() As Text = source.Split(&u000A)
 		  

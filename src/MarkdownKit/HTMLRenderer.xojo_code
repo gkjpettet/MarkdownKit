@@ -147,7 +147,7 @@ Implements IRenderer
 		    If wsIndex = 0 Then
 		      mOutput.Append(fc.InfoString)
 		    Else
-		      mOutput.Append(fc.InfoString.Left(wsIndex))
+		      mOutput.Append(fc.InfoString.Left(wsIndex - 1))
 		    End If
 		    
 		    mOutput.Append("""")
@@ -501,7 +501,8 @@ Implements IRenderer
 		#tag ViewProperty
 			Name="Output"
 			Group="Behavior"
-			Type="Text"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

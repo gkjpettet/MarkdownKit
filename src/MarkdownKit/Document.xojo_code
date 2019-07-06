@@ -20,10 +20,10 @@ Inherits MarkdownKit.Block
 		  // Only add this definition if it's name is unique (case-insensitive) as 
 		  // the first encountered definition supersedes subsequently similarly named 
 		  // definitions.
-		  If ReferenceMap.HasKey(name) Then
+		  If ReferenceMap.HasKey(name.Lowercase) Then
 		    Return
 		  Else
-		    ReferenceMap.Value(name) = New MarkdownKit.LinkReferenceDefinition(name, destination, title)
+		    ReferenceMap.Value(name.Lowercase) = New MarkdownKit.LinkReferenceDefinition(name, destination, title)
 		  End If
 		  
 		End Sub
@@ -671,7 +671,8 @@ Inherits MarkdownKit.Block
 		#tag ViewProperty
 			Name="FenceChar"
 			Group="Behavior"
-			Type="Text"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FenceLength"
@@ -686,27 +687,32 @@ Inherits MarkdownKit.Block
 		#tag ViewProperty
 			Name="InfoString"
 			Group="Behavior"
-			Type="Text"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Destination"
 			Group="Behavior"
-			Type="Text"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Label"
 			Group="Behavior"
-			Type="Text"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Title"
 			Group="Behavior"
-			Type="Text"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Delimiter"
 			Group="Behavior"
-			Type="Text"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="DelimiterLength"

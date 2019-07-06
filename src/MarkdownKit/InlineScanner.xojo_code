@@ -156,7 +156,7 @@ Protected Class InlineScanner
 		  
 		  // Get the reference destination and title from the document's reference map.
 		  Dim ref As MarkdownKit.LinkReferenceDefinition = _
-		  MarkdownKit.LinkReferenceDefinition(container.Root.ReferenceMap.Value(linkLabel))
+		  MarkdownKit.LinkReferenceDefinition(container.Root.ReferenceMap.Value(linkLabel.Lowercase))
 		  data.Destination = ref.Destination
 		  data.LinkTitle = ref.Title
 		  
@@ -180,7 +180,7 @@ Protected Class InlineScanner
 		  
 		  // Get the reference destination and title from the document's reference map.
 		  Dim ref As MarkdownKit.LinkReferenceDefinition = _
-		  MarkdownKit.LinkReferenceDefinition(container.Root.ReferenceMap.Value(linkLabel))
+		  MarkdownKit.LinkReferenceDefinition(container.Root.ReferenceMap.Value(linkLabel.Lowercase))
 		  data.Destination = ref.Destination
 		  data.LinkTitle = ref.Title
 		  
@@ -233,7 +233,7 @@ Protected Class InlineScanner
 		  
 		  // Does the document's reference map contain a reference with the same label?
 		  Dim linkLabel As String = Join(linkLabelChars, "")
-		  If Not container.Root.ReferenceMap.HasKey(linkLabel) Then Return Nil
+		  If Not container.Root.ReferenceMap.HasKey(linkLabel.Lowercase) Then Return Nil
 		  
 		  // Construct this reference image.
 		  Return CreateReferenceImageData(container, linkLabel, imageDescriptionChars, indexOfClosingBracket)
@@ -283,8 +283,8 @@ Protected Class InlineScanner
 		  If Not seenNonWhitespace Then Return Nil
 		  
 		  // Does the document's reference map contain a reference with the same label?
-		  Dim linkLabel As String = Join(linkLabelChars, "")
-		  If Not container.Root.ReferenceMap.HasKey(linkLabel) Then Return Nil
+		  Dim linkLabel As Text = Join(linkLabelChars, "").ToText
+		  If Not container.Root.ReferenceMap.HasKey(linkLabel.Lowercase) Then Return Nil
 		  
 		  // Construct this reference link.
 		  Return CreateReferenceLinkData(container, linkLabel, linkTextChars, indexOfClosingBracket)
@@ -1542,9 +1542,11 @@ Protected Class InlineScanner
 		  Next i
 		  
 		  // Is part1 a valid linkLabel?
+		  Dim linkLabelAsText As Text // Must be text to permit case-sensitive lookups.
 		  Dim validLinkLabel As Boolean = False
 		  If part1RawChars.Ubound > -1 Then
-		    If container.Root.ReferenceMap.HasKey(Join(part1RawChars, "")) Then
+		    linkLabelAsText = Join(part1RawChars, "").ToText
+		    If container.Root.ReferenceMap.HasKey(linkLabelAsText.Lowercase) Then
 		      validLinkLabel = True
 		    End If
 		  End If
@@ -1556,10 +1558,10 @@ Protected Class InlineScanner
 		  If validLinkLabel And Not Peek(chars, pos, "(") Then
 		    If pos >= charsUbound Or pos + 1 > charsUbound Then
 		      // Found a shortcut reference link.
-		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceLinkData(container, linkLabelAsText, part1RawChars, pos - 1)
 		    ElseIf chars(pos) <> "[" And chars(pos + 1) <> "]" Then
 		      // Found a shortcut reference link.
-		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceLinkData(container, linkLabelAsText, part1RawChars, pos - 1)
 		    End If
 		  End If
 		  
@@ -1567,7 +1569,7 @@ Protected Class InlineScanner
 		  If validLinkLabel Then
 		    If pos + 1 <= charsUbound And chars(pos) = "[" And chars(pos + 1) = "]" Then
 		      // Found a collapsed reference link.
-		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos + 1)
+		      Return CreateReferenceLinkData(container,linkLabelAsText, part1RawChars, pos + 1)
 		    End If
 		  End If
 		  
@@ -1579,7 +1581,7 @@ Protected Class InlineScanner
 		    InlineLinkData(chars, charsUbound, part1RawChars, pos)
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference link immediately followed by a "(".
-		      Return CreateReferenceLinkData(container, Join(part1RawChars, ""), part1RawChars, pos - 1)
+		      Return CreateReferenceLinkData(container, linkLabelAsText, part1RawChars, pos - 1)
 		    Else
 		      Return result
 		    End If

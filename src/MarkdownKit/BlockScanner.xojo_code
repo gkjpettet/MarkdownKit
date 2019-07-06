@@ -28,7 +28,7 @@ Protected Class BlockScanner
 		  
 		  // Only add this reference to the document if it's the first time we've encountered 
 		  // a reference with this normalised name.
-		  If Not doc.ReferenceMap.HasKey(label) Then
+		  If Not doc.ReferenceMap.HasKey(label.Lowercase) Then
 		    // This is the first reference with this label that we've encountered. Add it.
 		    doc.AddLinkReferenceDefinition(label, url, title)
 		  End If

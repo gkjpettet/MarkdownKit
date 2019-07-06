@@ -423,7 +423,7 @@ Protected Class InlineScanner
 
 	#tag Method, Flags = &h21
 		Private Shared Sub InitialiseEmailPartOneDictionary()
-		  mEmailPartOneCharacters = New Xojo.Core.Dictionary
+		  mEmailPartOneCharacters = New Dictionary
 		  
 		  mEmailPartOneCharacters.Value("a") = 0
 		  mEmailPartOneCharacters.Value("b") = 0
@@ -1995,7 +1995,7 @@ Protected Class InlineScanner
 			Stores the characters that are valid for the first part of an email autolink:
 			a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-
 		#tag EndNote
-		Private Shared mEmailPartOneCharacters As Xojo.Core.Dictionary
+		Private Shared mEmailPartOneCharacters As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

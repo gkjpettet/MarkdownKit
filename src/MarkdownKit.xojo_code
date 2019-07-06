@@ -172,7 +172,7 @@ Protected Module MarkdownKit
 
 	#tag Method, Flags = &h1
 		Protected Function ToHTML(markdown As String) As String
-		  // Takes Markdown source as Text and returns it as raw HTML.
+		  // Takes Markdown source as a String and returns it as raw HTML.
 		  
 		  // Create a new Markdown document.
 		  Dim doc As New MarkdownKit.Document(markdown)
@@ -199,7 +199,7 @@ Protected Module MarkdownKit
 	#tag Method, Flags = &h21
 		Private Function ToString(Extends chars() As String, start As Integer, length As Integer) As String
 		  // Grabs `length` characters from the passed character array beginning at `start` 
-		  // and returns them as concatenated Text.
+		  // and returns them as a concatenated String.
 		  // If any of the passed parameters are out of range then we return "".
 		  
 		  Dim charsUbound As Integer = chars.Ubound
@@ -220,7 +220,7 @@ Protected Module MarkdownKit
 
 	#tag Method, Flags = &h21
 		Private Function ToText(Extends type As MarkdownKit.BlockType) As String
-		  // Returns a Text representation of the passed MarkdownKit.BlockType.
+		  // Returns a String representation of the passed MarkdownKit.BlockType.
 		  
 		  Select Case type
 		  Case MarkdownKit.BlockType.AtxHeading
@@ -277,9 +277,9 @@ Protected Module MarkdownKit
 		on all platforms supported by Xojo (Mac, Windows, Linux x86/ARM and iOS).
 		
 		## Usage.
-		The easiest way to convert Markdown text to HTML is to use the 
-		`MarkdownKit.ToHTML()` method. This takes the Markdown source code as `Text` and 
-		returns the HTML as `Text`:
+		The easiest way to convert Markdown to HTML is to use the 
+		`MarkdownKit.ToHTML()` method. This takes the Markdown source code as a String and 
+		returns the HTML as a String:
 		
 		```xojo
 		Dim html As String = MarkdownKit.ToHTML("**Hello** World!") // <p><strong>Hello</strong> World!</p>

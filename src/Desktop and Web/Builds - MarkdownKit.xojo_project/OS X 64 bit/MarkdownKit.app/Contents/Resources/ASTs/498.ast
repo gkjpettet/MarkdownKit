@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<link destination="foo\bar" title="">
+<text>link</text>
+</link>
+</paragraph>
+</document>

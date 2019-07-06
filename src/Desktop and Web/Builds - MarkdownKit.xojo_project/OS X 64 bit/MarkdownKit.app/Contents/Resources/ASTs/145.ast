@@ -1,0 +1,8 @@
+<document>
+<html_block>&lt;style&gt;p{color:red;}&lt;/style&gt;</html_block>
+<paragraph>
+<emph>
+<text>foo</text>
+</emph>
+</paragraph>
+</document>

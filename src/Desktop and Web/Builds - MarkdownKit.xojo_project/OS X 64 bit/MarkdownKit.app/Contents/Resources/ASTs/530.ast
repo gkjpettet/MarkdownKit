@@ -1,0 +1,9 @@
+<document>
+<paragraph>
+<text>*</text>
+<link destination="/uri" title="">
+<text>foo</text>
+<text>*</text>
+</link>
+</paragraph>
+</document>

@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<link destination="/bar*" title="ti*tle">
+<text>foo</text>
+</link>
+</paragraph>
+</document>

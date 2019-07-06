@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<strong>
+<text>foo </text>
+<link destination="/url" title="">
+<text>bar</text>
+</link>
+</strong>
+</paragraph>
+</document>

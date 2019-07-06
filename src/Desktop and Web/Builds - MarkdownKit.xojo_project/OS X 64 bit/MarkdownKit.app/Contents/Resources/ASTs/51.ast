@@ -1,0 +1,10 @@
+<document>
+<heading level="1">
+<text>Foo </text>
+<emph>
+<text>bar</text>
+<softbreak />
+<text>baz</text>
+</emph>
+</heading>
+</document>

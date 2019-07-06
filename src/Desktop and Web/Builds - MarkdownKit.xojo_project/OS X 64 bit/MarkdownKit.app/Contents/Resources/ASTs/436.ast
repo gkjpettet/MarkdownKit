@@ -1,0 +1,8 @@
+<document>
+<paragraph>
+<text>foo </text>
+<emph>
+<text>*</text>
+</emph>
+</paragraph>
+</document>

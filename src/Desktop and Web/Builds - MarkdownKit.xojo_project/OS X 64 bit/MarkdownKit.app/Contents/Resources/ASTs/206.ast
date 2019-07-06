@@ -1,0 +1,10 @@
+<document>
+<block_quote>
+<indented_code_block>
+<text>foo</text>
+</indented_code_block>
+</block_quote>
+<indented_code_block>
+<text>bar</text>
+</indented_code_block>
+</document>

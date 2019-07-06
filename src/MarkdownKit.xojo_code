@@ -36,7 +36,7 @@ Protected Module MarkdownKit
 		  // This Dictionary provides fast lookup for characters that can be 
 		  // escaped with a preceding backslash.
 		  
-		  mEscapableCharacters = New Xojo.Core.Dictionary
+		  mEscapableCharacters = New Dictionary
 		  
 		  mEscapableCharacters.Value("!") = 0
 		  mEscapableCharacters.Value("""") = 0
@@ -316,7 +316,7 @@ Protected Module MarkdownKit
 
 
 	#tag Property, Flags = &h21, Description = 412064696374696F6E617279206F6620746865206368617261637465727320746861742061726520657363617061626C65206279206120707265636564696E67206261636B736C617368
-		Private mEscapableCharacters As Xojo.Core.Dictionary
+		Private mEscapableCharacters As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

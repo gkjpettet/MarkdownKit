@@ -2487,7 +2487,7 @@ Protected Class Utilities
 		      If Not seenSemiColon Then Return
 		      // `tmp` contains the HTML entity reference name.
 		      // Is this a valid entity name?
-		      Dim entityName As String = Join(tmp, "")
+		      Dim entityName As Text = Join(tmp, "").ToText // Must be text for correct case-sensitive lookup.
 		      If CharacterReferences.HasKey(entityName) Then
 		        // Remove the characters in `chars` that make up this reference.
 		        For x As Integer = 1 To tmp.Ubound + 3

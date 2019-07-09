@@ -3,3 +3,4 @@
 src/Builds - MarkdownKit.xojo_project
 src/MarkdownKit.debug.app
 *.DS_Store
+.DS_Store

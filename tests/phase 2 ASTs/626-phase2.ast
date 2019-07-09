@@ -1,6 +1,0 @@
-<document>
-<paragraph>
-<text>foo </text>
-<html_inline>&lt;![CDATA[&gt;&amp;&lt;]]&gt;</html_inline>
-</paragraph>
-</document>

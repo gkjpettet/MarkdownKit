@@ -1,8 +1,0 @@
-<document>
-<indented_code_block>
-<text>[foo]: /url "title"</text>
-</indented_code_block>
-<paragraph>
-<raw_text>[foo]</raw_text>
-</paragraph>
-</document>

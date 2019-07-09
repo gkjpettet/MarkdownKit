@@ -1,8 +1,0 @@
-<document>
-<paragraph>
-<raw_text>Foo</raw_text>
-</paragraph>
-<html_block>&lt;div&gt;
-bar
-&lt;/div&gt;</html_block>
-</document>

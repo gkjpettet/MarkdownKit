@@ -1,7 +1,0 @@
-<document>
-<paragraph>
-<text>foo </text>
-<html_inline>&lt;!-- this is a
-comment - with hyphen --&gt;</html_inline>
-</paragraph>
-</document>

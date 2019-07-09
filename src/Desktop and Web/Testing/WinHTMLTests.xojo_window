@@ -16,7 +16,7 @@ Begin Window WinHTMLTests
    MaxHeight       =   32000
    MaximizeButton  =   False
    MaxWidth        =   32000
-   MenuBar         =   1396744191
+   MenuBar         =   1083813887
    MenuBarVisible  =   True
    MinHeight       =   64
    MinimizeButton  =   True
@@ -609,7 +609,6 @@ Begin Window WinHTMLTests
    Begin HTMLTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
-      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -1122,33 +1121,6 @@ End
 	#tag MenuHandler
 		Function EditUnselectAllGroups() As Boolean Handles EditUnselectAllGroups.Action
 			SelectAllGroups(False, False)
-			
-			Return True
-			
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
-		Function FileRunTests() As Boolean Handles FileRunTests.Action
-			RunTests
-			
-			Return True
-			
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
-		Function WindowASTTests() As Boolean Handles WindowASTTests.Action
-			WinASTTests.Show
-			
-			Return True
-			
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
-		Function WindowEditor() As Boolean Handles WindowEditor.Action
-			WinEditor.Show
 			
 			Return True
 			

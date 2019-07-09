@@ -1,21 +1,11 @@
 #tag Menu
-Begin Menu MenuBarMain
+Begin Menu MenuBar1
    Begin MenuItem FileMenu
       SpecialMenu = 0
       Text = "&File"
       Index = -2147483648
       AutoEnable = True
       Visible = True
-      Begin MenuItem FileRunTests
-         SpecialMenu = 0
-         Text = "&Run Tests"
-         Index = -2147483648
-         ShortcutKey = "R"
-         Shortcut = "Cmd+R"
-         MenuModifier = True
-         AutoEnable = True
-         Visible = True
-      End
       Begin QuitMenuItem FileQuit
          SpecialMenu = 0
          Text = "#App.kFileQuit"
@@ -42,7 +32,7 @@ Begin Menu MenuBarMain
          AutoEnable = True
          Visible = True
       End
-      Begin MenuItem UntitledMenu1
+      Begin MenuItem EditSeparator1
          SpecialMenu = 0
          Text = "-"
          Index = -2147483648
@@ -86,48 +76,21 @@ Begin Menu MenuBarMain
          AutoEnable = True
          Visible = True
       End
-      Begin MenuItem UntitledMenu0
+      Begin MenuItem EditSeparator2
          SpecialMenu = 0
          Text = "-"
          Index = -2147483648
          AutoEnable = True
          Visible = True
       End
-      Begin MenuItem EditSelectAllGroups
+      Begin MenuItem EditSelectAll
          SpecialMenu = 0
-         Text = "Select &All Groups"
+         Text = "Select &All"
          Index = -2147483648
          ShortcutKey = "A"
          Shortcut = "Cmd+A"
          MenuModifier = True
          AutoEnable = True
-         Visible = True
-      End
-      Begin MenuItem EditUnselectAllGroups
-         SpecialMenu = 0
-         Text = "Unselect All Groups"
-         Index = -2147483648
-         ShortcutKey = "-"
-         Shortcut = "Cmd+-"
-         MenuModifier = True
-         AutoEnable = True
-         Visible = True
-      End
-   End
-   Begin MenuItem ParserMenu
-      SpecialMenu = 0
-      Text = "Parser"
-      Index = -2147483648
-      AutoEnable = True
-      Visible = True
-      Begin MenuItem ParserParse
-         SpecialMenu = 0
-         Text = "Parse"
-         Index = -2147483648
-         ShortcutKey = "Y"
-         Shortcut = "Cmd+Y"
-         MenuModifier = True
-         AutoEnable = False
          Visible = True
       End
    End
@@ -137,12 +100,12 @@ Begin Menu MenuBarMain
       Index = -2147483648
       AutoEnable = True
       Visible = True
-      Begin MenuItem WindowEditorPhase2
+      Begin MenuItem WindowHTMLTests
          SpecialMenu = 0
-         Text = "Phase 2 Editor"
+         Text = "HTML Tests"
          Index = -2147483648
-         ShortcutKey = "2"
-         Shortcut = "Cmd+2"
+         ShortcutKey = "1"
+         Shortcut = "Cmd+1"
          MenuModifier = True
          AutoEnable = True
          Visible = True
@@ -151,8 +114,8 @@ Begin Menu MenuBarMain
          SpecialMenu = 0
          Text = "AST Tests"
          Index = -2147483648
-         ShortcutKey = "3"
-         Shortcut = "Cmd+3"
+         ShortcutKey = "2"
+         Shortcut = "Cmd+2"
          MenuModifier = True
          AutoEnable = True
          Visible = True

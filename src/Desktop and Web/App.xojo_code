@@ -19,8 +19,8 @@ Inherits Application
 	#tag EndMenuHandler
 
 	#tag MenuHandler
-		Function WindowEditorPhase2() As Boolean Handles WindowEditorPhase2.Action
-			WinEditor.Show
+		Function WindowHTMLTests() As Boolean Handles WindowHTMLTests.Action
+			WinHTMLTests.Show
 			
 			Return True
 			

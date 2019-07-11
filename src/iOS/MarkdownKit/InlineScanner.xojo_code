@@ -218,7 +218,7 @@ Protected Class InlineScanner
 		      linkLabelChars.Append(c)
 		    End If
 		  Next i
-		  If Not indexOfClosingBracket = -1 Then Return Nil
+		  If indexOfClosingBracket = -1 Then Return Nil
 		  
 		  // A valid label must contain at least one non-whitespace character.
 		  Dim seenNonWhitespace As Boolean = False
@@ -269,7 +269,7 @@ Protected Class InlineScanner
 		      linkLabelChars.Append(c)
 		    End If
 		  Next i
-		  If Not indexOfClosingBracket = -1 Then Return Nil
+		  If indexOfClosingBracket = -1 Then Return Nil
 		  
 		  // A valid label must contain at least one non-whitespace character.
 		  Dim seenNonWhitespace As Boolean = False

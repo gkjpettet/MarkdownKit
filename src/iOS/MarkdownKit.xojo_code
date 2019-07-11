@@ -187,12 +187,7 @@ Protected Module MarkdownKit
 		  
 		  Return renderer.Output
 		  
-		  // If an exception occurs, display the error message.
-		  Exception e As MarkdownKit.MarkdownException
-		    Raise e
-		  Exception e
-		    Raise New MarkdownKit.MarkdownException(e.Reason)
-		    
+		  
 		End Function
 	#tag EndMethod
 
@@ -324,7 +319,7 @@ Protected Module MarkdownKit
 	#tag EndProperty
 
 
-	#tag Constant, Name = kVersionBug, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
+	#tag Constant, Name = kVersionBug, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
 	#tag EndConstant
 
 	#tag Constant, Name = kVersionMajor, Type = Double, Dynamic = False, Default = \"1", Scope = Protected

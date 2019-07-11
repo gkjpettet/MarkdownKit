@@ -502,6 +502,8 @@ Protected Class InlineScanner
 		  // We know that `startPos` points at the opening "(" so move past it.
 		  Dim pos As Integer = startPos + 1
 		  
+		  If pos > charsUbound Then Return Nil
+		  
 		  // Advance past any optional whitespace.
 		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
 		    pos = pos + 1
@@ -559,6 +561,8 @@ Protected Class InlineScanner
 		  
 		  // We know that `startPos` points at the opening "(" so move past it.
 		  Dim pos As Integer = startPos + 1
+		  
+		  If pos > charsUbound Then Return Nil
 		  
 		  // Advance past any optional whitespace.
 		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
@@ -1770,6 +1774,9 @@ Protected Class InlineScanner
 		  Dim c As String
 		  
 		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
+		  
+		  // Sanity check.
+		  If startPos > charsUbound Then Return result
 		  
 		  // Scenario 1:
 		  If chars(startPos) = "<" Then

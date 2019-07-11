@@ -319,7 +319,7 @@ Protected Module MarkdownKit
 	#tag EndProperty
 
 
-	#tag Constant, Name = kVersionBug, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
+	#tag Constant, Name = kVersionBug, Type = Double, Dynamic = False, Default = \"2", Scope = Protected
 	#tag EndConstant
 
 	#tag Constant, Name = kVersionMajor, Type = Double, Dynamic = False, Default = \"1", Scope = Protected

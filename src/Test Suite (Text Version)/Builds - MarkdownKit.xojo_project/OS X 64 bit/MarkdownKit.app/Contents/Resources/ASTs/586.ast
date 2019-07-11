@@ -1,0 +1,16 @@
+<document>
+<paragraph>
+<text>![</text>
+<text>[</text>
+<text>foo</text>
+<text>]</text>
+<text>]</text>
+</paragraph>
+<paragraph>
+<text>[</text>
+<text>[</text>
+<text>foo</text>
+<text>]</text>
+<text>]: /url "title"</text>
+</paragraph>
+</document>

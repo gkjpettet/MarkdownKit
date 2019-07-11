@@ -1,0 +1,12 @@
+<document>
+<paragraph>
+<text>aaa</text>
+<softbreak />
+<text>bbb</text>
+</paragraph>
+<paragraph>
+<text>ccc</text>
+<softbreak />
+<text>ddd</text>
+</paragraph>
+</document>

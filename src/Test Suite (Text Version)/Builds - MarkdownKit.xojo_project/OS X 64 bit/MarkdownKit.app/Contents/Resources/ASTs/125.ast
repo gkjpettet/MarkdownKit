@@ -1,0 +1,9 @@
+<document>
+<html_block>&lt;div&gt;
+*foo*</html_block>
+<paragraph>
+<emph>
+<text>bar</text>
+</emph>
+</paragraph>
+</document>

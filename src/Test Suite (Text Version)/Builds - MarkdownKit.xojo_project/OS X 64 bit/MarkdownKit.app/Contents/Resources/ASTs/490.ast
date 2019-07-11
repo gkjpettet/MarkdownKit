@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<text>[</text>
+<text>link</text>
+<text>](<foo>)</text>
+</paragraph>
+</document>

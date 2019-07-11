@@ -1,0 +1,16 @@
+<document>
+<paragraph>
+<text>[</text>
+<text>foo </text>
+<emph>
+<text>bar </text>
+<link destination="/uri" title="">
+<text>baz</text>
+</link>
+</emph>
+<text>]</text>
+<link destination="/uri" title="">
+<text>ref</text>
+</link>
+</paragraph>
+</document>

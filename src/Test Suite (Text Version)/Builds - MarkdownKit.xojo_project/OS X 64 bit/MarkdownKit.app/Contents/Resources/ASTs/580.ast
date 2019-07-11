@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<image destination="/url" title="title">
+<text>foo</text>
+</image>
+</paragraph>
+</document>

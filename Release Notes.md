@@ -1,5 +1,12 @@
 # Release Notes
 
+## 1.0.2
+_10th July 2019_
+* Another bug fix in `InlineScanner` that was causing a link to be created by 
+a poorly formatted partial inline reference link.
+* Added fixes to the `Text` based module to bring it to parity with the 
+`String` based module.
+
 ## 1.0.1
 _10th July 2019_
 * Fixed a bug in the `InlineScanner` class that could cause an infinite loop to 

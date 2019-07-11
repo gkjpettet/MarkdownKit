@@ -1,0 +1,10 @@
+<document>
+<paragraph>
+<image destination="/url2" title="">
+<text>foo </text>
+<image destination="/url" title="">
+<text>bar</text>
+</image>
+</image>
+</paragraph>
+</document>

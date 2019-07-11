@@ -1,0 +1,7 @@
+<document>
+<paragraph>
+<link destination="my url" title="title">
+<text>Foo bar</text>
+</link>
+</paragraph>
+</document>

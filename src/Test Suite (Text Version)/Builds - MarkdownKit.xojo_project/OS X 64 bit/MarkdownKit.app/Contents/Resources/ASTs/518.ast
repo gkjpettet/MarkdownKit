@@ -1,0 +1,9 @@
+<document>
+<paragraph>
+<link destination="baz*" title="">
+<text>foo </text>
+<text>*</text>
+<text>bar</text>
+</link>
+</paragraph>
+</document>

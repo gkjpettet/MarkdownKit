@@ -1,0 +1,13 @@
+<document>
+<paragraph>
+<link destination="/uri" title="">
+<text>link </text>
+<text>[</text>
+<text>foo </text>
+<text>[</text>
+<text>bar</text>
+<text>]</text>
+<text>]</text>
+</link>
+</paragraph>
+</document>

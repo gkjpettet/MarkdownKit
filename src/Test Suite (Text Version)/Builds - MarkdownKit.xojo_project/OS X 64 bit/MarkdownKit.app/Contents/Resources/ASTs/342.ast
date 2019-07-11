@@ -1,0 +1,8 @@
+<document>
+<paragraph>
+<text>[</text>
+<text>not a </text>
+<code>link](/foo</code>
+<text>)</text>
+</paragraph>
+</document>

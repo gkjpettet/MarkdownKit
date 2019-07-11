@@ -75,6 +75,7 @@ MultiImage=icon_play;Testing/Images/icon_play.xojo_image;&h000000000BE857FF;&h00
 MultiImage=icon_stop;Testing/Images/icon_stop.xojo_image;&h000000002AB9F7FF;&h000000007124B7FF;false
 MultiImage=icon_run_until_fail;Testing/Images/icon_run_until_fail.xojo_image;&h000000004C8EC7FF;&h000000007124B7FF;false
 MultiImage=icon_export;Testing/Images/icon_export.xojo_image;&h000000003B2ADFFF;&h000000007124B7FF;false
+Window=WinEditor;WinEditor.xojo_window;&h0000000025D287FF;&h0000000000000000;false
 DefaultWindow=WinHTMLTests
 AppMenuBar=MenuBar1
 MajorVersion=1

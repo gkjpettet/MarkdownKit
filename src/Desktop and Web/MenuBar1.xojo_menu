@@ -120,6 +120,16 @@ Begin Menu MenuBar1
          AutoEnable = True
          Visible = True
       End
+      Begin MenuItem WindowEditor
+         SpecialMenu = 0
+         Text = "Editor"
+         Index = -2147483648
+         ShortcutKey = "3"
+         Shortcut = "Cmd+3"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
    End
 End
 #tag EndMenu

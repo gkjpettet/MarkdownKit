@@ -15,12 +15,12 @@ Your download contains the following components:
 
 1. This documentation
 2. A demo application
-3. A desktop test suite
+3. Desktop test suites (both `String` and `Text` versions of the module)
 4. A basic iOS application
 
-### The Desktop Test Suite
+### The Desktop Test Suites
 
-This application contains two windows: one for running the HTML tests, the other for the AST tests. Clicking the "Run" button on the toolbar will run all 649 tests from the [CommonMark 0.29 specification][cm spec], proving the compliance of the parser. Feel free to click on an indiviual test to see the provided input, the expected output and the generated output. The test suite uses the `String` based `MarkdownKit` module.
+There are two test suite projects (`src/Test Suite (String Version)` and `src/Test Suite (Text Version)`) These applications contains three windows: one for running the HTML tests, one for the AST tests and a third as a simple editor. Clicking the "Run" button on the toolbar for test windows will run all 649 tests from the [CommonMark 0.29 specification][cm spec], proving the compliance of the parser. Feel free to click on an individual test to see the provided input, the expected output and the generated output.
 
 ### The Basic iOS Application
 
@@ -32,13 +32,13 @@ The demo app is a fully functioning Markdown editor with a live preview. It has 
 
 ## Which MarkdownKit Module?
 
-Your purchase actually includes two `MarkdownKit` modules. One uses the Xojo `String` datatype, the other uses `Text`. The module found in the test suite project in the  `Desktop and Web` folder uses `String` and the module in the iOS project uses `Text`. Since Xojo's iOS framework does not support the `String` datatype I originally wrote `MarkdownKit` using `Text`. Whilst this worked fine on iOS and macOS, there are inherent issues with Xojo's implementation of the `Text` datatype on Windows and Linux. In short, the performance is poor. Therefore, I decided to port the module to use the `String` datatype. 
+Your purchase actually includes two `MarkdownKit` modules. One uses the Xojo `String` datatype, the other uses `Text`. The module found in the test suite project in the `src/Test Suite (String Version)`) folder uses the `String` datatype and the module in the `src/Test Suite (Text Version)` uses the `Text` datatype. The iOS project also uses the `Text` datatype-based version of the module. Since Xojo's iOS framework does not support the `String` datatype I originally wrote `MarkdownKit` using `Text`. Whilst this worked fine on iOS and macOS, there are inherent issues with Xojo's implementation of the `Text` datatype on Windows and Linux. In short, the performance is poor. Therefore, I decided to port the module to use the `String` datatype. 
 
 You are free to use whichever module you like (they are both CommonMark compliant). I would recommend using the `String` based version whenever possible (i.e: in all non-iOS projects) as it is much faster. The `Text` datatype has already been deprecated by Xojo and I'm hopeful that they will add `String` support to iOS soon.
 
 ## Quick Start
 
-1. For non-iOS projects, open the `MarkdownKit.xojo_project` file in the IDE (found in the `src/Desktop and Web` folder). For iOS projects open the `iOS Demo.xojo_project` file in `src/iOS`. Copy the `MarkdownKit` module from the navigator and paste it into your own project.
+1. For non-iOS projects, open the `MarkdownKit.xojo_project` file in the IDE (use either `src/Test Suite (String Version)` or `src/Test Suite (String Version)`). For iOS projects open the `iOS Demo.xojo_project` file in `src/iOS`. Copy the `MarkdownKit` module from the navigator and paste it into your own project.
 2. Convert Markdown source to HTML with the `MarkdownKit.ToHTML()` method:
 
 ```xojo

@@ -1,9 +1,0 @@
-<document>
-<paragraph>
-<html_inline>&lt;del&gt;</html_inline>
-<emph>
-<text>foo</text>
-</emph>
-<html_inline>&lt;/del&gt;</html_inline>
-</paragraph>
-</document>

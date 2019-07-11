@@ -1,7 +1,0 @@
-<document>
-<paragraph>
-<text>[</text>
-<text>foo </text>
-<html_inline>&lt;bar attr=&quot;](baz)&quot;&gt;</html_inline>
-</paragraph>
-</document>

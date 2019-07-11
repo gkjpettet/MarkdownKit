@@ -1,9 +1,0 @@
-<document>
-<block_quote>
-<paragraph>
-<text>foo</text>
-<softbreak />
-<text>- bar</text>
-</paragraph>
-</block_quote>
-</document>

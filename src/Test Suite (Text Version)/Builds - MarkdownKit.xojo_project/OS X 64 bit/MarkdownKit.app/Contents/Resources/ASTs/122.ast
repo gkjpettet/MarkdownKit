@@ -1,9 +1,0 @@
-<document>
-<html_block>&lt;DIV CLASS=&quot;foo&quot;&gt;</html_block>
-<paragraph>
-<emph>
-<text>Markdown</text>
-</emph>
-</paragraph>
-<html_block>&lt;/DIV&gt;</html_block>
-</document>

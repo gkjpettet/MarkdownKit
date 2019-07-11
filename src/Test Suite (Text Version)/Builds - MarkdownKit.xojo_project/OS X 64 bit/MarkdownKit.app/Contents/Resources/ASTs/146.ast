@@ -1,8 +1,0 @@
-<document>
-<html_block>&lt;!-- foo --&gt;*bar*</html_block>
-<paragraph>
-<emph>
-<text>baz</text>
-</emph>
-</paragraph>
-</document>

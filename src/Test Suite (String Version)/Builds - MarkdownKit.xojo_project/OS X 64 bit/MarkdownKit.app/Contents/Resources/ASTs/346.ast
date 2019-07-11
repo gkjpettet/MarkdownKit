@@ -1,8 +1,0 @@
-<document>
-<paragraph>
-<link destination="http://foo.bar.`baz" title="">
-<text>http://foo.bar.`baz</text>
-</link>
-<text>`</text>
-</paragraph>
-</document>

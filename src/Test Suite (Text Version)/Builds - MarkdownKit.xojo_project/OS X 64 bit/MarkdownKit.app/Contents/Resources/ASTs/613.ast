@@ -1,6 +1,0 @@
-<document>
-<paragraph>
-<text>Foo </text>
-<html_inline>&lt;responsive-image src=&quot;foo.jpg&quot; /&gt;</html_inline>
-</paragraph>
-</document>

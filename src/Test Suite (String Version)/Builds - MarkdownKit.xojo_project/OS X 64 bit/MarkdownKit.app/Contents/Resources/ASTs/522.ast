@@ -1,9 +1,0 @@
-<document>
-<paragraph>
-<text>[</text>
-<text>foo</text>
-<link destination="http://example.com/?search=](uri)" title="">
-<text>http://example.com/?search=](uri)</text>
-</link>
-</paragraph>
-</document>

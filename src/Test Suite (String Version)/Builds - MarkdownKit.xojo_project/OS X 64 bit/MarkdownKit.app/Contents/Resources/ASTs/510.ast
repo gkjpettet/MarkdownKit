@@ -1,9 +1,0 @@
-<document>
-<paragraph>
-<text>[</text>
-<text>link </text>
-<link destination="/uri" title="">
-<text>bar</text>
-</link>
-</paragraph>
-</document>

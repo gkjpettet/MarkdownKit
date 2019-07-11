@@ -1,9 +1,0 @@
-<document>
-<html_block>&lt;!-- Foo
-
-bar
-   baz --&gt;</html_block>
-<paragraph>
-<text>okay</text>
-</paragraph>
-</document>

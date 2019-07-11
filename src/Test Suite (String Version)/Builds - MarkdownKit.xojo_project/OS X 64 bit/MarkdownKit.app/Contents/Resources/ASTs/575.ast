@@ -1,8 +1,0 @@
-<document>
-<paragraph>
-<text>My </text>
-<image destination="/path/to/train.jpg" title="title">
-<text>foo bar</text>
-</image>
-</paragraph>
-</document>

@@ -1,4 +1,4 @@
-# MarkdownKit 1.0.0
+# MarkdownKit 1.0.3
 
 Thank you so much for helping to support my small business by purchasing MarkdownKit. This document contains all you need to know about the module. If you have any issues with the module, please contact me either directly [via email][email me], through [my website][contact page] or the [Xojo forums][forums].
 
@@ -16,15 +16,15 @@ Your download contains the following components:
 1. This documentation
 2. A demo application
 3. Desktop test suites (both `String` and `Text` versions of the module)
-4. A basic iOS application
+4. iOS test suite
 
 ### The Desktop Test Suites
 
 There are two test suite projects (`src/Test Suite (String Version)` and `src/Test Suite (Text Version)`) These applications contains three windows: one for running the HTML tests, one for the AST tests and a third as a simple editor. Clicking the "Run" button on the toolbar for test windows will run all 649 tests from the [CommonMark 0.29 specification][cm spec], proving the compliance of the parser. Feel free to click on an individual test to see the provided input, the expected output and the generated output.
 
-### The Basic iOS Application
+### The iOS Application Test Suite
 
-When I say basic, I mean basic. This app contains the `Text` based `MarkdownKit` module (for you to use in your own projects). The app itself does nothing.
+This is a very basic iOS app which will run the 649 CommonMark HTML tests. It contains the `Text` based `MarkdownKit` module (for you to use in your own projects). It's designed to run on an iPad in landscape mode.
 
 ### The Demo Application
 
@@ -66,7 +66,7 @@ Why might you want access to the AST? Well, maybe you want to do something as si
 
 `MarkdownKit` provides a class interface called `IRenderer` which must be implemented by any custom renderer you write. The built-in `MarkdownKit.HTMLRenderer` and `MarkdownKit.ASTRenderer` classes are examples of renderers which implement this interface. Take a look at their well-documented methods to learn how to write your own renderer.
 
-
+_14th July 2019_
 
 [email me]: mailto:contact@garrypettet.com
 [contact page]: https://garrypettet.com/contact

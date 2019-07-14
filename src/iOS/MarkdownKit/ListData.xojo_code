@@ -88,6 +88,16 @@ Protected Class ListData
 			Group="Behavior"
 			Type="Integer"
 		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ListDelimiter"
+			Group="Behavior"
+			Type="MarkdownKit.ListDelimiter"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ListType"
+			Group="Behavior"
+			Type="MarkdownKit.ListType"
+		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
 #tag EndClass

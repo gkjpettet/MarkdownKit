@@ -1,5 +1,10 @@
 # Release Notes
 
+## 1.0.3
+_14th July 2019_
+* Added an iOS test suite app for the 649 CommonMark HTML tests. The app is designed 
+to run on an iPad in landscape mode. It's deliberately basic in its UI.
+
 ## 1.0.2
 _10th July 2019_
 * Another bug fix in `InlineScanner` that was causing a link to be created by 

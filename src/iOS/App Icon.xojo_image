@@ -156,7 +156,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = Settings\niOS 5-10
+			Comment = Settings\niOS 5-8
 			Device = 2
 			HSize = 29.00
 			Orientation = Any
@@ -167,7 +167,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = Settings\niOS 5-10
+			Comment = Settings\niOS 5-8
 			Device = 7
 			HSize = 29.00
 			Orientation = Any
@@ -178,7 +178,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = Settings\niOS 5-10
+			Comment = Settings\niOS 5-8
 			Device = 1
 			HSize = 29.00
 			Orientation = Any
@@ -189,7 +189,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = Spotlight\niOS 7-10
+			Comment = Spotlight\niOS 7\x2C8
 			Device = 2
 			HSize = 40.00
 			Orientation = Any
@@ -200,7 +200,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = Spotlight\niOS 7-10
+			Comment = Spotlight\niOS 7\x2C 8
 			Device = 7
 			HSize = 40.00
 			Orientation = Any
@@ -211,7 +211,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = Spotlight\niOS 7-10
+			Comment = Spotlight\niOS 7\x2C 8
 			Device = 1
 			HSize = 40.00
 			Orientation = Any
@@ -222,7 +222,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = App\niOS 7-10
+			Comment = App\niOS 7\x2C 8
 			Device = 1
 			HSize = 60.00
 			Orientation = Any
@@ -233,7 +233,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = App\niOS 7-10
+			Comment = App\niOS 7\x2C 8
 			Device = 1
 			HSize = 60.00
 			Orientation = Any
@@ -244,7 +244,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = App\niOS 7-10
+			Comment = App\niOS 7\x2C8
 			Device = 2
 			HSize = 76.00
 			Orientation = Any
@@ -255,7 +255,7 @@ Image App Icon
 	#tag EndImageRepresentation
 	#tag ImageRepresentation
 		#tag ImageSpecification
-			Comment = App\niOS 7-10
+			Comment = App\niOS 7\x2C8
 			Device = 2
 			HSize = 76.00
 			Orientation = Any

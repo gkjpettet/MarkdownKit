@@ -742,6 +742,37 @@ Protected Class Block
 			InitialValue="False"
 			Type="Boolean"
 		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Type"
+			Group="Behavior"
+			Type="MarkdownKit.BlockType"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Document"
+				"1 - BlockQuote"
+				"2 - List"
+				"3 - ListItem"
+				"4 - FencedCode"
+				"5 - IndentedCode"
+				"6 - HtmlBlock"
+				"7 - Paragraph"
+				"8 - AtxHeading"
+				"9 - SetextHeading"
+				"10 - ThematicBreak"
+				"11 - ReferenceDefinition"
+				"12 - Block"
+				"13 - TextBlock"
+				"14 - Softbreak"
+				"15 - Hardbreak"
+				"16 - InlineText"
+				"17 - Emphasis"
+				"18 - Strong"
+				"19 - Codespan"
+				"20 - InlineHTML"
+				"21 - InlineLink"
+				"22 - InlineImage"
+			#tag EndEnumValues
+		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
 #tag EndClass

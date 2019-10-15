@@ -15,7 +15,7 @@ Protected Class HTMLScanner
 		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
 		  // Returns "" If no valid tagName is found.
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  If pos > charsUbound Or Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return ""
 		  
@@ -25,7 +25,7 @@ Protected Class HTMLScanner
 		  For pos = start To charsUbound
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.IsDigit(c) Or c= "-" Then
-		      tmp.Append(c)
+		      tmp.AddRow(c)
 		    Else
 		      Exit
 		    End If
@@ -160,7 +160,7 @@ Protected Class HTMLScanner
 		  // Reset `tagName`.
 		  tagName = ""
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  If pos + 1 > charsUbound Then Return 0
 		  
 		  // The tag name must start with an ASCII letter.
@@ -385,7 +385,7 @@ Protected Class HTMLScanner
 		  // Reset `tagName`.
 		  tagName = ""
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  If pos + 1 > charsUbound Then Return 0
 		  
 		  // The tag name must start with an ASCII letter.

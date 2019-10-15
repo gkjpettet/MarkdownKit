@@ -50,18 +50,18 @@ Implements IRenderer
 		  
 		  Dim level As String = atx.Level.ToText
 		  
-		  mOutput.Append("<h")
-		  mOutput.Append(level)
-		  mOutput.Append(">")
+		  mOutput.AddRow("<h")
+		  mOutput.AddRow(level)
+		  mOutput.AddRow(">")
 		  
 		  For Each child As MarkdownKit.Block In atx.Children
 		    child.Accept(Self)
 		  Next child
 		  
-		  mOutput.Append("</h")
-		  mOutput.Append(level)
-		  mOutput.Append(">")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("</h")
+		  mOutput.AddRow(level)
+		  mOutput.AddRow(">")
+		  mOutput.AddRow(&u000A)
 		  
 		End Sub
 	#tag EndMethod
@@ -79,15 +79,15 @@ Implements IRenderer
 		Sub VisitBlockQuote(bq As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<blockquote>")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("<blockquote>")
+		  mOutput.AddRow(&u000A)
 		  
 		  For Each b As MarkdownKit.Block In bq.Children
 		    b.Accept(Self)
 		  Next b
 		  
-		  mOutput.Append("</blockquote>")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("</blockquote>")
+		  mOutput.AddRow(&u000A)
 		End Sub
 	#tag EndMethod
 
@@ -95,9 +95,9 @@ Implements IRenderer
 		Sub VisitCodespan(cs As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<code>")
-		  mOutput.Append(EncodePredefinedEntities(Join(cs.Chars, "")))
-		  mOutput.Append("</code>")
+		  mOutput.AddRow("<code>")
+		  mOutput.AddRow(EncodePredefinedEntities(Join(cs.Chars, "")))
+		  mOutput.AddRow("</code>")
 		  
 		End Sub
 	#tag EndMethod
@@ -117,13 +117,13 @@ Implements IRenderer
 		Sub VisitEmphasis(e As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<em>")
+		  mOutput.AddRow("<em>")
 		  
 		  For Each child As MarkdownKit.Block In e.Children
 		    child.Accept(Self)
 		  Next child
 		  
-		  mOutput.Append("</em>")
+		  mOutput.AddRow("</em>")
 		  
 		End Sub
 	#tag EndMethod
@@ -132,35 +132,35 @@ Implements IRenderer
 		Sub VisitFencedCode(fc As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<pre>")
+		  mOutput.AddRow("<pre>")
 		  
 		  If fc.InfoString = "" Then
-		    mOutput.Append("<code>")
+		    mOutput.AddRow("<code>")
 		  Else
-		    mOutput.Append("<code class=")
-		    mOutput.Append("""")
-		    mOutput.Append("language-")
+		    mOutput.AddRow("<code class=")
+		    mOutput.AddRow("""")
+		    mOutput.AddRow("language-")
 		    
 		    // When rendering the info string, use only the first word.
 		    Dim wsIndex As Integer = fc.InfoString.IndexOf(" ")
 		    If wsIndex = -1 Then wsIndex = fc.InfoString.IndexOf(&u0009)
 		    If wsIndex = -1 Then
-		      mOutput.Append(fc.InfoString)
+		      mOutput.AddRow(fc.InfoString)
 		    Else
-		      mOutput.Append(fc.InfoString.Left(wsIndex))
+		      mOutput.AddRow(fc.InfoString.Left(wsIndex))
 		    End If
 		    
-		    mOutput.Append("""")
-		    mOutput.Append(">")
+		    mOutput.AddRow("""")
+		    mOutput.AddRow(">")
 		  End If
 		  
 		  For Each b As MarkdownKit.Block In fc.Children
-		    mOutput.Append(EncodePredefinedEntities(Join(b.Chars, "")))
-		    mOutput.Append(&u000A)
+		    mOutput.AddRow(EncodePredefinedEntities(Join(b.Chars, "")))
+		    mOutput.AddRow(&u000A)
 		  Next b
 		  
-		  mOutput.Append("</code></pre>")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("</code></pre>")
+		  mOutput.AddRow(&u000A)
 		  
 		End Sub
 	#tag EndMethod
@@ -171,8 +171,8 @@ Implements IRenderer
 		  
 		  #Pragma Unused hb
 		  
-		  mOutput.Append("<br />")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("<br />")
+		  mOutput.AddRow(&u000A)
 		End Sub
 	#tag EndMethod
 
@@ -180,8 +180,8 @@ Implements IRenderer
 		Sub VisitHTMLBlock(h As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append(Join(h.Chars, ""))
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow(Join(h.Chars, ""))
+		  mOutput.AddRow(&u000A)
 		End Sub
 	#tag EndMethod
 
@@ -189,15 +189,15 @@ Implements IRenderer
 		Sub VisitIndentedCode(ic As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<pre><code>")
+		  mOutput.AddRow("<pre><code>")
 		  
 		  For Each b As MarkdownKit.Block In ic.Children
-		    mOutput.Append(EncodePredefinedEntities(Join(b.Chars, "")))
-		    mOutput.Append(&u000A)
+		    mOutput.AddRow(EncodePredefinedEntities(Join(b.Chars, "")))
+		    mOutput.AddRow(&u000A)
 		  Next b
 		  
-		  mOutput.Append("</code></pre>")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("</code></pre>")
+		  mOutput.AddRow(&u000A)
 		  
 		End Sub
 	#tag EndMethod
@@ -206,7 +206,7 @@ Implements IRenderer
 		Sub VisitInlineHTML(h As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append(Join(h.Chars, ""))
+		  mOutput.AddRow(Join(h.Chars, ""))
 		  
 		End Sub
 	#tag EndMethod
@@ -215,10 +215,10 @@ Implements IRenderer
 		Sub VisitInlineImage(image As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<img src=")
-		  mOutput.Append("""")
-		  mOutput.Append(URLEncode(image.Destination))
-		  mOutput.Append("""")
+		  mOutput.AddRow("<img src=")
+		  mOutput.AddRow("""")
+		  mOutput.AddRow(URLEncode(image.Destination))
+		  mOutput.AddRow("""")
 		  
 		  // The `alt` attribute is constructed from this image block's children.
 		  // Only render the plain text content (ignoring emphasis, etc).
@@ -235,38 +235,38 @@ Implements IRenderer
 		  While b <> Nil
 		    Select Case b.Type
 		    Case MarkdownKit.BlockType.InlineText
-		      charsUbound = b.Chars.Ubound
+		      charsUbound = b.Chars.LastRowIndex
 		      For i = 0 To charsUbound
-		        alt.Append(b.Chars(i))
+		        alt.AddRow(b.Chars(i))
 		      Next i
 		    End Select
 		    
 		    If b.FirstChild <> Nil Then
-		      If b.NextSibling <> Nil Then stack.Append(b.NextSibling)
+		      If b.NextSibling <> Nil Then stack.AddRow(b.NextSibling)
 		      b = b.FirstChild
 		    ElseIf b.NextSibling <> Nil Then
 		      b = b.NextSibling
-		    ElseIf stack.Ubound > -1 Then
+		    ElseIf stack.LastRowIndex > -1 Then
 		      b = stack.Pop
 		    Else
 		      b = Nil
 		    End If
 		  Wend
 		  
-		  mOutput.Append(" alt=")
-		  mOutput.Append("""")
-		  If alt.Ubound > -1 Then mOutput.Append(Join(alt, ""))
-		  mOutput.Append("""")
+		  mOutput.AddRow(" alt=")
+		  mOutput.AddRow("""")
+		  If alt.LastRowIndex > -1 Then mOutput.AddRow(Join(alt, ""))
+		  mOutput.AddRow("""")
 		  
 		  // Image title.
 		  If image.Title <> "" Then
-		    mOutput.Append(" title=")
-		    mOutput.Append("""")
-		    mOutput.Append(EncodePredefinedEntities(image.Title))
-		    mOutput.Append("""")
+		    mOutput.AddRow(" title=")
+		    mOutput.AddRow("""")
+		    mOutput.AddRow(EncodePredefinedEntities(image.Title))
+		    mOutput.AddRow("""")
 		  End If
 		  
-		  mOutput.Append(" />")
+		  mOutput.AddRow(" />")
 		End Sub
 	#tag EndMethod
 
@@ -274,30 +274,30 @@ Implements IRenderer
 		Sub VisitInlineLink(l As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<a href=")
-		  mOutput.Append("""")
-		  mOutput.Append(URLEncode(l.Destination))
-		  mOutput.Append("""")
+		  mOutput.AddRow("<a href=")
+		  mOutput.AddRow("""")
+		  mOutput.AddRow(URLEncode(l.Destination))
+		  mOutput.AddRow("""")
 		  
 		  If l.Title <> "" Then
-		    mOutput.Append(" title=")
-		    mOutput.Append("""")
-		    mOutput.Append(EncodePredefinedEntities(l.Title))
-		    mOutput.Append("""")
-		    mOutput.Append(">")
+		    mOutput.AddRow(" title=")
+		    mOutput.AddRow("""")
+		    mOutput.AddRow(EncodePredefinedEntities(l.Title))
+		    mOutput.AddRow("""")
+		    mOutput.AddRow(">")
 		  Else
-		    mOutput.Append(">")
+		    mOutput.AddRow(">")
 		  End If
 		  
 		  If l.IsAutoLink Then
-		    mOutput.Append(l.Label)
+		    mOutput.AddRow(l.Label)
 		  Else
 		    For Each child As MarkdownKit.Block In l.Children
 		      child.Accept(Self)
 		    Next child
 		  End If
 		  
-		  mOutput.Append("</a>")
+		  mOutput.AddRow("</a>")
 		End Sub
 	#tag EndMethod
 
@@ -305,7 +305,7 @@ Implements IRenderer
 		Sub VisitInlineText(t As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append(EncodePredefinedEntities(Join(t.Chars, "")))
+		  mOutput.AddRow(EncodePredefinedEntities(Join(t.Chars, "")))
 		  
 		End Sub
 	#tag EndMethod
@@ -328,29 +328,29 @@ Implements IRenderer
 		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
 		    listTag = "ol"
 		    If theList.ListData.Start <> 1 Then
-		      mOutput.Append("<ol start=")
-		      mOutput.Append("""")
-		      mOutput.Append(theList.ListData.Start.ToText)
-		      mOutput.Append("""")
-		      mOutput.Append(">")
+		      mOutput.AddRow("<ol start=")
+		      mOutput.AddRow("""")
+		      mOutput.AddRow(theList.ListData.Start.ToText)
+		      mOutput.AddRow("""")
+		      mOutput.AddRow(">")
 		    Else
-		      mOutput.Append("<ol>")
+		      mOutput.AddRow("<ol>")
 		    End If
 		  Else
 		    listTag = "ul"
-		    mOutput.Append("<ul>")
+		    mOutput.AddRow("<ul>")
 		  End If
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow(&u000A)
 		  
 		  // Print the list items.
 		  For Each b As MarkdownKit.Block In theList.Children
 		    b.Accept(Self)
 		  Next b
 		  
-		  mOutput.Append("</")
-		  mOutput.Append(listTag)
-		  mOutput.Append(">")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("</")
+		  mOutput.AddRow(listTag)
+		  mOutput.AddRow(">")
+		  mOutput.AddRow(&u000A)
 		  
 		End Sub
 	#tag EndMethod
@@ -359,18 +359,18 @@ Implements IRenderer
 		Sub VisitListItem(li As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<li>")
+		  mOutput.AddRow("<li>")
 		  
 		  Dim i As Integer
-		  Dim childrenUbound As Integer = li.Children.Ubound
+		  Dim childrenUbound As Integer = li.Children.LastRowIndex
 		  For i = 0 To childrenUbound
 		    li.Children(i).IsChildOfTightList = li.IsChildOfTightList
 		    li.Children(i).IsChildOfListItem = True
 		    li.Children(i).Accept(Self)
 		  Next i
 		  
-		  mOutput.Append("</li>")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("</li>")
+		  mOutput.AddRow(&u000A)
 		End Sub
 	#tag EndMethod
 
@@ -378,15 +378,15 @@ Implements IRenderer
 		Sub VisitParagraph(p As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  If Not p.IsChildOfTightList Then mOutput.Append("<p>")
+		  If Not p.IsChildOfTightList Then mOutput.AddRow("<p>")
 		  
 		  For Each child As MarkdownKit.Block In p.Children
 		    child.Accept(Self)
 		  Next child
 		  
-		  If Not p.IsChildOfTightList Then mOutput.Append("</p>")
+		  If Not p.IsChildOfTightList Then mOutput.AddRow("</p>")
 		  
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow(&u000A)
 		End Sub
 	#tag EndMethod
 
@@ -396,18 +396,18 @@ Implements IRenderer
 		  
 		  Dim level As String = stx.Level.ToText
 		  
-		  mOutput.Append("<h")
-		  mOutput.Append(level)
-		  mOutput.Append(">")
+		  mOutput.AddRow("<h")
+		  mOutput.AddRow(level)
+		  mOutput.AddRow(">")
 		  
 		  For Each child As MarkdownKit.Block In stx.Children
 		    child.Accept(Self)
 		  Next child
 		  
-		  mOutput.Append("</h")
-		  mOutput.Append(level)
-		  mOutput.Append(">")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("</h")
+		  mOutput.AddRow(level)
+		  mOutput.AddRow(">")
+		  mOutput.AddRow(&u000A)
 		  
 		End Sub
 	#tag EndMethod
@@ -418,7 +418,7 @@ Implements IRenderer
 		  
 		  #Pragma Unused sb
 		  
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow(&u000A)
 		  
 		End Sub
 	#tag EndMethod
@@ -427,13 +427,13 @@ Implements IRenderer
 		Sub VisitStrong(s As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  mOutput.Append("<strong>")
+		  mOutput.AddRow("<strong>")
 		  
 		  For Each child As MarkdownKit.Block In s.Children
 		    child.Accept(Self)
 		  Next child
 		  
-		  mOutput.Append("</strong>")
+		  mOutput.AddRow("</strong>")
 		End Sub
 	#tag EndMethod
 
@@ -443,8 +443,8 @@ Implements IRenderer
 		  
 		  #Pragma Unused tb
 		  
-		  mOutput.Append("<hr />")
-		  mOutput.Append(&u000A)
+		  mOutput.AddRow("<hr />")
+		  mOutput.AddRow(&u000A)
 		  
 		End Sub
 	#tag EndMethod

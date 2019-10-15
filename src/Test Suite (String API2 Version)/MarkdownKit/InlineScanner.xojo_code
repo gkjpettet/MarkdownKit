@@ -39,7 +39,7 @@ Protected Class InlineScanner
 		  // characters and replaces character references.
 		  // Mutates the passed array.
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  If charsUbound = -1 Then Return
 		  
@@ -67,7 +67,7 @@ Protected Class InlineScanner
 		  If stripTrailingWhitespace Then MarkdownKit.StripTrailingWhitespace(buffer.Chars)
 		  
 		  // Add the buffer to the container block before the code span.
-		  container.Children.Append(buffer)
+		  container.Children.AddRow(buffer)
 		  
 		  buffer = Nil
 		End Sub
@@ -88,7 +88,7 @@ Protected Class InlineScanner
 		  Dim i As Integer = 0
 		  Dim collapse As Boolean = False
 		  Dim c As String
-		  While i < chars.Ubound
+		  While i < chars.LastRowIndex
 		    c = chars(i)
 		    
 		    If Utilities.IsWhitespace(c) Then
@@ -215,14 +215,14 @@ Protected Class InlineScanner
 		      indexOfClosingBracket = i
 		      Exit
 		    Else
-		      linkLabelChars.Append(c)
+		      linkLabelChars.AddRow(c)
 		    End If
 		  Next i
 		  If indexOfClosingBracket = -1 Then Return Nil
 		  
 		  // A valid label must contain at least one non-whitespace character.
 		  Dim seenNonWhitespace As Boolean = False
-		  Dim linkLabelCharsUbound As Integer = linkLabelChars.Ubound
+		  Dim linkLabelCharsUbound As Integer = linkLabelChars.LastRowIndex
 		  For i As Integer = 0 To linkLabelCharsUbound
 		    If Not Utilities.IsWhitespace(linkLabelChars(i)) Then
 		      seenNonWhitespace = True
@@ -266,14 +266,14 @@ Protected Class InlineScanner
 		      indexOfClosingBracket = i
 		      Exit
 		    Else
-		      linkLabelChars.Append(c)
+		      linkLabelChars.AddRow(c)
 		    End If
 		  Next i
 		  If indexOfClosingBracket = -1 Then Return Nil
 		  
 		  // A valid label must contain at least one non-whitespace character.
 		  Dim seenNonWhitespace As Boolean = False
-		  Dim linkLabelCharsUbound As Integer = linkLabelChars.Ubound
+		  Dim linkLabelCharsUbound As Integer = linkLabelChars.LastRowIndex
 		  For i As Integer = 0 To linkLabelCharsUbound
 		    If Not Utilities.IsWhitespace(linkLabelChars(i)) Then
 		      seenNonWhitespace = True
@@ -617,7 +617,7 @@ Protected Class InlineScanner
 		  
 		  // Starting at the top of the delimiter stack, we look backwards through 
 		  // for an opening "[" or "![" delimiter.
-		  Dim delimiterStackUbound As Integer = delimiterStack.Ubound
+		  Dim delimiterStackUbound As Integer = delimiterStack.LastRowIndex
 		  Dim dsn As MarkdownKit.DelimiterStackNode
 		  Dim linkData As MarkdownKit.InlineLinkData
 		  Dim imageData As MarkdownKit.InlineImageData
@@ -662,10 +662,10 @@ Protected Class InlineScanner
 		          Raise New MarkdownKit.MarkdownException("Could not find the opener text node " + _
 		          "in the container's children.")
 		        End if
-		        limit = container.Children.Ubound
+		        limit = container.Children.LastRowIndex
 		        For x As Integer = openerIndex + 1 To limit
-		          link.Children.Append(container.Children(x))
-		          link.Children(link.Children.Ubound).Parent = link
+		          link.Children.AddRow(container.Children(x))
+		          link.Children(link.Children.LastRowIndex).Parent = link
 		        Next x
 		        // For x As Integer = openerIndex + 1 To limit
 		        For x As Integer = openerIndex + 1 To limit
@@ -673,7 +673,7 @@ Protected Class InlineScanner
 		        Next x
 		        
 		        // Add this link as the last child of this container.
-		        container.Children.Append(link)
+		        container.Children.AddRow(link)
 		        
 		        // Process emphasis on the link's children.
 		        ProcessEmphasis(link, delimiterStack, i)
@@ -718,17 +718,17 @@ Protected Class InlineScanner
 		          Raise New MarkdownKit.MarkdownException("Could not find the opener text node " + _
 		          "in the container's children.")
 		        End if
-		        limit = container.Children.Ubound
+		        limit = container.Children.LastRowIndex
 		        For x As Integer = openerIndex + 1 To limit
-		          image.Children.Append(container.Children(x))
-		          image.Children(image.Children.Ubound).Parent = image
+		          image.Children.AddRow(container.Children(x))
+		          image.Children(image.Children.LastRowIndex).Parent = image
 		        Next x
 		        For x As Integer = openerIndex + 1 To limit
 		          Call container.Children.Pop
 		        Next x
 		        
 		        // Add this image as the last child of this container.
-		        container.Children.Append(image)
+		        container.Children.AddRow(image)
 		        
 		        // Process emphasis on the image's children.
 		        ProcessEmphasis(image, delimiterStack, i)
@@ -764,7 +764,7 @@ Protected Class InlineScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  Dim pos As Integer = 0
-		  Dim charsUbound As Integer = b.Chars.Ubound
+		  Dim charsUbound As Integer = b.Chars.LastRowIndex
 		  Dim c, lastChar As String = ""
 		  Dim buffer, result As MarkdownKit.Block
 		  Dim dsn As MarkdownKit.DelimiterStackNode
@@ -781,7 +781,7 @@ Protected Class InlineScanner
 		        // Found a code span.
 		        If buffer <> Nil Then CloseBuffer(buffer, b)
 		        // Add the code span.
-		        b.Children.Append(result)
+		        b.Children.AddRow(result)
 		        // Advance the position.
 		        pos = result.EndPos + result.DelimiterLength + 1
 		      Else
@@ -802,7 +802,7 @@ Protected Class InlineScanner
 		        // Found inline HTML.
 		        If buffer <> Nil Then CloseBuffer(buffer, b)
 		        // Add the inline HTML.
-		        b.Children.Append(result)
+		        b.Children.AddRow(result)
 		        // Advance the position.
 		        pos = result.EndPos + 1
 		      Else
@@ -822,15 +822,15 @@ Protected Class InlineScanner
 		          buffer.EndPos = buffer.EndPos - 1 // Remove the trailing backslash.
 		          CloseBuffer(buffer, b)
 		        End If
-		        b.Children.Append(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
+		        b.Children.AddRow(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
 		        pos = pos + 1
 		      ElseIf pos - 2 >= 0 And b.Chars(pos - 2) = &u0020 And b.Chars(pos - 1) = &u0020 Then
 		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
-		        b.Children.Append(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
+		        b.Children.AddRow(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
 		        pos = pos + 1
 		      Else
 		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
-		        b.Children.Append(New MarkdownKit.Block(BlockType.Softbreak, Xojo.Core.WeakRef.Create(b)))
+		        b.Children.AddRow(New MarkdownKit.Block(BlockType.Softbreak, Xojo.Core.WeakRef.Create(b)))
 		        pos = pos + 1
 		      End If
 		      
@@ -846,7 +846,7 @@ Protected Class InlineScanner
 		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + 1
-		      delimiterStack.Append(dsn)
+		      delimiterStack.AddRow(dsn)
 		      
 		    ElseIf c = "!" And Not Utilities.Escaped(b.Chars, pos) And Peek(b.Chars, pos + 1, "[") Then
 		      // ========= Start of inline image? =========
@@ -860,7 +860,7 @@ Protected Class InlineScanner
 		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + 2
-		      delimiterStack.Append(dsn)
+		      delimiterStack.AddRow(dsn)
 		      
 		    ElseIf c = "]" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= End of inline link or image? =========
@@ -887,7 +887,7 @@ Protected Class InlineScanner
 		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + dsn.OriginalLength
-		      delimiterStack.Append(dsn)
+		      delimiterStack.AddRow(dsn)
 		      
 		    Else
 		      // This character is not the start of any inline content. If there is an 
@@ -919,7 +919,7 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  If delimiterStack.Ubound < 0 Then Return
+		  If delimiterStack.LastRowIndex < 0 Then Return
 		  
 		  // Let currentPosition point to the element on the delimiter stack just above stackBottom 
 		  // (or the first element if stackBottom = -1).
@@ -936,7 +936,7 @@ Protected Class InlineScanner
 		  Dim openerTextNode, closerTextNode, emphasis As MarkdownKit.Block
 		  Dim openerTextNodeIndex, closerTextNodeIndex, numToTranspose, limit As Integer
 		  
-		  While currentPosition <= delimiterStack.Ubound
+		  While currentPosition <= delimiterStack.LastRowIndex
 		    
 		    closerNode = delimiterStack(currentPosition)
 		    If Not closerNode.Ignore And (closerNode.Delimiter = "*" Or closerNode.Delimiter = "_") And closerNode.CanClose Then
@@ -1007,8 +1007,8 @@ Protected Class InlineScanner
 		          // into this emphasis node's `Children` array and remove them from the container's 
 		          // `Inlines` array.
 		          For x As Integer = openerTextNodeIndex + 2 To closerTextNodeIndex - 1
-		            emphasis.Children.Append(container.Children(x))
-		            emphasis.Children(emphasis.Children.Ubound).Parent = emphasis
+		            emphasis.Children.AddRow(container.Children(x))
+		            emphasis.Children(emphasis.Children.LastRowIndex).Parent = emphasis
 		          Next x
 		          
 		          // Remove the transposed inlines from the container.
@@ -1042,7 +1042,7 @@ Protected Class InlineScanner
 		          // If the text node becomes empty as a result, remove it and 
 		          // remove the corresponding element of the delimiter stack.
 		          openerTextNode = MarkdownKit.Block(openerNode.TextNodePointer.Value)
-		          If openerTextNode.Chars.Ubound < 0 Then
+		          If openerTextNode.Chars.LastRowIndex < 0 Then
 		            openerTextNodeIndex = openerTextNode.Parent.Children.IndexOf(openerTextNode)
 		            // openerTextNodeIndex = _
 		            // container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
@@ -1056,7 +1056,7 @@ Protected Class InlineScanner
 		          End If
 		          
 		          closerTextNode = MarkdownKit.Block(closerNode.TextNodePointer.Value)
-		          If closerTextNode.Chars.Ubound < 0 Then
+		          If closerTextNode.Chars.LastRowIndex < 0 Then
 		            closerTextNodeIndex = closerTextNode.Parent.Children.IndexOf(closerTextNode)
 		            // closerTextNodeIndex = _
 		            // container.Children.IndexOf(MarkdownKit.Block(closerNode.TextNodePointer.Value))
@@ -1089,7 +1089,7 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Remove all delimiters above stackBottom from the delimiter stack.
-		  For i As Integer = stackBottom + 1 To delimiterStack.Ubound
+		  For i As Integer = stackBottom + 1 To delimiterStack.LastRowIndex
 		    delimiterStack(i).Ignore = True
 		  Next i
 		End Sub
@@ -1136,7 +1136,7 @@ Protected Class InlineScanner
 		      limit = pos - 1
 		      Dim tmp() As String
 		      For i As Integer = startPos To limit
-		        tmp.Append(chars(i))
+		        tmp.AddRow(chars(i))
 		      Next i
 		      uri = Join(tmp, "")
 		      Return pos + 1
@@ -1360,7 +1360,7 @@ Protected Class InlineScanner
 		        limit = pos - 1
 		        Redim tmp(-1)
 		        For i As Integer = startPos To limit
-		          tmp.Append(chars(i))
+		          tmp.AddRow(chars(i))
 		        Next i
 		        uri = Join(tmp, "")
 		        Return pos + 1
@@ -1402,7 +1402,7 @@ Protected Class InlineScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  Dim pos As Integer = startPos
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  // Skip past the opening "![".
 		  pos = pos + 2
@@ -1427,7 +1427,7 @@ Protected Class InlineScanner
 		      hasUnescapedBracket = True
 		      openSquareBracketCount = openSquareBracketCount + 1
 		    ElseIf i > startPos + 1 Then // Only add characters occurring after the start position.
-		      part1RawChars.Append(c)
+		      part1RawChars.AddRow(c)
 		    End If
 		  Next i
 		  
@@ -1442,7 +1442,7 @@ Protected Class InlineScanner
 		  
 		  // Is part1 a valid linkLabel?
 		  Dim validLinkLabel As Boolean = False
-		  If part1RawChars.Ubound > -1 Then
+		  If part1RawChars.LastRowIndex > -1 Then
 		    If container.Root.ReferenceMap.HasKey(Join(part1RawChars, "")) Then
 		      validLinkLabel = True
 		    End If
@@ -1506,7 +1506,7 @@ Protected Class InlineScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  Dim pos As Integer = startPos
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  // Skip past the opening "[".
 		  pos = pos + 1
@@ -1532,7 +1532,7 @@ Protected Class InlineScanner
 		      hasUnescapedBracket = True
 		      openSquareBracketCount = openSquareBracketCount + 1
 		    ElseIf i > startPos Then // Only add characters occurring after the start position.
-		      part1RawChars.Append(c)
+		      part1RawChars.AddRow(c)
 		    End If
 		  Next i
 		  
@@ -1548,7 +1548,7 @@ Protected Class InlineScanner
 		  // Is part1 a valid linkLabel?
 		  Dim linkLabelAsText As Text // Must be text to permit case-sensitive lookups.
 		  Dim validLinkLabel As Boolean = False
-		  If part1RawChars.Ubound > -1 Then
+		  If part1RawChars.LastRowIndex > -1 Then
 		    linkLabelAsText = Join(part1RawChars, "").ToText
 		    If container.Root.ReferenceMap.HasKey(linkLabelAsText.Lowercase) Then
 		      validLinkLabel = True
@@ -1769,7 +1769,7 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  Dim i As Integer
 		  Dim c As String
 		  
@@ -1843,7 +1843,7 @@ Protected Class InlineScanner
 		Shared Function ScanLinkLabelDefinition(chars() As String, pos As Integer) As MarkdownKit.CharacterRun
 		  // Scans the contents of `chars` for a link reference definition label.
 		  // Assumes chars(pos) = "[".
-		  // Assumes `chars.Ubound` >=3.
+		  // Assumes `chars.LastRowIndex` >=3.
 		  // Returns a CharacterRun. If no valid label is found then the CharacterRun's
 		  // `start` and `finish` properties will be set to -1.
 		  // Does NOT mutate the passed array.
@@ -1860,7 +1860,7 @@ Protected Class InlineScanner
 		  
 		  Dim result As New MarkdownKit.CharacterRun(0, -1, -1)
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  If charsUbound > kMaxReferenceLabelLength + 1 Then Return result
 		  
@@ -1963,7 +1963,7 @@ Protected Class InlineScanner
 		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
 		  result.Invalid = True
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  // Sanity check.
 		  If startPos < 0 Or startPos > charsUbound Or _
@@ -2022,7 +2022,9 @@ Protected Class InlineScanner
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -2030,12 +2032,15 @@ Protected Class InlineScanner
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -2043,6 +2048,7 @@ Protected Class InlineScanner
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -2050,6 +2056,7 @@ Protected Class InlineScanner
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

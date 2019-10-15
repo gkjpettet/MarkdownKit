@@ -92,7 +92,7 @@ Protected Class TestGroup
 		  //
 		  
 		  Static props() As Xojo.Introspection.PropertyInfo
-		  If props.Ubound = -1 Then
+		  If props.LastRowIndex = -1 Then
 		    Dim ti As Xojo.Introspection.TypeInfo
 		    ti = Xojo.Introspection.GetType(Self)
 		    While ti.BaseType IsA Object And Not (ti Is ti.BaseType)
@@ -135,7 +135,7 @@ Protected Class TestGroup
 		        Dim toArr() As Object = prop.Value(Self)
 		        Dim fromArr() As Object = fromValue
 		        
-		        For i As Integer = 0 To fromArr.Ubound
+		        For i As Integer = 0 To fromArr.LastRowIndex
 		          toArr.Append(fromArr(i))
 		        Next i
 		      Else
@@ -184,10 +184,10 @@ Protected Class TestGroup
 		  // Get the unique set of methods
 		  //
 		  Dim methodsDict As New Xojo.Core.Dictionary
-		  For i As Integer = 0 To methods.Ubound
+		  For i As Integer = 0 To methods.LastRowIndex
 		    Dim m As Xojo.Introspection.MethodInfo = methods(i)
 		    If m.Name.Length > kTestSuffix.Length And m.Name.Right(kTestSuffix.Length) = kTestSuffix And _
-		      m.Parameters.Ubound = -1 Then
+		      m.Parameters.LastRowIndex = -1 Then
 		      methodsDict.Value(m.Name) = m // Will replace overridden methods
 		    End If
 		  Next 
@@ -291,7 +291,7 @@ Protected Class TestGroup
 		    Dim myInfo As Xojo.Introspection.TypeInfo = Xojo.Introspection.GetType(Self)
 		    Dim constructors() As Xojo.Introspection.ConstructorInfo = myInfo.Constructors
 		    For Each c As Xojo.Introspection.ConstructorInfo In constructors
-		      If c.Parameters.Ubound = 0 Then
+		      If c.Parameters.LastRowIndex = 0 Then
 		        UseConstructor = c
 		        Exit For c
 		      End If
@@ -308,7 +308,7 @@ Protected Class TestGroup
 		    End If
 		  End If
 		  
-		  If CurrentResultIndex <= mResults.Ubound Then
+		  If CurrentResultIndex <= mResults.LastRowIndex Then
 		    RunTestsTimer.Period = kTimerPeriod
 		    CurrentClone = Nil // Make sure TearDown happens
 		    
@@ -675,7 +675,7 @@ Protected Class TestGroup
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return mResults.Ubound + 1
+			  Return mResults.LastRowIndex + 1
 			End Get
 		#tag EndGetter
 		TestCount As Integer

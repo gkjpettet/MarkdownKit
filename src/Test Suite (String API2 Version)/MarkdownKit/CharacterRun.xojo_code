@@ -21,7 +21,7 @@ Protected Class CharacterRun
 		  // Copies from the passed array of characters the characters that make up 
 		  // this CharacterRun.
 		  
-		  Dim sourceUbound As Integer = source.Ubound
+		  Dim sourceUbound As Integer = source.LastRowIndex
 		  
 		  // Sanity checks.
 		  If Self.Start < 0 Or (Self.Start + Self.Length - 1) > sourceUbound Then
@@ -35,7 +35,7 @@ Protected Class CharacterRun
 		  Dim i, limit As Integer
 		  limit = Self.Start + Self.Length - 1
 		  For i = Self.Start To limit
-		    result.Append(source(i))
+		    result.AddRow(source(i))
 		  Next i
 		  
 		  Return result
@@ -86,7 +86,9 @@ Protected Class CharacterRun
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -94,12 +96,15 @@ Protected Class CharacterRun
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -107,6 +112,7 @@ Protected Class CharacterRun
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -114,30 +120,39 @@ Protected Class CharacterRun
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Start"
+			Visible=false
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Finish"
+			Visible=false
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Invalid"
+			Visible=false
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Length"
+			Visible=false
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

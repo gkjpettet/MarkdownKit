@@ -140,7 +140,7 @@ Protected Class BlockScanner
 		  data = Nil
 		  length = 0
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  If pos > charsUbound Then Return 0
 		  
@@ -167,7 +167,7 @@ Protected Class BlockScanner
 		    c = "6" Or c = "7" Or c = "8" Or c = "9" Then
 		    Dim numDigits As Integer = 0
 		    Dim startText As String
-		    Dim limit As Integer = Min(chars.Ubound, startPos + 8)
+		    Dim limit As Integer = Min(chars.LastRowIndex, startPos + 8)
 		    For i As Integer = startPos To limit
 		      c = chars(i)
 		      Select Case c
@@ -228,7 +228,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  // Reset the ByRef variables.
 		  length = 0
@@ -283,7 +283,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  If pos + (length - 1) > charsUbound Then Return 0
 		  
@@ -350,7 +350,7 @@ Protected Class BlockScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  Dim chars() As String = line.Chars
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  // The shortest opening condition is two characters.
 		  If pos + 1 > charsUbound Then
@@ -426,10 +426,10 @@ Protected Class BlockScanner
 		  
 		  // `pos` currently points to the first character of a potential tag name.
 		  Dim tagNameArray() As String
-		  While pos <= charsUbound And tagNameArray.Ubound < 10
+		  While pos <= charsUbound And tagNameArray.LastRowIndex < 10
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.CharInHeaderLevelRange(c) Then
-		      tagNameArray.Append(c)
+		      tagNameArray.AddRow(c)
 		    Else
 		      Exit
 		    End If
@@ -490,7 +490,7 @@ Protected Class BlockScanner
 		  
 		  // At least 3 characters are required for a valid type 7 block start.
 		  Dim chars() As String = line.Chars
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  If pos + 2 > charsUbound Then Return Block.kHTMLBlockTypeNone
 		  
 		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
@@ -531,7 +531,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  Dim pos As Integer = 0
 		  
 		  // Parse the label.
@@ -654,7 +654,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  length = 0
 		  
@@ -709,7 +709,7 @@ Protected Class BlockScanner
 		  // Reset the ByRef parameter.
 		  level = 0
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  If pos > charsUbound Then Return 0
 		  
 		  Dim c As String = chars(pos)
@@ -755,7 +755,7 @@ Protected Class BlockScanner
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  If pos > charsUbound Then Return 0
 		  
@@ -784,7 +784,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.Ubound
+		  Dim charsUbound As Integer = chars.LastRowIndex
 		  
 		  Dim count As Integer = 0
 		  Dim i As Integer
@@ -865,7 +865,9 @@ Protected Class BlockScanner
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -873,12 +875,15 @@ Protected Class BlockScanner
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -886,6 +891,7 @@ Protected Class BlockScanner
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -893,6 +899,7 @@ Protected Class BlockScanner
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

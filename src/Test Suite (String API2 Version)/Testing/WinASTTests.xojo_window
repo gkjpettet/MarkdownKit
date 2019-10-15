@@ -2,51 +2,31 @@
 Begin Window WinASTTests
    BackColor       =   &cFFFFFF00
    Backdrop        =   0
-   BackgroundColor =   &cFFFFFF00
    CloseButton     =   True
-   Compatibility   =   ""
    Composite       =   False
-   DefaultLocation =   "0"
    Frame           =   0
    FullScreen      =   False
    FullScreenButton=   False
    HasBackColor    =   False
-   HasBackgroundColor=   False
-   HasCloseButton  =   True
-   HasFullScreenButton=   False
-   HasMaximizeButton=   False
-   HasMinimizeButton=   True
    Height          =   800
    ImplicitInstance=   True
    LiveResize      =   "True"
    MacProcID       =   0
    MaxHeight       =   32000
    MaximizeButton  =   False
-   MaximumHeight   =   32000
-   MaximumWidth    =   32000
    MaxWidth        =   32000
    MenuBar         =   1083813887
    MenuBarVisible  =   True
    MinHeight       =   64
    MinimizeButton  =   True
-   MinimumHeight   =   64
-   MinimumWidth    =   64
    MinWidth        =   64
    Placement       =   0
-   Resizable       =   True
+   Resizable       =   "True"
    Resizeable      =   True
    Title           =   "AST Tests (String Version)"
-   Type            =   "0"
    Visible         =   True
    Width           =   1090
    Begin Listbox TestGroupList
-      AllowAutoDeactivate=   True
-      AllowAutoHideScrollbars=   True
-      AllowExpandableRows=   True
-      AllowFocusRing  =   False
-      AllowResizableColumns=   True
-      AllowRowDragging=   False
-      AllowRowReordering=   False
       AutoDeactivate  =   True
       AutoHideScrollbars=   True
       Bold            =   False
@@ -57,22 +37,12 @@ Begin Window WinASTTests
       DataField       =   ""
       DataSource      =   ""
       DefaultRowHeight=   -1
-      DropIndicatorVisible=   False
       Enabled         =   True
       EnableDrag      =   False
       EnableDragReorder=   False
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
       GridLinesHorizontal=   "0"
-      GridLinesHorizontalStyle=   "0"
       GridLinesVertical=   "0"
-      GridLinesVerticalStyle=   "0"
-      HasBorder       =   True
-      HasHeader       =   False
       HasHeading      =   False
-      HasHorizontalScrollbar=   False
-      HasVerticalScrollbar=   True
       HeadingIndex    =   -1
       Height          =   800
       HelpTag         =   ""
@@ -88,7 +58,6 @@ Begin Window WinASTTests
       LockRight       =   False
       LockTop         =   True
       RequiresSelection=   False
-      RowSelectionType=   "0"
       Scope           =   0
       ScrollbarHorizontal=   False
       ScrollBarVertical=   True
@@ -100,7 +69,6 @@ Begin Window WinASTTests
       TextFont        =   "System"
       TextSize        =   0.0
       TextUnit        =   0
-      Tooltip         =   ""
       Top             =   0
       Transparent     =   False
       Underline       =   False
@@ -111,14 +79,10 @@ Begin Window WinASTTests
       _ScrollWidth    =   -1
    End
    Begin GroupBox GroupBoxes
-      AllowAutoDeactivate=   True
       AutoDeactivate  =   True
       Bold            =   False
       Caption         =   ""
       Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
       Height          =   108
       HelpTag         =   ""
       Index           =   0
@@ -137,22 +101,17 @@ Begin Window WinASTTests
       TextFont        =   "System"
       TextSize        =   0.0
       TextUnit        =   0
-      Tooltip         =   ""
       Top             =   14
       Transparent     =   False
       Underline       =   False
       Visible         =   True
       Width           =   784
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   1
@@ -172,29 +131,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Start:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   24
          Transparent     =   False
          Underline       =   False
-         Value           =   "Start:"
          Visible         =   True
          Width           =   68
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   2
@@ -214,29 +166,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Duration:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   24
          Transparent     =   False
          Underline       =   False
-         Value           =   "Duration:"
          Visible         =   True
          Width           =   100
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   3
@@ -256,29 +201,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Total:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   56
          Transparent     =   False
          Underline       =   False
-         Value           =   "Total:"
          Visible         =   True
          Width           =   68
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   4
@@ -298,29 +236,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Passed:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   24
          Transparent     =   False
          Underline       =   False
-         Value           =   "Passed:"
          Visible         =   True
          Width           =   68
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   5
@@ -340,29 +271,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Failed:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   56
          Transparent     =   False
          Underline       =   False
-         Value           =   "Failed:"
          Visible         =   True
          Width           =   68
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   6
@@ -382,29 +306,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Skipped:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   88
          Transparent     =   False
          Underline       =   False
-         Value           =   "Skipped:"
          Visible         =   True
          Width           =   68
       End
       Begin Label StartLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -424,29 +341,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "1/1/2012 12:00PM"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   24
          Transparent     =   False
          Underline       =   False
-         Value           =   "1/1/2012 12:00PM"
          Visible         =   True
          Width           =   145
       End
       Begin Label DurationLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -466,29 +376,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "0s"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   24
          Transparent     =   False
          Underline       =   False
-         Value           =   "0s"
          Visible         =   True
          Width           =   137
       End
       Begin Label TestCountLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   52
          HelpTag         =   ""
          Index           =   -2147483648
@@ -508,28 +411,21 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "(run tests first)"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   56
          Transparent     =   False
          Underline       =   False
-         Value           =   "(run tests first)"
          Visible         =   True
          Width           =   153
          Begin Label Labels
-            AllowAutoDeactivate=   True
             AutoDeactivate  =   True
             Bold            =   False
             DataField       =   ""
             DataSource      =   ""
             Enabled         =   True
-            FontName        =   "System"
-            FontSize        =   0.0
-            FontUnit        =   0
             Height          =   20
             HelpTag         =   ""
             Index           =   8
@@ -549,30 +445,23 @@ Begin Window WinASTTests
             TabStop         =   True
             Text            =   "Not Implemented:"
             TextAlign       =   "0"
-            TextAlignment   =   "1"
             TextColor       =   &c00000000
             TextFont        =   "System"
             TextSize        =   0.0
             TextUnit        =   0
-            Tooltip         =   ""
             Top             =   56
             Transparent     =   False
             Underline       =   False
-            Value           =   "Not Implemented:"
             Visible         =   True
             Width           =   135
          End
       End
       Begin Label PassedCountLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -592,29 +481,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "0 (0%)"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   24
          Transparent     =   False
          Underline       =   False
-         Value           =   "0 (0%)"
          Visible         =   True
          Width           =   100
       End
       Begin Label FailedCountLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -634,29 +516,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "0 (0%)"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   56
          Transparent     =   False
          Underline       =   False
-         Value           =   "0 (0%)"
          Visible         =   True
          Width           =   100
       End
       Begin Label SkippedCountLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -676,29 +551,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "0 (0%)"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   88
          Transparent     =   False
          Underline       =   False
-         Value           =   "0 (0%)"
          Visible         =   True
          Width           =   100
       End
       Begin Label NotImplementedCountLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -718,16 +586,13 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "0 (0%)"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   56
          Transparent     =   False
          Underline       =   False
-         Value           =   "0 (0%)"
          Visible         =   True
          Width           =   100
       End
@@ -744,6 +609,7 @@ Begin Window WinASTTests
    Begin ASTTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
+      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -758,7 +624,6 @@ Begin Window WinASTTests
       TabPanelIndex   =   0
    End
    Begin ProgressWheel ProgressWheel1
-      AllowAutoDeactivate=   True
       AutoDeactivate  =   True
       Enabled         =   True
       Height          =   16
@@ -775,21 +640,16 @@ Begin Window WinASTTests
       TabIndex        =   6
       TabPanelIndex   =   0
       TabStop         =   True
-      Tooltip         =   ""
       Top             =   7
       Transparent     =   False
       Visible         =   False
       Width           =   16
    End
    Begin GroupBox GroupBoxes
-      AllowAutoDeactivate=   True
       AutoDeactivate  =   True
       Bold            =   False
       Caption         =   ""
       Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
       Height          =   632
       HelpTag         =   ""
       Index           =   1
@@ -808,22 +668,17 @@ Begin Window WinASTTests
       TextFont        =   "System"
       TextSize        =   0.0
       TextUnit        =   0
-      Tooltip         =   ""
       Top             =   134
       Transparent     =   False
       Underline       =   False
       Visible         =   True
       Width           =   790
       Begin Label TestNameLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   True
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -843,29 +698,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Test Name"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   146
          Transparent     =   False
          Underline       =   False
-         Value           =   "Test Name"
          Visible         =   True
          Width           =   254
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   0
@@ -885,29 +733,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Duration:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   178
          Transparent     =   False
          Underline       =   False
-         Value           =   "Duration:"
          Visible         =   True
          Width           =   100
       End
       Begin Label TestDurationLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -927,43 +768,28 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "0s"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   178
          Transparent     =   False
          Underline       =   False
-         Value           =   "0s"
          Visible         =   True
          Width           =   100
       End
       Begin TextArea TestResultsExpected
          AcceptTabs      =   False
          Alignment       =   "0"
-         AllowAutoDeactivate=   True
-         AllowFocusRing  =   True
-         AllowSpellChecking=   True
-         AllowStyledText =   True
-         AllowTabs       =   False
          AutoDeactivate  =   True
          AutomaticallyCheckSpelling=   True
          BackColor       =   &cFFFFFF00
-         BackgroundColor =   &cFFFFFF00
          Bold            =   False
          Border          =   True
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Format          =   ""
-         HasBorder       =   True
-         HasHorizontalScrollbar=   False
-         HasVerticalScrollbar=   True
          Height          =   255
          HelpTag         =   ""
          HideSelection   =   True
@@ -980,7 +806,6 @@ Begin Window WinASTTests
          LockRight       =   False
          LockTop         =   True
          Mask            =   ""
-         MaximumCharactersAllowed=   0
          Multiline       =   True
          ReadOnly        =   True
          Scope           =   0
@@ -991,31 +816,23 @@ Begin Window WinASTTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   ""
-         TextAlignment   =   "0"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   247
          Transparent     =   False
          Underline       =   False
          UseFocusRing    =   True
-         ValidationMask  =   ""
-         Value           =   ""
          Visible         =   True
          Width           =   360
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   7
@@ -1035,29 +852,22 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Expected AST (""truth""):"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   218
          Transparent     =   False
          Underline       =   False
-         Value           =   "Expected AST (""truth""):"
          Visible         =   True
          Width           =   362
       End
       Begin Label TestResultLabel
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   -2147483648
@@ -1077,43 +887,28 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Passed"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   146
          Transparent     =   False
          Underline       =   False
-         Value           =   "Passed"
          Visible         =   True
          Width           =   100
       End
       Begin TextArea TestResultsActual
          AcceptTabs      =   False
          Alignment       =   "0"
-         AllowAutoDeactivate=   True
-         AllowFocusRing  =   True
-         AllowSpellChecking=   True
-         AllowStyledText =   True
-         AllowTabs       =   False
          AutoDeactivate  =   True
          AutomaticallyCheckSpelling=   True
          BackColor       =   &cFFFFFF00
-         BackgroundColor =   &cFFFFFF00
          Bold            =   False
          Border          =   True
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Format          =   ""
-         HasBorder       =   True
-         HasHorizontalScrollbar=   False
-         HasVerticalScrollbar=   True
          Height          =   255
          HelpTag         =   ""
          HideSelection   =   True
@@ -1130,7 +925,6 @@ Begin Window WinASTTests
          LockRight       =   True
          LockTop         =   True
          Mask            =   ""
-         MaximumCharactersAllowed=   0
          Multiline       =   True
          ReadOnly        =   True
          Scope           =   0
@@ -1141,31 +935,23 @@ Begin Window WinASTTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   ""
-         TextAlignment   =   "0"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   247
          Transparent     =   False
          Underline       =   False
          UseFocusRing    =   True
-         ValidationMask  =   ""
-         Value           =   ""
          Visible         =   True
          Width           =   360
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   9
@@ -1185,43 +971,28 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "AST produced by MarkdownKit (""actual""):"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   218
          Transparent     =   False
          Underline       =   False
-         Value           =   "AST produced by MarkdownKit (""actual""):"
          Visible         =   True
          Width           =   360
       End
       Begin TextArea TestInputMarkdown
          AcceptTabs      =   False
          Alignment       =   "0"
-         AllowAutoDeactivate=   True
-         AllowFocusRing  =   True
-         AllowSpellChecking=   False
-         AllowStyledText =   True
-         AllowTabs       =   False
          AutoDeactivate  =   True
          AutomaticallyCheckSpelling=   False
          BackColor       =   &cFFFFFF00
-         BackgroundColor =   &cFFFFFF00
          Bold            =   False
          Border          =   True
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Format          =   ""
-         HasBorder       =   True
-         HasHorizontalScrollbar=   False
-         HasVerticalScrollbar=   True
          Height          =   197
          HelpTag         =   ""
          HideSelection   =   True
@@ -1238,7 +1009,6 @@ Begin Window WinASTTests
          LockRight       =   True
          LockTop         =   True
          Mask            =   ""
-         MaximumCharactersAllowed=   0
          Multiline       =   True
          ReadOnly        =   True
          Scope           =   2
@@ -1249,31 +1019,23 @@ Begin Window WinASTTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   ""
-         TextAlignment   =   "0"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   549
          Transparent     =   False
          Underline       =   False
          UseFocusRing    =   True
-         ValidationMask  =   ""
-         Value           =   ""
          Visible         =   True
          Width           =   742
       End
       Begin Label Labels
-         AllowAutoDeactivate=   True
          AutoDeactivate  =   True
          Bold            =   False
          DataField       =   ""
          DataSource      =   ""
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
          Height          =   20
          HelpTag         =   ""
          Index           =   10
@@ -1293,16 +1055,13 @@ Begin Window WinASTTests
          TabStop         =   True
          Text            =   "Input Markdown:"
          TextAlign       =   "0"
-         TextAlignment   =   "1"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Tooltip         =   ""
          Top             =   517
          Transparent     =   False
          Underline       =   False
-         Value           =   "Input Markdown:"
          Visible         =   True
          Width           =   123
       End
@@ -1385,7 +1144,7 @@ End
 		  
 		  Dim startPos As Integer = testName.IndexOf("Example") + 7
 		  Dim chars() As Text = testName.Split
-		  If startPos > chars.Ubound Then
+		  If startPos > chars.LastRowIndex Then
 		    Dim e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `exampleXX`"
 		    Raise e
@@ -1393,7 +1152,7 @@ End
 		  
 		  Dim result As Text
 		  Dim tmp As Integer
-		  For i As Integer = startPos To chars.Ubound
+		  For i As Integer = startPos To chars.LastRowIndex
 		    Try
 		      tmp = Val(chars(i))
 		      result = result + chars(i)
@@ -2185,14 +1944,6 @@ End
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="Resizable"
-		Visible=true
-		Group="Frame"
-		InitialValue="True"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
 		Name="HasMaximizeButton"
 		Visible=true
 		Group="Frame"
@@ -2245,15 +1996,7 @@ End
 		Group="Background"
 		InitialValue="&hFFFFFF"
 		Type="Color"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="BackColor"
-		Visible=true
-		Group="Appearance"
-		InitialValue="&hFFFFFF"
-		Type="Color"
-		EditorType=""
+		EditorType="Color"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Backdrop"
@@ -2261,14 +2004,6 @@ End
 		Group="Appearance"
 		InitialValue=""
 		Type="Picture"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="CloseButton"
-		Visible=true
-		Group="Appearance"
-		InitialValue="True"
-		Type="Boolean"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
@@ -2280,44 +2015,7 @@ End
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="Frame"
-		Visible=true
-		Group="Appearance"
-		InitialValue="0"
-		Type="Integer"
-		EditorType="Enum"
-		#tag EnumValues
-			"0 - Document"
-			"1 - Movable Modal"
-			"2 - Modal Dialog"
-			"3 - Floating Window"
-			"4 - Plain Box"
-			"5 - Shadowed Box"
-			"6 - Rounded Window"
-			"7 - Global Floating Window"
-			"8 - Sheet Window"
-			"9 - Metal Window"
-			"11 - Modeless Dialog"
-		#tag EndEnumValues
-	#tag EndViewProperty
-	#tag ViewProperty
 		Name="FullScreen"
-		Visible=true
-		Group="Appearance"
-		InitialValue="False"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="FullScreenButton"
-		Visible=true
-		Group="Appearance"
-		InitialValue="False"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="HasBackColor"
 		Visible=true
 		Group="Appearance"
 		InitialValue="False"
@@ -2357,30 +2055,6 @@ End
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="MaxHeight"
-		Visible=true
-		Group="Position"
-		InitialValue="32000"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MaximizeButton"
-		Visible=true
-		Group="Appearance"
-		InitialValue="False"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MaxWidth"
-		Visible=true
-		Group="Position"
-		InitialValue="32000"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
 		Name="MenuBar"
 		Visible=true
 		Group="Appearance"
@@ -2397,51 +2071,12 @@ End
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="MinHeight"
-		Visible=true
-		Group="Position"
-		InitialValue="64"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MinimizeButton"
-		Visible=true
-		Group="Appearance"
-		InitialValue="True"
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="MinWidth"
-		Visible=true
-		Group="Position"
-		InitialValue="64"
-		Type="Integer"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
 		Name="Name"
 		Visible=true
 		Group="ID"
 		InitialValue=""
 		Type="String"
 		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="Placement"
-		Visible=true
-		Group="Position"
-		InitialValue="0"
-		Type="Integer"
-		EditorType="Enum"
-		#tag EnumValues
-			"0 - Default"
-			"1 - Parent Window"
-			"2 - Main Screen"
-			"3 - Parent Window Screen"
-			"4 - Stagger"
-		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Resizeable"

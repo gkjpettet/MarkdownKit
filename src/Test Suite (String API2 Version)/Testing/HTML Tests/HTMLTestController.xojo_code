@@ -57,7 +57,7 @@ Inherits TestController
 		  
 		  Dim startPos As Integer = methodName.IndexOf("Example") + 7
 		  Dim chars() As Text = methodName.Split
-		  If startPos = 6 Or startPos = chars.Ubound Then
+		  If startPos = 6 Or startPos = chars.LastRowIndex Then
 		    Dim e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `ExampleXXTest`"
 		    Raise e
@@ -65,7 +65,7 @@ Inherits TestController
 		  
 		  Dim result As Text
 		  Dim tmp As Integer
-		  For i As Integer = startPos To chars.Ubound
+		  For i As Integer = startPos To chars.LastRowIndex
 		    Try
 		      tmp = Val(chars(i))
 		      result = result + chars(i)

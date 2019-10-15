@@ -93,7 +93,7 @@ Protected Class TestController
 		  //  "My*Group" = Match any group that starts with "My" and ends with "Group"
 		  
 		  
-		  If includePatterns.Ubound = -1 And excludePatterns.Ubound = -1 Then
+		  If includePatterns.LastRowIndex = -1 And excludePatterns.LastRowIndex = -1 Then
 		    Dim err As New RuntimeException
 		    err.Message = "You must specify at least one include or exclude pattern"
 		    Raise err
@@ -102,11 +102,11 @@ Protected Class TestController
 		  //
 		  // Convert the patterns into regular expressions
 		  //
-		  For i As Integer = 0 To includePatterns.Ubound
+		  For i As Integer = 0 To includePatterns.LastRowIndex
 		    includePatterns(i) = SimplePatternToRegExPattern(includePatterns(i))
 		  Next i
 		  
-		  For i As Integer = 0 To excludePatterns.Ubound
+		  For i As Integer = 0 To excludePatterns.LastRowIndex
 		    excludePatterns(i) = SimplePatternToRegExPattern(excludePatterns(i))
 		  Next i
 		  
@@ -122,7 +122,7 @@ Protected Class TestController
 		    //
 		    // Turn all methods on and the group on/off
 		    //
-		    group.IncludeGroup = (includePatterns.Ubound = -1) // If there are any includes, default to False
+		    group.IncludeGroup = (includePatterns.LastRowIndex = -1) // If there are any includes, default to False
 		    group.SetIncludeMethods(True)
 		    Dim methodsTurnedOff As Boolean
 		    
@@ -244,7 +244,7 @@ Protected Class TestController
 
 	#tag Method, Flags = &h0
 		Attributes( Hidden )  Sub RunNextTest()
-		  If TestQueue.Ubound = -1 Then
+		  If TestQueue.LastRowIndex = -1 Then
 		    Stop
 		  Else
 		    Dim tg As TestGroup = TestQueue(0)
@@ -385,7 +385,7 @@ Protected Class TestController
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return mTestGroups.Ubound + 1
+			  Return mTestGroups.LastRowIndex + 1
 			End Get
 		#tag EndGetter
 		GroupCount As Integer

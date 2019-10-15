@@ -64,17 +64,17 @@ Inherits MarkdownKit.Block
 		  Dim tmp() As String = source.Split(&u000A)
 		  
 		  // Convert each line of text in the temporary array to a LineInfo object.
-		  Dim tmpUbound As Integer = tmp.Ubound
+		  Dim tmpUbound As Integer = tmp.LastRowIndex
 		  Dim i As Integer
 		  For i = 0 To tmpUbound
-		    Lines.Append(New MarkdownKit.LineInfo(tmp(i), i + 1))
+		    Lines.AddRow(New MarkdownKit.LineInfo(tmp(i), i + 1))
 		  Next i
 		  
 		  // Remove contiguous blank lines at the beginning and end of the array.
 		  // As blank lines at the beginning and end of the document 
 		  // are ignored (commonmark spec 0.29 4.9).
 		  // Leading...
-		  While Lines.Ubound > -1
+		  While Lines.LastRowIndex > -1
 		    If Lines(0).IsBlank Then
 		      Lines.Remove(0)
 		    Else
@@ -82,7 +82,7 @@ Inherits MarkdownKit.Block
 		    End If
 		  Wend
 		  // Trailing...
-		  For i = Lines.Ubound DownTo 0
+		  For i = Lines.LastRowIndex DownTo 0
 		    If Lines(i).IsBlank Then
 		      Lines.Remove(i)
 		    Else
@@ -91,7 +91,7 @@ Inherits MarkdownKit.Block
 		  Next i
 		  
 		  // Cache the upper bounds of the Lines array.
-		  LinesUbound = Lines.Ubound
+		  LinesUbound = Lines.LastRowIndex
 		  
 		  // The document block starts open.
 		  IsOpen = True
@@ -129,7 +129,7 @@ Inherits MarkdownKit.Block
 		  // appropriate), add the setext heading line as content to this paragraph and raise 
 		  // an EdgeCase exception.
 		  stx.Finalise(line)
-		  If stx.Chars.Ubound = -1 Then
+		  If stx.Chars.LastRowIndex = -1 Then
 		    p.AddLine(line, 0)
 		    #Pragma BreakOnExceptions False
 		    Raise New MarkdownKit.EdgeCase
@@ -141,7 +141,7 @@ Inherits MarkdownKit.Block
 		  
 		  // Insert our new SetextHeading.
 		  If index = 0 Then
-		    paraParent.Children.Append(stx)
+		    paraParent.Children.AddRow(stx)
 		  Else
 		    paraParent.Children.Insert(index, stx)
 		  End If
@@ -175,7 +175,7 @@ Inherits MarkdownKit.Block
 		  child.Root = theParent.Root
 		  
 		  // Insert the child into the parent's tree.
-		  theParent.Children.Append(child)
+		  theParent.Children.AddRow(child)
 		  
 		  // Return the new child block.
 		  Return child
@@ -236,15 +236,15 @@ Inherits MarkdownKit.Block
 		    Select Case b.Type
 		    Case BlockType.AtxHeading, BlockType.Paragraph, BlockType.SetextHeading
 		      Redim delimiterStack(-1) // Each block gets a new delimiter stack.
-		      If b.Chars.Ubound > -1 Then InlineScanner.ParseInlines(b, delimiterStack)
+		      If b.Chars.LastRowIndex > -1 Then InlineScanner.ParseInlines(b, delimiterStack)
 		    End Select
 		    
 		    If b.FirstChild <> Nil Then
-		      If b.NextSibling <> Nil Then stack.Append(b.NextSibling)
+		      If b.NextSibling <> Nil Then stack.AddRow(b.NextSibling)
 		      b = b.FirstChild
 		    ElseIf b.NextSibling <> Nil Then
 		      b = b.NextSibling
-		    ElseIf stack.Ubound > -1 Then
+		    ElseIf stack.LastRowIndex > -1 Then
 		      b = stack.Pop
 		    Else
 		      b = Nil
@@ -470,7 +470,7 @@ Inherits MarkdownKit.Block
 		        // paragraph with the setext heading line having been added to the 
 		        // paragraph's contents.
 		      End Try
-		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
+		      line.AdvanceOffset(line.Chars.LastRowIndex + 1 - line.Offset, False)
 		      
 		    ElseIf Not indented And _
 		      Not (container.Type = BlockType.Paragraph And Not line.AllMatched) And _
@@ -480,7 +480,7 @@ Inherits MarkdownKit.Block
 		      container = CreateChildBlock(container, line, BlockType.ThematicBreak)
 		      container.Finalise(line)
 		      container = container.Parent
-		      line.AdvanceOffset(line.Chars.Ubound + 1 - line.Offset, False)
+		      line.AdvanceOffset(line.Chars.LastRowIndex + 1 - line.Offset, False)
 		      
 		    ElseIf (Not indented Or container.Type = BlockType.List) And _
 		      0 <> BlockScanner.ParseListMarker(indented, line.Chars, line.NextNWS, _
@@ -658,107 +658,145 @@ Inherits MarkdownKit.Block
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="IsChildOfListItem"
+			Visible=false
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsChildOfTightList"
+			Visible=false
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FenceChar"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FenceLength"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FenceOffset"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="InfoString"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Destination"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Label"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Title"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Delimiter"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="DelimiterLength"
+			Visible=false
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsAutoLink"
+			Visible=false
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StartPos"
+			Visible=false
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="EndPos"
+			Visible=false
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Level"
+			Visible=false
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="HTMLBlockType"
+			Visible=false
 			Group="Behavior"
 			InitialValue="kHTMLBlockTypeNone"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsLastLineBlank"
+			Visible=false
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Type"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="MarkdownKit.BlockType"
 			EditorType="Enum"
 			#tag EnumValues
@@ -789,15 +827,19 @@ Inherits MarkdownKit.Block
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsOpen"
+			Visible=false
 			Group="Behavior"
 			InitialValue="True"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -805,12 +847,15 @@ Inherits MarkdownKit.Block
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -818,6 +863,7 @@ Inherits MarkdownKit.Block
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -825,6 +871,7 @@ Inherits MarkdownKit.Block
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

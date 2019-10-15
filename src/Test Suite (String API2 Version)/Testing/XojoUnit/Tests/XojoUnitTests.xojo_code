@@ -94,11 +94,9 @@ Inherits XojoUnitSuperClassTests
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub AreEqualDateTest()
-		  Dim d1 As New Date
-		  d1.SQLDate = "2012-11-30"
+		  Dim d1 As New DateTime(2012, 11, 30)
 		  
-		  Dim d2 As New Date
-		  d2.SQLDate = "2012-11-30"
+		  Dim d2 As New DateTime(2012, 11, 30)
 		  
 		  Assert.AreEqual(d1, d2)
 		  
@@ -147,11 +145,11 @@ Inherits XojoUnitSuperClassTests
 		Sub AreEqualIntegerArrayTest()
 		  Dim i1() As Integer = Array(1, 2, 3, 4, 5)
 		  Dim i2() As Integer
-		  i2.Append(1)
-		  i2.Append(2)
-		  i2.Append(3)
-		  i2.Append(4)
-		  i2.Append(5)
+		  i2.AddRow(1)
+		  i2.AddRow(2)
+		  i2.AddRow(3)
+		  i2.AddRow(4)
+		  i2.AddRow(5)
 		  
 		  Assert.AreEqual(i1, i2)
 		End Sub
@@ -214,9 +212,9 @@ Inherits XojoUnitSuperClassTests
 		Sub AreEqualStringArrayTest()
 		  Dim s1() As String = Array("A", "B", "C")
 		  Dim s2() As String
-		  s2.Append("A")
-		  s2.Append("B")
-		  s2.Append("C")
+		  s2.AddRow("A")
+		  s2.AddRow("B")
+		  s2.AddRow("C")
 		  Assert.AreEqual(s1, s2)
 		  
 		  s2(1) = s2(1).DefineEncoding(Nil)
@@ -241,9 +239,9 @@ Inherits XojoUnitSuperClassTests
 		Sub AreEqualTextArrayTest()
 		  Dim t1() As Text = Array("A", "B", "C")
 		  Dim t2() As Text
-		  t2.Append("A")
-		  t2.Append("B")
-		  t2.Append("C")
+		  t2.AddRow("A")
+		  t2.AddRow("B")
+		  t2.AddRow("C")
 		  
 		  Assert.AreEqual(t1, t2)
 		End Sub
@@ -269,11 +267,9 @@ Inherits XojoUnitSuperClassTests
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub AreNotEqualDateTest()
-		  Dim d1 As New Date
-		  d1.SQLDate = "2012-11-29"
+		  Dim d1 As New DateTime(2012, 11, 29)
 		  
-		  Dim d2 As New Date
-		  d2.SQLDate = "2012-11-30"
+		  Dim d2 As New DateTime(2012, 11, 30)
 		  
 		  Assert.AreNotEqual(d1, d2)
 		  
@@ -341,9 +337,9 @@ Inherits XojoUnitSuperClassTests
 		Sub AreSameStringArrayTest()
 		  Dim s1() As String = Array("A", "B", "C")
 		  Dim s2() As String
-		  s2.Append("A")
-		  s2.Append("B")
-		  s2.Append("C")
+		  s2.AddRow("A")
+		  s2.AddRow("B")
+		  s2.AddRow("C")
 		  Assert.AreSame(s1, s2)
 		  
 		End Sub
@@ -363,9 +359,9 @@ Inherits XojoUnitSuperClassTests
 		Sub AreSameTextArrayTest()
 		  Dim t1() As Text = Array("A", "B", "C")
 		  Dim t2() As Text
-		  t2.Append("A")
-		  t2.Append("B")
-		  t2.Append("C")
+		  t2.AddRow("A")
+		  t2.AddRow("B")
+		  t2.AddRow("C")
 		  
 		  Assert.AreSame(t1, t2)
 		End Sub
@@ -454,7 +450,7 @@ Inherits XojoUnitSuperClassTests
 
 	#tag Method, Flags = &h0
 		Sub IsNilTest()
-		  Dim d As Date
+		  Dim d As DateTime
 		  
 		  Assert.IsNil(d)
 		End Sub

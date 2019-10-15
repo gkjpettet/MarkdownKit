@@ -76,7 +76,7 @@ Inherits MarkdownKit.Block
 		  // Leading...
 		  While Lines.LastRowIndex > -1
 		    If Lines(0).IsBlank Then
-		      Lines.Remove(0)
+		      Lines.RemoveRowAt(0)
 		    Else
 		      Exit
 		    End If
@@ -84,7 +84,7 @@ Inherits MarkdownKit.Block
 		  // Trailing...
 		  For i = Lines.LastRowIndex DownTo 0
 		    If Lines(i).IsBlank Then
-		      Lines.Remove(i)
+		      Lines.RemoveRowAt(i)
 		    Else
 		      Exit
 		    End If
@@ -137,13 +137,13 @@ Inherits MarkdownKit.Block
 		  End If
 		  
 		  // Remove the paragraph from its parent.
-		  paraParent.Children.Remove(index)
+		  paraParent.Children.RemoveRowAt(index)
 		  
 		  // Insert our new SetextHeading.
 		  If index = 0 Then
 		    paraParent.Children.AddRow(stx)
 		  Else
-		    paraParent.Children.Insert(index, stx)
+		    paraParent.Children.AddRowAt(index, stx)
 		  End If
 		  
 		  // Assign the parent.

@@ -154,7 +154,7 @@ Protected Class Block
 		    // consist entirely of space characters, a single space character is removed from the 
 		    // front and back.
 		    If seenNonSpace And Chars.LastRowIndex >= 1 And Chars(0) = &u0020 And Chars(Chars.LastRowIndex) = &u0020 Then
-		      Chars.Remove(0)
+		      Chars.RemoveRowAt(0)
 		      Call Chars.Pop
 		    End If
 		    
@@ -287,7 +287,7 @@ Protected Class Block
 		        InfoString = Utilities.ReplaceEntities(InfoString)
 		        Utilities.Unescape(InfoString)
 		      End If
-		      Children.Remove(0)
+		      Children.RemoveRowAt(0)
 		    End If
 		    
 		  Case MarkdownKit.BlockType.HtmlBlock
@@ -304,7 +304,7 @@ Protected Class Block
 		    For i As Integer = 0 to limit
 		      b = Children(i)
 		      If b.Chars.IsBlank Then
-		        Children.Remove(0)
+		        Children.RemoveRowAt(0)
 		      Else
 		        Exit
 		      End If
@@ -314,7 +314,7 @@ Protected Class Block
 		      For i As Integer = Children.LastRowIndex DownTo 0
 		        b = Children(i)
 		        If b.Chars.IsBlank Then
-		          Children.Remove(i)
+		          Children.RemoveRowAt(i)
 		        Else
 		          Exit
 		        End If
@@ -451,7 +451,7 @@ Protected Class Block
 		  // Only looks at the top level children of this block.
 		  
 		  Dim childIndex As Integer = Children.IndexOf(child)
-		  If childIndex <> -1 Then Children.Remove(childIndex)
+		  If childIndex <> -1 Then Children.RemoveRowAt(childIndex)
 		End Sub
 	#tag EndMethod
 

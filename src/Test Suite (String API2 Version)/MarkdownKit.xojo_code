@@ -121,7 +121,7 @@ Protected Module MarkdownKit
 		  
 		  Dim remaining As Integer = length
 		  Do Until remaining = 0
-		    source.Remove(0)
+		    source.RemoveRowAt(0)
 		    remaining = remaining - 1
 		  Loop
 		End Sub
@@ -139,7 +139,7 @@ Protected Module MarkdownKit
 		    c = chars(0)
 		    Select Case c
 		    Case &u0020, &u0009, &u000A
-		      chars.Remove(0)
+		      chars.RemoveRowAt(0)
 		    Else
 		      Exit
 		    End Select
@@ -161,7 +161,7 @@ Protected Module MarkdownKit
 		    c = chars(chars.LastRowIndex)
 		    Select Case c
 		    Case &u0020, &u0009, &u000A
-		      chars.Remove(chars.LastRowIndex)
+		      chars.RemoveRowAt(chars.LastRowIndex)
 		    Else
 		      Exit
 		    End Select

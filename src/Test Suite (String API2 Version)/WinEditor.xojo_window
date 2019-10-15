@@ -28,7 +28,7 @@ Begin Window WinEditor
    Width           =   1160
    Begin TextArea TextAreaInput
       AcceptTabs      =   False
-      Alignment       =   "0"
+      Alignment       =   0
       AutoDeactivate  =   True
       AutomaticallyCheckSpelling=   True
       BackColor       =   &cFFFFFF00
@@ -98,7 +98,7 @@ Begin Window WinEditor
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "Input:"
-      TextAlign       =   "0"
+      TextAlign       =   0
       TextColor       =   &c00000000
       TextFont        =   "System"
       TextSize        =   0.0
@@ -111,7 +111,7 @@ Begin Window WinEditor
    End
    Begin TextArea TextAreaOutput
       AcceptTabs      =   False
-      Alignment       =   "0"
+      Alignment       =   0
       AutoDeactivate  =   True
       AutomaticallyCheckSpelling=   True
       BackColor       =   &cFFFFFF00
@@ -181,7 +181,7 @@ Begin Window WinEditor
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "Output:"
-      TextAlign       =   "0"
+      TextAlign       =   0
       TextColor       =   &c00000000
       TextFont        =   "System"
       TextSize        =   0.0
@@ -195,7 +195,7 @@ Begin Window WinEditor
    Begin PushButton ButtonParse
       AutoDeactivate  =   True
       Bold            =   False
-      ButtonStyle     =   "0"
+      ButtonStyle     =   0
       Cancel          =   False
       Caption         =   "Parse"
       Default         =   False
@@ -227,7 +227,7 @@ Begin Window WinEditor
    Begin PushButton ButtonClear
       AutoDeactivate  =   True
       Bold            =   False
-      ButtonStyle     =   "0"
+      ButtonStyle     =   0
       Cancel          =   False
       Caption         =   "Clear"
       Default         =   False

@@ -5,7 +5,7 @@ Protected Class InlineScanner
 		  // Cleans up a label parsed by ScanLinkLabel by removing the flanking [].
 		  // Mutates the passed array.
 		  
-		  chars.Remove(0)
+		  chars.RemoveRowAt(0)
 		  Call chars.Pop
 		  
 		  CollapseInternalWhitespace(chars)
@@ -23,7 +23,7 @@ Protected Class InlineScanner
 		  // Mutates the passed array.
 		  
 		  // Remove the flanking delimiters.
-		  chars.Remove(0)
+		  chars.RemoveRowAt(0)
 		  Call chars.Pop
 		  
 		  Utilities.Unescape(chars)
@@ -49,7 +49,7 @@ Protected Class InlineScanner
 		  
 		  // If the URL has flanking < and > characters, remove them.
 		  If charsUbound >= 1 And chars(0) = "<" And chars(charsUbound) = ">" Then
-		    chars.Remove(0)
+		    chars.RemoveRowAt(0)
 		    Call chars.Pop
 		  End If
 		  
@@ -93,7 +93,7 @@ Protected Class InlineScanner
 		    
 		    If Utilities.IsWhitespace(c) Then
 		      If collapse Then
-		        chars.Remove(i)
+		        chars.RemoveRowAt(i)
 		        i = i - 1
 		      Else
 		        If c <> " "  Then chars(i) = " " // Convert newlines, tabs, etc to spaces.
@@ -679,7 +679,7 @@ Protected Class InlineScanner
 		        ProcessEmphasis(link, delimiterStack, i)
 		        
 		        // Remove the opening delimiter.
-		        container.Children.Remove(openerIndex)
+		        container.Children.RemoveRowAt(openerIndex)
 		        dsn.Ignore = True
 		        
 		        // Set all "[" delimiters before the opening delimiter to inactive.
@@ -734,7 +734,7 @@ Protected Class InlineScanner
 		        ProcessEmphasis(image, delimiterStack, i)
 		        
 		        // Remove the opening delimiter.
-		        container.Children.Remove(openerIndex)
+		        container.Children.RemoveRowAt(openerIndex)
 		        dsn.Ignore = True
 		        
 		        // Update the position.
@@ -990,8 +990,8 @@ Protected Class InlineScanner
 		            Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		            "text node.")
 		          End If
-		          // container.Children.Insert(openerTextNodeIndex + 1, emphasis)
-		          openerTextNode.Parent.Children.Insert(openerTextNodeIndex + 1, emphasis)
+		          // container.Children.AddRowAt(openerTextNodeIndex + 1, emphasis)
+		          openerTextNode.Parent.Children.AddRowAt(openerTextNodeIndex + 1, emphasis)
 		          
 		          // Get the index of the closer text node in the container's `Children` array.
 		          closerTextNode = MarkdownKit.Block(closerNode.TextNodePointer.Value)
@@ -1014,8 +1014,8 @@ Protected Class InlineScanner
 		          // Remove the transposed inlines from the container.
 		          numToTranspose = closerTextNodeIndex - openerTextNodeIndex - 2
 		          While numToTranspose > 0
-		            // container.Children.Remove(openerTextNodeIndex + 2)
-		            openerTextNode.Parent.Children.Remove(openerTextNodeIndex + 2)
+		            // container.Children.RemoveRowAt(openerTextNodeIndex + 2)
+		            openerTextNode.Parent.Children.RemoveRowAt(openerTextNodeIndex + 2)
 		            numToTranspose = numToTranspose - 1
 		          Wend
 		          
@@ -1050,8 +1050,8 @@ Protected Class InlineScanner
 		              Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            // container.Children.Remove(openerTextNodeIndex)
-		            openerTextNode.Parent.Children.Remove(openerTextNodeIndex)
+		            // container.Children.RemoveRowAt(openerTextNodeIndex)
+		            openerTextNode.Parent.Children.RemoveRowAt(openerTextNodeIndex)
 		            openerNode.Ignore = True
 		          End If
 		          
@@ -1064,8 +1064,8 @@ Protected Class InlineScanner
 		              Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            // container.Children.Remove(closerTextNodeIndex)
-		            closerTextNode.Parent.Children.Remove(closerTextNodeIndex)
+		            // container.Children.RemoveRowAt(closerTextNodeIndex)
+		            closerTextNode.Parent.Children.RemoveRowAt(closerTextNodeIndex)
 		            closerNode.Ignore = True
 		          End If
 		          

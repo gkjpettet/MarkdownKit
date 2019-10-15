@@ -2,7 +2,7 @@
 Protected Class TestController
 	#tag Method, Flags = &h0
 		Sub AddGroup(group As TestGroup)
-		  mTestGroups.Append(group)
+		  mTestGroups.AddRow(group)
 		End Sub
 	#tag EndMethod
 
@@ -248,7 +248,7 @@ Protected Class TestController
 		    Stop
 		  Else
 		    Dim tg As TestGroup = TestQueue(0)
-		    TestQueue.Remove(0)
+		    TestQueue.RemoveRowAt(0)
 		    tg.Start
 		  End If
 		  
@@ -261,7 +261,7 @@ Protected Class TestController
 		  
 		  For Each tg As TestGroup In mTestGroups
 		    If tg.IncludeGroup Then
-		      TestQueue.Append tg
+		      TestQueue.AddRow(tg)
 		      tg.ClearResults
 		    Else
 		      tg.ClearResults(True)

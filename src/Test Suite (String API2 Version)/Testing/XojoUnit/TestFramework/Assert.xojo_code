@@ -56,6 +56,16 @@ Protected Class Assert
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub AreEqual(expected As DateTime, actual As DateTime, message As Text = "")
+		  If expected Is actual Or expected.SecondsFrom1970 = actual.SecondsFrom1970 Then
+		    Pass()
+		  Else
+		    Fail(FailEqualMessage(expected.ToString.ToText, actual.ToString.ToText), message)
+		  End If
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub AreEqual(expected() As Double, actual() As Double, message As Text = "")
 		  Dim expectedSize, actualSize As Double
@@ -103,16 +113,6 @@ Protected Class Assert
 		  
 		  AreEqual(expected, actual, tolerance, message)
 		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
-		Sub AreEqual(expected As Global.Date, actual As Global.Date, message As Text = "")
-		  If  expected Is actual Or expected.TotalSeconds = actual.TotalSeconds Then
-		    Pass()
-		  Else
-		    Fail(FailEqualMessage(expected.ShortDate.ToText + " " + expected.LongTime.ToText, actual.ShortDate.ToText + " " + actual.LongTime.ToText), message)
-		  End If
 		End Sub
 	#tag EndMethod
 
@@ -399,6 +399,21 @@ Protected Class Assert
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
+		Sub AreNotEqual(expected As DateTime, actual As DateTime, message As Text = "")
+		  //NCM-written
+		  If expected Is Nil Xor actual Is Nil Then
+		    Pass()
+		  ElseIf expected Is Nil And actual Is Nil Then
+		    Fail("Both Dates are Nil", message)
+		  ElseIf expected = actual Or expected.SecondsFrom1970 = actual.SecondsFrom1970 Then
+		    Fail("Both Dates are the same", message)
+		  Else
+		    Pass()
+		  End If
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub AreNotEqual(expected As Double, actual As Double, tolerance As Double, message As Text = "")
 		  Dim diff As Double
@@ -419,21 +434,6 @@ Protected Class Assert
 		  
 		  AreNotEqual(expected, actual, tolerance, message)
 		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
-		Sub AreNotEqual(expected As Global.Date, actual As Global.Date, message As Text = "")
-		  //NCM-written
-		  If expected Is Nil Xor actual Is Nil Then
-		    Pass()
-		  ElseIf expected Is Nil And actual Is Nil Then
-		    Fail("Both Dates are Nil", message)
-		  ElseIf expected = actual Or expected.TotalSeconds = actual.TotalSeconds Then
-		    Fail("Both Dates are the same", message)
-		  Else
-		    Pass()
-		  End If
 		End Sub
 	#tag EndMethod
 
@@ -726,7 +726,7 @@ Protected Class Assert
 		  
 		  Dim lastByteIndex As Integer = mb.Size - 1
 		  For byteIndex As Integer = 0 To lastByteIndex
-		    r.Append mb.Data.Byte(byteIndex).ToHex
+		    r.AddRow(mb.Data.Byte(byteIndex).ToHex)
 		  Next
 		  
 		  Return Text.Join(r, " " )

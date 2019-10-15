@@ -2361,9 +2361,9 @@ Protected Class Utilities
 		          // `tmp` contains the hex value of the codepoint.
 		          // Remove the characters in `chars` that make up this reference.
 		          For x As Integer = 1 To tmp.LastRowIndex + 5
-		            chars.Remove(start)
+		            chars.RemoveRowAt(start)
 		          Next x
-		          chars.Insert(start, Text.FromUnicodeCodepoint(Integer.FromHex(Join(tmp, "").ToText)))
+		          chars.AddRowAt(start, Text.FromUnicodeCodepoint(Integer.FromHex(Join(tmp, "").ToText)))
 		          // Any other potential references?
 		          i = start + 1
 		          If i > chars.LastRowIndex Then Return
@@ -2422,12 +2422,12 @@ Protected Class Utilities
 		          // `tmp` contains the decimal value of the codepoint.
 		          // Remove the characters in `chars` that make up this reference.
 		          For x As Integer = 1 To tmp.LastRowIndex + 4
-		            chars.Remove(start)
+		            chars.RemoveRowAt(start)
 		          Next x
 		          codePoint = Val(Join(tmp, ""))
 		          // For security reasons, the code point U+0000 is replaced by U+FFFD.
 		          If codePoint = 0 Then codePoint = &hFFFD
-		          chars.Insert(start, Text.FromUnicodeCodepoint(codePoint))
+		          chars.AddRowAt(start, Text.FromUnicodeCodepoint(codePoint))
 		          // Any other potential references?
 		          i = start + 1
 		          If i > chars.LastRowIndex Then Return
@@ -2491,9 +2491,9 @@ Protected Class Utilities
 		      If CharacterReferences.HasKey(entityName) Then
 		        // Remove the characters in `chars` that make up this reference.
 		        For x As Integer = 1 To tmp.LastRowIndex + 3
-		          chars.Remove(start)
+		          chars.RemoveRowAt(start)
 		        Next x
-		        chars.Insert(start, Text.FromUnicodeCodepoint(CharacterReferences.Value(entityName)))
+		        chars.AddRowAt(start, Text.FromUnicodeCodepoint(CharacterReferences.Value(entityName)))
 		      End If
 		      
 		      // Any other potential references?
@@ -2550,7 +2550,7 @@ Protected Class Utilities
 		    If c = "\" And pos < chars.LastRowIndex And _
 		      MarkdownKit.IsEscapable(chars(pos + 1)) Then
 		      // Remove the backslash from the array.
-		      chars.Remove(pos)
+		      chars.RemoveRowAt(pos)
 		    End If
 		    pos = pos + 1
 		  Loop
@@ -2573,7 +2573,7 @@ Protected Class Utilities
 		    If c = "\" And pos < chars.LastRowIndex And _
 		      MarkdownKit.IsEscapable(chars(pos + 1)) Then
 		      // Remove the backslash from the array.
-		      chars.Remove(pos)
+		      chars.RemoveRowAt(pos)
 		    End If
 		    pos = pos + 1
 		  Loop

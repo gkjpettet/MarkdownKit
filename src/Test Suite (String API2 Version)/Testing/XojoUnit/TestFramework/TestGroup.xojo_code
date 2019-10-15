@@ -136,7 +136,7 @@ Protected Class TestGroup
 		        Dim fromArr() As Object = fromValue
 		        
 		        For i As Integer = 0 To fromArr.LastRowIndex
-		          toArr.Append(fromArr(i))
+		          toArr.AddRow(fromArr(i))
 		        Next i
 		      Else
 		        prop.Value(Self) = fromValue
@@ -200,7 +200,7 @@ Protected Class TestGroup
 		    tr.MethodInfo = m
 		    tr.Result = TestResult.NotImplemented
 		    
-		    mResults.Append(tr)
+		    mResults.AddRow(tr)
 		  Next
 		End Sub
 	#tag EndMethod
@@ -299,7 +299,7 @@ Protected Class TestGroup
 		  End If
 		  
 		  Dim constructorParams() As Auto
-		  constructorParams.Append Self
+		  constructorParams.AddRow(Self)
 		  
 		  If CurrentClone IsA Object Then
 		    CalculateTestDuration

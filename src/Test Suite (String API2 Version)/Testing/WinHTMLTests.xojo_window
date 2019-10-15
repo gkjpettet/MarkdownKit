@@ -40,8 +40,8 @@ Begin Window WinHTMLTests
       Enabled         =   True
       EnableDrag      =   False
       EnableDragReorder=   False
-      GridLinesHorizontal=   "0"
-      GridLinesVertical=   "0"
+      GridLinesHorizontal=   0
+      GridLinesVertical=   0
       HasHeading      =   False
       HeadingIndex    =   -1
       Height          =   800
@@ -61,7 +61,7 @@ Begin Window WinHTMLTests
       Scope           =   0
       ScrollbarHorizontal=   False
       ScrollBarVertical=   True
-      SelectionType   =   "0"
+      SelectionType   =   0
       ShowDropIndicator=   False
       TabIndex        =   0
       TabPanelIndex   =   0
@@ -130,7 +130,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Start:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -165,7 +165,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Duration:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -200,7 +200,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Total:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -235,7 +235,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Passed:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -270,7 +270,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Failed:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -305,7 +305,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Skipped:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -340,7 +340,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "1/1/2012 12:00PM"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -375,7 +375,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "0s"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -410,7 +410,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "(run tests first)"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -444,7 +444,7 @@ Begin Window WinHTMLTests
             TabPanelIndex   =   0
             TabStop         =   True
             Text            =   "Not Implemented:"
-            TextAlign       =   "0"
+            TextAlign       =   0
             TextColor       =   &c00000000
             TextFont        =   "System"
             TextSize        =   0.0
@@ -480,7 +480,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "0 (0%)"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -515,7 +515,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "0 (0%)"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -550,7 +550,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "0 (0%)"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -585,7 +585,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "0 (0%)"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -609,7 +609,6 @@ Begin Window WinHTMLTests
    Begin HTMLTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
-      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -697,7 +696,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Test Name"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -732,7 +731,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Duration:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -767,7 +766,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "0s"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -780,7 +779,7 @@ Begin Window WinHTMLTests
       End
       Begin TextArea TestResultsExpected
          AcceptTabs      =   False
-         Alignment       =   "0"
+         Alignment       =   0
          AutoDeactivate  =   True
          AutomaticallyCheckSpelling=   True
          BackColor       =   &cFFFFFF00
@@ -851,7 +850,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Expected HTML (""truth""):"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -886,7 +885,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Passed"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -899,7 +898,7 @@ Begin Window WinHTMLTests
       End
       Begin TextArea TestResultsActual
          AcceptTabs      =   False
-         Alignment       =   "0"
+         Alignment       =   0
          AutoDeactivate  =   True
          AutomaticallyCheckSpelling=   True
          BackColor       =   &cFFFFFF00
@@ -970,7 +969,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "HTML produced by MarkdownKit (""actual""):"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -983,7 +982,7 @@ Begin Window WinHTMLTests
       End
       Begin TextArea TestInputMarkdown
          AcceptTabs      =   False
-         Alignment       =   "0"
+         Alignment       =   0
          AutoDeactivate  =   True
          AutomaticallyCheckSpelling=   False
          BackColor       =   &cFFFFFF00
@@ -1054,7 +1053,7 @@ Begin Window WinHTMLTests
          TabPanelIndex   =   0
          TabStop         =   True
          Text            =   "Input Markdown:"
-         TextAlign       =   "0"
+         TextAlign       =   0
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -1247,9 +1246,9 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub RunTests()
-		  Dim now As New Date
+		  Dim now As DateTime = DateTime.Now
 		  
-		  StartLabel.Value = now.ShortDate + " " + now.ShortTime
+		  StartLabel.Value = now.ToString
 		  
 		  ProgressWheel1.Visible = True
 		  MyToolbar.RunButton.Enabled = False
@@ -1625,11 +1624,6 @@ End
 
 #tag Events TestGroupList
 	#tag Event
-		Sub DoubleClick()
-		  Me.RowExpandedAt(Me.SelectedRowIndex) = Not Me.RowExpandedAt(Me.SelectedRowIndex)
-		End Sub
-	#tag EndEvent
-	#tag Event
 		Sub CellAction(row As Integer, column As Integer)
 		  If column = ColInclude Then
 		    
@@ -1814,6 +1808,11 @@ End
 	#tag Event
 		Sub SelectionChanged()
 		  UpdateTestSummary
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub DoubleClicked()
+		  Me.RowExpandedAt(Me.SelectedRowIndex) = Not Me.RowExpandedAt(Me.SelectedRowIndex)
 		End Sub
 	#tag EndEvent
 #tag EndEvents

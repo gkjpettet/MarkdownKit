@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.0.4
+_8th November 2019_
+* Updated to fully support API 2.0.
+
 ## 1.0.3
 _14th July 2019_
 * Added an iOS test suite app for the 649 CommonMark HTML tests. The app is designed 

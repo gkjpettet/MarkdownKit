@@ -4,8 +4,6 @@ MarkdownKit is a 100% CommonMark compliant Markdown parser for Xojo written in p
 
 MarkdownKit takes Markdown as input and generates an _abstract syntax tree_ (AST). From the AST, it is then able to render the input as HTML.
 
-## Package Contents
-
 This repo contains the following components:
 
 1. The `MarkdownKit` module.

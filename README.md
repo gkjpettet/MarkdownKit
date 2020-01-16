@@ -52,7 +52,5 @@ Why might you want access to the AST? Well, maybe you want to do something as si
 
 `MarkdownKit` provides a class interface called `IRenderer` which must be implemented by any custom renderer you write. The built-in `MarkdownKit.HTMLRenderer` and `MarkdownKit.ASTRenderer` classes are examples of renderers which implement this interface. Take a look at their well-documented methods to learn how to write your own renderer.
 
-_8th November 2019_
-
 [forums]: https://forum.xojo.com
 [cm spec]: https://spec.commonmark.org/0.29/

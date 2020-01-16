@@ -6,9 +6,9 @@
 					AppliesTo = 0
 					Destination = 1
 					Subdirectory = 
-					FolderItem = Li4vLi4vLi4vdGVzdHMvQVNUcy8=
-					FolderItem = Li4vLi4vLi4vdGVzdHMvSFRNTC8=
-					FolderItem = Li4vLi4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
+					FolderItem = Li4vLi4vdGVzdHMvQVNUcy8=
+					FolderItem = Li4vLi4vdGVzdHMvSFRNTC8=
+					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
 				End
 			End
 			Begin BuildStepList Mac OS X
@@ -30,9 +30,9 @@
 					AppliesTo = 0
 					Destination = 1
 					Subdirectory = 
-					FolderItem = Li4vLi4vLi4vdGVzdHMvQVNUcy8=
-					FolderItem = Li4vLi4vLi4vdGVzdHMvSFRNTC8=
-					FolderItem = Li4vLi4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
+					FolderItem = Li4vLi4vdGVzdHMvQVNUcy8=
+					FolderItem = Li4vLi4vdGVzdHMvSFRNTC8=
+					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
 				End
 			End
 #tag EndBuildAutomation

@@ -984,20 +984,15 @@ Protected Class InlineScanner
 		          // Get the index of the opener text node in the container's `Inlines` array.
 		          openerTextNode = MarkdownKit.Block(openerNode.TextNodePointer.Value)
 		          openerTextNodeIndex = openerTextNode.Parent.Children.IndexOf(openerTextNode)
-		          // Dim openerTextNodeIndex As Integer = _
-		          // container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
 		          If openerTextNodeIndex = -1 Then
 		            Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		            "text node.")
 		          End If
-		          // container.Children.AddRowAt(openerTextNodeIndex + 1, emphasis)
 		          openerTextNode.Parent.Children.AddRowAt(openerTextNodeIndex + 1, emphasis)
 		          
 		          // Get the index of the closer text node in the container's `Children` array.
 		          closerTextNode = MarkdownKit.Block(closerNode.TextNodePointer.Value)
 		          closerTextNodeIndex = closerTextNode.Parent.Children.IndexOf(closerTextNode)
-		          // Dim closerTextNodeIndex As Integer = _
-		          // container.Children.IndexOf(Markdownkit.Block(closerNode.TextNodePointer.Value))
 		          If closerTextNodeIndex = -1 Then
 		            Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		            "text node.")
@@ -1014,7 +1009,6 @@ Protected Class InlineScanner
 		          // Remove the transposed inlines from the container.
 		          numToTranspose = closerTextNodeIndex - openerTextNodeIndex - 2
 		          While numToTranspose > 0
-		            // container.Children.RemoveRowAt(openerTextNodeIndex + 2)
 		            openerTextNode.Parent.Children.RemoveRowAt(openerTextNodeIndex + 2)
 		            numToTranspose = numToTranspose - 1
 		          Wend
@@ -1044,13 +1038,10 @@ Protected Class InlineScanner
 		          openerTextNode = MarkdownKit.Block(openerNode.TextNodePointer.Value)
 		          If openerTextNode.Chars.LastRowIndex < 0 Then
 		            openerTextNodeIndex = openerTextNode.Parent.Children.IndexOf(openerTextNode)
-		            // openerTextNodeIndex = _
-		            // container.Children.IndexOf(Markdownkit.Block(openerNode.TextNodePointer.Value))
 		            If openerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate opening emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            // container.Children.RemoveRowAt(openerTextNodeIndex)
 		            openerTextNode.Parent.Children.RemoveRowAt(openerTextNodeIndex)
 		            openerNode.Ignore = True
 		          End If
@@ -1058,13 +1049,10 @@ Protected Class InlineScanner
 		          closerTextNode = MarkdownKit.Block(closerNode.TextNodePointer.Value)
 		          If closerTextNode.Chars.LastRowIndex < 0 Then
 		            closerTextNodeIndex = closerTextNode.Parent.Children.IndexOf(closerTextNode)
-		            // closerTextNodeIndex = _
-		            // container.Children.IndexOf(MarkdownKit.Block(closerNode.TextNodePointer.Value))
 		            If closerTextNodeIndex = -1 Then
 		              Raise New MarkdownKit.MarkdownException("Cannot locate closing emphasis delimiter run " + _
 		              "text node.")
 		            End If
-		            // container.Children.RemoveRowAt(closerTextNodeIndex)
 		            closerTextNode.Parent.Children.RemoveRowAt(closerTextNodeIndex)
 		            closerNode.Ignore = True
 		          End If

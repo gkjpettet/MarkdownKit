@@ -238,6 +238,11 @@ Protected Class Block
 		  Select Case Type
 		  Case MarkdownKit.BlockType.AtxHeading
 		    // ===== ATX heading =====
+		    If MarkdownKit.Document(Root).TrackCharacterOffsets Then
+		      StartPos = line.StartOffset
+		      EndPos = StartPos + line.Chars.Count
+		    End If
+		    
 		    Dim p As Integer = line.CharsUbound
 		    
 		    // Trim trailing spaces.
@@ -262,7 +267,8 @@ Protected Class Block
 		    
 		    // Add contents of the line.
 		    If p - line.NextNWS > -1 Then
-		      Dim len As Integer = If(p - line.NextNWS + 1 = -1, line.CharsUbound - line.Offset + 1, p - line.NextNWS + 1)
+		      Dim len As Integer = If(p - line.NextNWS + 1 = -1, _
+		      line.CharsUbound - line.Offset + 1, p - line.NextNWS + 1)
 		      If len <= 0 Then Return // Empty heading.
 		      
 		      // Get the characters from the current line offset to the end of the line.
@@ -832,6 +838,22 @@ Protected Class Block
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OffsetOfLineStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

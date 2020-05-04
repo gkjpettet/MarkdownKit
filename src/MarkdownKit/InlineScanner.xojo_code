@@ -998,12 +998,22 @@ Protected Class InlineScanner
 		            "text node.")
 		          End If
 		          
+		          // ===========================================================================
+		          // Block start offsets.
+		          // Compute the character position in the original source code that this block begins at.
 		          If MarkdownKit.Document(emphasis.Root).TrackCharacterOffsets Then
-		            // We'll compute the actual character position in the original source code that 
-		            // this block begins at.
-		            emphasis.StartPos = openerTextNode.Parent.OffsetOfLineStart + openerTextNode.StartPos
-		            emphasis.EndPos = openerTextNode.Parent.OffsetOfLineStart + closerTextNode.EndPos + 1
+		            Select Case openerTextNode.Parent.Type
+		            Case MarkdownKit.BlockType.Paragraph
+		              emphasis.StartPos = openerTextNode.Parent.OffsetOfLineStart + openerTextNode.StartPos
+		              emphasis.EndPos = openerTextNode.Parent.OffsetOfLineStart + closerTextNode.EndPos + 1
+		            Case MarkdownKit.BlockType.AtxHeading
+		              // Account for the #s and single separating space at the start of the line.
+		              emphasis.StartPos = openerTextNode.Parent.OffsetOfLineStart + openerTextNode.StartPos + _
+		              openerTextNode.Parent.Level + 1
+		              emphasis.EndPos = emphasis.StartPos + closerTextNode.EndPos + 1
+		            End Select
 		          End If
+		          // ===========================================================================
 		          
 		          // Need to move all blocks that occur between `openerTextNodeIndex` and `closerTextNodeIndex` 
 		          // into this emphasis node's `Children` array and remove them from the container's 

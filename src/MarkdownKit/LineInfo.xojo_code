@@ -82,7 +82,7 @@ Protected Class LineInfo
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(lineText As String, lineNumber As Integer)
+		Sub Constructor(lineText As String, lineNumber As Integer, startOffset As Integer = -1)
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
@@ -91,6 +91,7 @@ Protected Class LineInfo
 		  Chars = lineText.Split("")
 		  CharsUbound = Chars.LastRowIndex
 		  Number = lineNumber
+		  Self.StartOffset = startOffset
 		  
 		  IsEmpty = If(Value = "", True, False)
 		  
@@ -202,6 +203,10 @@ Protected Class LineInfo
 
 	#tag Property, Flags = &h0, Description = 416E2061646A7573746D656E742076616C756520746F20746865207669727475616C2060436F6C756D6E60207468617420706F696E747320746F20746865206E756D626572206F66207370616365732066726F6D207468652054414220746861742068617665206E6F74206265656E20696E636C7564656420696E20616E7920696E64656E742E
 		RemainingSpaces As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520302D6261736564206F666673657420696E20746865206F726967696E616C20736F7572636520636F646520737472696E67206F662074686520666972737420636861726163746572206F662074686973206C696E652E
+		StartOffset As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 546865206F726967696E616C20746578742076616C7565206F662074686973206C696E652E

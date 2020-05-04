@@ -43,8 +43,18 @@ Inherits MarkdownKit.Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(source As String)
+		Sub Constructor(source As String, trackCharacterOffsets As Boolean = False)
+		  ///
+		  ' - Parameter trackCharacterOffsets: If True then this document will track the offset of the 
+		  '                                    first character of every line and the character offset 
+		  '                                    that each block begins at. These properties are not 
+		  '                                    required to accurately generate HTML (but may be required 
+		  '                                    for other AST manipulations such as syntax highlighting).
+		  ///
+		  
 		  Super.Constructor(MarkdownKit.BlockType.Document, Nil)
+		  
+		  Self.TrackCharacterOffsets = trackCharacterOffsets
 		  
 		  // Document Blocks act as the root of the block tree. 
 		  Self.Root = Self
@@ -63,12 +73,28 @@ Inherits MarkdownKit.Block
 		  // Split the source into lines of Text.
 		  Dim tmp() As String = source.Split(&u000A)
 		  
+		  Var lineStarts() As Integer = Array(0)
+		  If trackCharacterOffsets Then
+		    // Track the 0-based index of the first character for every line.
+		    Var chars() As String = source.Split("")
+		    For i As Integer = 0 To chars.LastRowIndex
+		      If chars(i) = &u000A Then lineStarts.AddRow(i + 1)
+		    Next i
+		  End If
+		  
 		  // Convert each line of text in the temporary array to a LineInfo object.
 		  Dim tmpUbound As Integer = tmp.LastRowIndex
 		  Dim i As Integer
-		  For i = 0 To tmpUbound
-		    Lines.AddRow(New MarkdownKit.LineInfo(tmp(i), i + 1))
-		  Next i
+		  If trackCharacterOffsets Then
+		    // We can pass in the actual offset that each line begins at.
+		    For i = 0 To tmpUbound
+		      Lines.AddRow(New MarkdownKit.LineInfo(tmp(i), i + 1, lineStarts(i)))
+		    Next i
+		  Else
+		    For i = 0 To tmpUbound
+		      Lines.AddRow(New MarkdownKit.LineInfo(tmp(i), i + 1))
+		    Next i
+		  End If
 		  
 		  // Remove contiguous blank lines at the beginning and end of the array.
 		  // As blank lines at the beginning and end of the document 
@@ -173,6 +199,12 @@ Inherits MarkdownKit.Block
 		  // Create the child block.
 		  Dim child As New MarkdownKit.Block(childType, Xojo.Core.WeakRef.Create(theParent))
 		  child.Root = theParent.Root
+		  
+		  // Store the line number that this block begins on.
+		  child.LineNumber = line.Number
+		  
+		  // Store the 0-based offset of the start of this line.
+		  child.OffsetOfLineStart = line.StartOffset
 		  
 		  // Insert the child into the parent's tree.
 		  theParent.Children.AddRow(child)
@@ -652,6 +684,10 @@ Inherits MarkdownKit.Block
 
 	#tag Property, Flags = &h21
 		Private LinesUbound As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 49662054727565207468656E20776520747261636B2074686520302D6261736564206F666673657420696E2074686520736F75726365206F6620746865207374617274206F662065616368206C696E6520616E642070617261677261706820626C6F636B2E
+		TrackCharacterOffsets As Boolean = False
 	#tag EndProperty
 
 

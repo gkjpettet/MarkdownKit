@@ -528,6 +528,10 @@ Protected Class Block
 		Level As Integer = 0
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 54686520312D6261736564206C696E65206E756D6265722074686174207468697320626C6F636B206F70656E73206F6E2E
+		LineNumber As Integer = -1
+	#tag EndProperty
+
 	#tag Property, Flags = &h0
 		ListData As MarkdownKit.ListData
 	#tag EndProperty
@@ -538,6 +542,10 @@ Protected Class Block
 
 	#tag Property, Flags = &h0
 		Name As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520302D6261736564206F6666736574206F6620746865207374617274206F6620746865206C696E65207468697320626C6F636B206F70656E73206F6E2E
+		OffsetOfLineStart As Integer = -1
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0

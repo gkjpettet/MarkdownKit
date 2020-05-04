@@ -998,6 +998,13 @@ Protected Class InlineScanner
 		            "text node.")
 		          End If
 		          
+		          If MarkdownKit.Document(emphasis.Root).TrackCharacterOffsets Then
+		            // We'll compute the actual character position in the original source code that 
+		            // this block begins at.
+		            emphasis.StartPos = openerTextNode.Parent.OffsetOfLineStart + openerTextNode.StartPos
+		            emphasis.EndPos = openerTextNode.Parent.OffsetOfLineStart + closerTextNode.EndPos + 1
+		          End If
+		          
 		          // Need to move all blocks that occur between `openerTextNodeIndex` and `closerTextNodeIndex` 
 		          // into this emphasis node's `Children` array and remove them from the container's 
 		          // `Inlines` array.

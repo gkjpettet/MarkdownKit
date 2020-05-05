@@ -1010,7 +1010,9 @@ Protected Class InlineScanner
 		              // Account for the #s and single separating space at the start of the line.
 		              emphasis.StartPos = openerTextNode.Parent.OffsetOfLineStart + openerTextNode.StartPos + _
 		              openerTextNode.Parent.Level + 1
-		              emphasis.EndPos = emphasis.StartPos + closerTextNode.EndPos + 1
+		              #Pragma Warning "Need to check the +2 offset"
+		              emphasis.EndPos = openerTextNode.Parent.OffsetOfLineStart + closerTextNode.EndPos + _
+		              openerTextNode.Parent.Level + 2 // ? + 1 or +2 for * vs **
 		            End Select
 		          End If
 		          // ===========================================================================

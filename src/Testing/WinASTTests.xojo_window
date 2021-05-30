@@ -823,6 +823,7 @@ Begin Window WinASTTests
          Top             =   247
          Transparent     =   False
          Underline       =   False
+         UnicodeMode     =   0
          UseFocusRing    =   True
          Visible         =   True
          Width           =   360
@@ -942,6 +943,7 @@ Begin Window WinASTTests
          Top             =   247
          Transparent     =   False
          Underline       =   False
+         UnicodeMode     =   0
          UseFocusRing    =   True
          Visible         =   True
          Width           =   360
@@ -1026,6 +1028,7 @@ Begin Window WinASTTests
          Top             =   549
          Transparent     =   False
          Underline       =   False
+         UnicodeMode     =   0
          UseFocusRing    =   True
          Visible         =   True
          Width           =   742

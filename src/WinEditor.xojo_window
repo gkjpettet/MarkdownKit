@@ -26,11 +26,11 @@ Begin Window WinEditor
    Title           =   "Editor"
    Visible         =   True
    Width           =   1160
-   Begin TextArea TextAreaInput
+   Begin BetterTextArea TextAreaInput
       AcceptTabs      =   False
       Alignment       =   0
       AutoDeactivate  =   True
-      AutomaticallyCheckSpelling=   True
+      AutomaticallyCheckSpelling=   False
       BackColor       =   &cFFFFFF00
       Bold            =   False
       Border          =   True
@@ -70,6 +70,7 @@ Begin Window WinEditor
       Top             =   52
       Transparent     =   False
       Underline       =   False
+      UnicodeMode     =   0
       UseFocusRing    =   False
       Visible         =   True
       Width           =   550
@@ -153,6 +154,7 @@ Begin Window WinEditor
       Top             =   52
       Transparent     =   False
       Underline       =   False
+      UnicodeMode     =   0
       UseFocusRing    =   False
       Visible         =   True
       Width           =   550
@@ -260,6 +262,14 @@ End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Sub Open()
+		  TextAreaInput.SmartQuotes = False
+		  
+		End Sub
+	#tag EndEvent
+
+
 #tag EndWindowCode
 
 #tag Events ButtonParse

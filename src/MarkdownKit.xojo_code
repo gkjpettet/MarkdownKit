@@ -5,11 +5,11 @@ Protected Module MarkdownKit
 		  // Appends the contents of array2 to array1.
 		  // Has no effect on array2 but mutates array2.
 		  
-		  Dim array2Ubound As Integer = array2.LastIndex
-		  If array2Ubound < 0 Then Return
+		  Dim array2LastIndex As Integer = array2.LastIndex
+		  If array2LastIndex < 0 Then Return
 		  
 		  Dim i As Integer
-		  For i = 0 To array2Ubound
+		  For i = 0 To array2LastIndex
 		    array1.Add(array2(i))
 		  Next i
 		  
@@ -78,9 +78,9 @@ Protected Module MarkdownKit
 		  // Returns True if this array of characters is empty or contains only whitespace.
 		  If chars.LastIndex = - 1 Then Return True
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Dim charsLastIndex As Integer = chars.LastIndex
 		  Dim i As Integer
-		  For i = 0 To charsUbound
+		  For i = 0 To charsLastIndex
 		    Select Case Chars(i)
 		    Case " ", &u0009
 		      // Continue...
@@ -197,10 +197,10 @@ Protected Module MarkdownKit
 		  // and returns them as a concatenated String.
 		  // If any of the passed parameters are out of range then we return "".
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Dim charsLastIndex As Integer = chars.LastIndex
 		  
-		  If start < 0 Or start > charsUbound Or length <= 0 Or _
-		  (start + length - 1 > charsUbound) Then Return ""
+		  If start < 0 Or start > charsLastIndex Or length <= 0 Or _
+		  (start + length - 1 > charsLastIndex) Then Return ""
 		  
 		  Dim limit As Integer = start + length - 1
 		  Dim tmp() As String

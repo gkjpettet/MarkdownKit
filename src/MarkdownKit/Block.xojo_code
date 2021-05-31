@@ -62,14 +62,14 @@ Protected Class Block
 		  End If
 		  
 		  // Get the length of the text.
-		  Dim len As Integer = If(length = -1, line.CharsUbound - line.Offset + 1, length)
+		  Dim len As Integer = If(length = -1, line.CharsLastIndex - line.Offset + 1, length)
 		  
 		  Select Case Type
 		  Case MarkdownKit.BlockType.HtmlBlock
 		    // ===== HTML block =====
 		    // Get the characters from the current line offset to the end of the line.
 		    Dim tmp() As String
-		    Dim limit As Integer = Xojo.Math.Min(line.Chars.LastIndex, startPos + len - 1)
+		    Dim limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
 		    For i As Integer = startPos To limit
 		      tmp.Add(line.Chars(i))
 		    Next i
@@ -86,7 +86,7 @@ Protected Class Block
 		    If len <= 0 Then Raise New MarkdownKit.MarkdownException("Unexpected blank line")
 		    
 		    // Get the characters from the current line offset to the end of the line.
-		    Dim limit As Integer = Xojo.Math.Min(line.Chars.LastIndex, startPos + len - 1)
+		    Dim limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
 		    Dim tmp() As String
 		    For i As Integer = startPos To limit
 		      tmp.Add(line.Chars(i))
@@ -106,7 +106,7 @@ Protected Class Block
 		    Dim tmp() As String
 		    If len <= 0 Then
 		      // Blank line.
-		      Dim b As New MarkdownKit.Block(BlockType.TextBlock, Xojo.Core.WeakRef.Create(Self))
+		      Dim b As New MarkdownKit.Block(BlockType.TextBlock, New WeakRef(Self))
 		      b.Chars = tmp
 		      Children.Add(b)
 		      Return
@@ -117,13 +117,13 @@ Protected Class Block
 		    For i As Integer = 1 To line.RemainingSpaces
 		      tmp.Add(" ")
 		    Next i
-		    Dim limit As Integer = Xojo.Math.Min(line.Chars.LastIndex, startPos + len - 1)
+		    Dim limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
 		    For i As Integer = startPos To limit
 		      tmp.Add(line.Chars(i))
 		    Next i
 		    
 		    // Add the text as a text block.
-		    Dim b As New MarkdownKit.Block(BlockType.TextBlock, Xojo.Core.WeakRef.Create(Self))
+		    Dim b As New MarkdownKit.Block(BlockType.TextBlock, New WeakRef(Self))
 		    b.Chars = tmp
 		    Children.Add(b)
 		  End Select
@@ -184,7 +184,7 @@ Protected Class Block
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(type As MarkdownKit.BlockType, parent As Xojo.Core.WeakRef)
+		Sub Constructor(type As MarkdownKit.BlockType, parent As WeakRef)
 		  Self.Type = type
 		  Self.ListData = New MarkdownKit.ListData
 		  Self.mParent = parent
@@ -243,7 +243,7 @@ Protected Class Block
 		      EndPos = StartPos + line.Chars.Count
 		    End If
 		    
-		    Dim p As Integer = line.CharsUbound
+		    Dim p As Integer = line.CharsLastIndex
 		    
 		    // Trim trailing spaces.
 		    While p >= 0 And (line.Chars(p) = " " Or line.Chars(p) = &u0009)
@@ -268,7 +268,7 @@ Protected Class Block
 		    // Add contents of the line.
 		    If p - line.NextNWS > -1 Then
 		      Dim len As Integer = If(p - line.NextNWS + 1 = -1, _
-		      line.CharsUbound - line.Offset + 1, p - line.NextNWS + 1)
+		      line.CharsLastIndex - line.Offset + 1, p - line.NextNWS + 1)
 		      If len <= 0 Then Return // Empty heading.
 		      
 		      // Get the characters from the current line offset to the end of the line.
@@ -277,7 +277,7 @@ Protected Class Block
 		      For i = 1 To line.RemainingSpaces
 		        Chars.Add(" ")
 		      Next i
-		      Dim limit As Integer = Xojo.Math.Min(line.Chars.LastIndex, line.NextNWS + len - 1)
+		      Dim limit As Integer = Min(line.Chars.LastIndex, line.NextNWS + len - 1)
 		      For i = line.NextNWS To limit
 		        Chars.Add(line.Chars(i))
 		      Next i
@@ -543,7 +543,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h21, Description = 5468697320426C6F636B277320706172656E742028692E653A20656E636C6F73696E672920426C6F636B2E2057696C6C206265204E696C206966207468697320426C6F636B2069732074686520726F6F7420446F63756D656E742E
-		Private mParent As Xojo.Core.WeakRef
+		Private mParent As WeakRef
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -566,7 +566,7 @@ Protected Class Block
 		#tag EndGetter
 		#tag Setter
 			Set
-			  mParent = If(value = Nil, Nil, Xojo.Core.WeakRef.Create(value))
+			  mParent = If(value = Nil, Nil, New WeakRef(value))
 			End Set
 		#tag EndSetter
 		Parent As MarkdownKit.Block

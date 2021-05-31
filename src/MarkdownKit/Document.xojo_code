@@ -83,15 +83,15 @@ Inherits MarkdownKit.Block
 		  End If
 		  
 		  // Convert each line of text in the temporary array to a LineInfo object.
-		  Dim tmpUbound As Integer = tmp.LastIndex
+		  Dim tmpLastIndex As Integer = tmp.LastIndex
 		  Dim i As Integer
 		  If trackCharacterOffsets Then
 		    // We can pass in the actual offset that each line begins at.
-		    For i = 0 To tmpUbound
+		    For i = 0 To tmpLastIndex
 		      Lines.Add(New MarkdownKit.LineInfo(tmp(i), i + 1, lineStarts(i)))
 		    Next i
 		  Else
-		    For i = 0 To tmpUbound
+		    For i = 0 To tmpLastIndex
 		      Lines.Add(New MarkdownKit.LineInfo(tmp(i), i + 1))
 		    Next i
 		  End If
@@ -117,7 +117,7 @@ Inherits MarkdownKit.Block
 		  Next i
 		  
 		  // Cache the upper bounds of the Lines array.
-		  LinesUbound = Lines.LastIndex
+		  LinesLastIndex = Lines.LastIndex
 		  
 		  // The document block starts open.
 		  IsOpen = True
@@ -141,7 +141,7 @@ Inherits MarkdownKit.Block
 		  End If
 		  
 		  // Create a new SetextHeading block to replace the paragraph.
-		  Dim stx As New MarkdownKit.Block(BlockType.SetextHeading, Xojo.Core.WeakRef.Create(p.Parent))
+		  Dim stx As New MarkdownKit.Block(BlockType.SetextHeading, New WeakRef(p.Parent))
 		  
 		  // Set the root.
 		  stx.Root = p.Root
@@ -197,7 +197,7 @@ Inherits MarkdownKit.Block
 		  Wend
 		  
 		  // Create the child block.
-		  Dim child As New MarkdownKit.Block(childType, Xojo.Core.WeakRef.Create(theParent))
+		  Dim child As New MarkdownKit.Block(childType, New WeakRef(theParent))
 		  child.Root = theParent.Root
 		  
 		  // Store the line number that this block begins on.
@@ -235,7 +235,7 @@ Inherits MarkdownKit.Block
 		  
 		  Dim currentBlock As MarkdownKit.Block = Self
 		  
-		  For i As Integer = 0 To LinesUbound
+		  For i As Integer = 0 To LinesLastIndex
 		    
 		    ProcessLine(Lines(i), currentBlock)
 		    
@@ -243,7 +243,7 @@ Inherits MarkdownKit.Block
 		  
 		  // Finalise all blocks in the tree.
 		  While currentBlock <> Nil
-		    If LinesUbound > -1 Then currentBlock.Finalise(Lines(LinesUbound))
+		    If LinesLastIndex > -1 Then currentBlock.Finalise(Lines(LinesLastIndex))
 		    currentBlock = currentBlock.Parent
 		  Wend
 		  
@@ -645,7 +645,7 @@ Inherits MarkdownKit.Block
 		      Else
 		        // Skip optional spaces of fence offset.
 		        Dim i As Integer = container.FenceOffset
-		        While i > 0 And line.Offset <= line.CharsUbound And _
+		        While i > 0 And line.Offset <= line.CharsLastIndex And _
 		          line.Chars(line.Offset) = " "
 		          line.Offset = line.Offset + 1
 		          line.Column = line.Column + 1
@@ -683,7 +683,7 @@ Inherits MarkdownKit.Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private LinesUbound As Integer = -1
+		Private LinesLastIndex As Integer = -1
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 49662054727565207468656E20776520747261636B2074686520302D6261736564206F666673657420696E2074686520736F75726365206F6620746865207374617274206F662065616368206C696E6520616E642070617261677261706820626C6F636B2E

@@ -326,7 +326,7 @@ Protected Class InlineScanner
 		  If closingStartPos = - 1 Then Return Nil
 		  
 		  // We've found a code span.
-		  Dim result As New MarkdownKit.Block(BlockType.Codespan, Xojo.Core.WeakRef.Create(b))
+		  Dim result As New MarkdownKit.Block(BlockType.Codespan, New WeakRef(b))
 		  result.StartPos = contentStartPos
 		  result.EndPos = closingStartPos - 1
 		  result.DelimiterLength = backtickStringLen
@@ -368,7 +368,7 @@ Protected Class InlineScanner
 		    Dim uri As String
 		    pos = ScanAutoLink(b.Chars, startPos + 1, charsUbound, uri)
 		    If pos > 0 Then
-		      result = New MarkdownKit.Block(BlockType.InlineLink, Xojo.Core.WeakRef.Create(b))
+		      result = New MarkdownKit.Block(BlockType.InlineLink, New WeakRef(b))
 		      result.IsAutoLink = True
 		      result.StartPos = startPos
 		      result.EndPos = pos - 1
@@ -381,7 +381,7 @@ Protected Class InlineScanner
 		      // Email link?
 		      pos = ScanEmailLink(b.Chars, startPos + 1, charsUbound, uri)
 		      If pos > 0 Then
-		        result = New MarkdownKit.Block(BlockType.InlineLink, Xojo.Core.WeakRef.Create(b))
+		        result = New MarkdownKit.Block(BlockType.InlineLink, New WeakRef(b))
 		        result.IsAutoLink = True
 		        result.StartPos = startPos
 		        result.EndPos = pos - 1
@@ -400,7 +400,7 @@ Protected Class InlineScanner
 		  If pos = 0 Then
 		    Return Nil
 		  Else
-		    result = New MarkdownKit.Block(BlockType.InlineHTML, Xojo.Core.WeakRef.Create(b))
+		    result = New MarkdownKit.Block(BlockType.InlineHTML, New WeakRef(b))
 		    result.StartPos = startPos
 		    result.EndPos = pos - 1
 		    result.Close
@@ -649,7 +649,7 @@ Protected Class InlineScanner
 		      Else
 		        // Create a new link node with the container as its parent.
 		        link = New MarkdownKit.Block(BlockType.InlineLink, _ 
-		        Xojo.Core.WeakRef.Create(container))
+		        New WeakRef(container))
 		        link.Title = linkData.LinkTitle
 		        link.Destination = linkData.Destination
 		        link.Chars = linkData.LinkTextChars
@@ -705,7 +705,7 @@ Protected Class InlineScanner
 		      Else
 		        // Create a new image node with the container as its parent.
 		        image = New MarkdownKit.Block(BlockType.InlineImage, _ 
-		        Xojo.Core.WeakRef.Create(container))
+		        New WeakRef(container))
 		        image.Title = imageData.LinkTitle
 		        image.Destination = imageData.Destination
 		        image.Chars = imageData.ImageDescriptionChars
@@ -788,7 +788,7 @@ Protected Class InlineScanner
 		        If buffer <> Nil Then
 		          buffer.EndPos = pos
 		        Else
-		          buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		          buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		          buffer.StartPos = pos
 		          buffer.EndPos = pos
 		        End If
@@ -809,7 +809,7 @@ Protected Class InlineScanner
 		        If buffer <> Nil Then
 		          buffer.EndPos = pos
 		        Else
-		          buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		          buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		          buffer.StartPos = pos
 		          buffer.EndPos = pos
 		        End If
@@ -822,28 +822,28 @@ Protected Class InlineScanner
 		          buffer.EndPos = buffer.EndPos - 1 // Remove the trailing backslash.
 		          CloseBuffer(buffer, b)
 		        End If
-		        b.Children.Add(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
+		        b.Children.Add(New MarkdownKit.Block(BlockType.Hardbreak, New WeakRef(b)))
 		        pos = pos + 1
 		      ElseIf pos - 2 >= 0 And b.Chars(pos - 2) = &u0020 And b.Chars(pos - 1) = &u0020 Then
 		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
-		        b.Children.Add(New MarkdownKit.Block(BlockType.Hardbreak, Xojo.Core.WeakRef.Create(b)))
+		        b.Children.Add(New MarkdownKit.Block(BlockType.Hardbreak, New WeakRef(b)))
 		        pos = pos + 1
 		      Else
 		        If buffer <> Nil Then CloseBuffer(buffer, b, True)
-		        b.Children.Add(New MarkdownKit.Block(BlockType.Softbreak, Xojo.Core.WeakRef.Create(b)))
+		        b.Children.Add(New MarkdownKit.Block(BlockType.Softbreak, New WeakRef(b)))
 		        pos = pos + 1
 		      End If
 		      
 		    ElseIf c = "[" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= Start of inline link? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
-		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		      buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		      buffer.StartPos = pos
 		      buffer.EndPos = pos // One character long.
 		      dsn = New MarkdownKit.DelimiterStackNode
 		      dsn.Delimiter = "["
 		      dsn.OriginalLength = 1
-		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
+		      dsn.TextNodePointer = New WeakRef(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + 1
 		      delimiterStack.Add(dsn)
@@ -851,13 +851,13 @@ Protected Class InlineScanner
 		    ElseIf c = "!" And Not Utilities.Escaped(b.Chars, pos) And Peek(b.Chars, pos + 1, "[") Then
 		      // ========= Start of inline image? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
-		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		      buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		      buffer.StartPos = pos
 		      buffer.EndPos = pos + 1 // Two characters long.
 		      dsn = New MarkdownKit.DelimiterStackNode
 		      dsn.Delimiter = "!["
 		      dsn.OriginalLength = 2
-		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
+		      dsn.TextNodePointer = New WeakRef(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + 2
 		      delimiterStack.Add(dsn)
@@ -870,7 +870,7 @@ Protected Class InlineScanner
 		        If buffer <> Nil Then
 		          buffer.EndPos = pos
 		        Else
-		          buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		          buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		          buffer.StartPos = pos
 		          buffer.EndPos = pos
 		        End If
@@ -881,10 +881,10 @@ Protected Class InlineScanner
 		      // ========= Emphasis? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      dsn = ScanDelimiterRun(b.Chars, charsUbound, pos, c)
-		      buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		      buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		      buffer.StartPos = pos
 		      buffer.EndPos = pos + dsn.OriginalLength - 1
-		      dsn.TextNodePointer = Xojo.Core.WeakRef.Create(buffer)
+		      dsn.TextNodePointer = New WeakRef(buffer)
 		      CloseBuffer(buffer, b)
 		      pos = pos + dsn.OriginalLength
 		      delimiterStack.Add(dsn)
@@ -896,7 +896,7 @@ Protected Class InlineScanner
 		      If buffer <> Nil Then
 		        buffer.EndPos = pos
 		      Else
-		        buffer = New MarkdownKit.Block(BlockType.InlineText, Xojo.Core.WeakRef.Create(b))
+		        buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		        buffer.StartPos = pos
 		        buffer.EndPos = pos
 		      End If
@@ -971,12 +971,12 @@ Protected Class InlineScanner
 		          // we have strong, otherwise regular.
 		          If closerNode.CurrentLength >= 2 And openerNode.CurrentLength >= 2 Then
 		            // Strong.
-		            emphasis = New MarkdownKit.Block(BlockType.Strong, Xojo.Core.WeakRef.Create(container))
+		            emphasis = New MarkdownKit.Block(BlockType.Strong, New WeakRef(container))
 		            emphasis.Delimiter = openerNode.Delimiter
 		            emphasis.DelimiterLength = openerNode.CurrentLength
 		          Else
 		            // Regular. 
-		            emphasis = New MarkdownKit.Block(BlockType.Emphasis, Xojo.Core.WeakRef.Create(container))
+		            emphasis = New MarkdownKit.Block(BlockType.Emphasis, New WeakRef(container))
 		            emphasis.Delimiter = openerNode.Delimiter
 		            emphasis.DelimiterLength = openerNode.CurrentLength
 		          End If
@@ -1872,7 +1872,7 @@ Protected Class InlineScanner
 		  If charsUbound > kMaxReferenceLabelLength + 1 Then Return result
 		  
 		  // Find the first "]" that is not backslash-escaped.
-		  Dim limit As Integer = Xojo.Math.Min(charsUbound, kMaxReferenceLabelLength + 1)
+		  Dim limit As Integer = Min(charsUbound, kMaxReferenceLabelLength + 1)
 		  Dim i As Integer
 		  Dim seenNonWhitespace As Boolean = False
 		  For i = (pos + 1) To limit

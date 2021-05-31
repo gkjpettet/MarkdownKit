@@ -1190,7 +1190,7 @@ End
 		  
 		  Dim testCount As Integer
 		  testCount = Controller.AllTestCount
-		  TestCountLabel.Value = Str(testCount) + " tests in " + Str(Controller.GroupCount) + " groups"
+		  TestCountLabel.Text = Str(testCount) + " tests in " + Str(Controller.GroupCount) + " groups"
 		  
 		End Sub
 	#tag EndMethod
@@ -1253,7 +1253,7 @@ End
 		Private Sub RunTests()
 		  Dim now As DateTime = DateTime.Now
 		  
-		  StartLabel.Value = now.ToString
+		  StartLabel.Text = now.ToString
 		  
 		  ProgressWheel1.Visible = True
 		  MyToolbar.RunButton.Enabled = False
@@ -1411,7 +1411,7 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub UpdateSummary()
-		  DurationLabel.Value = Format(Controller.Duration, "#,###.0000000") + "s"
+		  DurationLabel.Text = Format(Controller.Duration, "#,###.0000000") + "s"
 		  
 		  Dim allTestCount As Integer = Controller.AllTestCount
 		  Dim runTestCount As Integer = Controller.RunTestCount
@@ -1420,9 +1420,9 @@ End
 		  Dim testsMessage As String = If(allTestCount = 1, " test", " tests")
 		  
 		  If runTestCount = allTestCount Then
-		    TestCountLabel.Value = Str(runTestCount) + testsMessage + " in " + groupsMessage
+		    TestCountLabel.Text = Str(runTestCount) + testsMessage + " in " + groupsMessage
 		  Else
-		    TestCountLabel.Value = Str(runTestCount) + " of " + Str(allTestCount) + testsMessage + " in " + groupsMessage
+		    TestCountLabel.Text = Str(runTestCount) + " of " + Str(allTestCount) + testsMessage + " in " + groupsMessage
 		  End If
 		  
 		  Dim passedCount As Integer = Controller.PassedCount
@@ -1433,10 +1433,10 @@ End
 		  Dim failedPercent As Double = failedCount / runTestCount
 		  Dim failedPercentMessage As String = If(runTestCount = 0, "", " (" + Format(failedPercent, "#.00%") + ")")
 		  
-		  PassedCountLabel.Value = Str(passedCount) + passedPercentMessage
-		  FailedCountLabel.Value = Str(Controller.FailedCount) + failedPercentMessage
-		  SkippedCountLabel.Value = Str(Controller.SkippedCount)
-		  NotImplementedCountLabel.Value = Str(Controller.NotImplementedCount)
+		  PassedCountLabel.Text = Str(passedCount) + passedPercentMessage
+		  FailedCountLabel.Text = Str(Controller.FailedCount) + failedPercentMessage
+		  SkippedCountLabel.Text = Str(Controller.SkippedCount)
+		  NotImplementedCountLabel.Text = Str(Controller.NotImplementedCount)
 		  
 		End Sub
 	#tag EndMethod
@@ -1515,12 +1515,12 @@ End
 		    duration = Format(tg.Duration, "#,0.0000000") + "s"
 		  End If
 		  
-		  TestNameLabel.Value = name
-		  TestResultLabel.Value = result
-		  TestDurationLabel.Value = duration
+		  TestNameLabel.Text = name
+		  TestResultLabel.Text = result
+		  TestDurationLabel.Text = duration
 		  
-		  TestResultsExpected.Value = expected
-		  TestResultsActual.Value = actual
+		  TestResultsExpected.Text = expected
+		  TestResultsActual.Text = actual
 		  
 		  #Pragma BreakOnExceptions False
 		  // Display this test's input Markdown source.
@@ -1532,7 +1532,7 @@ End
 		    Dim md As Text
 		    Call ASTTestController.GetTestMarkdown(testNumber + ".md", md)
 		    ASTTestController.TransformWhitespace(md)
-		    TestInputMarkdown.Value = md
+		    TestInputMarkdown.Text = md
 		  Catch e
 		    // Ignore.
 		  End Try
@@ -1665,7 +1665,7 @@ End
 	#tag EndEvent
 	#tag Event
 		Function ContextualMenuAction(hitItem as MenuItem) As Boolean
-		  Select Case hitItem.Value
+		  Select Case hitItem.Text
 		  Case kCMSelectAllGroups
 		    SelectAllGroups(True, False)
 		    

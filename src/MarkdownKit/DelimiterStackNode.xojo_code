@@ -34,7 +34,7 @@ Protected Class DelimiterStackNode
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		TextNodePointer As Xojo.Core.WeakRef
+		TextNodePointer As WeakRef
 	#tag EndProperty
 
 

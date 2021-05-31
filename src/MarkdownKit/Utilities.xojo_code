@@ -2337,7 +2337,7 @@ Protected Class Utilities
 		      
 		      If c = "X" Then
 		        // ========== HEX REFERENCE? ==========
-		        xLimit = Xojo.Math.Min(chars.LastIndex, i + 7)
+		        xLimit = Min(chars.LastIndex, i + 7)
 		        If i + 1 > chars.LastIndex Then Return
 		        For x As Integer = i + 1 To xLimit
 		          c = chars(x)
@@ -2397,7 +2397,7 @@ Protected Class Utilities
 		        End If
 		      ElseIf Utilities.IsDigit(c) Then
 		        // ========== DECIMAL REFERENCE? ==========
-		        xLimit = Xojo.Math.Min(chars.LastIndex, i + 6)
+		        xLimit = Min(chars.LastIndex, i + 6)
 		        If i + 1 > chars.LastIndex Then Return
 		        For x As Integer = i To xLimit
 		          c = chars(x)
@@ -2464,7 +2464,7 @@ Protected Class Utilities
 		    ElseIf Utilities.IsASCIIAlphaChar(c) Or Utilities.IsDigit(c) Then
 		      // ========== ENTITY REFERENCE? ==========
 		      // The longest entity reference is 31 characters.
-		      xLimit = Xojo.Math.Min(chars.LastIndex, i + 30)
+		      xLimit = Min(chars.LastIndex, i + 30)
 		      If i + 1 > chars.LastIndex Then Return
 		      For x As Integer = i To xLimit
 		        c = chars(x)

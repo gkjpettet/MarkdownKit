@@ -23,7 +23,7 @@ Protected Class LineInfo
 		    // If count = 0 Then Exit
 		    If count <= 0 Then Exit
 		    
-		    If Offset > CharsUbound Then
+		    If Offset > CharsLastIndex Then
 		      CurrentChar = ""
 		      Exit
 		    End If
@@ -59,20 +59,20 @@ Protected Class LineInfo
 		    Return True
 		  End If
 		  
-		  If Offset > CharsUbound Then Return False
+		  If Offset > CharsLastIndex Then Return False
 		  
 		  Select Case Chars(Offset)
 		  Case " "
 		    Offset = Offset + 1
 		    Column = Column + 1
-		    CurrentChar = If(Offset <= CharsUbound, Chars(Offset), "")
+		    CurrentChar = If(Offset <= CharsLastIndex, Chars(Offset), "")
 		    Return True
 		  Case &u0009
 		    Offset = Offset + 1
 		    Dim charsToTabStop As Integer = 4 - (Column Mod kTabSize)
 		    Column = Column + charsToTabStop
 		    RemainingSpaces = charsToTabStop - 1
-		    CurrentChar = If(Offset <= CharsUbound, Chars(Offset), "")
+		    CurrentChar = If(Offset <= CharsLastIndex, Chars(Offset), "")
 		    Return True
 		  End Select
 		  
@@ -89,7 +89,7 @@ Protected Class LineInfo
 		  
 		  Value = lineText
 		  Chars = lineText.Split("")
-		  CharsUbound = Chars.LastIndex
+		  CharsLastIndex = Chars.LastIndex
 		  Number = lineNumber
 		  Self.StartOffset = startOffset
 		  
@@ -104,7 +104,7 @@ Protected Class LineInfo
 		  // tabs, is considered blank (spec 0.29 2.1).
 		  Dim i As Integer
 		  IsBlank = True
-		  For i = 0 To CharsUbound
+		  For i = 0 To CharsLastIndex
 		    Select Case Chars(i)
 		    Case &u0020, &u0009
 		      // Keep searching.
@@ -133,7 +133,7 @@ Protected Class LineInfo
 		  NextNWSColumn = Column
 		  
 		  Do
-		    If NextNWS > CharsUbound Then
+		    If NextNWS > CharsLastIndex Then
 		      CurrentChar = ""
 		    Else
 		      CurrentChar = Chars(NextNWS)
@@ -166,7 +166,7 @@ Protected Class LineInfo
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 54686520757070657220626F756E6473206F662074686973206C696E6527732043686172732061727261792E20
-		CharsUbound As Integer = -1
+		CharsLastIndex As Integer = -1
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 546865207669727475616C20706F736974696F6E20696E20746865206C696E6520746861742074616B65732054414220657870616E73696F6E20696E746F206163636F756E742E
@@ -276,7 +276,7 @@ Protected Class LineInfo
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="CharsUbound"
+			Name="CharsLastIndex"
 			Visible=false
 			Group="Behavior"
 			InitialValue="-1"

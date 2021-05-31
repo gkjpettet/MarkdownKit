@@ -77,22 +77,22 @@ Inherits MarkdownKit.Block
 		  If trackCharacterOffsets Then
 		    // Track the 0-based index of the first character for every line.
 		    Var chars() As String = source.Split("")
-		    For i As Integer = 0 To chars.LastRowIndex
-		      If chars(i) = &u000A Then lineStarts.AddRow(i + 1)
+		    For i As Integer = 0 To chars.LastIndex
+		      If chars(i) = &u000A Then lineStarts.Add(i + 1)
 		    Next i
 		  End If
 		  
 		  // Convert each line of text in the temporary array to a LineInfo object.
-		  Dim tmpUbound As Integer = tmp.LastRowIndex
+		  Dim tmpUbound As Integer = tmp.LastIndex
 		  Dim i As Integer
 		  If trackCharacterOffsets Then
 		    // We can pass in the actual offset that each line begins at.
 		    For i = 0 To tmpUbound
-		      Lines.AddRow(New MarkdownKit.LineInfo(tmp(i), i + 1, lineStarts(i)))
+		      Lines.Add(New MarkdownKit.LineInfo(tmp(i), i + 1, lineStarts(i)))
 		    Next i
 		  Else
 		    For i = 0 To tmpUbound
-		      Lines.AddRow(New MarkdownKit.LineInfo(tmp(i), i + 1))
+		      Lines.Add(New MarkdownKit.LineInfo(tmp(i), i + 1))
 		    Next i
 		  End If
 		  
@@ -100,24 +100,24 @@ Inherits MarkdownKit.Block
 		  // As blank lines at the beginning and end of the document 
 		  // are ignored (commonmark spec 0.29 4.9).
 		  // Leading...
-		  While Lines.LastRowIndex > -1
+		  While Lines.LastIndex > -1
 		    If Lines(0).IsBlank Then
-		      Lines.RemoveRowAt(0)
+		      Lines.RemoveAt(0)
 		    Else
 		      Exit
 		    End If
 		  Wend
 		  // Trailing...
-		  For i = Lines.LastRowIndex DownTo 0
+		  For i = Lines.LastIndex DownTo 0
 		    If Lines(i).IsBlank Then
-		      Lines.RemoveRowAt(i)
+		      Lines.RemoveAt(i)
 		    Else
 		      Exit
 		    End If
 		  Next i
 		  
 		  // Cache the upper bounds of the Lines array.
-		  LinesUbound = Lines.LastRowIndex
+		  LinesUbound = Lines.LastIndex
 		  
 		  // The document block starts open.
 		  IsOpen = True
@@ -155,7 +155,7 @@ Inherits MarkdownKit.Block
 		  // appropriate), add the setext heading line as content to this paragraph and raise 
 		  // an EdgeCase exception.
 		  stx.Finalise(line)
-		  If stx.Chars.LastRowIndex = -1 Then
+		  If stx.Chars.LastIndex = -1 Then
 		    p.AddLine(line, 0)
 		    #Pragma BreakOnExceptions False
 		    Raise New MarkdownKit.EdgeCase
@@ -163,13 +163,13 @@ Inherits MarkdownKit.Block
 		  End If
 		  
 		  // Remove the paragraph from its parent.
-		  paraParent.Children.RemoveRowAt(index)
+		  paraParent.Children.RemoveAt(index)
 		  
 		  // Insert our new SetextHeading.
 		  If index = 0 Then
-		    paraParent.Children.AddRow(stx)
+		    paraParent.Children.Add(stx)
 		  Else
-		    paraParent.Children.AddRowAt(index, stx)
+		    paraParent.Children.AddAt(index, stx)
 		  End If
 		  
 		  // Assign the parent.
@@ -207,7 +207,7 @@ Inherits MarkdownKit.Block
 		  child.OffsetOfLineStart = line.StartOffset
 		  
 		  // Insert the child into the parent's tree.
-		  theParent.Children.AddRow(child)
+		  theParent.Children.Add(child)
 		  
 		  // Return the new child block.
 		  Return child
@@ -268,15 +268,15 @@ Inherits MarkdownKit.Block
 		    Select Case b.Type
 		    Case BlockType.AtxHeading, BlockType.Paragraph, BlockType.SetextHeading
 		      Redim delimiterStack(-1) // Each block gets a new delimiter stack.
-		      If b.Chars.LastRowIndex > -1 Then InlineScanner.ParseInlines(b, delimiterStack)
+		      If b.Chars.LastIndex > -1 Then InlineScanner.ParseInlines(b, delimiterStack)
 		    End Select
 		    
 		    If b.FirstChild <> Nil Then
-		      If b.NextSibling <> Nil Then stack.AddRow(b.NextSibling)
+		      If b.NextSibling <> Nil Then stack.Add(b.NextSibling)
 		      b = b.FirstChild
 		    ElseIf b.NextSibling <> Nil Then
 		      b = b.NextSibling
-		    ElseIf stack.LastRowIndex > -1 Then
+		    ElseIf stack.LastIndex > -1 Then
 		      b = stack.Pop
 		    Else
 		      b = Nil
@@ -502,7 +502,7 @@ Inherits MarkdownKit.Block
 		        // paragraph with the setext heading line having been added to the 
 		        // paragraph's contents.
 		      End Try
-		      line.AdvanceOffset(line.Chars.LastRowIndex + 1 - line.Offset, False)
+		      line.AdvanceOffset(line.Chars.LastIndex + 1 - line.Offset, False)
 		      
 		    ElseIf Not indented And _
 		      Not (container.Type = BlockType.Paragraph And Not line.AllMatched) And _
@@ -512,7 +512,7 @@ Inherits MarkdownKit.Block
 		      container = CreateChildBlock(container, line, BlockType.ThematicBreak)
 		      container.Finalise(line)
 		      container = container.Parent
-		      line.AdvanceOffset(line.Chars.LastRowIndex + 1 - line.Offset, False)
+		      line.AdvanceOffset(line.Chars.LastIndex + 1 - line.Offset, False)
 		      
 		    ElseIf (Not indented Or container.Type = BlockType.List) And _
 		      0 <> BlockScanner.ParseListMarker(indented, line.Chars, line.NextNWS, _
@@ -692,6 +692,22 @@ Inherits MarkdownKit.Block
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="LineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OffsetOfLineStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsChildOfListItem"
 			Visible=false
@@ -907,6 +923,14 @@ Inherits MarkdownKit.Block
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="TrackCharacterOffsets"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

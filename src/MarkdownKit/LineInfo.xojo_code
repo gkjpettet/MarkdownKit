@@ -89,7 +89,7 @@ Protected Class LineInfo
 		  
 		  Value = lineText
 		  Chars = lineText.Split("")
-		  CharsUbound = Chars.LastRowIndex
+		  CharsUbound = Chars.LastIndex
 		  Number = lineNumber
 		  Self.StartOffset = startOffset
 		  
@@ -353,6 +353,14 @@ Protected Class LineInfo
 			Group="Behavior"
 			InitialValue="True"
 			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="StartOffset"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

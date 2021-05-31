@@ -21,7 +21,7 @@ Protected Class CharacterRun
 		  // Copies from the passed array of characters the characters that make up 
 		  // this CharacterRun.
 		  
-		  Dim sourceUbound As Integer = source.LastRowIndex
+		  Dim sourceUbound As Integer = source.LastIndex
 		  
 		  // Sanity checks.
 		  If Self.Start < 0 Or (Self.Start + Self.Length - 1) > sourceUbound Then
@@ -35,7 +35,7 @@ Protected Class CharacterRun
 		  Dim i, limit As Integer
 		  limit = Self.Start + Self.Length - 1
 		  For i = Self.Start To limit
-		    result.AddRow(source(i))
+		    result.Add(source(i))
 		  Next i
 		  
 		  Return result

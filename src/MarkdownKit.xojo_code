@@ -5,12 +5,12 @@ Protected Module MarkdownKit
 		  // Appends the contents of array2 to array1.
 		  // Has no effect on array2 but mutates array2.
 		  
-		  Dim array2Ubound As Integer = array2.LastRowIndex
+		  Dim array2Ubound As Integer = array2.LastIndex
 		  If array2Ubound < 0 Then Return
 		  
 		  Dim i As Integer
 		  For i = 0 To array2Ubound
-		    array1.AddRow(array2(i))
+		    array1.Add(array2(i))
 		  Next i
 		  
 		End Sub
@@ -76,9 +76,9 @@ Protected Module MarkdownKit
 	#tag Method, Flags = &h21
 		Private Function IsBlank(Extends chars() As String) As Boolean
 		  // Returns True if this array of characters is empty or contains only whitespace.
-		  If chars.LastRowIndex = - 1 Then Return True
+		  If chars.LastIndex = - 1 Then Return True
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  Dim i As Integer
 		  For i = 0 To charsUbound
 		    Select Case Chars(i)
@@ -105,7 +105,7 @@ Protected Module MarkdownKit
 		Private Function Peek(chars() As String, pos As Integer, char As String) As Boolean
 		  // Returns True if the character at position `pos` is `char`.
 		  
-		  If pos < 0 Or pos > chars.LastRowIndex Then Return False
+		  If pos < 0 Or pos > chars.LastIndex Then Return False
 		  Return If(chars(pos) = char, True, False)
 		End Function
 	#tag EndMethod
@@ -114,14 +114,14 @@ Protected Module MarkdownKit
 		Private Sub RemoveLeft(Extends source() As String, length As Integer)
 		  // Removes `length` elements from the start of the passed array.
 		  
-		  If length <= 0 Or (length - 1) > source.LastRowIndex Then
+		  If length <= 0 Or (length - 1) > source.LastIndex Then
 		    Raise New MarkdownKit.MarkdownException( _
 		    "Invalid parameters provided to the MarkdownKit.RemoveLeft method")
 		  End If
 		  
 		  Dim remaining As Integer = length
 		  Do Until remaining = 0
-		    source.RemoveRowAt(0)
+		    source.RemoveAt(0)
 		    remaining = remaining - 1
 		  Loop
 		End Sub
@@ -135,11 +135,11 @@ Protected Module MarkdownKit
 		  
 		  Dim i As Integer
 		  Dim c As String
-		  For i = chars.LastRowIndex DownTo 0
+		  For i = chars.LastIndex DownTo 0
 		    c = chars(0)
 		    Select Case c
 		    Case &u0020, &u0009, &u000A
-		      chars.RemoveRowAt(0)
+		      chars.RemoveAt(0)
 		    Else
 		      Exit
 		    End Select
@@ -157,11 +157,11 @@ Protected Module MarkdownKit
 		  
 		  Dim i As Integer
 		  Dim c As String
-		  For i = chars.LastRowIndex DownTo 0
-		    c = chars(chars.LastRowIndex)
+		  For i = chars.LastIndex DownTo 0
+		    c = chars(chars.LastIndex)
 		    Select Case c
 		    Case &u0020, &u0009, &u000A
-		      chars.RemoveRowAt(chars.LastRowIndex)
+		      chars.RemoveAt(chars.LastIndex)
 		    Else
 		      Exit
 		    End Select
@@ -197,7 +197,7 @@ Protected Module MarkdownKit
 		  // and returns them as a concatenated String.
 		  // If any of the passed parameters are out of range then we return "".
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  If start < 0 Or start > charsUbound Or length <= 0 Or _
 		  (start + length - 1 > charsUbound) Then Return ""
@@ -205,10 +205,10 @@ Protected Module MarkdownKit
 		  Dim limit As Integer = start + length - 1
 		  Dim tmp() As String
 		  For i As Integer = start To limit
-		    tmp.AddRow(chars(i))
+		    tmp.Add(chars(i))
 		  Next i
 		  
-		  Return Join(tmp, "")
+		  Return String.FromArray(tmp, "")
 		  
 		End Function
 	#tag EndMethod

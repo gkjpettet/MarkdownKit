@@ -2,7 +2,7 @@
 Protected Class TestController
 	#tag Method, Flags = &h0
 		Sub AddGroup(group As TestGroup)
-		  mTestGroups.AddRow(group)
+		  mTestGroups.Add(group)
 		End Sub
 	#tag EndMethod
 
@@ -93,7 +93,7 @@ Protected Class TestController
 		  //  "My*Group" = Match any group that starts with "My" and ends with "Group"
 		  
 		  
-		  If includePatterns.LastRowIndex = -1 And excludePatterns.LastRowIndex = -1 Then
+		  If includePatterns.LastIndex = -1 And excludePatterns.LastIndex = -1 Then
 		    Dim err As New RuntimeException
 		    err.Message = "You must specify at least one include or exclude pattern"
 		    Raise err
@@ -102,11 +102,11 @@ Protected Class TestController
 		  //
 		  // Convert the patterns into regular expressions
 		  //
-		  For i As Integer = 0 To includePatterns.LastRowIndex
+		  For i As Integer = 0 To includePatterns.LastIndex
 		    includePatterns(i) = SimplePatternToRegExPattern(includePatterns(i))
 		  Next i
 		  
-		  For i As Integer = 0 To excludePatterns.LastRowIndex
+		  For i As Integer = 0 To excludePatterns.LastIndex
 		    excludePatterns(i) = SimplePatternToRegExPattern(excludePatterns(i))
 		  Next i
 		  
@@ -122,7 +122,7 @@ Protected Class TestController
 		    //
 		    // Turn all methods on and the group on/off
 		    //
-		    group.IncludeGroup = (includePatterns.LastRowIndex = -1) // If there are any includes, default to False
+		    group.IncludeGroup = (includePatterns.LastIndex = -1) // If there are any includes, default to False
 		    group.SetIncludeMethods(True)
 		    Dim methodsTurnedOff As Boolean
 		    
@@ -244,11 +244,11 @@ Protected Class TestController
 
 	#tag Method, Flags = &h0
 		Attributes( Hidden )  Sub RunNextTest()
-		  If TestQueue.LastRowIndex = -1 Then
+		  If TestQueue.LastIndex = -1 Then
 		    Stop
 		  Else
 		    Dim tg As TestGroup = TestQueue(0)
-		    TestQueue.RemoveRowAt(0)
+		    TestQueue.RemoveAt(0)
 		    tg.Start
 		  End If
 		  
@@ -261,7 +261,7 @@ Protected Class TestController
 		  
 		  For Each tg As TestGroup In mTestGroups
 		    If tg.IncludeGroup Then
-		      TestQueue.AddRow(tg)
+		      TestQueue.Add(tg)
 		      tg.ClearResults
 		    Else
 		      tg.ClearResults(True)
@@ -385,7 +385,7 @@ Protected Class TestController
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return mTestGroups.LastRowIndex + 1
+			  Return mTestGroups.LastIndex + 1
 			End Get
 		#tag EndGetter
 		GroupCount As Integer

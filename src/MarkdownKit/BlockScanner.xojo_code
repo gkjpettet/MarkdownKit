@@ -10,20 +10,20 @@ Protected Class BlockScanner
 		  // ##### LABEL #####
 		  Dim labelChars() As String = labelCR.ToArray(chars)
 		  InlineScanner.CleanLinkLabel(labelChars)
-		  Dim label As String = Join(labelChars, "")
+		  Dim label As String = String.FromArray(labelChars, "")
 		  
 		  // ##### DESTINATION #####
 		  Dim urlChars() As String = destinationCR.ToArray(chars)
 		  InlineScanner.CleanURL(urlChars)
-		  // Dim url As String = Join(urlChars, "")
-		  Dim url As String = Utilities.ReplaceEntities(Join(urlChars, ""))
+		  // Dim url As String = String.FromArray(urlChars, "")
+		  Dim url As String = Utilities.ReplaceEntities(String.FromArray(urlChars, ""))
 		  
 		  // ##### TITLE #####
 		  Dim title As String = ""
 		  If titleCR <> Nil Then
 		    Dim titleChars() As String = titleCR.ToArray(chars)
 		    InlineScanner.CleanLinkTitle(titleChars)
-		    title = Utilities.ReplaceEntities(Join(titleChars, ""))
+		    title = Utilities.ReplaceEntities(String.FromArray(titleChars, ""))
 		  End If
 		  
 		  // Only add this reference to the document if it's the first time we've encountered 
@@ -140,7 +140,7 @@ Protected Class BlockScanner
 		  data = Nil
 		  length = 0
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  If pos > charsUbound Then Return 0
 		  
@@ -167,7 +167,7 @@ Protected Class BlockScanner
 		    c = "6" Or c = "7" Or c = "8" Or c = "9" Then
 		    Dim numDigits As Integer = 0
 		    Dim startText As String
-		    Dim limit As Integer = Min(chars.LastRowIndex, startPos + 8)
+		    Dim limit As Integer = Min(chars.LastIndex, startPos + 8)
 		    For i As Integer = startPos To limit
 		      c = chars(i)
 		      Select Case c
@@ -228,7 +228,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  // Reset the ByRef variables.
 		  length = 0
@@ -283,7 +283,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  If pos + (length - 1) > charsUbound Then Return 0
 		  
@@ -350,7 +350,7 @@ Protected Class BlockScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  Dim chars() As String = line.Chars
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  // The shortest opening condition is two characters.
 		  If pos + 1 > charsUbound Then
@@ -426,17 +426,17 @@ Protected Class BlockScanner
 		  
 		  // `pos` currently points to the first character of a potential tag name.
 		  Dim tagNameArray() As String
-		  While pos <= charsUbound And tagNameArray.LastRowIndex < 10
+		  While pos <= charsUbound And tagNameArray.LastIndex < 10
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.CharInHeaderLevelRange(c) Then
-		      tagNameArray.AddRow(c)
+		      tagNameArray.Add(c)
 		    Else
 		      Exit
 		    End If
 		    pos = pos + 1
 		  Wend
 		  
-		  Dim tagName As String = Join(tagNameArray, "")
+		  Dim tagName As String = String.FromArray(tagNameArray, "")
 		  If Not mHTMLTagNames.HasKey(tagName) And tagName <> "pre" And tagName <> "script" And tagName <> "style" Then
 		    type = Block.kHTMLBlockTypeNone
 		    Return Block.kHTMLBlockTypeNone
@@ -490,7 +490,7 @@ Protected Class BlockScanner
 		  
 		  // At least 3 characters are required for a valid type 7 block start.
 		  Dim chars() As String = line.Chars
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  If pos + 2 > charsUbound Then Return Block.kHTMLBlockTypeNone
 		  
 		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
@@ -531,7 +531,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  Dim pos As Integer = 0
 		  
 		  // Parse the label.
@@ -654,7 +654,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  length = 0
 		  
@@ -709,7 +709,7 @@ Protected Class BlockScanner
 		  // Reset the ByRef parameter.
 		  level = 0
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  If pos > charsUbound Then Return 0
 		  
 		  Dim c As String = chars(pos)
@@ -755,7 +755,7 @@ Protected Class BlockScanner
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  If pos > charsUbound Then Return 0
 		  
@@ -784,7 +784,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  Dim count As Integer = 0
 		  Dim i As Integer

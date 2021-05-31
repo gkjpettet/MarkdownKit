@@ -26,7 +26,7 @@ Protected Class Utilities
 		  // Returns True if the character at zero-based position `pos` is escaped.
 		  // (i.e: preceded by a (non-escaped) backslash character).
 		  
-		  If pos > chars.LastRowIndex or pos = 0 Then Return False
+		  If pos > chars.LastIndex or pos = 0 Then Return False
 		  
 		  If chars(pos - 1) = "\" And Not Escaped(chars, pos - 1) Then
 		    Return True
@@ -2307,7 +2307,7 @@ Protected Class Utilities
 		  Dim xLimit As Integer
 		  Dim codePoint As Integer
 		  Dim seenSemiColon As Boolean = False
-		  While i < chars.LastRowIndex
+		  While i < chars.LastIndex
 		    Redim tmp(-1)
 		    seenSemiColon = False
 		    c = chars(i)
@@ -2316,7 +2316,7 @@ Protected Class Utilities
 		    If chars(i) <> "&" Then Return
 		    If Utilities.Escaped(chars, i) Then
 		      i = i + 1
-		      If i > chars.LastRowIndex Then Return
+		      If i > chars.LastIndex Then Return
 		      // Any other potential references?
 		      start = chars.IndexOf("&", i)
 		      If start = -1 Then
@@ -2327,22 +2327,22 @@ Protected Class Utilities
 		    End If
 		    
 		    i = i + 1
-		    If i > chars.LastRowIndex Then Return
+		    If i > chars.LastIndex Then Return
 		    c = chars(i)
 		    
 		    If c = "#" Then
 		      i = i + 1
-		      If i > chars.LastRowIndex Then Return
+		      If i > chars.LastIndex Then Return
 		      c = chars(i)
 		      
 		      If c = "X" Then
 		        // ========== HEX REFERENCE? ==========
-		        xLimit = Xojo.Math.Min(chars.LastRowIndex, i + 7)
-		        If i + 1 > chars.LastRowIndex Then Return
+		        xLimit = Xojo.Math.Min(chars.LastIndex, i + 7)
+		        If i + 1 > chars.LastIndex Then Return
 		        For x As Integer = i + 1 To xLimit
 		          c = chars(x)
 		          If Utilities.IsHexDigit(c) Then
-		            tmp.AddRow(c)
+		            tmp.Add(c)
 		          ElseIf c = ";" Then
 		            seenSemiColon = True
 		            Exit
@@ -2357,16 +2357,16 @@ Protected Class Utilities
 		            End If
 		          End If
 		        Next x
-		        If seenSemiColon And tmp.LastRowIndex > -1 Then
+		        If seenSemiColon And tmp.LastIndex > -1 Then
 		          // `tmp` contains the hex value of the codepoint.
 		          // Remove the characters in `chars` that make up this reference.
-		          For x As Integer = 1 To tmp.LastRowIndex + 5
-		            chars.RemoveRowAt(start)
+		          For x As Integer = 1 To tmp.LastIndex + 5
+		            chars.RemoveAt(start)
 		          Next x
-		          chars.AddRowAt(start, Text.FromUnicodeCodepoint(Integer.FromHex(Join(tmp, "").ToText)))
+		          chars.AddAt(start, Text.FromUnicodeCodepoint(Integer.FromHex(String.FromArray(tmp, "").ToText)))
 		          // Any other potential references?
 		          i = start + 1
-		          If i > chars.LastRowIndex Then Return
+		          If i > chars.LastIndex Then Return
 		          start = chars.IndexOf("&", i)
 		          If start = -1 Then
 		            Return
@@ -2377,7 +2377,7 @@ Protected Class Utilities
 		        Else
 		          // Any other potential references?
 		          i = i + 1
-		          If i > chars.LastRowIndex Then Return
+		          If i > chars.LastIndex Then Return
 		          start = chars.IndexOf("&", i)
 		          If start = -1 Then
 		            Return
@@ -2397,12 +2397,12 @@ Protected Class Utilities
 		        End If
 		      ElseIf Utilities.IsDigit(c) Then
 		        // ========== DECIMAL REFERENCE? ==========
-		        xLimit = Xojo.Math.Min(chars.LastRowIndex, i + 6)
-		        If i + 1 > chars.LastRowIndex Then Return
+		        xLimit = Xojo.Math.Min(chars.LastIndex, i + 6)
+		        If i + 1 > chars.LastIndex Then Return
 		        For x As Integer = i To xLimit
 		          c = chars(x)
 		          If Utilities.IsDigit(c) Then
-		            tmp.AddRow(c)
+		            tmp.Add(c)
 		          ElseIf c = ";" Then
 		            seenSemiColon = True
 		            Exit
@@ -2418,19 +2418,19 @@ Protected Class Utilities
 		          End If
 		        Next x
 		        
-		        If seenSemiColon And tmp.LastRowIndex > -1 Then
+		        If seenSemiColon And tmp.LastIndex > -1 Then
 		          // `tmp` contains the decimal value of the codepoint.
 		          // Remove the characters in `chars` that make up this reference.
-		          For x As Integer = 1 To tmp.LastRowIndex + 4
-		            chars.RemoveRowAt(start)
+		          For x As Integer = 1 To tmp.LastIndex + 4
+		            chars.RemoveAt(start)
 		          Next x
-		          codePoint = Val(Join(tmp, ""))
+		          codePoint = Val(String.FromArray(tmp, ""))
 		          // For security reasons, the code point U+0000 is replaced by U+FFFD.
 		          If codePoint = 0 Then codePoint = &hFFFD
-		          chars.AddRowAt(start, Text.FromUnicodeCodepoint(codePoint))
+		          chars.AddAt(start, Text.FromUnicodeCodepoint(codePoint))
 		          // Any other potential references?
 		          i = start + 1
-		          If i > chars.LastRowIndex Then Return
+		          If i > chars.LastIndex Then Return
 		          start = chars.IndexOf("&", i)
 		          If start = -1 Then
 		            Return
@@ -2441,7 +2441,7 @@ Protected Class Utilities
 		        Else
 		          // Any other potential references?
 		          i = i + 1
-		          If i > chars.LastRowIndex Then Return
+		          If i > chars.LastIndex Then Return
 		          start = chars.IndexOf("&", i)
 		          If start = -1 Then
 		            Return
@@ -2464,12 +2464,12 @@ Protected Class Utilities
 		    ElseIf Utilities.IsASCIIAlphaChar(c) Or Utilities.IsDigit(c) Then
 		      // ========== ENTITY REFERENCE? ==========
 		      // The longest entity reference is 31 characters.
-		      xLimit = Xojo.Math.Min(chars.LastRowIndex, i + 30)
-		      If i + 1 > chars.LastRowIndex Then Return
+		      xLimit = Xojo.Math.Min(chars.LastIndex, i + 30)
+		      If i + 1 > chars.LastIndex Then Return
 		      For x As Integer = i To xLimit
 		        c = chars(x)
 		        If Utilities.IsASCIIAlphaChar(c) Or Utilities.IsDigit(c) Then
-		          tmp.AddRow(c)
+		          tmp.Add(c)
 		        ElseIf c = ";" Then
 		          seenSemiColon = True
 		          Exit
@@ -2487,18 +2487,18 @@ Protected Class Utilities
 		      If Not seenSemiColon Then Return
 		      // `tmp` contains the HTML entity reference name.
 		      // Is this a valid entity name?
-		      Dim entityName As Text = Join(tmp, "").ToText // Must be text for correct case-sensitive lookup.
+		      Dim entityName As Text = String.FromArray(tmp, "").ToText // Must be text for correct case-sensitive lookup.
 		      If CharacterReferences.HasKey(entityName) Then
 		        // Remove the characters in `chars` that make up this reference.
-		        For x As Integer = 1 To tmp.LastRowIndex + 3
-		          chars.RemoveRowAt(start)
+		        For x As Integer = 1 To tmp.LastIndex + 3
+		          chars.RemoveAt(start)
 		        Next x
-		        chars.AddRowAt(start, Text.FromUnicodeCodepoint(CharacterReferences.Value(entityName)))
+		        chars.AddAt(start, Text.FromUnicodeCodepoint(CharacterReferences.Value(entityName)))
 		      End If
 		      
 		      // Any other potential references?
 		      i = start + 1
-		      If i > chars.LastRowIndex Then Return
+		      If i > chars.LastIndex Then Return
 		      start = chars.IndexOf("&", i)
 		      If start = -1 Then
 		        Return
@@ -2528,7 +2528,7 @@ Protected Class Utilities
 		  Else
 		    Dim tmp() As String = t.Split("")
 		    Utilities.ReplaceEntities(tmp)
-		    Return Join(tmp, "")
+		    Return String.FromArray(tmp, "")
 		  End If
 		  
 		End Function
@@ -2545,17 +2545,17 @@ Protected Class Utilities
 		  Dim chars() As String = t.Split("")
 		  Dim pos As Integer = 0
 		  Dim c As String
-		  Do Until pos > chars.LastRowIndex
+		  Do Until pos > chars.LastIndex
 		    c = chars(pos)
-		    If c = "\" And pos < chars.LastRowIndex And _
+		    If c = "\" And pos < chars.LastIndex And _
 		      MarkdownKit.IsEscapable(chars(pos + 1)) Then
 		      // Remove the backslash from the array.
-		      chars.RemoveRowAt(pos)
+		      chars.RemoveAt(pos)
 		    End If
 		    pos = pos + 1
 		  Loop
 		  
-		  t = Join(chars, "")
+		  t = String.FromArray(chars, "")
 		End Sub
 	#tag EndMethod
 
@@ -2568,12 +2568,12 @@ Protected Class Utilities
 		  
 		  Dim pos As Integer = 0
 		  Dim c As String
-		  Do Until pos > chars.LastRowIndex
+		  Do Until pos > chars.LastIndex
 		    c = chars(pos)
-		    If c = "\" And pos < chars.LastRowIndex And _
+		    If c = "\" And pos < chars.LastIndex And _
 		      MarkdownKit.IsEscapable(chars(pos + 1)) Then
 		      // Remove the backslash from the array.
-		      chars.RemoveRowAt(pos)
+		      chars.RemoveAt(pos)
 		    End If
 		    pos = pos + 1
 		  Loop

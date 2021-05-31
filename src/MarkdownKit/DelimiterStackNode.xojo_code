@@ -4,7 +4,7 @@ Protected Class DelimiterStackNode
 		Function CurrentLength() As Integer
 		  If TextNodePointer.Value = Nil Then Return 0
 		  
-		  Return Markdownkit.Block(TextNodePointer.Value).Chars.LastRowIndex + 1
+		  Return Markdownkit.Block(TextNodePointer.Value).Chars.LastIndex + 1
 		End Function
 	#tag EndMethod
 

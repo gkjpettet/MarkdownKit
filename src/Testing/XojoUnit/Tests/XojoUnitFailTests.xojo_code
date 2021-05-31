@@ -153,18 +153,18 @@ Inherits TestGroup
 		Sub AreEqualIntegerArrayTest()
 		  Dim i1() As Integer = Array(1, 2, 3, 4, 5)
 		  Dim i2() As Integer
-		  i2.AddRow(1)
-		  i2.AddRow(2)
-		  i2.AddRow(3)
-		  i2.AddRow(4)
-		  i2.AddRow(5)
+		  i2.Add(1)
+		  i2.Add(2)
+		  i2.Add(3)
+		  i2.Add(4)
+		  i2.Add(5)
 		  i2(4) = 6
 		  
 		  Assert.AreEqual(i1, i2)
 		  IncrementFailCountIfFail
 		  
 		  i2(4) = 5
-		  i2.AddRow(6)
+		  i2.Add(6)
 		  
 		  Assert.AreEqual(i1, i2)
 		  IncrementFailCountIfFail
@@ -251,14 +251,14 @@ Inherits TestGroup
 		Sub AreEqualStringArrayTest()
 		  Dim s1() As String = Array("A", "B", "C")
 		  Dim s2() As String
-		  s2.AddRow("A")
-		  s2.AddRow("B")
-		  s2.AddRow("D")
+		  s2.Add("A")
+		  s2.Add("B")
+		  s2.Add("D")
 		  Assert.AreEqual(s1, s2)
 		  IncrementFailCountIfFail
 		  
 		  s2(2) = "C"
-		  s2.AddRow("D")
+		  s2.Add("D")
 		  Assert.AreEqual(s1, s2)
 		  IncrementFailCountIfFail
 		  
@@ -282,15 +282,15 @@ Inherits TestGroup
 		Sub AreEqualTextArrayTest()
 		  Dim t1() As Text = Array("A", "B", "C")
 		  Dim t2() As Text
-		  t2.AddRow("A")
-		  t2.AddRow("B")
-		  t2.AddRow("D")
+		  t2.Add("A")
+		  t2.Add("B")
+		  t2.Add("D")
 		  
 		  Assert.AreEqual(t1, t2)
 		  IncrementFailCountIfFail
 		  
 		  t2(2) = "C"
-		  t2.AddRow("D")
+		  t2.Add("D")
 		  
 		  Assert.AreEqual(t1, t2)
 		  IncrementFailCountIfFail
@@ -425,14 +425,14 @@ Inherits TestGroup
 		Sub AreSameStringArrayTest()
 		  Dim s1() As String = Array("A", "B", "C")
 		  Dim s2() As String
-		  s2.AddRow("A")
-		  s2.AddRow("B")
-		  s2.AddRow("D")
+		  s2.Add("A")
+		  s2.Add("B")
+		  s2.Add("D")
 		  Assert.AreSame(s1, s2)
 		  IncrementFailCountIfFail
 		  
 		  s2(2) = "C"
-		  s2.AddRow("D")
+		  s2.Add("D")
 		  Assert.AreSame(s1, s2)
 		  IncrementFailCountIfFail
 		  
@@ -461,9 +461,9 @@ Inherits TestGroup
 		Sub AreSameTextArrayTest()
 		  Dim t1() As Text = Array("A", "B", "C")
 		  Dim t2() As Text
-		  t2.AddRow("A")
-		  t2.AddRow("B")
-		  t2.AddRow("D")
+		  t2.Add("A")
+		  t2.Add("B")
+		  t2.Add("D")
 		  
 		  Assert.AreSame(t1, t2)
 		  IncrementFailCountIfFail
@@ -474,7 +474,7 @@ Inherits TestGroup
 		  IncrementFailCountIfFail
 		  
 		  t2(2) = "C"
-		  t2.AddRow("D")
+		  t2.Add("D")
 		  
 		  Assert.AreSame(t1, t2)
 		  IncrementFailCountIfFail

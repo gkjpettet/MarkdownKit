@@ -1148,7 +1148,7 @@ End
 		  
 		  Dim startPos As Integer = testName.IndexOf("Example") + 7
 		  Dim chars() As Text = testName.Split
-		  If startPos > chars.LastRowIndex Then
+		  If startPos > chars.LastIndex Then
 		    Dim e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `exampleXX`"
 		    Raise e
@@ -1156,7 +1156,7 @@ End
 		  
 		  Dim result As Text
 		  Dim tmp As Integer
-		  For i As Integer = startPos To chars.LastRowIndex
+		  For i As Integer = startPos To chars.LastIndex
 		    Try
 		      tmp = Val(chars(i))
 		      result = result + chars(i)

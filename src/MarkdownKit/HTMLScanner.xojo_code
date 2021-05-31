@@ -15,7 +15,7 @@ Protected Class HTMLScanner
 		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
 		  // Returns "" If no valid tagName is found.
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  
 		  If pos > charsUbound Or Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return ""
 		  
@@ -25,13 +25,13 @@ Protected Class HTMLScanner
 		  For pos = start To charsUbound
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.IsDigit(c) Or c= "-" Then
-		      tmp.AddRow(c)
+		      tmp.Add(c)
 		    Else
 		      Exit
 		    End If
 		  Next pos
 		  
-		  Return Join(tmp, "")
+		  Return String.FromArray(tmp, "")
 		End Function
 	#tag EndMethod
 
@@ -160,7 +160,7 @@ Protected Class HTMLScanner
 		  // Reset `tagName`.
 		  tagName = ""
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  If pos + 1 > charsUbound Then Return 0
 		  
 		  // The tag name must start with an ASCII letter.
@@ -295,7 +295,7 @@ Protected Class HTMLScanner
 		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
 		  //                  (case-insensitive; it need not match the start tag).
 		  
-		  Dim t As String = Join(line.Chars, "")
+		  Dim t As String = String.FromArray(line.Chars, "")
 		  If t.IndexOf(pos, "</pre>") <> -1 Then Return True
 		  If t.IndexOf(pos, "</style>") <> -1 Then Return True
 		  If t.IndexOf(pos, "</script>") <> -1 Then Return True
@@ -313,7 +313,7 @@ Protected Class HTMLScanner
 		  // HTML block type 2:
 		  // End condition: line contains the string "-->"
 		  
-		  Dim t As String = Join(line.Chars, "")
+		  Dim t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, "-->") <> -1, True, False)
 		  
 		  Exception e
@@ -326,7 +326,7 @@ Protected Class HTMLScanner
 		  // HTML block type 3:
 		  // End condition: line contains the string "?>"
 		  
-		  Dim t As String = Join(line.Chars, "")
+		  Dim t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, "?>") <> -1, True, False)
 		  
 		  Exception e
@@ -340,7 +340,7 @@ Protected Class HTMLScanner
 		  // HTML block type 4:
 		  // End condition: line contains the character ">".
 		  
-		  Dim t As String = Join(line.Chars, "")
+		  Dim t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, ">") <> -1, True, False)
 		  
 		  Exception e
@@ -354,7 +354,7 @@ Protected Class HTMLScanner
 		  // HTML block type 5:
 		  // End condition: line contains the string "]]>".
 		  
-		  Dim t As String = Join(line.Chars, "")
+		  Dim t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, "]]>") <> -1, True, False)
 		  
 		  Exception e
@@ -385,7 +385,7 @@ Protected Class HTMLScanner
 		  // Reset `tagName`.
 		  tagName = ""
 		  
-		  Dim charsUbound As Integer = chars.LastRowIndex
+		  Dim charsUbound As Integer = chars.LastIndex
 		  If pos + 1 > charsUbound Then Return 0
 		  
 		  // The tag name must start with an ASCII letter.

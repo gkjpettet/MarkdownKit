@@ -20,7 +20,7 @@ This application contains three windows: one for running the HTML tests, one for
 
 ## A word about API 2.0
 
-Xojo 2019 Release 2 introduced the new Xojo framework, known as _API 2.0_. API 2.0 is an attempt by Xojo to unify code between their platforms and make method naming more consistent as well as move everything to 0-based offsets. The master branch is API 2.0 compliant. Use either the API 1.0 branch if you need to support Xojo 2019 release 1.1 or earlier or the iOS branch if you need to support iOS. You can continue to use the API 1.0 branch in projects created from Xojo 2019 Release 2 onwards but you will get deprecation warnings in the analyze project pane. 
+Xojo 2019 Release 2 introduced the new Xojo framework, known as _API 2.0_. API 2.0 is an attempt by Xojo to unify code between their platforms and make method naming more consistent as well as move everything to 0-based offsets. The master branch is API 2.0 compliant. Use either the API 1.0 branch if you need to support Xojo 2019 release 1.1 or earlier or the iOS branch if you need to support iOS. You can continue to use the API 1.0 branch in projects created from Xojo 2019 Release 2 onwards but you will get deprecation warnings in the analyse project pane. 
 
 Going forwards, I will no longer support API 1.0, only API 2.0. 
 
@@ -30,7 +30,7 @@ Going forwards, I will no longer support API 1.0, only API 2.0.
 2. Convert Markdown source to HTML with the `MarkdownKit.ToHTML()` method:
 
 ```xojo
-Dim html As String = MarkdownKit.ToHTML("Some **bold** text")
+Var html As String = MarkdownKit.ToHTML("Some **bold** text")
 ```
 
 ## Advanced Use
@@ -38,7 +38,7 @@ Dim html As String = MarkdownKit.ToHTML("Some **bold** text")
 I imagine that most people will only ever need to use the simple `MarkdownKit.ToHTML()` method. However, if you want access to the abstract syntax tree created by `MarkdownKit` during parsing then you can, like so:
 
 ```xojo
-Dim ast As New MarkdownKit.Document("Some **bold** text")
+Var ast As New MarkdownKit.Document("Some **bold** text")
 
 // Parsing Markdown is done in two phases. First the block structure is 
 // determined and then inlines are parsed.

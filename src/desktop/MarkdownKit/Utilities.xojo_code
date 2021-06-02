@@ -2187,7 +2187,7 @@ Protected Class Utilities
 		Shared Function IsASCIIAlphaChar(c As String) As Boolean
 		  // Returns True if the passed character `c` is A-Z or a-z.
 		  
-		  Select Case Asc(c)
+		  Select Case c.Asc
 		  Case 65 To 90, 97 To 122
 		    Return True
 		  Else
@@ -2201,7 +2201,7 @@ Protected Class Utilities
 		Shared Function IsDigit(c As String) As Boolean
 		  // Returns True if the passed character `c` a digit 0-9.
 		  
-		  Select Case Asc(c)
+		  Select Case c.Asc
 		  Case 48 To 57
 		    Return True
 		  Else
@@ -2215,7 +2215,7 @@ Protected Class Utilities
 		Shared Function IsHexDigit(c As String) As Boolean
 		  // Returns True if the passed character `c` is A-F, a-f or 0-9.
 		  
-		  Select Case Asc(c)
+		  Select Case c.Asc
 		  Case 65 To 70, 97 To 102, 48 To 57
 		    Return True
 		  Else
@@ -2243,7 +2243,7 @@ Protected Class Utilities
 		Shared Function IsUppercaseASCIIChar(c As String) As Boolean
 		  // Returns True if the passed character `c` is an uppercase ASCII character.
 		  
-		  Select Case Asc(c)
+		  Select Case c.Asc
 		  Case 65 To 90
 		    Return True
 		  Else

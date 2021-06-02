@@ -609,6 +609,7 @@ Begin Window WinHTMLTests
    Begin HTMLTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
+      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -1126,6 +1127,16 @@ End
 	#tag MenuHandler
 		Function EditUnselectAllGroups() As Boolean Handles EditUnselectAllGroups.Action
 			SelectAllGroups(False, False)
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function TestsRunAllTests() As Boolean Handles TestsRunAllTests.Action
+			RunUntilFail = False
+			RunTests
 			
 			Return True
 			

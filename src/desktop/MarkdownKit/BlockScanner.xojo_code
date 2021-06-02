@@ -180,7 +180,7 @@ Protected Class BlockScanner
 		        Exit
 		      End Select
 		    Next i
-		    Var start As Integer = Val(startText)
+		    Var start As Integer = startText.Val
 		    pos = pos + numDigits
 		    // pos now points to the character after the last digit.
 		    If pos > charsUbound Then Return 0

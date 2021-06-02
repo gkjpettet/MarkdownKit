@@ -67,7 +67,7 @@ Inherits TestController
 		  Var tmp As Integer
 		  For i As Integer = startPos To chars.LastIndex
 		    Try
-		      tmp = Val(chars(i))
+		      tmp = chars(i).Val
 		      result = result + chars(i)
 		    Catch
 		      Exit

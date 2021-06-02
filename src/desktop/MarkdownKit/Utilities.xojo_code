@@ -2424,7 +2424,7 @@ Protected Class Utilities
 		          For x As Integer = 1 To tmp.LastIndex + 4
 		            chars.RemoveAt(start)
 		          Next x
-		          codePoint = Val(String.FromArray(tmp, ""))
+		          codePoint = String.FromArray(tmp, "").Val
 		          // For security reasons, the code point U+0000 is replaced by U+FFFD.
 		          If codePoint = 0 Then codePoint = &hFFFD
 		          chars.AddAt(start, Text.FromUnicodeCodepoint(codePoint))

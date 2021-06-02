@@ -70,8 +70,8 @@ Protected Class Assert
 		Sub AreEqual(expected() As Double, actual() As Double, message As Text = "")
 		  Dim expectedSize, actualSize As Double
 		  
-		  expectedSize = UBound(expected)
-		  actualSize = UBound(actual)
+		  expectedSize = expected.LastRowIndex
+		  actualSize = actual.LastRowIndex
 		  
 		  If expectedSize <> actualSize Then
 		    Fail( "Expected Integer array Ubound [" + expectedSize.ToText + _
@@ -194,8 +194,8 @@ Protected Class Assert
 		Sub AreEqual(expected() As Integer, actual() As Integer, message As Text = "")
 		  Dim expectedSize, actualSize As Integer
 		  
-		  expectedSize = UBound(expected)
-		  actualSize = UBound(actual)
+		  expectedSize = expected.LastRowIndex
+		  actualSize = actual.LastRowIndex
 		  
 		  If expectedSize <> actualSize Then
 		    Fail( "Expected Integer array Ubound [" + expectedSize.ToText + _
@@ -221,8 +221,8 @@ Protected Class Assert
 		Sub AreEqual(expected() As String, actual() As String, message As Text = "")
 		  Dim expectedSize, actualSize As Integer
 		  
-		  expectedSize = UBound(expected)
-		  actualSize = UBound(actual)
+		  expectedSize = expected.LastRowIndex
+		  actualSize = actual.LastRowIndex
 		  
 		  If expectedSize <> actualSize Then
 		    Fail( "Expected String array Ubound [" + expectedSize.ToText + _
@@ -260,8 +260,8 @@ Protected Class Assert
 		Sub AreEqual(expected() As Text, actual() As Text, message As Text = "")
 		  Dim expectedSize, actualSize As Integer
 		  
-		  expectedSize = UBound(expected)
-		  actualSize = UBound(actual)
+		  expectedSize = expected.LastRowIndex
+		  actualSize = actual.LastRowIndex
 		  
 		  If expectedSize <> actualSize Then
 		    Fail( "Expected Text array Ubound [" + expectedSize.ToText + _
@@ -616,8 +616,8 @@ Protected Class Assert
 		Sub AreSame(expected() As String, actual() As String, message As Text = "")
 		  Dim expectedSize, actualSize As Integer
 		  
-		  expectedSize = UBound(expected)
-		  actualSize = UBound(actual)
+		  expectedSize = expected.LastRowIndex
+		  actualSize = actual.LastRowIndex
 		  
 		  If expectedSize <> actualSize Then
 		    Fail( "Expected Text array Ubound [" + expectedSize.ToText + _
@@ -661,8 +661,8 @@ Protected Class Assert
 		Sub AreSame(expected() As Text, actual() As Text, message As Text = "")
 		  Dim expectedSize, actualSize As Integer
 		  
-		  expectedSize = UBound(expected)
-		  actualSize = UBound(actual)
+		  expectedSize = expected.LastRowIndex
+		  actualSize = actual.LastRowIndex
 		  
 		  If expectedSize <> actualSize Then
 		    Fail( "Expected Text array Ubound [" + expectedSize.ToText + _

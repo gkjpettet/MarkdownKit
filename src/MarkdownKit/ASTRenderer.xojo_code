@@ -1,18 +1,18 @@
 #tag Class
 Protected Class ASTRenderer
 Implements Global.MarkdownKit.IRenderer
-	#tag Method, Flags = &h21
+	#tag Method, Flags = &h21, Description = 52657475726E7320746865207265717569726564206E756D626572206F662073706163657320746F20726570726573656E74207468652063757272656E7420696E64656E742E
 		Private Function CurrentIndent() As String
-		  // Given the current indentation level (specified by mCurrentIndent), this 
-		  // method returns mCurrentIndent * 4 number of spaces as Text.
+		  /// Returns the required number of spaces to represent the current indent.
 		  
 		  If Not Pretty Then Return ""
 		  
-		  Dim numSpaces As Integer = mCurrentIndent * kSpacesPerIndent
-		  Dim tmp() As String
+		  Var numSpaces As Integer = mCurrentIndent * SPACES_PER_INDENT
+		  Var tmp() As String
 		  For i As Integer = 1 To numSpaces
 		    tmp.Add(" ")
 		  Next i
+		  
 		  Return String.FromArray(tmp, "")
 		  
 		End Function
@@ -545,7 +545,7 @@ Implements Global.MarkdownKit.IRenderer
 	#tag EndProperty
 
 
-	#tag Constant, Name = kSpacesPerIndent, Type = Double, Dynamic = False, Default = \"4", Scope = Private
+	#tag Constant, Name = SPACES_PER_INDENT, Type = Double, Dynamic = False, Default = \"4", Scope = Private
 	#tag EndConstant
 
 

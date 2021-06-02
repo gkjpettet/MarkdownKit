@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.0.0
+_2nd June 2021_
+* Despite the release notes for 1.0.4, this version is _actually_ fully API 2.0 compliant. This required a lot of refactoring
+but all tests are back to passing and any mention of `Text`, `Auto` and `Xojo.Core.` have been banished.
+* The repo's structure has been refactored to tidy it up and some polish has been added to the test windows and the demo app.
+
 ## 1.0.4
 _8th November 2019_
 * Updated to fully support API 2.0.

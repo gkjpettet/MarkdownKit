@@ -4,11 +4,12 @@
 				End
 				Begin CopyFilesBuildStep CopyTestAssetsLinux
 					AppliesTo = 0
+					Architecture = 0
 					Destination = 1
 					Subdirectory = 
-					FolderItem = Li4vLi4vdGVzdHMvQVNUcy8=
-					FolderItem = Li4vLi4vdGVzdHMvSFRNTC8=
-					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
+					FolderItem = Li4vLi4vLi4vdGVzdHMvQVNUcy8=
+					FolderItem = Li4vLi4vLi4vdGVzdHMvSFRNTC8=
+					FolderItem = Li4vLi4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
 				End
 			End
 			Begin BuildStepList Mac OS X
@@ -16,11 +17,12 @@
 				End
 				Begin CopyFilesBuildStep CopyTestAssetsMac
 					AppliesTo = 0
+					Architecture = 0
 					Destination = 1
 					Subdirectory = 
-					FolderItem = Li4vLi4vdGVzdHMvQVNUcy8=
-					FolderItem = Li4vLi4vdGVzdHMvSFRNTC8=
-					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
+					FolderItem = Li4vLi4vLi4vdGVzdHMvQVNUcy8=
+					FolderItem = Li4vLi4vLi4vdGVzdHMvSFRNTC8=
+					FolderItem = Li4vLi4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
 				End
 			End
 			Begin BuildStepList Windows
@@ -28,11 +30,12 @@
 				End
 				Begin CopyFilesBuildStep CopyTestAssetsWin
 					AppliesTo = 0
+					Architecture = 0
 					Destination = 1
 					Subdirectory = 
-					FolderItem = Li4vLi4vdGVzdHMvQVNUcy8=
-					FolderItem = Li4vLi4vdGVzdHMvSFRNTC8=
-					FolderItem = Li4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
+					FolderItem = Li4vLi4vLi4vdGVzdHMvQVNUcy8=
+					FolderItem = Li4vLi4vLi4vdGVzdHMvSFRNTC8=
+					FolderItem = Li4vLi4vLi4vdGVzdHMvc291cmNlJTIwbWFya2Rvd24v
 				End
 			End
 #tag EndBuildAutomation

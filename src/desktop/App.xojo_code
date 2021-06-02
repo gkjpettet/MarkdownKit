@@ -1,16 +1,6 @@
 #tag Class
 Protected Class App
 Inherits Application
-	#tag Event
-		Sub Open()
-		  // Initialise MarkdownKit.
-		  MarkdownKit.Initialise
-		  
-		  
-		End Sub
-	#tag EndEvent
-
-
 	#tag MenuHandler
 		Function WindowASTTests() As Boolean Handles WindowASTTests.Action
 			WinASTTests.Show

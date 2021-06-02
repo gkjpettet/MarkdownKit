@@ -16,11 +16,57 @@ Protected Module MarkdownKit
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h21, Description = 52657475726E7320612064696374696F6E61727920636F6E7461696E696E67206368617261637465727320746861742063616E20626520657363617065642077697468206120707265636564696E67206261636B736C6173682E
+		Private Function EscapableCharactersDictionary() As Dictionary
+		  /// Returns a dictionary containing characters that can be 
+		  /// escaped with a preceding backslash.
+		  
+		  Var d As New Dictionary
+		  
+		  d.Value("!") = 0
+		  d.Value("""") = 0
+		  d.Value("#") = 0
+		  d.Value("$") = 0
+		  d.Value("%") = 0
+		  d.Value("&") = 0
+		  d.Value("'") = 0
+		  d.Value("(") = 0
+		  d.Value(")") = 0
+		  d.Value("*") = 0
+		  d.Value("+") = 0
+		  d.Value(",") = 0
+		  d.Value("-") = 0
+		  d.Value(".") = 0
+		  d.Value("/") = 0
+		  d.Value("\") = 0
+		  d.Value(":") = 0
+		  d.Value(";") = 0
+		  d.Value("<") = 0
+		  d.Value("=") = 0
+		  d.Value(">") = 0
+		  d.Value("?") = 0
+		  d.Value("@") = 0
+		  d.Value("[") = 0
+		  d.Value("]") = 0
+		  d.Value("^") = 0
+		  d.Value("_") = 0
+		  d.Value("`") = 0
+		  d.Value("{") = 0
+		  d.Value("|") = 0
+		  d.Value("}") = 0
+		  d.Value("~") = 0
+		  
+		  Return d
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1, Description = 496E697469616C697365204D61726B646F776E4B6974206168656164206F662074696D652E2057696C6C206265206175746F6D61746963616C6C7920696E697469616C697365642075706F6E206669727374207573652E
 		Protected Sub Initialise()
 		  If mInitialised Then Return
 		  
-		  InitialiseEscapableCharactersDictionary
+		  // Performing any operation on `mEscapableCharacters` will create it.
+		  Call mEscapableCharacters.KeyCount
 		  
 		  BlockScanner.Initialise
 		  InlineScanner.Initialise
@@ -28,48 +74,6 @@ Protected Module MarkdownKit
 		  
 		  mInitialised = True
 		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Sub InitialiseEscapableCharactersDictionary()
-		  // This Dictionary provides fast lookup for characters that can be 
-		  // escaped with a preceding backslash.
-		  
-		  mEscapableCharacters = New Dictionary
-		  
-		  mEscapableCharacters.Value("!") = 0
-		  mEscapableCharacters.Value("""") = 0
-		  mEscapableCharacters.Value("#") = 0
-		  mEscapableCharacters.Value("$") = 0
-		  mEscapableCharacters.Value("%") = 0
-		  mEscapableCharacters.Value("&") = 0
-		  mEscapableCharacters.Value("'") = 0
-		  mEscapableCharacters.Value("(") = 0
-		  mEscapableCharacters.Value(")") = 0
-		  mEscapableCharacters.Value("*") = 0
-		  mEscapableCharacters.Value("+") = 0
-		  mEscapableCharacters.Value(",") = 0
-		  mEscapableCharacters.Value("-") = 0
-		  mEscapableCharacters.Value(".") = 0
-		  mEscapableCharacters.Value("/") = 0
-		  mEscapableCharacters.Value("\") = 0
-		  mEscapableCharacters.Value(":") = 0
-		  mEscapableCharacters.Value(";") = 0
-		  mEscapableCharacters.Value("<") = 0
-		  mEscapableCharacters.Value("=") = 0
-		  mEscapableCharacters.Value(">") = 0
-		  mEscapableCharacters.Value("?") = 0
-		  mEscapableCharacters.Value("@") = 0
-		  mEscapableCharacters.Value("[") = 0
-		  mEscapableCharacters.Value("]") = 0
-		  mEscapableCharacters.Value("^") = 0
-		  mEscapableCharacters.Value("_") = 0
-		  mEscapableCharacters.Value("`") = 0
-		  mEscapableCharacters.Value("{") = 0
-		  mEscapableCharacters.Value("|") = 0
-		  mEscapableCharacters.Value("}") = 0
-		  mEscapableCharacters.Value("~") = 0
 		End Sub
 	#tag EndMethod
 
@@ -310,9 +314,16 @@ Protected Module MarkdownKit
 	#tag EndNote
 
 
-	#tag Property, Flags = &h21, Description = 412064696374696F6E617279206F6620746865206368617261637465727320746861742061726520657363617061626C65206279206120707265636564696E67206261636B736C617368
+	#tag ComputedProperty, Flags = &h21, Description = 412064696374696F6E617279206F6620746865206368617261637465727320746861742061726520657363617061626C65206279206120707265636564696E67206261636B736C617368
+		#tag Getter
+			Get
+			  Static d As Dictionary = EscapableCharactersDictionary
+			  Return d
+			  
+			End Get
+		#tag EndGetter
 		Private mEscapableCharacters As Dictionary
-	#tag EndProperty
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
 		Private mInitialised As Boolean = False

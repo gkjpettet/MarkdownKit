@@ -64,9 +64,6 @@ Inherits MarkdownKit.Block
 		  
 		  Self.ReferenceMap = New Dictionary
 		  
-		  // Make sure that the MarkdownKit module has been initialised.
-		  MarkdownKit.Initialise
-		  
 		  // Standardise the line endings in the passed Markdown to line feeds.
 		  source = ReplaceLineEndings(source, &u000A)
 		  

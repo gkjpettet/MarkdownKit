@@ -192,6 +192,72 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
+		Private Shared Function EmailPartOneCharacters() As Dictionary
+		  Var d As New Dictionary
+		  
+		  d.Value("a") = 0
+		  d.Value("b") = 0
+		  d.Value("c") = 0
+		  d.Value("d") = 0
+		  d.Value("e") = 0
+		  d.Value("f") = 0
+		  d.Value("g") = 0
+		  d.Value("h") = 0
+		  d.Value("i") = 0
+		  d.Value("j") = 0
+		  d.Value("k") = 0
+		  d.Value("l") = 0
+		  d.Value("m") = 0
+		  d.Value("n") = 0
+		  d.Value("o") = 0
+		  d.Value("p") = 0
+		  d.Value("q") = 0
+		  d.Value("r") = 0
+		  d.Value("s") = 0
+		  d.Value("t") = 0
+		  d.Value("u") = 0
+		  d.Value("v") = 0
+		  d.Value("w") = 0
+		  d.Value("x") = 0
+		  d.Value("y") = 0
+		  d.Value("z") = 0
+		  d.Value("0") = 0
+		  d.Value("1") = 0
+		  d.Value("2") = 0
+		  d.Value("3") = 0
+		  d.Value("4") = 0
+		  d.Value("5") = 0
+		  d.Value("6") = 0
+		  d.Value("7") = 0
+		  d.Value("8") = 0
+		  d.Value("9") = 0
+		  d.Value(".") = 0
+		  d.Value("!") = 0
+		  d.Value("#") = 0
+		  d.Value("$") = 0
+		  d.Value("%") = 0
+		  d.Value("&") = 0
+		  d.Value("'") = 0
+		  d.Value("*") = 0
+		  d.Value("+") = 0
+		  d.Value("/") = 0
+		  d.Value("=") = 0
+		  d.Value("?") = 0
+		  d.Value("^") = 0
+		  d.Value("_") = 0
+		  d.Value("`") = 0
+		  d.Value("{") = 0
+		  d.Value("|") = 0
+		  d.Value("}") = 0
+		  d.Value("~") = 0
+		  d.Value("-") = 0
+		  
+		  Return d
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
 		Private Shared Function FullReferenceImageData(ByRef container As markdownKit.Block, chars() As String, charsUbound As Integer, imageDescriptionChars() As String, startPos As Integer) As MarkdownKit.InlineImageData
 		  // Returns either an inline image or Nil if a valid full reference image cannot be constructed.
 		  // `imageDescriptionChars` are the raw characters representing this images's 
@@ -414,73 +480,10 @@ Protected Class InlineScanner
 		Shared Sub Initialise()
 		  If mInitialised Then Return
 		  
-		  InitialiseEmailPartOneDictionary
+		  // Performing any operation on `mEmailPartOneCharacters` will create it.
+		  Call mEmailPartOneCharacters.KeyCount
 		  
 		  mInitialised = True
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Shared Sub InitialiseEmailPartOneDictionary()
-		  mEmailPartOneCharacters = New Dictionary
-		  
-		  mEmailPartOneCharacters.Value("a") = 0
-		  mEmailPartOneCharacters.Value("b") = 0
-		  mEmailPartOneCharacters.Value("c") = 0
-		  mEmailPartOneCharacters.Value("d") = 0
-		  mEmailPartOneCharacters.Value("e") = 0
-		  mEmailPartOneCharacters.Value("f") = 0
-		  mEmailPartOneCharacters.Value("g") = 0
-		  mEmailPartOneCharacters.Value("h") = 0
-		  mEmailPartOneCharacters.Value("i") = 0
-		  mEmailPartOneCharacters.Value("j") = 0
-		  mEmailPartOneCharacters.Value("k") = 0
-		  mEmailPartOneCharacters.Value("l") = 0
-		  mEmailPartOneCharacters.Value("m") = 0
-		  mEmailPartOneCharacters.Value("n") = 0
-		  mEmailPartOneCharacters.Value("o") = 0
-		  mEmailPartOneCharacters.Value("p") = 0
-		  mEmailPartOneCharacters.Value("q") = 0
-		  mEmailPartOneCharacters.Value("r") = 0
-		  mEmailPartOneCharacters.Value("s") = 0
-		  mEmailPartOneCharacters.Value("t") = 0
-		  mEmailPartOneCharacters.Value("u") = 0
-		  mEmailPartOneCharacters.Value("v") = 0
-		  mEmailPartOneCharacters.Value("w") = 0
-		  mEmailPartOneCharacters.Value("x") = 0
-		  mEmailPartOneCharacters.Value("y") = 0
-		  mEmailPartOneCharacters.Value("z") = 0
-		  mEmailPartOneCharacters.Value("0") = 0
-		  mEmailPartOneCharacters.Value("1") = 0
-		  mEmailPartOneCharacters.Value("2") = 0
-		  mEmailPartOneCharacters.Value("3") = 0
-		  mEmailPartOneCharacters.Value("4") = 0
-		  mEmailPartOneCharacters.Value("5") = 0
-		  mEmailPartOneCharacters.Value("6") = 0
-		  mEmailPartOneCharacters.Value("7") = 0
-		  mEmailPartOneCharacters.Value("8") = 0
-		  mEmailPartOneCharacters.Value("9") = 0
-		  mEmailPartOneCharacters.Value(".") = 0
-		  mEmailPartOneCharacters.Value("!") = 0
-		  mEmailPartOneCharacters.Value("#") = 0
-		  mEmailPartOneCharacters.Value("$") = 0
-		  mEmailPartOneCharacters.Value("%") = 0
-		  mEmailPartOneCharacters.Value("&") = 0
-		  mEmailPartOneCharacters.Value("'") = 0
-		  mEmailPartOneCharacters.Value("*") = 0
-		  mEmailPartOneCharacters.Value("+") = 0
-		  mEmailPartOneCharacters.Value("/") = 0
-		  mEmailPartOneCharacters.Value("=") = 0
-		  mEmailPartOneCharacters.Value("?") = 0
-		  mEmailPartOneCharacters.Value("^") = 0
-		  mEmailPartOneCharacters.Value("_") = 0
-		  mEmailPartOneCharacters.Value("`") = 0
-		  mEmailPartOneCharacters.Value("{") = 0
-		  mEmailPartOneCharacters.Value("|") = 0
-		  mEmailPartOneCharacters.Value("}") = 0
-		  mEmailPartOneCharacters.Value("~") = 0
-		  mEmailPartOneCharacters.Value("-") = 0
 		  
 		End Sub
 	#tag EndMethod
@@ -2013,13 +2016,20 @@ Protected Class InlineScanner
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h21
+	#tag ComputedProperty, Flags = &h21
 		#tag Note
 			Stores the characters that are valid for the first part of an email autolink:
 			a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-
 		#tag EndNote
+		#tag Getter
+			Get
+			  Static d As Dictionary = EmailPartOneCharacters
+			  Return d
+			  
+			End Get
+		#tag EndGetter
 		Private Shared mEmailPartOneCharacters As Dictionary
-	#tag EndProperty
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
 		Private Shared mInitialised As Boolean = False

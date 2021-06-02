@@ -41,85 +41,88 @@ Protected Class BlockScanner
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21, Description = 52657475726E732061206C6F6F6B75702064696374696F6E61727920666F722048544D4C20746167206E616D65732E
+		Private Shared Function HTMLTagNames() As Dictionary
+		  /// Returns a lookup dictionary for HTML tag names.
+		  
+		  Var d As New Dictionary
+		  
+		  d.Value("ADDRESS") = 0
+		  d.Value("ARTICLE") = 0
+		  d.Value("ASIDE") = 0
+		  d.Value("BASE") = 0
+		  d.Value("BASEFONT") = 0
+		  d.Value("BLOCKQUOTE") = 0
+		  d.Value("BODY") = 0
+		  d.Value("CAPTION") = 0
+		  d.Value("CENTER") = 0
+		  d.Value("COL") = 0
+		  d.Value("COLGROUP") = 0
+		  d.Value("DD") = 0
+		  d.Value("DETAILS") = 0
+		  d.Value("DIALOG") = 0
+		  d.Value("DIR") = 0
+		  d.Value("DIV") = 0
+		  d.Value("DL") = 0
+		  d.Value("DT") = 0
+		  d.Value("FIELDSET") = 0
+		  d.Value("FIGCAPTION") = 0
+		  d.Value("FIGURE") = 0
+		  d.Value("FOOTER") = 0
+		  d.Value("FORM") = 0
+		  d.Value("FRAME") = 0
+		  d.Value("FRAMESET") = 0
+		  d.Value("H1") = 0
+		  d.Value("H2") = 0
+		  d.Value("H3") = 0
+		  d.Value("H4") = 0
+		  d.Value("H5") = 0
+		  d.Value("H6") = 0
+		  d.Value("HEAD") = 0
+		  d.Value("HEADER") = 0
+		  d.Value("HR") = 0
+		  d.Value("HTML") = 0
+		  d.Value("IFRAME") = 0
+		  d.Value("LEGEND") = 0
+		  d.Value("LI") = 0
+		  d.Value("LINK") = 0
+		  d.Value("MAIN") = 0
+		  d.Value("MENU") = 0
+		  d.Value("MENUITEM") = 0
+		  d.Value("NAV") = 0
+		  d.Value("NOFRAMES") = 0
+		  d.Value("OL") = 0
+		  d.Value("OPTGROUP") = 0
+		  d.Value("OPTION") = 0
+		  d.Value("P") = 0
+		  d.Value("PARAM") = 0
+		  d.Value("SECTION") = 0
+		  d.Value("SOURCE") = 0
+		  d.Value("SUMMARY") = 0
+		  d.Value("TABLE") = 0
+		  d.Value("TBODY") = 0
+		  d.Value("TD") = 0
+		  d.Value("TFOOT") = 0
+		  d.Value("TH") = 0
+		  d.Value("THEAD") = 0
+		  d.Value("TITLE") = 0
+		  d.Value("TR") = 0
+		  d.Value("TRACK") = 0
+		  d.Value("UL") = 0
+		  
+		  Return d
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Shared Sub Initialise()
 		  If mInitialised Then Return
 		  
-		  InitialiseBlockScannerHTMLTagNames
+		  // Performing any operation on `mHTMLTagNames` will initialise it.
+		  Call mHTMLTagNames.KeyCount
 		  
 		  mInitialised = True
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Shared Sub InitialiseBlockScannerHTMLTagNames()
-		  // Initialise the lookup dictionary for HTML tag names.
-		  
-		  mHTMLTagNames = New Dictionary
-		  
-		  mHTMLTagNames.Value("ADDRESS") = 0
-		  mHTMLTagNames.Value("ARTICLE") = 0
-		  mHTMLTagNames.Value("ASIDE") = 0
-		  mHTMLTagNames.Value("BASE") = 0
-		  mHTMLTagNames.Value("BASEFONT") = 0
-		  mHTMLTagNames.Value("BLOCKQUOTE") = 0
-		  mHTMLTagNames.Value("BODY") = 0
-		  mHTMLTagNames.Value("CAPTION") = 0
-		  mHTMLTagNames.Value("CENTER") = 0
-		  mHTMLTagNames.Value("COL") = 0
-		  mHTMLTagNames.Value("COLGROUP") = 0
-		  mHTMLTagNames.Value("DD") = 0
-		  mHTMLTagNames.Value("DETAILS") = 0
-		  mHTMLTagNames.Value("DIALOG") = 0
-		  mHTMLTagNames.Value("DIR") = 0
-		  mHTMLTagNames.Value("DIV") = 0
-		  mHTMLTagNames.Value("DL") = 0
-		  mHTMLTagNames.Value("DT") = 0
-		  mHTMLTagNames.Value("FIELDSET") = 0
-		  mHTMLTagNames.Value("FIGCAPTION") = 0
-		  mHTMLTagNames.Value("FIGURE") = 0
-		  mHTMLTagNames.Value("FOOTER") = 0
-		  mHTMLTagNames.Value("FORM") = 0
-		  mHTMLTagNames.Value("FRAME") = 0
-		  mHTMLTagNames.Value("FRAMESET") = 0
-		  mHTMLTagNames.Value("H1") = 0
-		  mHTMLTagNames.Value("H2") = 0
-		  mHTMLTagNames.Value("H3") = 0
-		  mHTMLTagNames.Value("H4") = 0
-		  mHTMLTagNames.Value("H5") = 0
-		  mHTMLTagNames.Value("H6") = 0
-		  mHTMLTagNames.Value("HEAD") = 0
-		  mHTMLTagNames.Value("HEADER") = 0
-		  mHTMLTagNames.Value("HR") = 0
-		  mHTMLTagNames.Value("HTML") = 0
-		  mHTMLTagNames.Value("IFRAME") = 0
-		  mHTMLTagNames.Value("LEGEND") = 0
-		  mHTMLTagNames.Value("LI") = 0
-		  mHTMLTagNames.Value("LINK") = 0
-		  mHTMLTagNames.Value("MAIN") = 0
-		  mHTMLTagNames.Value("MENU") = 0
-		  mHTMLTagNames.Value("MENUITEM") = 0
-		  mHTMLTagNames.Value("NAV") = 0
-		  mHTMLTagNames.Value("NOFRAMES") = 0
-		  mHTMLTagNames.Value("OL") = 0
-		  mHTMLTagNames.Value("OPTGROUP") = 0
-		  mHTMLTagNames.Value("OPTION") = 0
-		  mHTMLTagNames.Value("P") = 0
-		  mHTMLTagNames.Value("PARAM") = 0
-		  mHTMLTagNames.Value("SECTION") = 0
-		  mHTMLTagNames.Value("SOURCE") = 0
-		  mHTMLTagNames.Value("SUMMARY") = 0
-		  mHTMLTagNames.Value("TABLE") = 0
-		  mHTMLTagNames.Value("TBODY") = 0
-		  mHTMLTagNames.Value("TD") = 0
-		  mHTMLTagNames.Value("TFOOT") = 0
-		  mHTMLTagNames.Value("TH") = 0
-		  mHTMLTagNames.Value("THEAD") = 0
-		  mHTMLTagNames.Value("TITLE") = 0
-		  mHTMLTagNames.Value("TR") = 0
-		  mHTMLTagNames.Value("TRACK") = 0
-		  mHTMLTagNames.Value("UL") = 0
 		  
 		End Sub
 	#tag EndMethod
@@ -851,9 +854,16 @@ Protected Class BlockScanner
 	#tag EndNote
 
 
-	#tag Property, Flags = &h21
+	#tag ComputedProperty, Flags = &h21
+		#tag Getter
+			Get
+			  Static d As Dictionary = HTMLTagNames
+			  Return d
+			  
+			End Get
+		#tag EndGetter
 		Private Shared mHTMLTagNames As Dictionary
-	#tag EndProperty
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
 		Private Shared mInitialised As Boolean = False

@@ -1,5 +1,5 @@
 #tag Class
-Protected Class EdgeCase
+Protected Class XojoUnitTestFailedException
 Inherits RuntimeException
 	#tag ViewBehavior
 		#tag ViewProperty

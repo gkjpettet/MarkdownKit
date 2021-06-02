@@ -1,7 +1,7 @@
 #tag Class
 Protected Class TestResult
 	#tag Property, Flags = &h0
-		Actual As Text
+		Actual As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -9,7 +9,7 @@ Protected Class TestResult
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Expected As Text
+		Expected As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -17,7 +17,7 @@ Protected Class TestResult
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Message As Text
+		Message As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -25,11 +25,11 @@ Protected Class TestResult
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Result As Text
+		Result As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		TestName As Text
+		TestName As String
 	#tag EndProperty
 
 

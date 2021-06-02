@@ -56,7 +56,7 @@ Protected Class BlockScanner
 		Private Shared Sub InitialiseBlockScannerHTMLTagNames()
 		  // Initialise the lookup dictionary for HTML tag names.
 		  
-		  mHTMLTagNames = New Xojo.Core.Dictionary
+		  mHTMLTagNames = New Dictionary
 		  
 		  mHTMLTagNames.Value("ADDRESS") = 0
 		  mHTMLTagNames.Value("ARTICLE") = 0
@@ -852,7 +852,7 @@ Protected Class BlockScanner
 
 
 	#tag Property, Flags = &h21
-		Private Shared mHTMLTagNames As Xojo.Core.Dictionary
+		Private Shared mHTMLTagNames As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

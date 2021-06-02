@@ -283,7 +283,7 @@ Protected Class InlineScanner
 		  If Not seenNonWhitespace Then Return Nil
 		  
 		  // Does the document's reference map contain a reference with the same label?
-		  Dim linkLabel As Text = String.FromArray(linkLabelChars, "").ToText
+		  Dim linkLabel As String = String.FromArray(linkLabelChars, "")
 		  If Not container.Root.ReferenceMap.HasKey(linkLabel.Lowercase) Then Return Nil
 		  
 		  // Construct this reference link.
@@ -611,6 +611,8 @@ Protected Class InlineScanner
 		  // If a valid link/image is found the a new block is created of the appropriate 
 		  // type, inserted into the container and any inlines it containes are handled.
 		  
+		  #Pragma Warning "FIX: This is returning False when using classic dictionary for reference map."
+		  
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
@@ -624,6 +626,12 @@ Protected Class InlineScanner
 		  Dim openerIndex, openerPos As Integer
 		  Dim link, openerTextNode, image As MarkdownKit.Block
 		  Dim limit As Integer
+		  
+		  #Pragma Warning "REMOVE"
+		  If App.DEBUGGING Then
+		    'Break
+		  End If
+		  
 		  For i As Integer = delimiterStackUbound DownTo 0
 		    dsn = delimiterStack(i)
 		    
@@ -770,7 +778,6 @@ Protected Class InlineScanner
 		  Dim dsn As MarkdownKit.DelimiterStackNode
 		  
 		  While pos <= charsUbound
-		    
 		    lastChar = c
 		    c = b.Chars(pos)
 		    
@@ -836,7 +843,9 @@ Protected Class InlineScanner
 		      
 		    ElseIf c = "[" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= Start of inline link? =========
-		      If buffer <> Nil Then CloseBuffer(buffer, b)
+		      If buffer <> Nil Then
+		        CloseBuffer(buffer, b)
+		      End If
 		      buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		      buffer.StartPos = pos
 		      buffer.EndPos = pos // One character long.
@@ -850,7 +859,9 @@ Protected Class InlineScanner
 		      
 		    ElseIf c = "!" And Not Utilities.Escaped(b.Chars, pos) And Peek(b.Chars, pos + 1, "[") Then
 		      // ========= Start of inline image? =========
-		      If buffer <> Nil Then CloseBuffer(buffer, b)
+		      If buffer <> Nil Then
+		        CloseBuffer(buffer, b)
+		      End If
 		      buffer = New MarkdownKit.Block(BlockType.InlineText, New WeakRef(b))
 		      buffer.StartPos = pos
 		      buffer.EndPos = pos + 1 // Two characters long.
@@ -865,7 +876,15 @@ Protected Class InlineScanner
 		    ElseIf c = "]" And Not Utilities.Escaped(b.Chars, pos) Then
 		      // ========= End of inline link or image? =========
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
+		      
 		      If Not LookForLinkOrImage(b, delimiterStack, pos) Then
+		        #Pragma Warning "REMOVE"
+		        If App.DEBUGGING Then
+		          // Hit 1x when using broken classic dictionary.
+		          // Never hit when using the working Xojo.Core.Dictionary.
+		          'Break
+		        End If
+		        
 		        // Add a literal "]" text node.
 		        If buffer <> Nil Then
 		          buffer.EndPos = pos
@@ -904,7 +923,16 @@ Protected Class InlineScanner
 		    End If
 		  Wend
 		  
-		  If buffer <> Nil Then CloseBuffer(buffer, b)
+		  If buffer <> Nil Then
+		    #Pragma Warning "BROKEN"
+		    // This is hit when using the broken classic Dictionary.
+		    // Never hit when using the working Xojo.Core.Dictionary.
+		    // Therefore, buffer should be NIL but isn't!!
+		    If App.DEBUGGING Then
+		      'Break
+		    End If
+		    CloseBuffer(buffer, b)
+		  End If
 		  
 		  ProcessEmphasis(b, delimiterStack, -1)
 		End Sub
@@ -912,6 +940,14 @@ Protected Class InlineScanner
 
 	#tag Method, Flags = &h21
 		Private Shared Sub ProcessEmphasis(ByRef container As MarkdownKit.Block, ByRef delimiterStack() As MarkdownKit.DelimiterStackNode, stackBottom As Integer)
+		  #Pragma Warning "REMOVE"
+		  If App.DEBUGGING Then
+		    // Hit 2x when correct.
+		    // Hit 1x when using broken classic dictionary (and hit after the 
+		    // breakpoint at the end of ParseInlines).
+		    'Break
+		  End If
+		  
 		  // `stackBottom` sets a lower bound to how far we descend in the delimiter stack. If it's -1, 
 		  // we can go all the way to the bottom. Otherwise, we stop before visiting stackBottom.
 		  
@@ -1553,13 +1589,19 @@ Protected Class InlineScanner
 		  Next i
 		  
 		  // Is part1 a valid linkLabel?
-		  Dim linkLabelAsText As Text // Must be text to permit case-sensitive lookups.
+		  Dim linkLabelAsText As String // Must be text to permit case-sensitive lookups.
 		  Dim validLinkLabel As Boolean = False
 		  If part1RawChars.LastIndex > -1 Then
 		    linkLabelAsText = String.FromArray(part1RawChars, "").ToText
 		    If container.Root.ReferenceMap.HasKey(linkLabelAsText.Lowercase) Then
 		      validLinkLabel = True
 		    End If
+		  End If
+		  
+		  #Pragma Warning "FIX - Example 161"
+		  // validLinkLabel is set to False when it should be set to True!!!
+		  If App.DEBUGGING Then
+		    'Break
 		  End If
 		  
 		  // Move past the closing part1 square bracket.

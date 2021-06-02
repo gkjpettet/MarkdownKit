@@ -145,7 +145,7 @@ Implements Global.MarkdownKit.IRenderer
 		    // we will get the keys (definition names) as an array and sort 
 		    // them alphabetically.
 		    Dim keys() As String
-		    For Each entry As Xojo.Core.DictionaryEntry In d.ReferenceMap
+		    For Each entry As DictionaryEntry In d.ReferenceMap
 		      keys.Add(entry.Key)
 		    Next entry
 		    keys.Sort

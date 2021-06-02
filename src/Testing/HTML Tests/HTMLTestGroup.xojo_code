@@ -2,22 +2,22 @@
 Protected Class HTMLTestGroup
 Inherits TestGroup
 	#tag Method, Flags = &h0
-		Sub Run(methodName As Text)
+		Sub Run(methodName As String)
 		  Dim testNumber As Integer = Val(methodName.Replace("HTMLTests.Example", "").Replace("Test", ""))
 		  
 		  // Get the names of the files containing the test Markdown and expected HTML output.
-		  Dim mdName As Text = testNumber.ToText + ".md"
-		  Dim htmlName As Text = testNumber.ToText + ".html"
+		  Dim mdName As String = testNumber.ToText + ".md"
+		  Dim htmlName As String = testNumber.ToText + ".html"
 		  
 		  // Get the example Markdown file.
-		  Dim md As Text
+		  Dim md As String
 		  If Not HTMLTestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected HTML output.
-		  Dim expected As Text
+		  Dim expected As String
 		  If Not HTMLTestController.GetTestHTML(htmlName, expected) Then
 		    Assert.Fail("Unable to load test HTML file `" + htmlName + "`")
 		    Return
@@ -28,10 +28,17 @@ Inherits TestGroup
 		  doc.ParseBlockStructure
 		  doc.ParseInlines
 		  
+		  #Pragma Warning "REMOVE"
+		  If testNumber = 161 Then
+		    App.DEBUGGING = True
+		  Else
+		    App.DEBUGGING = False
+		  End If
+		  
 		  // Convert the AST to HTML.
 		  Dim renderer As New MarkdownKit.HTMLRenderer
 		  renderer.VisitDocument(doc)
-		  Dim actual As Text = renderer.Output.ToText
+		  Dim actual As String = renderer.Output
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
@@ -50,19 +57,27 @@ Inherits TestGroup
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Duration"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Double"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FailedTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IncludeGroup"
+			Visible=false
 			Group="Behavior"
 			InitialValue="True"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -70,11 +85,15 @@ Inherits TestGroup
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsRunning"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -82,48 +101,71 @@ Inherits TestGroup
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="NotImplementedCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="PassedTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="RunTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="SkippedTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StopTestOnFail"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="TestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -131,6 +173,7 @@ Inherits TestGroup
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

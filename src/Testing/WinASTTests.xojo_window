@@ -1142,19 +1142,19 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function GetTestNumberFromTestName(testName As Text) As Text
+		Private Function GetTestNumberFromTestName(testName As String) As String
 		  // Expected test name format:
 		  // ExampleXXX
 		  
 		  Dim startPos As Integer = testName.IndexOf("Example") + 7
-		  Dim chars() As Text = testName.Split
+		  Dim chars() As String = testName.Split
 		  If startPos > chars.LastIndex Then
 		    Dim e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `exampleXX`"
 		    Raise e
 		  End If
 		  
-		  Dim result As Text
+		  Dim result As String
 		  Dim tmp As Integer
 		  For i As Integer = startPos To chars.LastIndex
 		    Try
@@ -1526,10 +1526,10 @@ End
 		  // Display this test's input Markdown source.
 		  Try
 		    // Get the test number from the test name.
-		    Dim testNumber As Text = GetTestNumberFromTestName(name.ToText)
+		    Dim testNumber As String = GetTestNumberFromTestName(name.ToText)
 		    // Read the contents of the file containing the input Markdown for this test 
 		    // and assign it to the relevant text area.
-		    Dim md As Text
+		    Dim md As String
 		    Call ASTTestController.GetTestMarkdown(testNumber + ".md", md)
 		    ASTTestController.TransformWhitespace(md)
 		    TestInputMarkdown.Text = md

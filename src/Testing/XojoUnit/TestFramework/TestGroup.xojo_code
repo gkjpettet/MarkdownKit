@@ -453,7 +453,7 @@ Protected Class TestGroup
 	#tag EndHook
 
 	#tag Hook, Flags = &h0
-		Event UnhandledException(err As RuntimeException, methodName As Text) As Boolean
+		Event UnhandledException(err As RuntimeException, methodName As String) As Boolean
 	#tag EndHook
 
 

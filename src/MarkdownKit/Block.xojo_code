@@ -389,7 +389,9 @@ Protected Class Block
 		    
 		    // Do we need to remove this paragraph entirely? This occurs when its only content 
 		    // was a reference link.
-		    If Chars.LastIndex = -1 Then Self.Parent.RemoveChild(Self)
+		    If Chars.LastIndex = -1 Then
+		      Self.Parent.RemoveChild(Self)
+		    End If
 		    
 		  Case MarkdownKit.BlockType.SetextHeading
 		    // ===== Setext heading =====
@@ -577,7 +579,7 @@ Protected Class Block
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 4B6579203D205265666572656E6365206C696E6B206E616D652C2056616C7565203D204D61726B646F776E4B69742E5265666572656E63654C696E6B446566696E6974696F6E
-		ReferenceMap As Xojo.Core.Dictionary
+		ReferenceMap As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

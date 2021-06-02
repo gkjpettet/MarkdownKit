@@ -4,18 +4,18 @@ Inherits TestGroup
 	#tag Method, Flags = &h0
 		Sub Run(testNumber As Integer)
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As Text = testNumber.ToText + ".md"
-		  Dim astNAme As Text = testNumber.ToText + ".ast"
+		  Dim mdName As String = testNumber.ToString + ".md"
+		  Dim astNAme As String = testNumber.ToString + ".ast"
 		  
 		  // Get the example Markdown file.
-		  Dim md As Text
+		  Dim md As String
 		  If Not ASTTestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected AST output.
-		  Dim expected As Text
+		  Dim expected As String
 		  If Not ASTTestController.GetTestAST(astName, expected) Then
 		    Assert.Fail("Unable to load test AST file `" + astName + "`")
 		    Return
@@ -30,7 +30,7 @@ Inherits TestGroup
 		  Dim renderer As New MarkdownKit.ASTRenderer
 		  renderer.Pretty = False
 		  renderer.VisitDocument(doc)
-		  Dim actual As Text = renderer.Output.ToText
+		  Dim actual As String = renderer.Output
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
@@ -49,19 +49,27 @@ Inherits TestGroup
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Duration"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Double"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FailedTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IncludeGroup"
+			Visible=false
 			Group="Behavior"
 			InitialValue="True"
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -69,11 +77,15 @@ Inherits TestGroup
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsRunning"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -81,48 +93,71 @@ Inherits TestGroup
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="NotImplementedCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="PassedTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="RunTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="SkippedTestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="StopTestOnFail"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="TestCount"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -130,6 +165,7 @@ Inherits TestGroup
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

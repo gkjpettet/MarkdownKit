@@ -52,7 +52,7 @@ Protected Class Utilities
 		  // One-time intialisation of the dictionary which contains the recognised HTML entity 
 		  // references and their corresponding Unicode codepoints.
 		  
-		  CharacterReferences = Xojo.Data.ParseJSON("{}") // Case-sensitive.
+		  CharacterReferences = ParseJSON("{}") // Case-sensitive.
 		  
 		  CharacterReferences.Value("AElig") = 198
 		  CharacterReferences.Value("AMP") = 38
@@ -2487,7 +2487,7 @@ Protected Class Utilities
 		      If Not seenSemiColon Then Return
 		      // `tmp` contains the HTML entity reference name.
 		      // Is this a valid entity name?
-		      Dim entityName As Text = String.FromArray(tmp, "").ToText // Must be text for correct case-sensitive lookup.
+		      Dim entityName As String = String.FromArray(tmp, "")
 		      If CharacterReferences.HasKey(entityName) Then
 		        // Remove the characters in `chars` that make up this reference.
 		        For x As Integer = 1 To tmp.LastIndex + 3
@@ -2583,7 +2583,7 @@ Protected Class Utilities
 
 
 	#tag Property, Flags = &h0
-		Shared CharacterReferences As Xojo.Core.Dictionary
+		Shared CharacterReferences As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

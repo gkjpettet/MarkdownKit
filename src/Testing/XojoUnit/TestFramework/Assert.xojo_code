@@ -734,7 +734,7 @@ Protected Class Assert
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Fail(failMessage As Text, message As Text = "")
+		Sub Fail(failMessage As String, message As String = "")
 		  Failed = True
 		  Group.CurrentTestResult.Result = TestResult.Failed
 		  
@@ -749,7 +749,7 @@ Protected Class Assert
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub FailCustom(expected As Text, actual As Text)
+		Sub FailCustom(expected As String, actual As String)
 		  Failed = True
 		  Group.CurrentTestResult.Result = TestResult.Failed
 		  
@@ -838,13 +838,13 @@ Protected Class Assert
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Message(msg As Text)
+		Sub Message(msg As String)
 		  msg = msg.Trim
-		  If msg.Empty Then
+		  If msg = "" Then
 		    Return
 		  End If
 		  
-		  If Group.CurrentTestResult.Message.Empty Then
+		  If Group.CurrentTestResult.Message.IsEmpty Then
 		    Group.CurrentTestResult.Message = msg
 		  Else
 		    Group.CurrentTestResult.Message = Group.CurrentTestResult.Message + &u0A + msg

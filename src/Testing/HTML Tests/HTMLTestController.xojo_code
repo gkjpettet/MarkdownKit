@@ -13,13 +13,13 @@ Inherits TestController
 
 
 	#tag Method, Flags = &h0
-		Shared Function GetTestHTML(fileName As Text, ByRef html As Text) As Boolean
+		Shared Function GetTestHTML(fileName As String, ByRef html As String) As Boolean
 		  // Takes the name of an example HTML output file copied to the 
 		  // app's resources folder and returns the contents.
 		  
-		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource("HTML").Child(fileName)
+		  Dim f As FolderItem = SpecialFolder.Resource("HTML").Child(fileName)
 		  
-		  Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		  Dim tin As TextInputStream = TextInputStream.Open(f)
 		  html = tin.ReadAll
 		  tin.Close
 		  Return True
@@ -32,13 +32,13 @@ Inherits TestController
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function GetTestMarkdown(fileName As Text, ByRef md As Text) As Boolean
+		Shared Function GetTestMarkdown(fileName As String, ByRef md As String) As Boolean
 		  // Takes the name of a Markdown example test file copied to the 
 		  // app's resources folder and returns the contents.
 		  
-		  Dim f As Xojo.IO.FolderItem = Xojo.IO.SpecialFolder.GetResource("source markdown").Child(fileName)
+		  Dim f As FolderItem = SpecialFolder.Resource("source markdown").Child(fileName)
 		  
-		  Dim tin As Xojo.IO.TextInputStream = Xojo.IO.TextInputStream.Open(f, Xojo.Core.TextEncoding.UTF8)
+		  Dim tin As TextInputStream = TextInputStream.Open(f)
 		  md = tin.ReadAll
 		  tin.Close
 		  Return True
@@ -50,20 +50,20 @@ Inherits TestController
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function GetTestNumberFromMethodName(methodName As Text) As Text
+		Shared Function GetTestNumberFromMethodName(methodName As String) As String
 		  // Given the name of a test, extract and return the test number.
 		  
 		  #Pragma BreakOnExceptions False
 		  
 		  Dim startPos As Integer = methodName.IndexOf("Example") + 7
-		  Dim chars() As Text = methodName.Split
+		  Dim chars() As String = methodName.Split("")
 		  If startPos = 6 Or startPos = chars.LastIndex Then
 		    Dim e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `ExampleXXTest`"
 		    Raise e
 		  End If
 		  
-		  Dim result As Text
+		  Dim result As String
 		  Dim tmp As Integer
 		  For i As Integer = startPos To chars.LastIndex
 		    Try
@@ -75,7 +75,7 @@ Inherits TestController
 		  Next i
 		  
 		  If result.Length = 0 Then
-		    Dim e As New Xojo.Core.InvalidArgumentException
+		    Dim e As New InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `ExampleXXTest`"
 		    Raise e
 		  End If
@@ -86,9 +86,9 @@ Inherits TestController
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub TransformWhitespace(ByRef t As Text)
-		  t = t.ReplaceAll(&u0020, "•")
-		  t = t.ReplaceAll(&u0009, "→")
+		Shared Sub TransformWhitespace(ByRef s As String)
+		  s = s.ReplaceAll(&u0020, "•")
+		  s = s.ReplaceAll(&u0009, "→")
 		End Sub
 	#tag EndMethod
 

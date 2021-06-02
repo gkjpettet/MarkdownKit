@@ -62,7 +62,7 @@ Inherits MarkdownKit.Block
 		  // They don't have parents.
 		  Self.Parent = Nil
 		  
-		  Self.ReferenceMap = New Xojo.Core.Dictionary
+		  Self.ReferenceMap = New Dictionary
 		  
 		  // Make sure that the MarkdownKit module has been initialised.
 		  MarkdownKit.Initialise

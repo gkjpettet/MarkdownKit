@@ -48,7 +48,7 @@ Implements IRenderer
 		Sub VisitAtxHeading(atx As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  Dim level As String = atx.Level.ToText
+		  Var level As String = atx.Level.ToText
 		  
 		  mOutput.Add("<h")
 		  mOutput.Add(level)
@@ -142,7 +142,7 @@ Implements IRenderer
 		    mOutput.Add("language-")
 		    
 		    // When rendering the info string, use only the first word.
-		    Dim wsIndex As Integer = fc.InfoString.IndexOf(" ")
+		    Var wsIndex As Integer = fc.InfoString.IndexOf(" ")
 		    If wsIndex = -1 Then wsIndex = fc.InfoString.IndexOf(&u0009)
 		    If wsIndex = -1 Then
 		      mOutput.Add(fc.InfoString)
@@ -226,12 +226,12 @@ Implements IRenderer
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim stack() As MarkdownKit.Block
-		  Dim b As MarkdownKit.Block = image.FirstChild
+		  Var stack() As MarkdownKit.Block
+		  Var b As MarkdownKit.Block = image.FirstChild
 		  
-		  Dim alt() As String
-		  Dim i As Integer
-		  Dim charsUbound As Integer
+		  Var alt() As String
+		  Var i As Integer
+		  Var charsUbound As Integer
 		  While b <> Nil
 		    Select Case b.Type
 		    Case MarkdownKit.BlockType.InlineText
@@ -324,7 +324,7 @@ Implements IRenderer
 		Sub VisitList(theList As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  Dim listTag As String
+		  Var listTag As String
 		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
 		    listTag = "ol"
 		    If theList.ListData.Start <> 1 Then
@@ -361,8 +361,8 @@ Implements IRenderer
 		  
 		  mOutput.Add("<li>")
 		  
-		  Dim i As Integer
-		  Dim childrenUbound As Integer = li.Children.LastIndex
+		  Var i As Integer
+		  Var childrenUbound As Integer = li.Children.LastIndex
 		  For i = 0 To childrenUbound
 		    li.Children(i).IsChildOfTightList = li.IsChildOfTightList
 		    li.Children(i).IsChildOfListItem = True
@@ -394,7 +394,7 @@ Implements IRenderer
 		Sub VisitSetextHeading(stx As MarkdownKit.Block)
 		  // Part of the IRenderer interface.
 		  
-		  Dim level As String = stx.Level.ToText
+		  Var level As String = stx.Level.ToText
 		  
 		  mOutput.Add("<h")
 		  mOutput.Add(level)

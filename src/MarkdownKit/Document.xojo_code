@@ -71,7 +71,7 @@ Inherits MarkdownKit.Block
 		  source = ReplaceLineEndings(source, &u000A)
 		  
 		  // Split the source into lines of Text.
-		  Dim tmp() As String = source.Split(&u000A)
+		  Var tmp() As String = source.Split(&u000A)
 		  
 		  Var lineStarts() As Integer = Array(0)
 		  If trackCharacterOffsets Then
@@ -83,8 +83,8 @@ Inherits MarkdownKit.Block
 		  End If
 		  
 		  // Convert each line of text in the temporary array to a LineInfo object.
-		  Dim tmpLastIndex As Integer = tmp.LastIndex
-		  Dim i As Integer
+		  Var tmpLastIndex As Integer = tmp.LastIndex
+		  Var i As Integer
 		  If trackCharacterOffsets Then
 		    // We can pass in the actual offset that each line begins at.
 		    For i = 0 To tmpLastIndex
@@ -132,16 +132,16 @@ Inherits MarkdownKit.Block
 		  // Returns the newly created SetextHeading.
 		  
 		  // Get a reference to the passed paragraph's parent.
-		  Dim paraParent As MarkdownKit.Block = p.Parent
+		  Var paraParent As MarkdownKit.Block = p.Parent
 		  
 		  // Get the index of the passed paragraph in its parent's Children array.
-		  Dim index As Integer = paraParent.Children.IndexOf(p)
+		  Var index As Integer = paraParent.Children.IndexOf(p)
 		  If index = -1 Then
 		    Raise New MarkdownKit.MarkdownException("Unable to convert paragraph block to setext heading")
 		  End If
 		  
 		  // Create a new SetextHeading block to replace the paragraph.
-		  Dim stx As New MarkdownKit.Block(BlockType.SetextHeading, New WeakRef(p.Parent))
+		  Var stx As New MarkdownKit.Block(BlockType.SetextHeading, New WeakRef(p.Parent))
 		  
 		  // Set the root.
 		  stx.Root = p.Root
@@ -197,7 +197,7 @@ Inherits MarkdownKit.Block
 		  Wend
 		  
 		  // Create the child block.
-		  Dim child As New MarkdownKit.Block(childType, New WeakRef(theParent))
+		  Var child As New MarkdownKit.Block(childType, New WeakRef(theParent))
 		  child.Root = theParent.Root
 		  
 		  // Store the line number that this block begins on.
@@ -233,7 +233,7 @@ Inherits MarkdownKit.Block
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim currentBlock As MarkdownKit.Block = Self
+		  Var currentBlock As MarkdownKit.Block = Self
 		  
 		  For i As Integer = 0 To LinesLastIndex
 		    
@@ -259,15 +259,15 @@ Inherits MarkdownKit.Block
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim stack() As MarkdownKit.Block
-		  Dim delimiterStack() As MarkdownKit.DelimiterStackNode
+		  Var stack() As MarkdownKit.Block
+		  Var delimiterStack() As MarkdownKit.DelimiterStackNode
 		  
-		  Dim b As MarkdownKit.Block = Self
+		  Var b As MarkdownKit.Block = Self
 		  
 		  While b <> Nil
 		    Select Case b.Type
 		    Case BlockType.AtxHeading, BlockType.Paragraph, BlockType.SetextHeading
-		      Redim delimiterStack(-1) // Each block gets a new delimiter stack.
+		      delimiterStack.ResizeTo(-1) // Each block gets a new delimiter stack.
 		      If b.Chars.LastIndex > -1 Then InlineScanner.ParseInlines(b, delimiterStack)
 		    End Select
 		    
@@ -292,16 +292,16 @@ Inherits MarkdownKit.Block
 		  //               Will be modified by the method.
 		  
 		  // Always start processing at the document root.
-		  Dim container As MarkdownKit.Block = Self
+		  Var container As MarkdownKit.Block = Self
 		  
 		  // Match this line against each open block in the tree.
 		  TryOpenBlocks(line, container)
 		  
 		  // Store which container was the last to match.
-		  Dim lastMatchedContainer As MarkdownKit.Block = container
+		  Var lastMatchedContainer As MarkdownKit.Block = container
 		  
 		  // Paragraph Blocks can have lazy continuation lines.
-		  Dim maybeLazy As Boolean = _
+		  Var maybeLazy As Boolean = _
 		  If(currentBlock.Type = BlockType.Paragraph, True, False)
 		  
 		  // Should we create a new block?
@@ -324,8 +324,8 @@ Inherits MarkdownKit.Block
 		  #Pragma StackOverflowChecking False
 		  
 		  line.FindNextNonWhitespace
-		  Dim indent As Integer = line.NextNWSColumn - line.Column
-		  Dim blank As Boolean = If(line.CurrentChar = "", True, False)
+		  Var indent As Integer = line.NextNWSColumn - line.Column
+		  Var blank As Boolean = If(line.CurrentChar = "", True, False)
 		  
 		  If blank And container.LastChild <> Nil Then container.LastChild.IsLastLineBlank = True
 		  
@@ -341,7 +341,7 @@ Inherits MarkdownKit.Block
 		  container.FirstChild = Nil)
 		  
 		  // Flag that the last line of all the ancestors of this Block are NOT blank.
-		  Dim tmpBlock As MarkdownKit.Block = container
+		  Var tmpBlock As MarkdownKit.Block = container
 		  While tmpBlock.Parent <> Nil
 		    tmpBlock.Parent.IsLastLineBlank = False
 		    tmpBlock = tmpBlock.Parent
@@ -442,9 +442,9 @@ Inherits MarkdownKit.Block
 		  #Pragma StackOverflowChecking False
 		  
 		  Const kCodeIndent = 4
-		  Dim indent, tmpInt1, tmpInt2 As Integer
-		  Dim blank, indented As Boolean
-		  Dim tmpData As MarkdownKit.ListData
+		  Var indent, tmpInt1, tmpInt2 As Integer
+		  Var blank, indented As Boolean
+		  Var tmpData As MarkdownKit.ListData
 		  
 		  While container.Type <> BlockType.FencedCode And _
 		    container.Type <> BlockType.IndentedCode And _
@@ -521,9 +521,9 @@ Inherits MarkdownKit.Block
 		      // Compute padding.
 		      line.AdvanceOffset(line.NextNWS + tmpInt1 - line.Offset, False)
 		      
-		      Dim prevOffset As Integer = line.Offset
-		      Dim prevColumn As Integer = line.Column
-		      Dim prevRemainingSpaces As Integer = line.RemainingSpaces
+		      Var prevOffset As Integer = line.Offset
+		      Var prevColumn As Integer = line.Column
+		      Var prevRemainingSpaces As Integer = line.RemainingSpaces
 		      
 		      While line.Column - prevColumn <= kCodeIndent
 		        If Not line.AdvanceOptionalSpace Then Exit
@@ -587,8 +587,8 @@ Inherits MarkdownKit.Block
 		  #Pragma StackOverflowChecking False
 		  
 		  Const kCodeIndent = 4
-		  Dim indent As Integer
-		  Dim blank As Boolean
+		  Var indent As Integer
+		  Var blank As Boolean
 		  
 		  line.AllMatched = True
 		  
@@ -644,7 +644,7 @@ Inherits MarkdownKit.Block
 		        If blank Then container.IsLastLineBlank = True
 		      Else
 		        // Skip optional spaces of fence offset.
-		        Dim i As Integer = container.FenceOffset
+		        Var i As Integer = container.FenceOffset
 		        While i > 0 And line.Offset <= line.CharsLastIndex And _
 		          line.Chars(line.Offset) = " "
 		          line.Offset = line.Offset + 1

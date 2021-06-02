@@ -15,13 +15,13 @@ Protected Class HTMLScanner
 		  // tagName: ASCII letter, >= 0 ASCII letter|digit|-
 		  // Returns "" If no valid tagName is found.
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  If pos > charsUbound Or Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return ""
 		  
-		  Dim c As String
-		  Dim tmp() As String
-		  Dim start As Integer = pos
+		  Var c As String
+		  Var tmp() As String
+		  Var start As Integer = pos
 		  For pos = start To charsUbound
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.IsDigit(c) Or c= "-" Then
@@ -37,7 +37,7 @@ Protected Class HTMLScanner
 
 	#tag Method, Flags = &h0
 		Shared Function MatchAnythingExcept(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String, invalidChar As String) As Boolean
-		  Dim matched As Boolean = False
+		  Var matched As Boolean = False
 		  
 		  While currentChar <> invalidChar And pos < charsUbound
 		    pos = pos + 1
@@ -52,7 +52,7 @@ Protected Class HTMLScanner
 
 	#tag Method, Flags = &h0
 		Shared Function MatchAnythingExceptWhitespace(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String, invalid1 As String, invalid2 As String, invalid3 As String, invalid4 As String, invalid5 As String, invalid6 As String) As Boolean
-		  Dim matched As Boolean = False
+		  Var matched As Boolean = False
 		  
 		  While currentChar <> invalid1 And _
 		    currentChar <> invalid2 And _
@@ -78,7 +78,7 @@ Protected Class HTMLScanner
 		  // Moves along the given array as long as the current character is an ASCII letter 
 		  // or one of the given additional valid characters.
 		  
-		  Dim matched As Boolean = False
+		  Var matched As Boolean = False
 		  
 		  While (currentChar = valid1 Or _
 		    currentChar = valid2 Or _
@@ -100,7 +100,7 @@ Protected Class HTMLScanner
 		  // Moves along the given array as long as the current character is an ASCII letter 
 		  // or digit or one of the given additional valid characters.
 		  
-		  Dim matched As Boolean = False
+		  Var matched As Boolean = False
 		  
 		  While (currentChar = valid1 Or _
 		    currentChar = valid2 Or _
@@ -128,9 +128,9 @@ Protected Class HTMLScanner
 		  // Stops skipping if we match maxCount characters.
 		  
 		  If pos > charsUbound Then Return 0
-		  Dim c As String = chars(pos)
+		  Var c As String = chars(pos)
 		  
-		  Dim matched As Integer = 0
+		  Var matched As Integer = 0
 		  
 		  While (c = "-" Or _
 		    Utilities.IsASCIIAlphaChar(c) Or _
@@ -160,7 +160,7 @@ Protected Class HTMLScanner
 		  // Reset `tagName`.
 		  tagName = ""
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  If pos + 1 > charsUbound Then Return 0
 		  
 		  // The tag name must start with an ASCII letter.
@@ -172,7 +172,7 @@ Protected Class HTMLScanner
 		  If tagName = "" Then Return 0
 		  
 		  // Get the current character.
-		  Dim c As String = chars(pos)
+		  Var c As String = chars(pos)
 		  
 		  // Skip optional whitespace.
 		  Call HTMLScanner.SkipWhitespace(chars, charsUbound, pos, c)
@@ -223,9 +223,9 @@ Protected Class HTMLScanner
 		  // Shortest valid: <!A A>
 		  If startPos + 3 > charsUbound Then Return 0
 		  
-		  Dim c As String = chars(startPos)
+		  Var c As String = chars(startPos)
 		  
-		  Dim pos As Integer
+		  Var pos As Integer
 		  If c = "-" Then
 		    // Comment?
 		    If chars(startPos + 1) <> "-" Then Return 0
@@ -295,7 +295,7 @@ Protected Class HTMLScanner
 		  // End condition:   line contains an end tag </script>, </pre>, or </style> 
 		  //                  (case-insensitive; it need not match the start tag).
 		  
-		  Dim t As String = String.FromArray(line.Chars, "")
+		  Var t As String = String.FromArray(line.Chars, "")
 		  If t.IndexOf(pos, "</pre>") <> -1 Then Return True
 		  If t.IndexOf(pos, "</style>") <> -1 Then Return True
 		  If t.IndexOf(pos, "</script>") <> -1 Then Return True
@@ -313,7 +313,7 @@ Protected Class HTMLScanner
 		  // HTML block type 2:
 		  // End condition: line contains the string "-->"
 		  
-		  Dim t As String = String.FromArray(line.Chars, "")
+		  Var t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, "-->") <> -1, True, False)
 		  
 		  Exception e
@@ -326,7 +326,7 @@ Protected Class HTMLScanner
 		  // HTML block type 3:
 		  // End condition: line contains the string "?>"
 		  
-		  Dim t As String = String.FromArray(line.Chars, "")
+		  Var t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, "?>") <> -1, True, False)
 		  
 		  Exception e
@@ -340,7 +340,7 @@ Protected Class HTMLScanner
 		  // HTML block type 4:
 		  // End condition: line contains the character ">".
 		  
-		  Dim t As String = String.FromArray(line.Chars, "")
+		  Var t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, ">") <> -1, True, False)
 		  
 		  Exception e
@@ -354,7 +354,7 @@ Protected Class HTMLScanner
 		  // HTML block type 5:
 		  // End condition: line contains the string "]]>".
 		  
-		  Dim t As String = String.FromArray(line.Chars, "")
+		  Var t As String = String.FromArray(line.Chars, "")
 		  Return If(t.IndexOf(pos, "]]>") <> -1, True, False)
 		  
 		  Exception e
@@ -385,7 +385,7 @@ Protected Class HTMLScanner
 		  // Reset `tagName`.
 		  tagName = ""
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  If pos + 1 > charsUbound Then Return 0
 		  
 		  // The tag name must start with an ASCII letter.
@@ -402,10 +402,10 @@ Protected Class HTMLScanner
 		  End If
 		  
 		  // Loop until the end of the line is reached or the tag is closed.
-		  Dim hadWhitespace As Boolean = False
-		  Dim hadAttribute As Boolean = False
-		  Dim tmpChar As String
-		  Dim currentChar As String = chars(pos)
+		  Var hadWhitespace As Boolean = False
+		  Var hadAttribute As Boolean = False
+		  Var tmpChar As String
+		  Var currentChar As String = chars(pos)
 		  While pos <= charsUbound
 		    // Skip whitespace.
 		    hadWhitespace = HTMLScanner.SkipWhitespace(chars, charsUbound, pos, currentChar)
@@ -501,7 +501,7 @@ Protected Class HTMLScanner
 
 	#tag Method, Flags = &h0
 		Shared Function SkipWhitespace(chars() As String, charsUbound As Integer, ByRef pos As Integer, ByRef currentChar As String) As Boolean
-		  Dim matched As Boolean = False
+		  Var matched As Boolean = False
 		  
 		  While Utilities.IsWhitespace(currentChar) And pos < charsUbound
 		    pos = pos + 1

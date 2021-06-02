@@ -5,7 +5,7 @@ Inherits TestController
 		Sub InitializeTestGroups()
 		  // Instantiate TestGroup subclasses here so that they can be run.
 		  
-		  Dim group As TestGroup
+		  Var group As TestGroup
 		  
 		  // Current test.
 		  group = New ASTCharacterReferenceTests(Self, "Character Reference Tests")
@@ -45,9 +45,9 @@ Inherits TestController
 		  // Takes the name of an example AST output file copied to the 
 		  // app's resources folder and returns the contents.
 		  
-		  Dim f As FolderItem = SpecialFolder.Resource("ASTs").Child(fileName)
+		  Var f As FolderItem = SpecialFolder.Resource("ASTs").Child(fileName)
 		  
-		  Dim tin As TextInputStream = TextInputStream.Open(f)
+		  Var tin As TextInputStream = TextInputStream.Open(f)
 		  ast = tin.ReadAll
 		  tin.Close
 		  Return True
@@ -64,9 +64,8 @@ Inherits TestController
 		  // Takes the name of a Markdown example test file copied to the 
 		  // app's resources folder and returns the contents.
 		  
-		  Dim f As FolderItem = SpecialFolder.Resource("source markdown").Child(fileName)
-		  
-		  Dim tin As TextInputStream = TextInputStream.Open(f)
+		  Var f As FolderItem = SpecialFolder.Resource("source markdown").Child(fileName)
+		  Var tin As TextInputStream = TextInputStream.Open(f)
 		  md = tin.ReadAll
 		  tin.Close
 		  Return True
@@ -83,16 +82,16 @@ Inherits TestController
 		  
 		  #Pragma BreakOnExceptions False
 		  
-		  Dim startPos As Integer = methodName.IndexOf("Example") + 7
-		  Dim chars() As String = methodName.Split("")
+		  Var startPos As Integer = methodName.IndexOf("Example") + 7
+		  Var chars() As String = methodName.Split("")
 		  If startPos = 6 Or startPos = chars.LastIndex Then
-		    Dim e As New Xojo.Core.InvalidArgumentException
+		    Var e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `ExampleXXTest`"
 		    Raise e
 		  End If
 		  
-		  Dim result As String
-		  Dim tmp As Integer
+		  Var result As String
+		  Var tmp As Integer
 		  For i As Integer = startPos To chars.LastIndex
 		    Try
 		      tmp = Val(chars(i))
@@ -103,7 +102,7 @@ Inherits TestController
 		  Next i
 		  
 		  If result.Length = 0 Then
-		    Dim e As New Xojo.Core.InvalidArgumentException
+		    Var e As New Xojo.Core.InvalidArgumentException
 		    e.Reason = "Invalid method name format. Expected: `ExampleXXTest`"
 		    Raise e
 		  End If

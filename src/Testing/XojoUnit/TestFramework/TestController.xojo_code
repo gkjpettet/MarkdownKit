@@ -27,11 +27,11 @@ Protected Class TestController
 		    Const kEOL As Text = &u0A
 		  #Endif
 		  
-		  Dim testId As Text = Xojo.Core.Date.Now.ToText + "." + Xojo.Core.Date.Now.Nanosecond.ToText
+		  Var testId As String = DateTime.Now.ToString + "." + DateTime.Now.Nanosecond.ToString
 		  
-		  Dim f As FolderItem
+		  Var f As FolderItem
 		  f = New FolderItem(filePath, FolderItem.PathModes.Shell)
-		  Dim stream As BinaryStream
+		  Var stream As BinaryStream
 		  If f <> Nil Then
 		    stream=BinaryStream.Create(f, True)
 		    stream.Write "<?xml version=""1.0"" encoding=""UTF-8"" ?>" + kEOL
@@ -58,7 +58,7 @@ Protected Class TestController
 		          stream.Write "       <not_implemented />" + EndOfLine
 		          
 		        ElseIf tr.Result = TestResult.Failed Then
-		          Dim failMessage As String = tr.Message
+		          Var failMessage As String = tr.Message
 		          failMessage = failMessage.ReplaceAll("<", "&lt;")
 		          failMessage = failMessage.ReplaceAll(">", "&gt;")
 		          stream.Write "       <failure type=""xojo.AssertionFailedError"" message=""" + failMessage + """/>" + kEOL
@@ -94,7 +94,7 @@ Protected Class TestController
 		  
 		  
 		  If includePatterns.LastIndex = -1 And excludePatterns.LastIndex = -1 Then
-		    Dim err As New RuntimeException
+		    Var err As New RuntimeException
 		    err.Message = "You must specify at least one include or exclude pattern"
 		    Raise err
 		  End If
@@ -113,7 +113,7 @@ Protected Class TestController
 		  //
 		  // Set up the RegEx
 		  //
-		  Dim rx As New RegEx
+		  Var rx As New RegEx
 		  
 		  //
 		  // Process includes
@@ -124,18 +124,18 @@ Protected Class TestController
 		    //
 		    group.IncludeGroup = (includePatterns.LastIndex = -1) // If there are any includes, default to False
 		    group.SetIncludeMethods(True)
-		    Dim methodsTurnedOff As Boolean
+		    Var methodsTurnedOff As Boolean
 		    
 		    For Each pattern As String In includePatterns
 		      rx.SearchPattern = pattern
-		      Dim hasDot As Boolean = PatternHasDot(pattern)
+		      Var hasDot As Boolean = PatternHasDot(pattern)
 		      
 		      //
 		      // See if this pattern matches any methods
 		      //
 		      If hasDot Then
 		        For Each result As TestResult In group.Results
-		          Dim methodName As String = group.Name + "." + result.MethodInfo.Name
+		          Var methodName As String = group.Name + "." + result.MethodInformation.Name
 		          If rx.Search(methodName) IsA RegExMatch Then
 		            group.IncludeGroup = True
 		            
@@ -168,7 +168,7 @@ Protected Class TestController
 		    
 		    For Each pattern As String In excludePatterns
 		      rx.SearchPattern = pattern
-		      Dim hasDot As Boolean = PatternHasDot(pattern)
+		      Var hasDot As Boolean = PatternHasDot(pattern)
 		      
 		      //
 		      // See if this pattern matches any methods
@@ -182,7 +182,7 @@ Protected Class TestController
 		            Continue For result
 		          End If
 		          
-		          Dim methodName As String = group.Name + "." + result.MethodInfo.Name
+		          Var methodName As String = group.Name + "." + result.MethodInformation.Name
 		          If rx.Search(methodName) IsA RegExMatch Then
 		            result.IncludeMethod = False
 		          End If
@@ -247,7 +247,7 @@ Protected Class TestController
 		  If TestQueue.LastIndex = -1 Then
 		    Stop
 		  Else
-		    Dim tg As TestGroup = TestQueue(0)
+		    Var tg As TestGroup = TestQueue(0)
 		    TestQueue.RemoveAt(0)
 		    tg.Start
 		  End If
@@ -278,7 +278,7 @@ Protected Class TestController
 		Private Function SimplePatternToRegExPattern(pattern As String) As String
 		  Const kPlaceholder As String = &u01
 		  
-		  Dim hasDot As Boolean = pattern.IndexOf(".") <> -1
+		  Var hasDot As Boolean = pattern.IndexOf(".") <> -1
 		  
 		  pattern = pattern.ReplaceAll("*", kPlaceholder)
 		  pattern = "^\Q" + pattern.ReplaceAllBytes("\E", "\E\\E\Q") + "\E"
@@ -310,7 +310,7 @@ Protected Class TestController
 		    tg.Stop
 		  Next
 		  
-		  Redim TestQueue(-1)
+		  TestQueue.ResizeTo(-1)
 		  Finish
 		  
 		End Sub
@@ -343,7 +343,7 @@ Protected Class TestController
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim totalCount As Integer
+			  Var totalCount As Integer
 			  
 			  For Each tg As TestGroup In mTestGroups
 			    If tg.IncludeGroup Then
@@ -360,7 +360,7 @@ Protected Class TestController
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim duration As Double
+			  Var duration As Double
 			  If mFinishMS = 0.0 Then
 			    duration = System.Microseconds - mStartMS
 			  Else
@@ -456,7 +456,7 @@ Protected Class TestController
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim cnt As Integer
+			  Var cnt As Integer
 			  
 			  For Each tg As TestGroup In mTestGroups
 			    If tg.IncludeGroup Then cnt = cnt + 1
@@ -476,7 +476,7 @@ Protected Class TestController
 			  mSkippedCount = 0
 			  mNotImplementedCount = 0
 			  
-			  Dim totalCount As Integer
+			  Var totalCount As Integer
 			  
 			  For Each tg As TestGroup In mTestGroups
 			    If tg.IncludeGroup Then

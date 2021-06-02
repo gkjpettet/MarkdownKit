@@ -23,7 +23,7 @@ Protected Class TestGroup
 
 	#tag Method, Flags = &h21
 		Private Sub CalculateTestDuration()
-		  Dim elapsed As Double
+		  Var elapsed As Double
 		  
 		  If CurrentClone Is Nil Then
 		    elapsed = 0.0
@@ -33,7 +33,7 @@ Protected Class TestGroup
 		  
 		  CurrentTestResult.Duration = elapsed
 		  
-		  Dim c As TestController = Controller
+		  Var c As TestController = Controller
 		  If c IsA Object Then
 		    c.RaiseTestFinished CurrentTestResult, Self
 		  End If
@@ -60,14 +60,14 @@ Protected Class TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(controller As TestController, groupName As Text = "")
+		Sub Constructor(controller As TestController, groupName As String = "")
 		  groupName = groupName.Trim
 		  
 		  //
 		  // If groupName was not given, use the name of the class
 		  //
 		  If groupName = "" Then
-		    Dim ti As Xojo.Introspection.TypeInfo = Xojo.Introspection.GetType(Self)
+		    Var ti As Introspection.TypeInfo = Introspection.GetType(Self)
 		    groupName = ti.FullName
 		  End If
 		  
@@ -91,49 +91,49 @@ Protected Class TestGroup
 		  // Only take the super's properties
 		  //
 		  
-		  Static props() As Xojo.Introspection.PropertyInfo
+		  Static props() As Introspection.PropertyInfo
 		  If props.LastIndex = -1 Then
-		    Dim ti As Xojo.Introspection.TypeInfo
-		    ti = Xojo.Introspection.GetType(Self)
+		    Var ti As Introspection.TypeInfo
+		    ti = Introspection.GetType(Self)
 		    While ti.BaseType IsA Object And Not (ti Is ti.BaseType)
 		      ti = ti.BaseType
 		    Wend
-		    props = ti.Properties
+		    props = ti.GetProperties
 		  End If
 		  
 		  //
 		  // Skip certain props all the time
 		  //
-		  Dim skipProps() As Text = Array("CurrentClone", "TestTimers")
+		  Var skipProps() As String = Array("CurrentClone", "TestTimers")
 		  
 		  //
 		  // Since computed properties can have side effects, do them first
 		  //
-		  Dim doComputed As Boolean = False // Will be flipped in the loop
+		  Var doComputed As Boolean = False // Will be flipped in the loop
 		  
 		  Do
 		    doComputed = Not doComputed
 		    
-		    For Each prop As Xojo.Introspection.PropertyInfo In props
+		    For Each prop As Introspection.PropertyInfo In props
 		      If prop.IsComputed <> doComputed Then
 		        Continue For prop
 		      End If
 		      
-		      Dim propName As Text = prop.Name
+		      Var propName As String = prop.Name
 		      
 		      If prop.IsShared Or Not prop.CanRead Or Not prop.CanWrite Or skipProps.IndexOf(propName) <> -1 Then
 		        Continue For prop
 		      End If
 		      
-		      Dim propType As Text = prop.PropertyType.Name
-		      Dim fromValue As Auto = prop.Value(fromGroup)
+		      Var propType As String = prop.PropertyType.Name
+		      Var fromValue As Variant = prop.Value(fromGroup)
 		      
 		      //
 		      // Handle arrays specially
 		      //
 		      If propType.Right(2) = "()" Then
-		        Dim toArr() As Object = prop.Value(Self)
-		        Dim fromArr() As Object = fromValue
+		        Var toArr() As Object = prop.Value(Self)
+		        Var fromArr() As Object = fromValue
 		        
 		        For i As Integer = 0 To fromArr.LastIndex
 		          toArr.Add(fromArr(i))
@@ -157,7 +157,7 @@ Protected Class TestGroup
 		  End If
 		  
 		  If Not IsClone And RunTestsTimer IsA Object Then
-		    RunTestsTimer.Mode = Xojo.Core.Timer.Modes.Off
+		    RunTestsTimer.RunMode = Timer.RunModes.Off
 		    RemoveHandler RunTestsTimer.Action, WeakAddressOf RunTestsTimer_Action
 		    RunTestsTimer = Nil
 		  End If
@@ -173,31 +173,31 @@ Protected Class TestGroup
 
 	#tag Method, Flags = &h21
 		Private Sub GetTestMethods()
-		  Dim info As Xojo.Introspection.TypeInfo
+		  Var info As Introspection.TypeInfo
 		  
-		  info = Xojo.Introspection.GetType(Self)
+		  info = Introspection.GetType(Self)
 		  
-		  Dim methods() As Xojo.Introspection.MethodInfo
-		  methods = info.Methods
+		  Var methods() As Introspection.MethodInfo
+		  methods = info.GetMethods
 		  
 		  //
 		  // Get the unique set of methods
 		  //
-		  Dim methodsDict As New Xojo.Core.Dictionary
+		  Var methodsDict As New Dictionary
 		  For i As Integer = 0 To methods.LastIndex
-		    Dim m As Xojo.Introspection.MethodInfo = methods(i)
+		    Var m As Introspection.MethodInfo = methods(i)
 		    If m.Name.Length > kTestSuffix.Length And m.Name.Right(kTestSuffix.Length) = kTestSuffix And _
-		      m.Parameters.LastIndex = -1 Then
+		      m.GetParameters.LastIndex = -1 Then
 		      methodsDict.Value(m.Name) = m // Will replace overridden methods
 		    End If
 		  Next 
 		  
-		  For Each entry As Xojo.Core.DictionaryEntry In methodsDict
+		  For Each entry As DictionaryEntry In methodsDict
 		    // Initialize test results
-		    Dim m As Xojo.Introspection.MethodInfo = entry.Value
-		    Dim tr As New TestResult
+		    Var m As Introspection.MethodInfo = entry.Value
+		    Var tr As New TestResult
 		    tr.TestName = m.Name.Left(m.Name.Length - kTestSuffix.Length)
-		    tr.MethodInfo = m
+		    tr.MethodInformation = m
 		    tr.Result = TestResult.NotImplemented
 		    
 		    mResults.Add(tr)
@@ -217,9 +217,9 @@ Protected Class TestGroup
 
 	#tag Method, Flags = &h1
 		Protected Function GetTestTimer(key As Text = "") As Double
-		  Dim endTime As Double = System.Microseconds
-		  Dim startTime As Double = TestTimers.Value(key)
-		  Dim duration As Double = endTime - startTime
+		  Var endTime As Double = System.Microseconds
+		  Var startTime As Double = TestTimers.Value(key)
+		  Var duration As Double = endTime - startTime
 		  
 		  Return duration
 		  
@@ -234,11 +234,11 @@ Protected Class TestGroup
 		  // If not used properly, this will raise an exception, intentionally.
 		  //
 		  
-		  Dim duration As Double = GetTestTimer(key)
+		  Var duration As Double = GetTestTimer(key)
 		  
-		  Dim durationText As Text
-		  Dim unit As Text = "µs"
-		  Dim useFormat As Text = "#,###,##0"
+		  Var durationText As String
+		  Var unit As String = "µs"
+		  Var useFormat As String = "#,###,##0"
 		  
 		  Const kSeconds As Double = 1000000.0
 		  
@@ -259,7 +259,7 @@ Protected Class TestGroup
 		    
 		  End If
 		  
-		  durationText = duration.ToText(Xojo.Core.Locale.Current, useFormat) + " " + unit
+		  durationText = duration.ToString(Locale.Current, useFormat) + " " + unit
 		  stage = stage.Trim
 		  
 		  Assert.Message "Test Timer " + _
@@ -284,21 +284,21 @@ Protected Class TestGroup
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub RunTestsTimer_Action(sender As Xojo.Core.Timer)
+		Private Sub RunTestsTimer_Action(sender As Timer)
 		  #Pragma Unused sender
 		  
 		  If UseConstructor Is Nil Then
-		    Dim myInfo As Xojo.Introspection.TypeInfo = Xojo.Introspection.GetType(Self)
-		    Dim constructors() As Xojo.Introspection.ConstructorInfo = myInfo.Constructors
-		    For Each c As Xojo.Introspection.ConstructorInfo In constructors
-		      If c.Parameters.LastIndex = 0 Then
+		    Var myInfo As Introspection.TypeInfo = Introspection.GetType(Self)
+		    Var constructors() As Introspection.ConstructorInfo = myInfo.GetConstructors
+		    For Each c As Introspection.ConstructorInfo In constructors
+		      If c.GetParameters.LastIndex = 0 Then
 		        UseConstructor = c
 		        Exit For c
 		      End If
 		    Next c
 		  End If
 		  
-		  Dim constructorParams() As Auto
+		  Var constructorParams() As Variant
 		  constructorParams.Add(Self)
 		  
 		  If CurrentClone IsA Object Then
@@ -312,7 +312,7 @@ Protected Class TestGroup
 		    RunTestsTimer.Period = kTimerPeriod
 		    CurrentClone = Nil // Make sure TearDown happens
 		    
-		    Dim result As TestResult = mResults(CurrentResultIndex)
+		    Var result As TestResult = mResults(CurrentResultIndex)
 		    CurrentResultIndex = CurrentResultIndex + 1
 		    
 		    If Not result.IncludeMethod Then
@@ -323,11 +323,11 @@ Protected Class TestGroup
 		    //
 		    // Handle any error after stopping the Timer
 		    //
-		    Dim err As RuntimeException
+		    Var err As RuntimeException
 		    
 		    Try
 		      CurrentTestResult = result
-		      Dim method As Xojo.Introspection.MethodInfo = result.MethodInfo
+		      Var method As Introspection.MethodInfo = result.MethodInformation
 		      
 		      //
 		      // Get a clone
@@ -364,10 +364,10 @@ Protected Class TestGroup
 		      
 		      If Not RaiseEvent UnhandledException(err, result.TestName) Then
 		        
-		        Dim eInfo As Xojo.Introspection.TypeInfo
-		        eInfo = Xojo.Introspection.GetType(err)
+		        Var eInfo As Introspection.TypeInfo
+		        eInfo = Introspection.GetType(err)
 		        
-		        Dim errorMessage As Text
+		        Var errorMessage As String
 		        errorMessage = "A " + eInfo.FullName + " occurred and was caught"
 		        If CurrentClone Is Nil Then
 		          errorMessage = errorMessage + " – something in the Setup event failed"
@@ -387,7 +387,7 @@ Protected Class TestGroup
 		  
 		  Stop
 		  
-		  Dim c As TestController = Controller
+		  Var c As TestController = Controller
 		  If c IsA Object Then
 		    c.RaiseGroupFinished Self
 		  End If
@@ -411,20 +411,20 @@ Protected Class TestGroup
 		Sub Start()
 		  If IncludeGroup Then
 		    If RunTestsTimer Is Nil Then
-		      RunTestsTimer = New Xojo.Core.Timer
+		      RunTestsTimer = New Timer
 		      AddHandler RunTestsTimer.Action, WeakAddressOf RunTestsTimer_Action
 		    End If
 		    RunTestsTimer.Period = kTimerPeriod
-		    RunTestsTimer.Mode = Xojo.Core.Timer.Modes.Multiple
+		    RunTestsTimer.RunMode = Timer.RunModes.Multiple
 		  End If
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Sub StartTestTimer(key As Text = "")
+		Protected Sub StartTestTimer(key As String = "")
 		  If TestTimers Is Nil Then
-		    TestTimers = New Xojo.Core.Dictionary
+		    TestTimers = New Dictionary
 		  End If
 		  
 		  TestTimers.Value(key) = System.Microseconds
@@ -437,7 +437,7 @@ Protected Class TestGroup
 		  CurrentClone = Nil
 		  CurrentTestResult = Nil
 		  If RunTestsTimer IsA Object Then
-		    RunTestsTimer.Mode = Xojo.Core.Timer.Modes.Off
+		    RunTestsTimer.RunMode = Timer.RunModes.Off
 		  End If
 		  
 		End Sub
@@ -505,7 +505,7 @@ Protected Class TestGroup
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim duration As Double
+			  Var duration As Double
 			  
 			  For Each tr As TestResult In mResults
 			    If tr.Result = TestResult.Passed Or tr.Result = TestResult.Failed Then
@@ -522,7 +522,7 @@ Protected Class TestGroup
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim testCount As Integer
+			  Var testCount As Integer
 			  
 			  For Each tr As TestResult In mResults
 			    If tr.Result = TestResult.Failed Then
@@ -551,7 +551,8 @@ Protected Class TestGroup
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Return RunTestsTimer Isa Object And RunTestsTimer.Mode <> Xojo.Core.Timer.Modes.Off
+			  Return RunTestsTimer Isa Object And _
+			  RunTestsTimer.RunMode <> Timer.RunModes.Off
 			  
 			End Get
 		#tag EndGetter
@@ -575,13 +576,13 @@ Protected Class TestGroup
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Name As Text
+		Name As String
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim testCount As Integer
+			  Var testCount As Integer
 			  
 			  For Each tr As TestResult In mResults
 			    If tr.Result = TestResult.NotImplemented Then
@@ -598,7 +599,7 @@ Protected Class TestGroup
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim testCount As Integer
+			  Var testCount As Integer
 			  
 			  For Each tr As TestResult In mResults
 			    If tr.Result = TestResult.Passed Then
@@ -615,7 +616,7 @@ Protected Class TestGroup
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim testCount As Integer
+			  Var testCount As Integer
 			  
 			  For Each tr As TestResult In mResults
 			    If tr.Result = TestResult.Passed Or tr.Result = TestResult.Failed Then
@@ -630,13 +631,13 @@ Protected Class TestGroup
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
-		Private RunTestsTimer As Xojo.Core.Timer
+		Private RunTestsTimer As Timer
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  Dim testCount As Integer
+			  Var testCount As Integer
 			  
 			  For Each tr As TestResult In mResults
 			    If tr.Result = TestResult.Skipped Then
@@ -686,11 +687,11 @@ Protected Class TestGroup
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private TestTimers As Xojo.Core.Dictionary
+		Private TestTimers As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private UseConstructor As Xojo.Introspection.ConstructorInfo
+		Private UseConstructor As Introspection.ConstructorInfo
 	#tag EndProperty
 
 

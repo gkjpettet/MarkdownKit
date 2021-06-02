@@ -8,20 +8,20 @@ Protected Class BlockScanner
 		  // of this paragraph block.
 		  
 		  // ##### LABEL #####
-		  Dim labelChars() As String = labelCR.ToArray(chars)
+		  Var labelChars() As String = labelCR.ToArray(chars)
 		  InlineScanner.CleanLinkLabel(labelChars)
-		  Dim label As String = String.FromArray(labelChars, "")
+		  Var label As String = String.FromArray(labelChars, "")
 		  
 		  // ##### DESTINATION #####
-		  Dim urlChars() As String = destinationCR.ToArray(chars)
+		  Var urlChars() As String = destinationCR.ToArray(chars)
 		  InlineScanner.CleanURL(urlChars)
-		  // Dim url As String = String.FromArray(urlChars, "")
-		  Dim url As String = Utilities.ReplaceEntities(String.FromArray(urlChars, ""))
+		  // Var url As String = String.FromArray(urlChars, "")
+		  Var url As String = Utilities.ReplaceEntities(String.FromArray(urlChars, ""))
 		  
 		  // ##### TITLE #####
-		  Dim title As String = ""
+		  Var title As String = ""
 		  If titleCR <> Nil Then
-		    Dim titleChars() As String = titleCR.ToArray(chars)
+		    Var titleChars() As String = titleCR.ToArray(chars)
 		    InlineScanner.CleanLinkTitle(titleChars)
 		    title = Utilities.ReplaceEntities(String.FromArray(titleChars, ""))
 		  End If
@@ -34,7 +34,7 @@ Protected Class BlockScanner
 		  End If
 		  
 		  // Remove the entire reference definition from the original character array.
-		  Dim refLength As Integer = If(titleCR <> Nil And titleCR.Finish <> -1, titleCR.Finish + 1, destinationCR.Finish + 1)
+		  Var refLength As Integer = If(titleCR <> Nil And titleCR.Finish <> -1, titleCR.Finish + 1, destinationCR.Finish + 1)
 		  chars.RemoveLeft(refLength)
 		  StripLeadingWhitespace(chars)
 		  
@@ -135,12 +135,12 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim c As String
-		  Dim startPos As Integer
+		  Var c As String
+		  Var startPos As Integer
 		  data = Nil
 		  length = 0
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  If pos > charsUbound Then Return 0
 		  
@@ -165,9 +165,9 @@ Protected Class BlockScanner
 		    
 		  ElseIf c = "0" Or c = "1" Or c = "2" Or c = "3" Or c = "4" Or c = "5" Or _
 		    c = "6" Or c = "7" Or c = "8" Or c = "9" Then
-		    Dim numDigits As Integer = 0
-		    Dim startText As String
-		    Dim limit As Integer = Min(chars.LastIndex, startPos + 8)
+		    Var numDigits As Integer = 0
+		    Var startText As String
+		    Var limit As Integer = Min(chars.LastIndex, startPos + 8)
 		    For i As Integer = startPos To limit
 		      c = chars(i)
 		      Select Case c
@@ -180,7 +180,7 @@ Protected Class BlockScanner
 		        Exit
 		      End Select
 		    Next i
-		    Dim start As Integer = Val(startText)
+		    Var start As Integer = Val(startText)
 		    pos = pos + numDigits
 		    // pos now points to the character after the last digit.
 		    If pos > charsUbound Then Return 0
@@ -228,7 +228,7 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  // Reset the ByRef variables.
 		  length = 0
@@ -240,7 +240,7 @@ Protected Class BlockScanner
 		  
 		  // An ATX heading consists of a string of characters, starting with an 
 		  // opening sequence of 1–6 unescaped # characters.
-		  Dim i As Integer
+		  Var i As Integer
 		  For i = pos To charsUbound
 		    If chars(i) = "#" Then
 		      headingLevel = headingLevel + 1
@@ -283,18 +283,18 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  If pos + (length - 1) > charsUbound Then Return 0
 		  
-		  Dim c1 As String = chars(pos)
+		  Var c1 As String = chars(pos)
 		  If c1 <> "`" And c1 <> "~" Then Return 0
 		  
-		  Dim cnt As Integer = 1
-		  Dim spaces As Boolean = False
+		  Var cnt As Integer = 1
+		  Var spaces As Boolean = False
 		  
-		  Dim i As Integer
-		  Dim c As String
+		  Var i As Integer
+		  Var c As String
 		  For i = pos + 1 To charsUbound
 		    c = chars(i)
 		    
@@ -349,8 +349,8 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim chars() As String = line.Chars
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var chars() As String = line.Chars
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  // The shortest opening condition is two characters.
 		  If pos + 1 > charsUbound Then
@@ -364,7 +364,7 @@ Protected Class BlockScanner
 		  End If
 		  
 		  pos = pos + 1
-		  Dim c As String = chars(pos)
+		  Var c As String = chars(pos)
 		  
 		  // Type 2, 4 or 5?
 		  // 2: <!--
@@ -414,7 +414,7 @@ Protected Class BlockScanner
 		  // Type 1 or 6?
 		  // 1: <(script|pre|style)([•→\n]|>)
 		  // 6: <|</(HTMLTagName)([•→\n]|>|/>)
-		  Dim slashAtStart As Boolean = If(c = "/", True, False)
+		  Var slashAtStart As Boolean = If(c = "/", True, False)
 		  If slashAtStart Then
 		    pos = pos + 1
 		    If pos > charsUbound Then
@@ -425,7 +425,7 @@ Protected Class BlockScanner
 		  End If
 		  
 		  // `pos` currently points to the first character of a potential tag name.
-		  Dim tagNameArray() As String
+		  Var tagNameArray() As String
 		  While pos <= charsUbound And tagNameArray.LastIndex < 10
 		    c = chars(pos)
 		    If Utilities.IsASCIIAlphaChar(c) Or Utilities.CharInHeaderLevelRange(c) Then
@@ -436,15 +436,15 @@ Protected Class BlockScanner
 		    pos = pos + 1
 		  Wend
 		  
-		  Dim tagName As String = String.FromArray(tagNameArray, "")
+		  Var tagName As String = String.FromArray(tagNameArray, "")
 		  If Not mHTMLTagNames.HasKey(tagName) And tagName <> "pre" And tagName <> "script" And tagName <> "style" Then
 		    type = Block.kHTMLBlockTypeNone
 		    Return Block.kHTMLBlockTypeNone
 		  End If
 		  
-		  Dim maybeType1 As Boolean
+		  Var maybeType1 As Boolean
 		  maybeType1 = If(Not slashAtStart And (tagName = "script" Or tagName = "pre" Or tagName = "style"), True, False)
-		  Dim maybeType6 As Boolean
+		  Var maybeType6 As Boolean
 		  maybeType6 = If(Not maybeType1 And tagName <> "script" And tagName <> "pre" And tagName <> "style", True, False)
 		  
 		  // `pos` points to the character immediately following the tag name.
@@ -489,13 +489,13 @@ Protected Class BlockScanner
 		  type = Block.kHTMLBlockTypeNone
 		  
 		  // At least 3 characters are required for a valid type 7 block start.
-		  Dim chars() As String = line.Chars
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var chars() As String = line.Chars
+		  Var charsUbound As Integer = chars.LastIndex
 		  If pos + 2 > charsUbound Then Return Block.kHTMLBlockTypeNone
 		  
 		  If chars(pos) <> "<" Then Return Block.kHTMLBlockTypeNone
 		  
-		  Dim tagName As String
+		  Var tagName As String
 		  If chars(pos + 1) = "/" Then
 		    pos = HTMLScanner.ScanClosingTag(chars, pos + 2, tagName)
 		  Else
@@ -531,11 +531,11 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
-		  Dim pos As Integer = 0
+		  Var charsUbound As Integer = chars.LastIndex
+		  Var pos As Integer = 0
 		  
 		  // Parse the label.
-		  Dim labelCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkLabelDefinition(chars, pos)
+		  Var labelCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkLabelDefinition(chars, pos)
 		  If labelCR.Length = -1 Then Return // Invalid.
 		  
 		  pos = labelCR.Start + labelCR.Length
@@ -550,8 +550,8 @@ Protected Class BlockScanner
 		  End If
 		  
 		  // Advance optional whitespace following the colon (including up to one newline).
-		  Dim i As Integer
-		  Dim seenNewline As Boolean = False
+		  Var i As Integer
+		  Var seenNewline As Boolean = False
 		  For i = pos To charsUbound
 		    Select Case chars(i)
 		    Case &u000A
@@ -566,12 +566,12 @@ Protected Class BlockScanner
 		  pos = i
 		  
 		  // Parse the link destination.
-		  Dim destinationCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkDestination(chars, pos, True)
+		  Var destinationCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkDestination(chars, pos, True)
 		  If destinationCR.Length = -1 Then Return // Invalid.
 		  pos = pos + destinationCR.Length
 		  
 		  // Advance optional whitespace following the destination (including up to one newline).
-		  Dim skippedWhitespace As Boolean = False
+		  Var skippedWhitespace As Boolean = False
 		  If pos <= charsUbound Then
 		    seenNewline = False
 		    For i = pos To charsUbound
@@ -597,7 +597,7 @@ Protected Class BlockScanner
 		  End If
 		  
 		  // Parse the (optional) title.
-		  Dim titleCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkTitle(chars, pos)
+		  Var titleCR As MarkdownKit.CharacterRun = InlineScanner.ScanLinkTitle(chars, pos)
 		  If titleCR.Invalid Then
 		    Return
 		  ElseIf titleCR.Length = -1 Then
@@ -613,7 +613,7 @@ Protected Class BlockScanner
 		  // (i.e: up to the next newline or end of array).
 		  pos = pos + titleCR.Length
 		  seenNewline = False
-		  Dim c As String
+		  Var c As String
 		  If pos < charsUbound Then
 		    For i = pos To charsUbound
 		      c = chars(i)
@@ -654,20 +654,20 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  length = 0
 		  
 		  If pos + 2 > charsUbound Then Return 0
 		  
-		  Dim fchar As String = chars(pos)
+		  Var fchar As String = chars(pos)
 		  If fchar <> "`" And fchar <> "~" Then Return 0
 		  
 		  length = 1
-		  Dim fenceDone As Boolean = False
+		  Var fenceDone As Boolean = False
 		  
-		  Dim i As Integer
-		  Dim c As String
+		  Var i As Integer
+		  Var c As String
 		  For i = pos + 1 to charsUbound
 		    c = chars(i)
 		    
@@ -709,11 +709,11 @@ Protected Class BlockScanner
 		  // Reset the ByRef parameter.
 		  level = 0
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  If pos > charsUbound Then Return 0
 		  
-		  Dim c As String = chars(pos)
-		  Dim stxChar As String
+		  Var c As String = chars(pos)
+		  Var stxChar As String
 		  If c <> "=" And c <> "-" Then
 		    Return 0
 		  Else
@@ -724,8 +724,8 @@ Protected Class BlockScanner
 		    Return level
 		  End If
 		  
-		  Dim i As Integer
-		  Dim done As Boolean = False
+		  Var i As Integer
+		  Var done As Boolean = False
 		  For i = pos + 1 To charsUbound
 		    c = chars(i)
 		    
@@ -755,11 +755,11 @@ Protected Class BlockScanner
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  If pos > charsUbound Then Return 0
 		  
-		  Dim i As Integer
+		  Var i As Integer
 		  For i = pos To charsUbound
 		    If Not Utilities.IsWhitespace(chars(pos)) Then Return i - pos
 		  Next i
@@ -784,11 +784,11 @@ Protected Class BlockScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
-		  Dim count As Integer = 0
-		  Dim i As Integer
-		  Dim c, tbChar As String
+		  Var count As Integer = 0
+		  Var i As Integer
+		  Var c, tbChar As String
 		  
 		  For i = pos To charsUbound
 		    c = chars(i)

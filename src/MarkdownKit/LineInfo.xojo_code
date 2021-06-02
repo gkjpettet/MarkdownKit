@@ -18,7 +18,7 @@ Protected Class LineInfo
 		    RemainingSpaces = 0
 		  End If
 		  
-		  Dim charsToTabStop As Integer
+		  Var charsToTabStop As Integer
 		  Do
 		    // If count = 0 Then Exit
 		    If count <= 0 Then Exit
@@ -69,7 +69,7 @@ Protected Class LineInfo
 		    Return True
 		  Case &u0009
 		    Offset = Offset + 1
-		    Dim charsToTabStop As Integer = 4 - (Column Mod kTabSize)
+		    Var charsToTabStop As Integer = 4 - (Column Mod kTabSize)
 		    Column = Column + charsToTabStop
 		    RemainingSpaces = charsToTabStop - 1
 		    CurrentChar = If(Offset <= CharsLastIndex, Chars(Offset), "")
@@ -102,7 +102,7 @@ Protected Class LineInfo
 		  
 		  // A line containing no characters, or a line containing only spaces or
 		  // tabs, is considered blank (spec 0.29 2.1).
-		  Dim i As Integer
+		  Var i As Integer
 		  IsBlank = True
 		  For i = 0 To CharsLastIndex
 		    Select Case Chars(i)
@@ -128,7 +128,7 @@ Protected Class LineInfo
 		  // Is the entire line blank?
 		  If IsBlank Then CurrentChar = ""
 		  
-		  Dim charsToNextTabStop As Integer = kTabSize - (Column Mod kTabSize)
+		  Var charsToNextTabStop As Integer = kTabSize - (Column Mod kTabSize)
 		  NextNWS = Offset
 		  NextNWSColumn = Column
 		  

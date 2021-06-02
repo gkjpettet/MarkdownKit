@@ -275,15 +275,15 @@ End
 #tag Events ButtonParse
 	#tag Event
 		Sub Action()
-		  TextAreaOutput.Value = MarkdownKit.ToHTML(TextAreaInput.Value)
+		  TextAreaOutput.Text = MarkdownKit.ToHTML(TextAreaInput.Text)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events ButtonClear
 	#tag Event
 		Sub Action()
-		  TextAreaInput.Value = ""
-		  TextAreaOutput.Value = ""
+		  TextAreaInput.Text = ""
+		  TextAreaOutput.Text = ""
 		End Sub
 	#tag EndEvent
 #tag EndEvents

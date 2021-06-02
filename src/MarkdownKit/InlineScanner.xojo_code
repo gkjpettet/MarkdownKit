@@ -39,7 +39,7 @@ Protected Class InlineScanner
 		  // characters and replaces character references.
 		  // Mutates the passed array.
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  If charsUbound = -1 Then Return
 		  
@@ -85,9 +85,9 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim i As Integer = 0
-		  Dim collapse As Boolean = False
-		  Dim c As String
+		  Var i As Integer = 0
+		  Var collapse As Boolean = False
+		  Var c As String
 		  While i < chars.LastIndex
 		    c = chars(i)
 		    
@@ -115,7 +115,7 @@ Protected Class InlineScanner
 		  // The contents of `imageDescriptionChars` are used as the images's 
 		  // `alt` attribute text and need to be parsed as inlines.
 		  
-		  Dim data As New MarkdownKit.InlineImageData
+		  Var data As New MarkdownKit.InlineImageData
 		  
 		  data.EndPos = endPos
 		  data.Destination = destination
@@ -132,7 +132,7 @@ Protected Class InlineScanner
 		  // The contents of `linkTextChars` are used as the link's text and need to be parsed 
 		  // as inlines.
 		  
-		  Dim data As New MarkdownKit.InlineLinkData
+		  Var data As New MarkdownKit.InlineLinkData
 		  
 		  data.EndPos = endPos
 		  data.Destination = destination
@@ -151,11 +151,11 @@ Protected Class InlineScanner
 		  // The contents of `descriptionChars` are used as the images's `alt` attrubute 
 		  // and need to be parsed as inlines.
 		  
-		  Dim data As New MarkdownKit.InlineImageData
+		  Var data As New MarkdownKit.InlineImageData
 		  data.EndPos = endPos
 		  
 		  // Get the reference destination and title from the document's reference map.
-		  Dim ref As MarkdownKit.LinkReferenceDefinition = _
+		  Var ref As MarkdownKit.LinkReferenceDefinition = _
 		  MarkdownKit.LinkReferenceDefinition(container.Root.ReferenceMap.Value(linkLabel.Lowercase))
 		  data.Destination = ref.Destination
 		  data.LinkTitle = ref.Title
@@ -175,11 +175,11 @@ Protected Class InlineScanner
 		  // The contents of `linkTextChars` are used as the link's text and need to be parsed 
 		  // as inlines.
 		  
-		  Dim data As New MarkdownKit.InlineLinkData
+		  Var data As New MarkdownKit.InlineLinkData
 		  data.EndPos = endPos
 		  
 		  // Get the reference destination and title from the document's reference map.
-		  Dim ref As MarkdownKit.LinkReferenceDefinition = _
+		  Var ref As MarkdownKit.LinkReferenceDefinition = _
 		  MarkdownKit.LinkReferenceDefinition(container.Root.ReferenceMap.Value(linkLabel.Lowercase))
 		  data.Destination = ref.Destination
 		  data.LinkTitle = ref.Title
@@ -207,8 +207,8 @@ Protected Class InlineScanner
 		  If startPos + 1 > charsUbound Then Return Nil
 		  
 		  // Scan for a valid link label.
-		  Dim c, linkLabelChars() As String
-		  Dim indexOfClosingBracket As Integer = -1
+		  Var c, linkLabelChars() As String
+		  Var indexOfClosingBracket As Integer = -1
 		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
 		    If c = "]" And Not Utilities.Escaped(chars, i) Then
@@ -221,8 +221,8 @@ Protected Class InlineScanner
 		  If indexOfClosingBracket = -1 Then Return Nil
 		  
 		  // A valid label must contain at least one non-whitespace character.
-		  Dim seenNonWhitespace As Boolean = False
-		  Dim linkLabelCharsUbound As Integer = linkLabelChars.LastIndex
+		  Var seenNonWhitespace As Boolean = False
+		  Var linkLabelCharsUbound As Integer = linkLabelChars.LastIndex
 		  For i As Integer = 0 To linkLabelCharsUbound
 		    If Not Utilities.IsWhitespace(linkLabelChars(i)) Then
 		      seenNonWhitespace = True
@@ -232,7 +232,7 @@ Protected Class InlineScanner
 		  If Not seenNonWhitespace Then Return Nil
 		  
 		  // Does the document's reference map contain a reference with the same label?
-		  Dim linkLabel As String = String.FromArray(linkLabelChars, "")
+		  Var linkLabel As String = String.FromArray(linkLabelChars, "")
 		  If Not container.Root.ReferenceMap.HasKey(linkLabel.Lowercase) Then Return Nil
 		  
 		  // Construct this reference image.
@@ -258,8 +258,8 @@ Protected Class InlineScanner
 		  If startPos + 1 > charsUbound Then Return Nil
 		  
 		  // Scan for a valid link label.
-		  Dim c, linkLabelChars() As String
-		  Dim indexOfClosingBracket As Integer = -1
+		  Var c, linkLabelChars() As String
+		  Var indexOfClosingBracket As Integer = -1
 		  For i As Integer = startPos + 1 To charsUbound
 		    c = chars(i)
 		    If c = "]" And Not Utilities.Escaped(chars, i) Then
@@ -272,8 +272,8 @@ Protected Class InlineScanner
 		  If indexOfClosingBracket = -1 Then Return Nil
 		  
 		  // A valid label must contain at least one non-whitespace character.
-		  Dim seenNonWhitespace As Boolean = False
-		  Dim linkLabelCharsUbound As Integer = linkLabelChars.LastIndex
+		  Var seenNonWhitespace As Boolean = False
+		  Var linkLabelCharsUbound As Integer = linkLabelChars.LastIndex
 		  For i As Integer = 0 To linkLabelCharsUbound
 		    If Not Utilities.IsWhitespace(linkLabelChars(i)) Then
 		      seenNonWhitespace = True
@@ -283,7 +283,7 @@ Protected Class InlineScanner
 		  If Not seenNonWhitespace Then Return Nil
 		  
 		  // Does the document's reference map contain a reference with the same label?
-		  Dim linkLabel As String = String.FromArray(linkLabelChars, "")
+		  Var linkLabel As String = String.FromArray(linkLabelChars, "")
 		  If Not container.Root.ReferenceMap.HasKey(linkLabel.Lowercase) Then Return Nil
 		  
 		  // Construct this reference link.
@@ -303,7 +303,7 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim pos As Integer
+		  Var pos As Integer
 		  
 		  pos = startPos + 1
 		  While pos <= charsUbound
@@ -315,18 +315,18 @@ Protected Class InlineScanner
 		  
 		  // `pos` now points to the first character immediately following the opening 
 		  // backtick string.
-		  Dim contentStartPos As Integer = pos
+		  Var contentStartPos As Integer = pos
 		  
-		  Dim backtickStringLen As Integer = pos - startPos
+		  Var backtickStringLen As Integer = pos - startPos
 		  
 		  // Find the start position of the closing backtick string (if there is one).
-		  Dim closingStartPos As Integer = ScanClosingBacktickString(b, backtickStringLen, _
+		  Var closingStartPos As Integer = ScanClosingBacktickString(b, backtickStringLen, _
 		  contentStartPos, charsUbound)
 		  
 		  If closingStartPos = - 1 Then Return Nil
 		  
 		  // We've found a code span.
-		  Dim result As New MarkdownKit.Block(BlockType.Codespan, New WeakRef(b))
+		  Var result As New MarkdownKit.Block(BlockType.Codespan, New WeakRef(b))
 		  result.StartPos = contentStartPos
 		  result.EndPos = closingStartPos - 1
 		  result.DelimiterLength = backtickStringLen
@@ -347,12 +347,12 @@ Protected Class InlineScanner
 		  // Bare minimum valid HTML tag is: <a>
 		  If startPos + 2 > charsUbound Then Return Nil
 		  
-		  Dim result As MarkdownKit.Block
+		  Var result As MarkdownKit.Block
 		  
-		  Dim pos As Integer = 0
-		  Dim c As String = b.Chars(startPos + 1)
+		  Var pos As Integer = 0
+		  Var c As String = b.Chars(startPos + 1)
 		  
-		  Dim tagName As String
+		  Var tagName As String
 		  
 		  If c = "/" Then
 		    // Closing tag?
@@ -365,7 +365,7 @@ Protected Class InlineScanner
 		    pos = HTMLScanner.ScanDeclarationCommentOrCData(b.Chars, startPos + 2, charsUbound)
 		  Else
 		    // Autolink?
-		    Dim uri As String
+		    Var uri As String
 		    pos = ScanAutoLink(b.Chars, startPos + 1, charsUbound, uri)
 		    If pos > 0 Then
 		      result = New MarkdownKit.Block(BlockType.InlineLink, New WeakRef(b))
@@ -500,7 +500,7 @@ Protected Class InlineScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  // We know that `startPos` points at the opening "(" so move past it.
-		  Dim pos As Integer = startPos + 1
+		  Var pos As Integer = startPos + 1
 		  
 		  If pos > charsUbound Then Return Nil
 		  
@@ -510,14 +510,14 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link destination?
-		  Dim destination As String = ScanInlineLinkDestination(chars, charsUbound, pos)
+		  Var destination As String = ScanInlineLinkDestination(chars, charsUbound, pos)
 		  Utilities.Unescape(destination)
 		  
 		  If pos >= charsUbound Then
 		    Return CreateInlineImageData(imageDescriptionChars, destination, "", pos)
 		  End If
 		  
-		  Dim seenWhiteSpace As Boolean = False
+		  Var seenWhiteSpace As Boolean = False
 		  // Advance past any optional whitespace.
 		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
 		    seenWhiteSpace = True
@@ -525,7 +525,7 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link title?
-		  Dim title As String = ScanInlineLinkTitle(chars, charsUbound, pos)
+		  Var title As String = ScanInlineLinkTitle(chars, charsUbound, pos)
 		  Utilities.Unescape(title)
 		  
 		  // Advance past any optional whitespace.
@@ -560,7 +560,7 @@ Protected Class InlineScanner
 		  #Pragma StackOverflowChecking False
 		  
 		  // We know that `startPos` points at the opening "(" so move past it.
-		  Dim pos As Integer = startPos + 1
+		  Var pos As Integer = startPos + 1
 		  
 		  If pos > charsUbound Then Return Nil
 		  
@@ -570,14 +570,14 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link destination?
-		  Dim destination As String = ScanInlineLinkDestination(chars, charsUbound, pos)
+		  Var destination As String = ScanInlineLinkDestination(chars, charsUbound, pos)
 		  Utilities.Unescape(destination)
 		  
 		  If pos >= charsUbound Then
 		    Return CreateInlineLinkData(linkTextChars, destination, "", pos)
 		  End If
 		  
-		  Dim seenWhiteSpace As Boolean = False
+		  Var seenWhiteSpace As Boolean = False
 		  // Advance past any optional whitespace.
 		  While pos <= charsUbound And Utilities.IsWhitespace(chars(pos))
 		    seenWhiteSpace = True
@@ -585,7 +585,7 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  // Optional link title?
-		  Dim title As String = ScanInlineLinkTitle(chars, charsUbound, pos)
+		  Var title As String = ScanInlineLinkTitle(chars, charsUbound, pos)
 		  Utilities.Unescape(title)
 		  
 		  // Advance past any optional whitespace.
@@ -611,26 +611,19 @@ Protected Class InlineScanner
 		  // If a valid link/image is found the a new block is created of the appropriate 
 		  // type, inserted into the container and any inlines it containes are handled.
 		  
-		  #Pragma Warning "FIX: This is returning False when using classic dictionary for reference map."
-		  
 		  #Pragma DisableBoundsChecking
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
 		  // Starting at the top of the delimiter stack, we look backwards through 
 		  // for an opening "[" or "![" delimiter.
-		  Dim delimiterStackUbound As Integer = delimiterStack.LastIndex
-		  Dim dsn As MarkdownKit.DelimiterStackNode
-		  Dim linkData As MarkdownKit.InlineLinkData
-		  Dim imageData As MarkdownKit.InlineImageData
-		  Dim openerIndex, openerPos As Integer
-		  Dim link, openerTextNode, image As MarkdownKit.Block
-		  Dim limit As Integer
-		  
-		  #Pragma Warning "REMOVE"
-		  If App.DEBUGGING Then
-		    'Break
-		  End If
+		  Var delimiterStackUbound As Integer = delimiterStack.LastIndex
+		  Var dsn As MarkdownKit.DelimiterStackNode
+		  Var linkData As MarkdownKit.InlineLinkData
+		  Var imageData As MarkdownKit.InlineImageData
+		  Var openerIndex, openerPos As Integer
+		  Var link, openerTextNode, image As MarkdownKit.Block
+		  Var limit As Integer
 		  
 		  For i As Integer = delimiterStackUbound DownTo 0
 		    dsn = delimiterStack(i)
@@ -771,11 +764,11 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim pos As Integer = 0
-		  Dim charsUbound As Integer = b.Chars.LastIndex
-		  Dim c, lastChar As String = ""
-		  Dim buffer, result As MarkdownKit.Block
-		  Dim dsn As MarkdownKit.DelimiterStackNode
+		  Var pos As Integer = 0
+		  Var charsUbound As Integer = b.Chars.LastIndex
+		  Var c, lastChar As String = ""
+		  Var buffer, result As MarkdownKit.Block
+		  Var dsn As MarkdownKit.DelimiterStackNode
 		  
 		  While pos <= charsUbound
 		    lastChar = c
@@ -878,13 +871,6 @@ Protected Class InlineScanner
 		      If buffer <> Nil Then CloseBuffer(buffer, b)
 		      
 		      If Not LookForLinkOrImage(b, delimiterStack, pos) Then
-		        #Pragma Warning "REMOVE"
-		        If App.DEBUGGING Then
-		          // Hit 1x when using broken classic dictionary.
-		          // Never hit when using the working Xojo.Core.Dictionary.
-		          'Break
-		        End If
-		        
 		        // Add a literal "]" text node.
 		        If buffer <> Nil Then
 		          buffer.EndPos = pos
@@ -924,13 +910,6 @@ Protected Class InlineScanner
 		  Wend
 		  
 		  If buffer <> Nil Then
-		    #Pragma Warning "BROKEN"
-		    // This is hit when using the broken classic Dictionary.
-		    // Never hit when using the working Xojo.Core.Dictionary.
-		    // Therefore, buffer should be NIL but isn't!!
-		    If App.DEBUGGING Then
-		      'Break
-		    End If
 		    CloseBuffer(buffer, b)
 		  End If
 		  
@@ -940,14 +919,6 @@ Protected Class InlineScanner
 
 	#tag Method, Flags = &h21
 		Private Shared Sub ProcessEmphasis(ByRef container As MarkdownKit.Block, ByRef delimiterStack() As MarkdownKit.DelimiterStackNode, stackBottom As Integer)
-		  #Pragma Warning "REMOVE"
-		  If App.DEBUGGING Then
-		    // Hit 2x when correct.
-		    // Hit 1x when using broken classic dictionary (and hit after the 
-		    // breakpoint at the end of ParseInlines).
-		    'Break
-		  End If
-		  
 		  // `stackBottom` sets a lower bound to how far we descend in the delimiter stack. If it's -1, 
 		  // we can go all the way to the bottom. Otherwise, we stop before visiting stackBottom.
 		  
@@ -959,18 +930,18 @@ Protected Class InlineScanner
 		  
 		  // Let currentPosition point to the element on the delimiter stack just above stackBottom 
 		  // (or the first element if stackBottom = -1).
-		  Dim currentPosition As Integer = If(stackBottom = -1, 0, stackBottom + 1)
+		  Var currentPosition As Integer = If(stackBottom = -1, 0, stackBottom + 1)
 		  
 		  // Move currentPosition forward in the delimiter stack until we find the first potential 
 		  // closer with delimiter * or _. (This will be the potential closer closest to the 
 		  // beginning of the input – the first one in parse order).
-		  Dim closerNode As MarkdownKit.DelimiterStackNode
-		  Dim openerNode As MarkdownKit.DelimiterStackNode
+		  Var closerNode As MarkdownKit.DelimiterStackNode
+		  Var openerNode As MarkdownKit.DelimiterStackNode
 		  
-		  Dim incrementCurrentPosition As Boolean = False
+		  Var incrementCurrentPosition As Boolean = False
 		  
-		  Dim openerTextNode, closerTextNode, emphasis As MarkdownKit.Block
-		  Dim openerTextNodeIndex, closerTextNodeIndex, numToTranspose, limit As Integer
+		  Var openerTextNode, closerTextNode, emphasis As MarkdownKit.Block
+		  Var openerTextNodeIndex, closerTextNodeIndex, numToTranspose, limit As Integer
 		  
 		  While currentPosition <= delimiterStack.LastIndex
 		    
@@ -1046,7 +1017,6 @@ Protected Class InlineScanner
 		              // Account for the #s and single separating space at the start of the line.
 		              emphasis.StartPos = openerTextNode.Parent.OffsetOfLineStart + openerTextNode.StartPos + _
 		              openerTextNode.Parent.Level + 1
-		              #Pragma Warning "Need to check the +2 offset"
 		              emphasis.EndPos = openerTextNode.Parent.OffsetOfLineStart + closerTextNode.EndPos + _
 		              openerTextNode.Parent.Level + 2 // ? + 1 or +2 for * vs **
 		            End Select
@@ -1161,7 +1131,7 @@ Protected Class InlineScanner
 		  If startPos + 3 > charsUbound Then Return 0
 		  
 		  // Check for a valid scheme.
-		  Dim pos As Integer = ScanLinkScheme(chars, startPos, charsUbound)
+		  Var pos As Integer = ScanLinkScheme(chars, startPos, charsUbound)
 		  If pos = 0 Or pos >= charsUbound Then Return 0
 		  
 		  // Check for a colon.
@@ -1170,14 +1140,14 @@ Protected Class InlineScanner
 		  
 		  // Skip over any characters that aren't whitespace, "<" or ">"
 		  If pos >= charsUbound Then Return 0
-		  Dim c As String
-		  Dim limit As Integer
+		  Var c As String
+		  Var limit As Integer
 		  For pos = pos To charsUbound
 		    c = chars(pos)
 		    If c = ">" Then
 		      // Valid autolink. Construct the URI.
 		      limit = pos - 1
-		      Dim tmp() As String
+		      Var tmp() As String
 		      For i As Integer = startPos To limit
 		        tmp.Add(chars(i))
 		      Next i
@@ -1210,8 +1180,8 @@ Protected Class InlineScanner
 		  
 		  If startPos + backtickStringLen > charsUbound Then Return -1
 		  
-		  Dim contiguousBackticks As Integer = 0
-		  Dim closingBacktickStringStartPos As Integer = -1
+		  Var contiguousBackticks As Integer = 0
+		  Var closingBacktickStringStartPos As Integer = -1
 		  For i As Integer = startPos To charsUbound
 		    If b.Chars(i) = "`" Then
 		      If contiguousBackticks = 0 Then
@@ -1264,9 +1234,9 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim startPos As integer = pos
+		  Var startPos As integer = pos
 		  
-		  Dim dsn As New MarkdownKit.DelimiterStackNode
+		  Var dsn As New MarkdownKit.DelimiterStackNode
 		  dsn.Delimiter = delimiter
 		  dsn.Active = True
 		  
@@ -1280,29 +1250,29 @@ Protected Class InlineScanner
 		  Next pos
 		  
 		  // `pos` currently points at the character following the end of the run.
-		  Dim beforeIsWhitespace As Boolean
+		  Var beforeIsWhitespace As Boolean
 		  If startPos = 0 Then
 		    beforeIsWhitespace = True
 		  Else
 		    beforeIsWhitespace = If(Utilities.IsWhitespace(chars(startPos - 1 ), True), True, False)
 		  End If
 		  
-		  Dim afterIsWhitespace As Boolean
+		  Var afterIsWhitespace As Boolean
 		  If pos >= charsUbound Then
 		    afterIsWhitespace = True
 		  Else
 		    afterIsWhitespace = If(Utilities.IsWhitespace(chars(pos), True), True, False)
 		  End If
 		  
-		  Dim beforeIsPunctuation As Boolean = If(startPos = 0 Or Not Utilities.IsPunctuation(chars(startPos - 1)), False, True)
-		  Dim afterIsPunctuation As Boolean = If(pos >= charsUbound Or Not Utilities.IsPunctuation(chars(pos)), False, True)
+		  Var beforeIsPunctuation As Boolean = If(startPos = 0 Or Not Utilities.IsPunctuation(chars(startPos - 1)), False, True)
+		  Var afterIsPunctuation As Boolean = If(pos >= charsUbound Or Not Utilities.IsPunctuation(chars(pos)), False, True)
 		  
 		  // Left flanking?
-		  Dim leftFlanking As Boolean = Not afterIsWhitespace And _
+		  Var leftFlanking As Boolean = Not afterIsWhitespace And _
 		  (Not afterIsPunctuation Or (afterIsPunctuation And (beforeIsWhitespace Or beforeIsPunctuation)))
 		  
 		  // Right flanking?
-		  Dim rightFlanking As Boolean = Not beforeIsWhitespace And _
+		  Var rightFlanking As Boolean = Not beforeIsWhitespace And _
 		  (Not beforeIsPunctuation Or (beforeIsPunctuation And (afterIsWhitespace Or afterIsPunctuation)))
 		  
 		  // Opener?
@@ -1345,12 +1315,12 @@ Protected Class InlineScanner
 		  
 		  uri = ""
 		  
-		  Dim pos As Integer = startPos
+		  Var pos As Integer = startPos
 		  
 		  // Match between 1 and unlimited times, as many times as possible, a character 
 		  // in the set: a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-
-		  Dim c As String
-		  Dim done As Boolean = False
+		  Var c As String
+		  Var done As Boolean = False
 		  While pos < charsUbound
 		    If Not mEmailPartOneCharacters.HasKey(chars(pos)) Then
 		      Exit
@@ -1374,10 +1344,10 @@ Protected Class InlineScanner
 		  
 		  // Is there a dot next?
 		  c = chars(pos)
-		  Dim hadDot As Boolean = If(c = ".", True, False)
-		  Dim dotPosition As Integer = If(hadDot, pos, -1)
+		  Var hadDot As Boolean = If(c = ".", True, False)
+		  Var dotPosition As Integer = If(hadDot, pos, -1)
 		  
-		  Dim count As Integer
+		  Var count As Integer
 		  If Not hadDot Then
 		    // Match zero or one times: [a-zA-Z0-9-]{0,61}[a-zA-Z0-9]
 		    count = HTMLScanner.MatchASCIILetterOrDigitOrHyphen(chars, charsUbound, pos, 62)
@@ -1392,16 +1362,16 @@ Protected Class InlineScanner
 		  pos = dotPosition
 		  
 		  
-		  Dim valid As Boolean = False
-		  Dim limit As Integer
-		  Dim tmp() As String
+		  Var valid As Boolean = False
+		  Var limit As Integer
+		  Var tmp() As String
 		  Do
 		    // Have we found a valid email?
 		    If chars(pos) = ">" Then
 		      If Valid Then
 		        // Construct the URI.
 		        limit = pos - 1
-		        Redim tmp(-1)
+		        tmp.ResizeTo(-1)
 		        For i As Integer = startPos To limit
 		          tmp.Add(chars(i))
 		        Next i
@@ -1444,8 +1414,8 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim pos As Integer = startPos
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var pos As Integer = startPos
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  // Skip past the opening "![".
 		  pos = pos + 2
@@ -1454,12 +1424,12 @@ Protected Class InlineScanner
 		  // Valid images start with either an imageDescription or a linkLabel.
 		  // linkLabels are not allowed to contain unescaped brackets and 
 		  // must contain at least one non-whitespace character.
-		  Dim part1RawChars() As String
-		  Dim indexOfLastClosingSquareBracket As Integer = -1
-		  Dim openSquareBracketCount As Integer = 1
-		  Dim closeSquareBracketCount As Integer = 0
-		  Dim hasUnescapedBracket As Boolean = False
-		  Dim c As String
+		  Var part1RawChars() As String
+		  Var indexOfLastClosingSquareBracket As Integer = -1
+		  Var openSquareBracketCount As Integer = 1
+		  Var closeSquareBracketCount As Integer = 0
+		  Var hasUnescapedBracket As Boolean = False
+		  Var c As String
 		  For i As Integer = 0 To closerCharPos
 		    c = chars(i)
 		    If c = "]" And Not Utilities.Escaped(chars, i) Then
@@ -1478,13 +1448,13 @@ Protected Class InlineScanner
 		  If Not hasUnescapedBracket And openSquareBracketCount <> closeSquareBracketCount Then Return Nil
 		  
 		  // Remove characters from `part1RawChars` from the closing "]" onwards.
-		  Dim charsToRemove As Integer = closerCharPos - indexOfLastClosingSquareBracket
+		  Var charsToRemove As Integer = closerCharPos - indexOfLastClosingSquareBracket
 		  For i As Integer = 1 To charsToRemove
 		    Call part1RawChars.Pop
 		  Next i
 		  
 		  // Is part1 a valid linkLabel?
-		  Dim validLinkLabel As Boolean = False
+		  Var validLinkLabel As Boolean = False
 		  If part1RawChars.LastIndex > -1 Then
 		    If container.Root.ReferenceMap.HasKey(String.FromArray(part1RawChars, "")) Then
 		      validLinkLabel = True
@@ -1517,7 +1487,7 @@ Protected Class InlineScanner
 		  If pos > charsUbound Then Return Nil
 		  If chars(pos) = "(" Then
 		    // Could be an inline image.
-		    Dim result As MarkdownKit.InlineImageData = _
+		    Var result As MarkdownKit.InlineImageData = _
 		    InlineImageData(chars, charsUbound, part1RawChars, pos)
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference image immediately followed by a "(".
@@ -1548,8 +1518,8 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim pos As Integer = startPos
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var pos As Integer = startPos
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  // Skip past the opening "[".
 		  pos = pos + 1
@@ -1559,12 +1529,12 @@ Protected Class InlineScanner
 		  // linkLabels are not allowed to contain unescaped brackets and 
 		  // must contain at least one non-whitespace character.
 		  
-		  Dim part1RawChars() As String
-		  Dim indexOfLastClosingSquareBracket As Integer = -1
-		  Dim openSquareBracketCount As Integer = 1
-		  Dim closeSquareBracketCount As Integer = 0
-		  Dim hasUnescapedBracket As Boolean = False
-		  Dim c As String
+		  Var part1RawChars() As String
+		  Var indexOfLastClosingSquareBracket As Integer = -1
+		  Var openSquareBracketCount As Integer = 1
+		  Var closeSquareBracketCount As Integer = 0
+		  Var hasUnescapedBracket As Boolean = False
+		  Var c As String
 		  For i As Integer = 0 To closerCharPos
 		    c = chars(i)
 		    If c = "]" And Not Utilities.Escaped(chars, i) Then
@@ -1583,25 +1553,19 @@ Protected Class InlineScanner
 		  If Not hasUnescapedBracket And openSquareBracketCount <> closeSquareBracketCount Then Return Nil
 		  
 		  // Remove characters from `part1RawChars` from the closing "]" onwards.
-		  Dim charsToRemove As Integer = closerCharPos - indexOfLastClosingSquareBracket
+		  Var charsToRemove As Integer = closerCharPos - indexOfLastClosingSquareBracket
 		  For i As Integer = 1 To charsToRemove
 		    Call part1RawChars.Pop
 		  Next i
 		  
 		  // Is part1 a valid linkLabel?
-		  Dim linkLabelAsText As String // Must be text to permit case-sensitive lookups.
-		  Dim validLinkLabel As Boolean = False
+		  Var linkLabelAsText As String // Must be text to permit case-sensitive lookups.
+		  Var validLinkLabel As Boolean = False
 		  If part1RawChars.LastIndex > -1 Then
 		    linkLabelAsText = String.FromArray(part1RawChars, "").ToText
 		    If container.Root.ReferenceMap.HasKey(linkLabelAsText.Lowercase) Then
 		      validLinkLabel = True
 		    End If
-		  End If
-		  
-		  #Pragma Warning "FIX - Example 161"
-		  // validLinkLabel is set to False when it should be set to True!!!
-		  If App.DEBUGGING Then
-		    'Break
 		  End If
 		  
 		  // Move past the closing part1 square bracket.
@@ -1630,7 +1594,7 @@ Protected Class InlineScanner
 		  If pos > charsUbound Then Return Nil
 		  If chars(pos) = "(" Then
 		    // Could be an inline link.
-		    Dim result As MarkdownKit.InlineLinkData = _
+		    Var result As MarkdownKit.InlineLinkData = _
 		    InlineLinkData(chars, charsUbound, part1RawChars, pos)
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference link immediately followed by a "(".
@@ -1671,10 +1635,10 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim i As Integer
-		  Dim c As String
+		  Var i As Integer
+		  Var c As String
 		  
-		  Dim startPos As Integer = pos
+		  Var startPos As Integer = pos
 		  
 		  // Sanity check.
 		  If pos > charsUbound Then Return ""
@@ -1696,7 +1660,7 @@ Protected Class InlineScanner
 		  End If
 		  
 		  // Scenario 2:
-		  Dim unmatchedOpenParens As Integer = 1 // Account for the opening parens we've already seen.
+		  Var unmatchedOpenParens As Integer = 1 // Account for the opening parens we've already seen.
 		  For i = startPos To charsUbound
 		    c = chars(i)
 		    Select Case c
@@ -1709,7 +1673,7 @@ Protected Class InlineScanner
 		      If i = charsUbound Or chars(i + 1) = &u000A Then
 		        If unmatchedOpenParens = 0 Then
 		          pos = i
-		          Dim destination As String = chars.ToString(startPos, i - startPos)
+		          Var destination As String = chars.ToString(startPos, i - startPos)
 		          Return Utilities.ReplaceEntities(destination)
 		        Else
 		          Return ""
@@ -1717,7 +1681,7 @@ Protected Class InlineScanner
 		      End If
 		      If unmatchedOpenParens = 0 Then
 		        pos = i
-		        Dim destination As String = chars.ToString(startPos, i - startPos)
+		        Var destination As String = chars.ToString(startPos, i - startPos)
 		        Return Utilities.ReplaceEntities(destination)
 		      End If
 		    Case &u0000, &u0009
@@ -1728,7 +1692,7 @@ Protected Class InlineScanner
 		    Case " "
 		      If unmatchedOpenParens = 1 Then
 		        pos = i
-		        Dim destination As String = chars.ToString(startPos, i - startPos)
+		        Var destination As String = chars.ToString(startPos, i - startPos)
 		        Return Utilities.ReplaceEntities(destination)
 		      Else
 		        Return ""
@@ -1738,7 +1702,7 @@ Protected Class InlineScanner
 		  
 		  If unmatchedOpenParens = 0 Then
 		    pos = i
-		    Dim destination As String = chars.ToString(startPos, pos - startPos)
+		    Var destination As String = chars.ToString(startPos, pos - startPos)
 		    Return Utilities.ReplaceEntities(destination)
 		  Else
 		    Return ""
@@ -1765,16 +1729,16 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim startPos As Integer = pos
+		  Var startPos As Integer = pos
 		  
 		  // Sanity check.
 		  If startPos > charsUbound Or (startPos + 1) > charsUbound Then
 		    Return ""
 		  End If
 		  
-		  Dim c As String = chars(pos)
+		  Var c As String = chars(pos)
 		  
-		  Dim delimiter As String
+		  Var delimiter As String
 		  Select Case c
 		  Case """", "'"
 		    delimiter = c
@@ -1786,7 +1750,7 @@ Protected Class InlineScanner
 		    c = chars(i)
 		    If c = delimiter And Not Utilities.Escaped(chars, i) Then
 		      pos = i + 1
-		      Dim title As String = chars.ToString(startPos + 1, i - startPos - 1)
+		      Var title As String = chars.ToString(startPos + 1, i - startPos - 1)
 		      Return Utilities.ReplaceEntities(title)
 		    End If
 		  Next i
@@ -1818,11 +1782,11 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
-		  Dim i As Integer
-		  Dim c As String
+		  Var charsUbound As Integer = chars.LastIndex
+		  Var i As Integer
+		  Var c As String
 		  
-		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
+		  Var result As New MarkdownKit.CharacterRun(startPos, -1, -1)
 		  
 		  // Sanity check.
 		  If startPos > charsUbound Then Return result
@@ -1845,7 +1809,7 @@ Protected Class InlineScanner
 		  End If
 		  
 		  // Scenario 2:
-		  Dim openParensCount, closeParensCount As Integer = 0
+		  Var openParensCount, closeParensCount As Integer = 0
 		  For i = startPos To charsUbound
 		    c = chars(i)
 		    Select Case c
@@ -1907,16 +1871,16 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim result As New MarkdownKit.CharacterRun(0, -1, -1)
+		  Var result As New MarkdownKit.CharacterRun(0, -1, -1)
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  If charsUbound > kMaxReferenceLabelLength + 1 Then Return result
 		  
 		  // Find the first "]" that is not backslash-escaped.
-		  Dim limit As Integer = Min(charsUbound, kMaxReferenceLabelLength + 1)
-		  Dim i As Integer
-		  Dim seenNonWhitespace As Boolean = False
+		  Var limit As Integer = Min(charsUbound, kMaxReferenceLabelLength + 1)
+		  Var i As Integer
+		  Var seenNonWhitespace As Boolean = False
 		  For i = (pos + 1) To limit
 		    Select Case chars(i)
 		    Case "["
@@ -1962,7 +1926,7 @@ Protected Class InlineScanner
 		  
 		  If Not Utilities.IsASCIIAlphaChar(chars(pos)) Then Return 0
 		  
-		  Dim c As String = chars(pos + 1)
+		  Var c As String = chars(pos + 1)
 		  If Not Utilities.IsASCIIAlphaChar(c) And Not Utilities.IsDigit(c) And _
 		    c <> "+" And c<> "." And c <> "-" Then
 		    Return 0
@@ -1971,7 +1935,7 @@ Protected Class InlineScanner
 		  pos = pos + 2
 		  
 		  // Up to 30 more ASCII letters, digits, +, . or -
-		  Dim count As Integer = 1
+		  Var count As Integer = 1
 		  
 		  While pos <= charsUbound And count <= 30
 		    c = chars(pos)
@@ -2009,10 +1973,10 @@ Protected Class InlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
-		  Dim result As New MarkdownKit.CharacterRun(startPos, -1, -1)
+		  Var result As New MarkdownKit.CharacterRun(startPos, -1, -1)
 		  result.Invalid = True
 		  
-		  Dim charsUbound As Integer = chars.LastIndex
+		  Var charsUbound As Integer = chars.LastIndex
 		  
 		  // Sanity check.
 		  If startPos < 0 Or startPos > charsUbound Or _
@@ -2020,9 +1984,9 @@ Protected Class InlineScanner
 		    Return result
 		  End If
 		  
-		  Dim c As String = chars(startPos)
+		  Var c As String = chars(startPos)
 		  
-		  Dim delimiter As String
+		  Var delimiter As String
 		  Select Case c
 		  Case """", "'"
 		    delimiter = c

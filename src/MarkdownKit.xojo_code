@@ -5,10 +5,10 @@ Protected Module MarkdownKit
 		  // Appends the contents of array2 to array1.
 		  // Has no effect on array2 but mutates array2.
 		  
-		  Dim array2LastIndex As Integer = array2.LastIndex
+		  Var array2LastIndex As Integer = array2.LastIndex
 		  If array2LastIndex < 0 Then Return
 		  
-		  Dim i As Integer
+		  Var i As Integer
 		  For i = 0 To array2LastIndex
 		    array1.Add(array2(i))
 		  Next i
@@ -78,8 +78,8 @@ Protected Module MarkdownKit
 		  // Returns True if this array of characters is empty or contains only whitespace.
 		  If chars.LastIndex = - 1 Then Return True
 		  
-		  Dim charsLastIndex As Integer = chars.LastIndex
-		  Dim i As Integer
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  Var i As Integer
 		  For i = 0 To charsLastIndex
 		    Select Case Chars(i)
 		    Case " ", &u0009
@@ -119,7 +119,7 @@ Protected Module MarkdownKit
 		    "Invalid parameters provided to the MarkdownKit.RemoveLeft method")
 		  End If
 		  
-		  Dim remaining As Integer = length
+		  Var remaining As Integer = length
 		  Do Until remaining = 0
 		    source.RemoveAt(0)
 		    remaining = remaining - 1
@@ -133,8 +133,8 @@ Protected Module MarkdownKit
 		  // characters from the beginning of it.
 		  // Whitespace characters are &u0020, &u0009.
 		  
-		  Dim i As Integer
-		  Dim c As String
+		  Var i As Integer
+		  Var c As String
 		  For i = chars.LastIndex DownTo 0
 		    c = chars(0)
 		    Select Case c
@@ -155,8 +155,8 @@ Protected Module MarkdownKit
 		  // Whitespace characters are &u0020, &u0009.
 		  // Mutates the passed array.
 		  
-		  Dim i As Integer
-		  Dim c As String
+		  Var i As Integer
+		  Var c As String
 		  For i = chars.LastIndex DownTo 0
 		    c = chars(chars.LastIndex)
 		    Select Case c
@@ -175,14 +175,14 @@ Protected Module MarkdownKit
 		  // Takes Markdown source as a String and returns it as raw HTML.
 		  
 		  // Create a new Markdown document.
-		  Dim doc As New MarkdownKit.Document(markdown)
+		  Var doc As New MarkdownKit.Document(markdown)
 		  
 		  // Create the AST.
 		  doc.ParseBlockStructure
 		  doc.ParseInlines
 		  
 		  // Create a HTML renderer to walk the AST.
-		  Dim renderer As New MarkdownKit.HTMLRenderer
+		  Var renderer As New MarkdownKit.HTMLRenderer
 		  renderer.VisitDocument(doc)
 		  
 		  Return renderer.Output
@@ -197,13 +197,13 @@ Protected Module MarkdownKit
 		  // and returns them as a concatenated String.
 		  // If any of the passed parameters are out of range then we return "".
 		  
-		  Dim charsLastIndex As Integer = chars.LastIndex
+		  Var charsLastIndex As Integer = chars.LastIndex
 		  
 		  If start < 0 Or start > charsLastIndex Or length <= 0 Or _
 		  (start + length - 1 > charsLastIndex) Then Return ""
 		  
-		  Dim limit As Integer = start + length - 1
-		  Dim tmp() As String
+		  Var limit As Integer = start + length - 1
+		  Var tmp() As String
 		  For i As Integer = start To limit
 		    tmp.Add(chars(i))
 		  Next i
@@ -253,9 +253,9 @@ Protected Module MarkdownKit
 
 	#tag Method, Flags = &h1
 		Protected Function Version() As String
-		  Dim major As Integer = kVersionMajor
-		  Dim minor As Integer = kVersionMinor
-		  Dim bug As Integer = kVersionBug
+		  Var major As Integer = kVersionMajor
+		  Var minor As Integer = kVersionMinor
+		  Var bug As Integer = kVersionBug
 		  
 		  Return major.ToText + "." + minor.ToText + "." + bug.ToText
 		End Function
@@ -277,7 +277,7 @@ Protected Module MarkdownKit
 		returns the HTML as a String:
 		
 		```xojo
-		Dim html As String = MarkdownKit.ToHTML("**Hello** World!") // <p><strong>Hello</strong> World!</p>
+		Var html As String = MarkdownKit.ToHTML("**Hello** World!") // <p><strong>Hello</strong> World!</p>
 		```
 		
 		If you would like access to the abstract syntax tree (AST) created by the parser 
@@ -285,7 +285,7 @@ Protected Module MarkdownKit
 		
 		```xojo
 		// Create a new Markdown document with some source code.
-		Dim doc As New MarkdownKit.Document("Some **bold** `Markdown` code.")
+		Var doc As New MarkdownKit.Document("Some **bold** `Markdown` code.")
 		
 		// Parse the source code into an AST.
 		doc.ParseBlockStructure
@@ -293,13 +293,13 @@ Protected Module MarkdownKit
 		
 		// `doc` is now essentially an AST. You can print it out using one of the 
 		// included renderers:
-		Dim astRenderer As New MarkdownKit.ASTRenderer
+		Var astRenderer As New MarkdownKit.ASTRenderer
 		astRenderer.VisitDocument(doc)
-		Dim ast As String = astRenderer.Output
+		Var ast As String = astRenderer.Output
 		
-		Dim htmlRenderer As New MarkdownKit.HTMLRenderer
+		Var htmlRenderer As New MarkdownKit.HTMLRenderer
 		htmlRenderer.VisitDocument(doc)
-		Dim html As String = htmlRenderer.Output
+		Var html As String = htmlRenderer.Output
 		```
 		
 		One of the powerful and customisable aspects of MarkdownKit is that because you 

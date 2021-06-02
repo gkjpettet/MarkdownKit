@@ -4,33 +4,33 @@ Inherits TestGroup
 	#tag Method, Flags = &h0
 		Sub Run(testNumber As Integer)
 		  // Get the names of the files containing the test Markdown and expected AST output.
-		  Dim mdName As String = testNumber.ToString + ".md"
-		  Dim astNAme As String = testNumber.ToString + ".ast"
+		  Var mdName As String = testNumber.ToString + ".md"
+		  Var astNAme As String = testNumber.ToString + ".ast"
 		  
 		  // Get the example Markdown file.
-		  Dim md As String
+		  Var md As String
 		  If Not ASTTestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected AST output.
-		  Dim expected As String
+		  Var expected As String
 		  If Not ASTTestController.GetTestAST(astName, expected) Then
 		    Assert.Fail("Unable to load test AST file `" + astName + "`")
 		    Return
 		  End If
 		  
 		  // Create a new Markdown document.
-		  Dim doc As New MarkdownKit.Document(md)
+		  Var doc As New MarkdownKit.Document(md)
 		  doc.ParseBlockStructure
 		  doc.ParseInlines
 		  
 		  // Convert the phase 2 block structure to Text.
-		  Dim renderer As New MarkdownKit.ASTRenderer
+		  Var renderer As New MarkdownKit.ASTRenderer
 		  renderer.Pretty = False
 		  renderer.VisitDocument(doc)
-		  Dim actual As String = renderer.Output
+		  Var actual As String = renderer.Output
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
@@ -38,7 +38,8 @@ Inherits TestGroup
 		  ASTTestController.TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
-		  Assert.AreEqual(expected, actual)
+		  ' Assert.AreEqual(expected, actual)
+		  Assert.AreEqualCustom(expected, actual)
 		  
 		  Exception e
 		    Assert.FailCustom(expected, "Exception occurred!")

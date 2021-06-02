@@ -2298,17 +2298,17 @@ Protected Class Utilities
 		  #Pragma StackOverflowChecking False
 		  
 		  // Quick check to see if we can bail early.
-		  Dim start As Integer = chars.IndexOf("&")
+		  Var start As Integer = chars.IndexOf("&")
 		  If start = -1 Or chars.IndexOf(";") = -1 Then Return
 		  
-		  Dim c As String
-		  Dim tmp() As String
-		  Dim i As Integer = start
-		  Dim xLimit As Integer
-		  Dim codePoint As Integer
-		  Dim seenSemiColon As Boolean = False
+		  Var c As String
+		  Var tmp() As String
+		  Var i As Integer = start
+		  Var xLimit As Integer
+		  Var codePoint As Integer
+		  Var seenSemiColon As Boolean = False
 		  While i < chars.LastIndex
-		    Redim tmp(-1)
+		    tmp.ResizeTo(-1)
 		    seenSemiColon = False
 		    c = chars(i)
 		    
@@ -2487,7 +2487,7 @@ Protected Class Utilities
 		      If Not seenSemiColon Then Return
 		      // `tmp` contains the HTML entity reference name.
 		      // Is this a valid entity name?
-		      Dim entityName As String = String.FromArray(tmp, "")
+		      Var entityName As String = String.FromArray(tmp, "")
 		      If CharacterReferences.HasKey(entityName) Then
 		        // Remove the characters in `chars` that make up this reference.
 		        For x As Integer = 1 To tmp.LastIndex + 3
@@ -2526,7 +2526,7 @@ Protected Class Utilities
 		  If t.IndexOf("&") = -1 Or t.IndexOf(";") = -1 Then
 		    Return t
 		  Else
-		    Dim tmp() As String = t.Split("")
+		    Var tmp() As String = t.Split("")
 		    Utilities.ReplaceEntities(tmp)
 		    Return String.FromArray(tmp, "")
 		  End If
@@ -2542,9 +2542,9 @@ Protected Class Utilities
 		  
 		  If t.IndexOf("\") = -1 Then Return
 		  
-		  Dim chars() As String = t.Split("")
-		  Dim pos As Integer = 0
-		  Dim c As String
+		  Var chars() As String = t.Split("")
+		  Var pos As Integer = 0
+		  Var c As String
 		  Do Until pos > chars.LastIndex
 		    c = chars(pos)
 		    If c = "\" And pos < chars.LastIndex And _
@@ -2566,8 +2566,8 @@ Protected Class Utilities
 		  
 		  If chars.IndexOf("\") = -1 Then Return
 		  
-		  Dim pos As Integer = 0
-		  Dim c As String
+		  Var pos As Integer = 0
+		  Var c As String
 		  Do Until pos > chars.LastIndex
 		    c = chars(pos)
 		    If c = "\" And pos < chars.LastIndex And _

@@ -140,11 +140,11 @@ Implements Global.MarkdownKit.IRenderer
 		  mOutput.Add(CurrentIndent + "</document>")
 		  
 		  // Display the reference link map.
-		  If ListReferences And d.ReferenceMap.Count > 0 Then
+		  If ListReferences And d.ReferenceMap.KeyCount > 0 Then
 		    // Since iterating through a dictionary does not guarantee order, 
 		    // we will get the keys (definition names) as an array and sort 
 		    // them alphabetically.
-		    Dim keys() As String
+		    Var keys() As String
 		    For Each entry As DictionaryEntry In d.ReferenceMap
 		      keys.Add(entry.Key)
 		    Next entry
@@ -185,13 +185,13 @@ Implements Global.MarkdownKit.IRenderer
 		Sub VisitFencedCode(fc As MarkdownKit.Block)
 		  // Part of the Global.MarkdownKit.IRenderer interface.
 		  
-		  Dim info As String = If(fc.InfoString <> "", " info=" + """" + fc.InfoString + """", "")
+		  Var info As String = If(fc.InfoString <> "", " info=" + """" + fc.InfoString + """", "")
 		  
 		  mOutput.Add(CurrentIndent + "<fenced_code_block" + _
 		  If(info <> "", info, "") + ">")
 		  mOutput.Add(EOL)
 		  
-		  Dim content As String
+		  Var content As String
 		  For Each b As MarkdownKit.Block In fc.Children
 		    IncreaseIndent
 		    
@@ -228,7 +228,7 @@ Implements Global.MarkdownKit.IRenderer
 		  
 		  mOutput.Add(CurrentIndent + "<html_block>")
 		  
-		  Dim content As String = String.FromArray(h.Chars, "")
+		  Var content As String = String.FromArray(h.Chars, "")
 		  
 		  // Since the reference AST ( https://spec.commonmark.org/dingus/ ) uses XML, we 
 		  // encode the predefined entities in the content to to match.
@@ -247,7 +247,7 @@ Implements Global.MarkdownKit.IRenderer
 		  mOutput.Add(CurrentIndent + "<indented_code_block>")
 		  mOutput.Add(EOL)
 		  
-		  Dim content As String
+		  Var content As String
 		  For Each b As MarkdownKit.Block In ic.Children
 		    IncreaseIndent
 		    
@@ -275,7 +275,7 @@ Implements Global.MarkdownKit.IRenderer
 		  
 		  // Since the reference AST ( https://spec.commonmark.org/dingus/ ) uses XML, we 
 		  // encode the predefined entities in the content to to match.
-		  Dim content As String = String.FromArray(h.Chars, "")
+		  Var content As String = String.FromArray(h.Chars, "")
 		  content = EncodePredefinedEntities(content)
 		  mOutput.Add(content)
 		  
@@ -373,7 +373,7 @@ Implements Global.MarkdownKit.IRenderer
 		  Const Q = """"
 		  
 		  // Construct the list header.
-		  Dim header As String
+		  Var header As String
 		  If theList.ListData.ListType = MarkdownKit.ListType.Ordered Then
 		    header = "type=" + Q + "ordered" + Q + " start=" + Q + _
 		    thelist.ListData.Start.ToText + Q + " tight=" + Q + _

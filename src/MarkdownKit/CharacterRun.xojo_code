@@ -21,7 +21,7 @@ Protected Class CharacterRun
 		  // Copies from the passed array of characters the characters that make up 
 		  // this CharacterRun.
 		  
-		  Dim sourceUbound As Integer = source.LastIndex
+		  Var sourceUbound As Integer = source.LastIndex
 		  
 		  // Sanity checks.
 		  If Self.Start < 0 Or (Self.Start + Self.Length - 1) > sourceUbound Then
@@ -29,10 +29,10 @@ Protected Class CharacterRun
 		    "This CharacterRun is incompatible with the passed source array")
 		  End If
 		  
-		  Dim result() As String
+		  Var result() As String
 		  If Self.Length = 0 Then Return result
 		  
-		  Dim i, limit As Integer
+		  Var i, limit As Integer
 		  limit = Self.Start + Self.Length - 1
 		  For i = Self.Start To limit
 		    result.Add(source(i))

@@ -3,42 +3,35 @@ Protected Class HTMLTestGroup
 Inherits TestGroup
 	#tag Method, Flags = &h0
 		Sub Run(methodName As String)
-		  Dim testNumber As Integer = Val(methodName.Replace("HTMLTests.Example", "").Replace("Test", ""))
+		  Var testNumber As Integer = Val(methodName.Replace("HTMLTests.Example", "").Replace("Test", ""))
 		  
 		  // Get the names of the files containing the test Markdown and expected HTML output.
-		  Dim mdName As String = testNumber.ToText + ".md"
-		  Dim htmlName As String = testNumber.ToText + ".html"
+		  Var mdName As String = testNumber.ToText + ".md"
+		  Var htmlName As String = testNumber.ToText + ".html"
 		  
 		  // Get the example Markdown file.
-		  Dim md As String
+		  Var md As String
 		  If Not HTMLTestController.GetTestMarkdown(mdName, md) Then
 		    Assert.Fail("Unable to load test Markdown file `" + mdName + "`")
 		    Return
 		  End If
 		  
 		  // Get the expected HTML output.
-		  Dim expected As String
+		  Var expected As String
 		  If Not HTMLTestController.GetTestHTML(htmlName, expected) Then
 		    Assert.Fail("Unable to load test HTML file `" + htmlName + "`")
 		    Return
 		  End If
 		  
 		  // Create a new Markdown document.
-		  Dim doc As New MarkdownKit.Document(md)
+		  Var doc As New MarkdownKit.Document(md)
 		  doc.ParseBlockStructure
 		  doc.ParseInlines
 		  
-		  #Pragma Warning "REMOVE"
-		  If testNumber = 161 Then
-		    App.DEBUGGING = True
-		  Else
-		    App.DEBUGGING = False
-		  End If
-		  
 		  // Convert the AST to HTML.
-		  Dim renderer As New MarkdownKit.HTMLRenderer
+		  Var renderer As New MarkdownKit.HTMLRenderer
 		  renderer.VisitDocument(doc)
-		  Dim actual As String = renderer.Output
+		  Var actual As String = renderer.Output
 		  
 		  // Transform whitespace in our result and the expected truth to make it 
 		  // easier to visualise.
@@ -46,7 +39,8 @@ Inherits TestGroup
 		  HTMLTestController.TransformWhitespace(expected)
 		  
 		  // Check the result matches the truth.
-		  Assert.AreEqual(expected, actual)
+		  ' Assert.AreEqual(expected, actual)
+		  Assert.AreEqualCustom(expected, actual)
 		  
 		  Exception e
 		    Assert.FailCustom(expected, "Exception occurred!")

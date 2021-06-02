@@ -9,7 +9,7 @@ Inherits TextArea
 		    
 		    Declare Function NSClassFromString Lib "Cocoa" (aClassName As CFStringRef) As Ptr
 		    
-		    Dim myTextArea as ptr
+		    Var myTextArea as ptr
 		    Declare Function documentView Lib "Cocoa" Selector "documentView" _
 		    (obj_id As Integer) As Ptr
 		    

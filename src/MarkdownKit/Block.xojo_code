@@ -62,14 +62,14 @@ Protected Class Block
 		  End If
 		  
 		  // Get the length of the text.
-		  Dim len As Integer = If(length = -1, line.CharsLastIndex - line.Offset + 1, length)
+		  Var len As Integer = If(length = -1, line.CharsLastIndex - line.Offset + 1, length)
 		  
 		  Select Case Type
 		  Case MarkdownKit.BlockType.HtmlBlock
 		    // ===== HTML block =====
 		    // Get the characters from the current line offset to the end of the line.
-		    Dim tmp() As String
-		    Dim limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
+		    Var tmp() As String
+		    Var limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
 		    For i As Integer = startPos To limit
 		      tmp.Add(line.Chars(i))
 		    Next i
@@ -86,8 +86,8 @@ Protected Class Block
 		    If len <= 0 Then Raise New MarkdownKit.MarkdownException("Unexpected blank line")
 		    
 		    // Get the characters from the current line offset to the end of the line.
-		    Dim limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
-		    Dim tmp() As String
+		    Var limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
+		    Var tmp() As String
 		    For i As Integer = startPos To limit
 		      tmp.Add(line.Chars(i))
 		    Next i
@@ -103,10 +103,10 @@ Protected Class Block
 		    
 		  Else
 		    // ===== All other block types ====
-		    Dim tmp() As String
+		    Var tmp() As String
 		    If len <= 0 Then
 		      // Blank line.
-		      Dim b As New MarkdownKit.Block(BlockType.TextBlock, New WeakRef(Self))
+		      Var b As New MarkdownKit.Block(BlockType.TextBlock, New WeakRef(Self))
 		      b.Chars = tmp
 		      Children.Add(b)
 		      Return
@@ -117,13 +117,13 @@ Protected Class Block
 		    For i As Integer = 1 To line.RemainingSpaces
 		      tmp.Add(" ")
 		    Next i
-		    Dim limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
+		    Var limit As Integer = Min(line.Chars.LastIndex, startPos + len - 1)
 		    For i As Integer = startPos To limit
 		      tmp.Add(line.Chars(i))
 		    Next i
 		    
 		    // Add the text as a text block.
-		    Dim b As New MarkdownKit.Block(BlockType.TextBlock, New WeakRef(Self))
+		    Var b As New MarkdownKit.Block(BlockType.TextBlock, New WeakRef(Self))
 		    b.Chars = tmp
 		    Children.Add(b)
 		  End Select
@@ -136,7 +136,7 @@ Protected Class Block
 		  Select Case Type
 		    // === Code span ===
 		  Case MarkdownKit.BlockType.Codespan
-		    Dim seenNonSpace As Boolean = False
+		    Var seenNonSpace As Boolean = False
 		    For i As Integer = Self.StartPos To Self.EndPos
 		      Select Case Parent.Chars(i)
 		      Case &u000A
@@ -243,14 +243,14 @@ Protected Class Block
 		      EndPos = StartPos + line.Chars.Count
 		    End If
 		    
-		    Dim p As Integer = line.CharsLastIndex
+		    Var p As Integer = line.CharsLastIndex
 		    
 		    // Trim trailing spaces.
 		    While p >= 0 And (line.Chars(p) = " " Or line.Chars(p) = &u0009)
 		      p = p - 1
 		    Wend
 		    
-		    Dim px As Integer = p
+		    Var px As Integer = p
 		    
 		    // If the line ends in #s, remove them.
 		    while p >= 0 And line.Chars(p) = "#"
@@ -267,17 +267,17 @@ Protected Class Block
 		    
 		    // Add contents of the line.
 		    If p - line.NextNWS > -1 Then
-		      Dim len As Integer = If(p - line.NextNWS + 1 = -1, _
+		      Var len As Integer = If(p - line.NextNWS + 1 = -1, _
 		      line.CharsLastIndex - line.Offset + 1, p - line.NextNWS + 1)
 		      If len <= 0 Then Return // Empty heading.
 		      
 		      // Get the characters from the current line offset to the end of the line.
 		      // Remember to account for missing spaces.
-		      Dim i As Integer
+		      Var i As Integer
 		      For i = 1 To line.RemainingSpaces
 		        Chars.Add(" ")
 		      Next i
-		      Dim limit As Integer = Min(line.Chars.LastIndex, line.NextNWS + len - 1)
+		      Var limit As Integer = Min(line.Chars.LastIndex, line.NextNWS + len - 1)
 		      For i = line.NextNWS To limit
 		        Chars.Add(line.Chars(i))
 		      Next i
@@ -287,7 +287,7 @@ Protected Class Block
 		    // ===== Fenced code =====
 		    If FirstChild <> Nil Then
 		      // The first child (if present) is the info string. It may be empty.
-		      Dim tb As MarkdownKit.Block = FirstChild
+		      Var tb As MarkdownKit.Block = FirstChild
 		      If Not tb.Chars.IsBlank Then
 		        InfoString = String.FromArray(tb.Chars, "").Trim
 		        InfoString = Utilities.ReplaceEntities(InfoString)
@@ -304,8 +304,8 @@ Protected Class Block
 		  Case MarkdownKit.BlockType.IndentedCode
 		    // ===== Indented code =====
 		    // Blank lines preceding or following an indented code block are not included in it.
-		    Dim limit As Integer = Children.LastIndex
-		    Dim b As MarkdownKit.Block
+		    Var limit As Integer = Children.LastIndex
+		    Var b As MarkdownKit.Block
 		    // Leading blank lines...
 		    For i As Integer = 0 to limit
 		      b = Children(i)
@@ -332,8 +332,8 @@ Protected Class Block
 		    // Determine tight/loose status of the list.
 		    Self.ListData.IsTight = True // Tight by default.
 		    
-		    Dim item As MarkdownKit.Block = Self.FirstChild
-		    Dim subItem As MarkdownKit.Block
+		    Var item As MarkdownKit.Block = Self.FirstChild
+		    Var subItem As MarkdownKit.Block
 		    
 		    While item <> Nil
 		      
@@ -359,16 +359,16 @@ Protected Class Block
 		      item = item.NextSibling
 		    Wend
 		    
-		    Dim i As Integer
-		    Dim childrenUbound As Integer = Self.Children.LastIndex
+		    Var i As Integer
+		    Var childrenUbound As Integer = Self.Children.LastIndex
 		    For i = 0 To childrenUbound
 		      Self.Children(i).IsChildOfTightList = Self.ListData.IsTight
 		    Next i
 		    
 		  Case MarkdownKit.BlockType.ListItem
 		    // ===== List items =====
-		    Dim i As Integer
-		    Dim childrenUbound As Integer = Self.Children.LastIndex
+		    Var i As Integer
+		    Var childrenUbound As Integer = Self.Children.LastIndex
 		    For i = 0 To childrenUbound
 		      Self.Children(i).IsChildOfListItem = True
 		    Next i
@@ -379,7 +379,7 @@ Protected Class Block
 		    
 		    StripTrailingWhitespace(Chars)
 		    
-		    Dim origCount As Integer
+		    Var origCount As Integer
 		    While Chars.LastIndex >= 3 And Chars(0) = "["
 		      // Cache the size of the chars array now as it will change if a reference is found.
 		      origCount = Chars.LastIndex
@@ -399,7 +399,7 @@ Protected Class Block
 		    
 		    StripTrailingWhitespace(Chars)
 		    
-		    Dim origCount As Integer
+		    Var origCount As Integer
 		    While Chars.LastIndex >= 3 And Chars(0) = "["
 		      // Cache the size of the chars array now as it will change if a reference is found.
 		      origCount = Chars.LastIndex
@@ -443,7 +443,7 @@ Protected Class Block
 		Function NextSibling() As MarkdownKit.Block
 		  If Self.Parent = Nil Then Return Nil
 		  
-		  Dim myIndex As Integer = Self.Parent.Children.IndexOf(Self)
+		  Var myIndex As Integer = Self.Parent.Children.IndexOf(Self)
 		  If myIndex = -1 Then Return Nil
 		  If myIndex = Self.Parent.Children.LastIndex Then
 		    Return Nil
@@ -458,7 +458,7 @@ Protected Class Block
 		  // Removes the passed child block from this block.
 		  // Only looks at the top level children of this block.
 		  
-		  Dim childIndex As Integer = Children.IndexOf(child)
+		  Var childIndex As Integer = Children.IndexOf(child)
 		  If childIndex <> -1 Then Children.RemoveAt(childIndex)
 		End Sub
 	#tag EndMethod

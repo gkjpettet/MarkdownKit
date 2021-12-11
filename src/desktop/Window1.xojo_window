@@ -10,7 +10,7 @@ Begin DesktopWindow Window1
    HasFullScreenButton=   False
    HasMaximizeButton=   True
    HasMinimizeButton=   True
-   Height          =   400
+   Height          =   616
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
@@ -23,10 +23,160 @@ Begin DesktopWindow Window1
    Title           =   "Untitled"
    Type            =   0
    Visible         =   True
-   Width           =   600
+   Width           =   1060
+   Begin BetterTextArea Source
+      AllowAutoDeactivate=   True
+      AllowFocusRing  =   True
+      AllowSpellChecking=   True
+      AllowStyledText =   True
+      AllowTabs       =   False
+      BackgroundColor =   &cFFFFFF
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Format          =   ""
+      HasBorder       =   True
+      HasHorizontalScrollbar=   False
+      HasVerticalScrollbar=   True
+      Height          =   544
+      HideSelection   =   True
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   20
+      LineHeight      =   0.0
+      LineSpacing     =   1.0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      MaximumCharactersAllowed=   0
+      Multiline       =   True
+      ReadOnly        =   False
+      Scope           =   2
+      TabIndex        =   0
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextAlignment   =   0
+      TextColor       =   &c000000
+      Tooltip         =   ""
+      Top             =   20
+      Transparent     =   False
+      Underline       =   False
+      UnicodeMode     =   0
+      ValidationMask  =   ""
+      Visible         =   True
+      Width           =   570
+   End
+   Begin DesktopButton ButtonParse
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Cancel          =   False
+      Caption         =   "Parse"
+      Default         =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   960
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   False
+      MacButtonStyle  =   0
+      Scope           =   2
+      TabIndex        =   1
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   576
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   80
+   End
+   Begin DesktopTreeView ASTTreeView
+      AutoDeactivate  =   True
+      BackColor       =   &cFFFFFF00
+      ColumnCount     =   1
+      DarkBackColor   =   &c2D2D2D00
+      DarkNodeTextColor=   &cFFFFFF00
+      DragReceiveBehavior=   1
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      HasBackColor    =   False
+      HasBorder       =   True
+      HasHeader       =   False
+      HasInactiveSelectionColor=   False
+      HasNodeColor    =   False
+      HasNodeTextColor=   False
+      HasSelectionColor=   False
+      Height          =   544
+      InactiveSelectionColor=   &cD3D3D300
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Left            =   602
+      LinuxDrawTreeLines=   False
+      LinuxExpanderStyle=   0
+      LinuxHighlightFullRow=   True
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      MacDrawTreeLines=   False
+      MacExpanderStyle=   0
+      MacHighlightFullRow=   True
+      MultiSelection  =   False
+      NodeEvenColor   =   &cFFFFFF00
+      NodeHeight      =   18
+      NodeOddColor    =   &cFFFFFF00
+      NodeTextColor   =   &c00000000
+      QuartzShading   =   False
+      Scope           =   0
+      SelectionColor  =   &c478A1A00
+      SelectionSeparator=   0
+      SystemNodeColors=   True
+      TabIndex        =   2
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   20
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   438
+      WinDrawTreeLines=   True
+      WinHighlightFullRow=   False
+   End
 End
 #tag EndDesktopWindow
 
 #tag WindowCode
+	#tag Constant, Name = SAMPLE_MARKDOWN, Type = String, Dynamic = False, Default = \"### Hello World\nThis is some text.\n\nAnother paragraph.", Scope = Public
+	#tag EndConstant
+
+
 #tag EndWindowCode
 
+#tag Events ButtonParse
+	#tag Event
+		Sub Pressed()
+		  Var parser As New MKParser
+		  Var doc As MKDocument = parser.ParseSource(Source.Text)
+		  
+		  Var printer As New ASTRenderer
+		  ASTTreeView.RemoveAllNodes
+		  ASTTreeView.AppendNode(printer.VisitDocument(doc))
+		  ASTTreeView.ExpandAll(True)
+		End Sub
+	#tag EndEvent
+#tag EndEvents

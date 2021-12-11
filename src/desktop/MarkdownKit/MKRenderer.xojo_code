@@ -25,13 +25,25 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitHTMLBlock(html As MKHTMLBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitIndentedCode(ic As MKBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitParagraph(p As MKBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitTextBlock(tb As MKBlock) As Variant
+		Function VisitTextBlock(tb As MKTextBlock) As Variant
 		  
 		End Function
 	#tag EndMethod

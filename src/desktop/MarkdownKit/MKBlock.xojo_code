@@ -20,11 +20,17 @@ Protected Class MKBlock
 		  Case MKBlockTypes.FencedCode
 		    Return visitor.VisitFencedCode(MKFencedCodeBlock(Self))
 		    
+		  Case MKBlockTypes.Html
+		    Return visitor.VisitHTMLBlock(MKHTMLBlock(Self))
+		    
+		  Case MKBlockTypes.IndentedCode
+		    Return visitor.VisitIndentedCode(Self)
+		    
 		  Case MKBlockTypes.Paragraph
 		    Return visitor.VisitParagraph(Self)
 		    
 		  Case MKBlockTypes.TextBlock
-		    Return visitor.VisitTextBlock(Self)
+		    Return visitor.VisitTextBlock(MKTextBlock(Self))
 		    
 		  Case MKBlockTypes.ThematicBreak
 		    Return visitor.VisitThematicBreak(Self)
@@ -47,9 +53,6 @@ Protected Class MKBlock
 		  End If
 		  
 		  Select Case Type
-		  Case MKBlockTypes.Html
-		    #Pragma Warning "TODO: Add line to HTML block"
-		    
 		  Case MKBlockTypes.Paragraph
 		    // ===============
 		    // PARAGRAPH BLOCK
@@ -71,12 +74,12 @@ Protected Class MKBlock
 		    
 		    // Blank line?
 		    If s = "" Then
-		      Children.Add(New MKBlock(MKBlockTypes.TextBlock, Self, line.Start + startPos))
+		      Children.Add(New MKTextBlock(Self, line.Start + startPos))
 		      Return
 		    End If
 		    
 		    // Add the text as a text block.
-		    Var b As New MKBlock(MKBlockTypes.TextBlock, Self, line.Start + startPos)
+		    Var b As New MKTextBlock(Self, line.Start + startPos)
 		    b.Lines.Add(New TextLine(line.Number, line.Start + startPos, s))
 		    Children.Add(b)
 		  End Select
@@ -143,13 +146,6 @@ Protected Class MKBlock
 		      End If
 		      Children.RemoveAt(0)
 		    End If
-		    
-		    
-		  Case MKBlockTypes.Html
-		    #Pragma Warning "TODO: Finalise HTML blocks"
-		    
-		  Case MKBlockTypes.IndentedCode
-		    #Pragma Warning "TODO: Finalise indented code"
 		    
 		  Case MKBlockTypes.List
 		    #Pragma Warning "TODO: Finalise lists"

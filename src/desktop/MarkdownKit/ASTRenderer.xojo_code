@@ -69,6 +69,36 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitHTMLBlock(html As MKHTMLBlock) As Variant
+		  /// Part of the MKRenderer interface.
+		  
+		  Var node As New TreeViewNode("HTML Block (start: " + html.Start.ToString + ")")
+		  
+		  For Each child As MKBlock In html.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitIndentedCode(ic As MKBlock) As Variant
+		  /// Part of the MKRenderer interface.
+		  
+		  Var node As New TreeViewNode("Indented Code")
+		  
+		  For Each child As MKBlock In ic.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitParagraph(p As MKBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
@@ -90,20 +120,24 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitTextBlock(tb As MKBlock) As Variant
+		Function VisitTextBlock(tb As MKTextBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  Var node As New TreeViewNode("Text Block (start:" + tb.Start.ToString + ")")
+		  Var title As String = If(tb.IsBlank, "Blank ", "") + "Text Block (start:" + tb.Start.ToString + ")"
 		  
-		  For Each line As TextLine In tb.Lines
-		    
-		    Var lineNode As New TreeViewNode("Start:" + line.Start.ToString + _
-		    ",len:" + line.Length.ToString + _
-		    ",Contents:" + line.Value)
-		    
-		    node.AppendNode(lineNode)
-		    
-		  Next line
+		  Var node As New TreeViewNode(title)
+		  
+		  If Not tb.IsBlank Then
+		    For Each line As TextLine In tb.Lines
+		      
+		      Var lineNode As New TreeViewNode("Start:" + line.Start.ToString + _
+		      ",len:" + line.Length.ToString + _
+		      ",Contents:" + line.Value)
+		      
+		      node.AppendNode(lineNode)
+		      
+		    Next line
+		  End If
 		  
 		  Return node
 		  

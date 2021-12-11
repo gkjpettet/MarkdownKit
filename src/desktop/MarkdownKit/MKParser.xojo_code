@@ -131,9 +131,11 @@ Protected Class MKParser
 		  // Create the child block.
 		  Var child As MKBlock
 		  If type = MKBlockTypes.FencedCode Then
-		    child = New MKFencedCodeBlock(parent)
+		    child = New MKFencedCodeBlock(parent, blockStartOffset)
+		  ElseIf type = MKBlockTypes.Html Then
+		    child = New MKHTMLBlock(parent, blockStartOffset)
 		  Else
-		    child = New MKBlock(type, parent)
+		    child = New MKBlock(type, parent, blockStartOffset)
 		  End If
 		  
 		  // Track source code positions for this child block.
@@ -327,6 +329,186 @@ Protected Class MKParser
 		  data = New Dictionary("fenceLength" : fenceLength, "fenceChar" : fenceChar)
 		  
 		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 52657475726E7320547275652069662077652066696E642074686520636F727265637420656E64696E6720636F6E646974696F6E20666F7220746865207370656369666965642048544D4C20626C6F636B20747970652E
+		Private Function IsCorrectHtmlBlockEnd(type As MKHTMLBlockTypes, line As TextLine, pos As Integer) As Boolean
+		  /// Returns True if we find the correct ending condition for the specified HTML block type.
+		  ///
+		  /// There are 7 kinds of HTML blocks (CommonMark spec 0.29 4.6).
+		  
+		  Select Case type
+		  Case MKHTMLBlockTypes.InterruptingBlockWithEmptyLines
+		    Return MKHTMLScanner.IsHTMLBlockType1End(line, pos)
+		    
+		  Case MKHTMLBlockTypes.Comment
+		    Return MKHTMLScanner.IsHtmlBlockType2End(line, pos)
+		    
+		  Case MKHTMLBlockTypes.ProcessingInstruction
+		    Return MKHTMLScanner.IsHtmlBlockType3End(line, pos)
+		    
+		  Case MKHTMLBlockTypes.Document
+		    Return MKHTMLScanner.IsHtmlBlockType4End(line, pos)
+		    
+		  Case MKHTMLBlockTypes.CData
+		    Return MKHTMLScanner.IsHtmlBlockType5End(line, pos)
+		    
+		  Else
+		    Return False
+		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 52657475726E7320547275652069662074686520746865726520697320612048544D4C20626C6F636B207374617274696E67206174205B706F735D206F6E205B6D43757272656E744C696E655D2E20507574732074686520227479706522206F662048544D4C20626C6F636B20696E205B646174615D2E
+		Private Function IsHtmlBlockStart(pos As Integer, ByRef data As Dictionary) As Boolean
+		  /// Returns True if the there is a HTML block starting at [pos] on [mCurrentLine]. 
+		  /// Puts the "type" of HTML block in [data].
+		  ///
+		  /// There are 7 kinds of HTML block. See the note "HTML Block Types" in this class for more detail.
+		  
+		  Var chars() As String = mCurrentLine.Characters
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  data = New Dictionary("type" : MKHTMLBlockTypes.None)
+		  
+		  // The shortest opening condition is two characters.
+		  If pos + 1 > charsLastIndex Then Return False
+		  
+		  If chars(pos) <> "<" Then Return False
+		  
+		  pos = pos + 1
+		  Var c As String = chars(pos)
+		  
+		  // Type 2, 4 or 5?
+		  // 2: <!--
+		  // 4: <!A-Z{1}
+		  // 5: <![CDATA[
+		  If c = "!" Then
+		    pos = pos + 1
+		    If pos > charsLastIndex Then Return False
+		    
+		    c = chars(pos)
+		    If c.IsUppercaseASCIICharacter Then
+		      data.Value("type") = MKHTMLBlockTypes.Document
+		      Return True
+		    End If
+		    
+		    // `pos` is currently pointing at the character after "!".
+		    If pos + 1 > charsLastIndex Then Return False
+		    
+		    If chars(pos) = "-" And chars(pos + 1) = "-" Then
+		      data.Value("type") = MKHTMLBlockTypes.Comment
+		      Return True
+		    End If
+		    
+		    // `pos` still points at the character after "!".
+		    If pos + 6 > charsLastIndex Then Return False
+		    
+		    If mCurrentLine.Value.MiddleCharacters(pos, 7).IsExactly("[CDATA[") Then
+		      data.Value("type") = MKHTMLBlockTypes.CData
+		      Return True
+		    End If
+		    
+		    Return False
+		  End If
+		  
+		  // Type 3?
+		  If c = "?" Then
+		    data.Value("type") = MKHTMLBlockTypes.ProcessingInstruction
+		    Return True
+		  End If
+		  
+		  // Type 1 or 6?
+		  // 1: <(script|pre|style)([•→\n]|>)
+		  // 6: <|</(HTMLTagName)([•→\n]|>|/>)
+		  Var slashAtStart As Boolean = If(c = "/", True, False)
+		  If slashAtStart Then
+		    pos = pos + 1
+		    If pos > charsLastIndex Then Return False
+		    c = chars(pos)
+		  End If
+		  
+		  // `pos` currently points to the first character of a potential tag name.
+		  Var tagNameArray() As String
+		  While pos <= charsLastIndex And tagNameArray.LastIndex < 10
+		    c = chars(pos)
+		    If c.IsASCIILetter Or (c.ToInteger >=1 And c.ToInteger <= 6) Then
+		      tagNameArray.Add(c)
+		    Else
+		      Exit
+		    End If
+		    pos = pos + 1
+		  Wend
+		  
+		  Var tagName As String = String.FromArray(tagNameArray, "")
+		  If Not MarkdownKit.HTMLTagNames.HasKey(tagName) And tagName <> "pre" And tagName <> "script" And tagName <> "style" Then
+		    Return False
+		  End If
+		  
+		  Var maybeType1 As Boolean
+		  maybeType1 = If(Not slashAtStart And (tagName = "script" Or tagName = "pre" Or tagName = "style"), True, False)
+		  Var maybeType6 As Boolean
+		  maybeType6 = If(Not maybeType1 And tagName <> "script" And tagName <> "pre" And tagName <> "style", True, False)
+		  
+		  // `pos` points to the character immediately following the tag name.
+		  c = If (pos < charsLastIndex, chars(pos), "")
+		  If maybeType1 Then
+		    If c.IsMarkdownWhitespace Or c = ">" Then
+		      data.Value("type") = MKHTMLBlockTypes.InterruptingBlockWithEmptyLines
+		      Return True
+		    Else
+		      Return False
+		    End If
+		  ElseIf maybeType6 Then // Type 6?
+		    If c.IsMarkdownWhitespace Or c = ">" Or (c = "/" And pos + 1 <= charsLastIndex And chars(pos + 1) = ">") Then
+		      data.Value("type") = MKHTMLBlockTypes.InterruptingBlock
+		      Return True
+		    Else
+		      Return False
+		    End If
+		  End If
+		  
+		  Return False
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 52657475726E732054727565206966205B6D43757272656E744C696E655D2066726F6D205B706F735D2069732061207479706520372048544D4C20626C6F636B2073746172742E2053657473205B646174612E56616C756528227479706522295D20746F206E6F6E65206F722074797065203720656E756D65726174696F6E2E
+		Private Function IsHtmlBlockType7Start(pos As Integer, ByRef data As Dictionary) As Boolean
+		  /// Returns True if [mCurrentLine] from [pos] is a type 7 HTML block start. Sets [data.Value("type")] to 
+		  /// none or type 7 enumeration.
+		  ///
+		  /// Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
+		  ///         {closingTag}[•→]+|⮐$
+		  
+		  data = New Dictionary("type" : MKHTMLBlockTypes.None)
+		  
+		  Var chars() As String = mCurrentLine.Characters
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  
+		  // At least 3 characters are required for a valid type 7 block start.
+		  If pos + 2 > charsLastIndex Then Return False
+		  
+		  If chars(pos) <> "<" Then Return False
+		  
+		  Var tagName As String // Will be mutated.
+		  If chars(pos + 1) = "/" Then
+		    pos = MKHTMLScanner.FindClosingTag(mCurrentLine, pos + 2, tagName)
+		  Else
+		    pos = MKHTMLScanner.FindOpenTag(mCurrentLine, pos + 1, tagName)
+		    If tagName = "script" Or tagName = "style" Or tagName = "pre" Then Return False
+		  End If
+		  If pos = 0 Then Return False
+		  
+		  While pos <= charsLastIndex
+		    If Not chars(pos).IsMarkdownWhitespace Then Return False
+		    pos = pos + 1
+		  Wend
+		  
+		  data.Value("type") = MKHTMLBlockTypes.NonInterruptingBlock
+		  Return True
+		  
 		End Function
 	#tag EndMethod
 
@@ -554,7 +736,11 @@ Protected Class MKParser
 		      End If
 		      
 		    ElseIf mContainer.Type = MKBlockTypes.Html Then
-		      #Pragma Warning "TODO: Finish processing line for HTML containers"
+		      mContainer.AddLine(mCurrentLine, mCurrentOffset)
+		      If IsCorrectHtmlBlockEnd(MKHTMLBlock(mContainer).HtmlBlockType, mCurrentLine, mNextNWS) Then
+		        mContainer.Finalise(mCurrentLine)
+		        mContainer = mContainer.Parent
+		      End If
 		      
 		    ElseIf mContainer.Type = MKBlockTypes.AtxHeading Then
 		      mContainer.Finalise(mCurrentLine)
@@ -645,12 +831,24 @@ Protected Class MKParser
 		      
 		    ElseIf Not indented And _
 		      (mCurrentChar = "`" Or mCurrentChar = "~") And IsCodeFenceOpening(mCurrentChar, data) Then
-		      // ============= New fenced code block =============
+		      // ======================
+		      // FENCED CODE BLOCK
+		      // ======================
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.FencedCode, 0)
 		      MKFencedCodeBlock(mContainer).FenceChar = data.Value("fenceChar")
 		      MKFencedCodeBlock(mContainer).FenceLength = data.Value("fenceLength")
 		      MKFencedCodeBlock(mContainer).FenceOffset = mNextNWS - mCurrentOffset
 		      AdvanceOffset(mNextNWS + data.Value("fenceLength") - mCurrentOffset, False)
+		      
+		    ElseIf Not indented And mCurrentChar = "<" And _
+		      (IsHtmlBlockStart(mNextNWS, data) _
+		      Or (mContainer.Type <> MKBlockTypes.Paragraph And IsHtmlBlockType7Start(mNextNWS, data))) Then
+		      // ======================
+		      // HTML BLOCK
+		      // ======================
+		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.HTML, 0)
+		      MKHTMLBlock(mContainer).HtmlBlockType = data.Value("type")
+		      // NB: We don't adjust `mCurrentOffset` because the tag is part of the text.
 		      
 		    ElseIf Not indented And Not (mContainer.Type = MKBlockTypes.Paragraph And Not mAllMatched) And _
 		      IsThematicBreak Then
@@ -661,6 +859,13 @@ Protected Class MKParser
 		      mContainer.Finalise(mCurrentLine)
 		      mContainer = mContainer.Parent
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
+		      
+		    ElseIf indented And Not mMaybeLazy And Not blank Then
+		      // ======================
+		      // INDENTED CODE BLOCK
+		      // ======================
+		      AdvanceOffset(CODE_INDENT, True)
+		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.IndentedCode, 0)
 		      
 		    Else
 		      Exit
@@ -704,6 +909,18 @@ Protected Class MKParser
 		        mAllMatched = False
 		      End If
 		      
+		    Case MKBlockTypes.IndentedCode
+		      // ======================
+		      // INDENTED CODE
+		      // ======================
+		      If mCurrentIndent >= CODE_INDENT Then
+		        AdvanceOffset(CODE_INDENT, True)
+		      ElseIf blank Then
+		        AdvanceOffset(mNextNWS - mCurrentOffset, False)
+		      Else
+		        mAllMatched = False
+		      End If
+		      
 		    Case MKBlockTypes.AtxHeading, MKBlockTypes.SetextHeading
 		      // ======================
 		      // ATX / SETEXT HEADINGS
@@ -730,6 +947,16 @@ Protected Class MKParser
 		        Wend
 		      End If
 		      
+		    Case MKBlockTypes.Html
+		      // ======================
+		      // HTML BLOCK
+		      // ======================
+		      If blank And MKHTMLBlock(mContainer).IsType6Or7 Then
+		        // All other block types can accept blanks.
+		        mContainer.IsLastLineBlank = True
+		        mAllMatched = False
+		      End If
+		      
 		    Case MKBlockTypes.Paragraph
 		      // ======================
 		      // PARAGRAPH
@@ -750,6 +977,38 @@ Protected Class MKParser
 		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag Note, Name = HTML Block Types
+		Type 1: MKHTMLBlockTypes.InterruptingBlockWithEmptyLines
+		Start condition: line begins with the string <script, <pre, or <style (case-insensitive), followed by whitespace, the string >, or the end of the line.
+		End condition: line contains an end tag </script>, </pre>, or </style> (case-insensitive; it need not match the start tag).
+		
+		Type 2: MKHTMLBlockTypesComment
+		Start condition: line begins with the string <!--.
+		End condition: line contains the string -->.
+		
+		Type 3: MKHTMLBlockTypes.ProcessingInstruction
+		Start condition: line begins with the string <?.
+		End condition: line contains the string ?>.
+		
+		Type 4: MKHTMLBlocks.TypeDocumentType
+		Start condition: line begins with the string <! followed by an uppercase ASCII letter.
+		End condition: line contains the character >.
+		
+		Type 5: MKHTMLBlockTypes.CData
+		Start condition: line begins with the string <![CDATA[.
+		End condition: line contains the string ]]>.
+		
+		Type 6: MKHTMLBlockTypes.InterruptingBlock
+		Start condition: line begins the string < or </ followed by one of the strings (case-insensitive) address, article, aside, base, basefont, blockquote, body, caption, center, col, colgroup, dd, details, dialog, dir, div, dl, dt, fieldset, figcaption, figure, footer, form, frame, frameset, h1, h2, h3, h4, h5, h6, head, header, hr, html, iframe, legend, li, link, main, menu, menuitem, nav, noframes, ol, optgroup, option, p, param, section, source, summary, table, tbody, td, tfoot, th, thead, title, tr, track, ul, followed by whitespace, the end of the line, the string >, or the string />.
+		End condition: line is followed by a blank line.
+		
+		Type 7: MKHTMLBlockTypes.NonInterruptingBlock
+		Start condition: line begins with a complete open tag (with any tag name other than script, style, or pre) or a complete closing tag, followed only by whitespace or the end of the line.
+		End condition: line is followed by a blank line.
+		
+	#tag EndNote
 
 
 	#tag Property, Flags = &h21

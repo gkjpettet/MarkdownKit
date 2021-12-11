@@ -1,33 +1,22 @@
 #tag Class
-Protected Class MKFencedCodeBlock
+Protected Class MKTextBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStartOffset As Integer = 0)
-		  Super.Constructor(MKBlockTypes.FencedCode, parent, blockStartOffset)
+		Sub Constructor(parent As MKBlock, blockStart As Integer = 0)
+		  Super.Constructor(MKBlockTypes.TextBlock, parent, blockStart)
 		  
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0, Description = 5468652066656E6365206368617261637465722E
-		FenceChar As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 546865206E756D626572206F662066656E63652063686172616374657273206D616B696E6720757020746865206F70656E696E672066656E63652E
-		FenceLength As Integer
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		FenceOffset As Integer
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 54686520286F7074696F6E616C2920696E666F20737472696E672E
-		InfoString As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 53657420746F205472756520696E206050726F6365737352656D61696E6465724F664C696E656020696620746869732066656E63656420636F646520626C6F636B206E6565647320636C6F73696E672E
-		ShouldClose As Boolean = False
-	#tag EndProperty
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  Return Self.Lines.Count = 0
+			End Get
+		#tag EndGetter
+		IsBlank As Boolean
+	#tag EndComputedProperty
 
 
 	#tag ViewBehavior
@@ -136,7 +125,7 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="FenceChar"
+			Name="IsBlank"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""

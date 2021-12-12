@@ -9,9 +9,9 @@ Implements MKRenderer
 		  node.AppendNode(New TreeViewNode("Start: " + atx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + atx.Level.ToString))
 		  
-		  For Each line As TextLine In atx.Lines
-		    node.AppendNode(New TreeViewNode(line.Value))
-		  Next line
+		  For Each child As MKBlock In atx.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
 		  
 		  Return node
 		End Function
@@ -68,10 +68,16 @@ Implements MKRenderer
 		Function VisitFencedCode(fc As MKFencedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  Var node As New TreeViewNode("Fenced Code")
-		  node.AppendNode(New TreeViewNode("Fence Char: " + fc.FenceChar))
-		  node.AppendNode(New TreeViewNode("Fence Length: " + fc.FenceLength.ToString))
-		  node.AppendNode(New TreeViewNode("Info string: " + fc.InfoString))
+		  Var node As New TreeViewNode("Fenced Code (start: " + fc.Start.ToString + ")")
+		  
+		  If fc.FenceChar = "`" Then
+		    node.AppendNode(New TreeViewNode("Fence Char: backtick ""`"""))
+		  Else
+		    node.AppendNode(New TreeViewNode("Fence Char: tilde ""~"""))
+		  End If
+		  node.AppendNode(New TreeViewNode("Opening Fence Length: " + fc.FenceLength.ToString))
+		  node.AppendNode(New TreeViewNode("Closing Fence Start: " + fc.ClosingFenceStart.ToString))
+		  node.AppendNode(New TreeViewNode("Info String: " + fc.InfoString))
 		  
 		  For Each child As MKBlock In fc.Children
 		    node.AppendNode(child.Accept(Self))
@@ -194,9 +200,9 @@ Implements MKRenderer
 		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.SetextUnderlineStart.ToString))
 		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.SetextUnderlineLength.ToString))
 		  
-		  For Each line As TextLine In stx.Lines
-		    node.AppendNode(New TreeViewNode(line.Value))
-		  Next line
+		  For Each child As MKBlock In stx.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
 		  
 		  Return node
 		  
@@ -208,18 +214,12 @@ Implements MKRenderer
 		  /// Part of the MKRenderer interface.
 		  
 		  Var title As String = If(tb.IsBlank, "Blank ", "") + _
-		  "Text Block (start:" + tb.Start.ToString + ")"
+		  "Text Block (start:" + tb.Start.ToString + ", length: " + tb.Contents.CharacterCount.ToString + ")"
 		  
 		  Var node As New TreeViewNode(title)
 		  
 		  If Not tb.IsBlank Then
-		    For Each line As TextLine In tb.Lines
-		      Var lineNode As New TreeViewNode("Line")
-		      lineNode.AppendNode(New TreeViewNode("Start: " + line.Start.ToString))
-		      lineNode.AppendNode(New TreeViewNode("Length: " + line.Length.ToString))
-		      lineNode.AppendNode(New TreeViewNode(line.Value))
-		      node.AppendNode(lineNode)
-		    Next line
+		    node.AppendNode(New TreeViewNode(tb.Contents))
 		  End If
 		  
 		  Return node

@@ -2,17 +2,21 @@
 Protected Class MKTextBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer = 0)
+		Sub Constructor(parent As MKBlock, blockStart As Integer, contents As String)
 		  Super.Constructor(MKBlockTypes.TextBlock, parent, blockStart)
-		  
+		  Self.Contents = contents
 		End Sub
 	#tag EndMethod
 
 
-	#tag ComputedProperty, Flags = &h0
+	#tag Property, Flags = &h0, Description = 54686520636F6E74656E7473206F662074686973207465787420626C6F636B2E
+		Contents As String
+	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686973207465787420626C6F636B20697320656D7074792E
 		#tag Getter
 			Get
-			  Return Self.Lines.Count = 0
+			  Return Self.Contents = ""
 			End Get
 		#tag EndGetter
 		IsBlank As Boolean

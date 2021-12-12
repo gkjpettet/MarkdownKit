@@ -132,8 +132,8 @@ Protected Class MKParser
 		  // Create a new SetextHeading block to replace the paragraph.
 		  Var stx As New MKBlock(MKBlockTypes.SetextHeading, paragraph.Parent)
 		  
-		  // Copy the paragraph's lines.
-		  stx.Lines = paragraph.Lines
+		  // Copy the paragraph's text blocks
+		  stx.Children = paragraph.Children
 		  
 		  stx.Start = paragraph.Start
 		  
@@ -940,6 +940,7 @@ Protected Class MKParser
 		        IsClosingCodeFence(MKFencedCodeBlock(mContainer).FenceLength) Then
 		        // It's a closing fence. It will be closed when the next line is processed. 
 		        MKFencedCodeBlock(mContainer).ShouldClose = True
+		        MKFencedCodeBlock(mContainer).ClosingFenceStart = mCurrentLine.Start + mNextNWS
 		      Else
 		        mContainer.AddLine(mCurrentLine, mCurrentOffset)
 		      End If

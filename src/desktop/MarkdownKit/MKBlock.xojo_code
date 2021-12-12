@@ -68,13 +68,12 @@ Protected Class MKBlock
 		  If Type = MKBlockTypes.Paragraph And s = "" Then
 		    Return
 		  ElseIf s = "" Then
-		    Children.Add(New MKTextBlock(Self, line.Start + startPos))
+		    Children.Add(New MKTextBlock(Self, line.Start + startPos, ""))
 		    Return
 		  End If
 		  
 		  // Add the text as a text block.
-		  Var b As New MKTextBlock(Self, line.Start + startPos)
-		  b.Lines.Add(New TextLine(line.Number, line.Start + startPos, s))
+		  Var b As New MKTextBlock(Self, line.Start + startPos, s)
 		  Children.Add(b)
 		  
 		End Sub
@@ -132,7 +131,7 @@ Protected Class MKBlock
 		    // ATX HEADING
 		    // ============
 		    Self.Start = line.Start
-		    Self.Lines.Add(New TextLine(line.Number, line.Start, line.Value))
+		    Self.Children.Add(New MKTextBlock(Self, line.Start, line.Value))
 		    
 		  Case MKBlockTypes.BlockQuote
 		    // ============
@@ -153,12 +152,8 @@ Protected Class MKBlock
 		    // FENCED CODE
 		    // ============
 		    If FirstChild <> Nil Then
-		      // The first child (if present) is the info string.
-		      If FirstChild.Lines.Count > 0 Then
-		        MKFencedCodeBlock(Self).InfoString = FirstChild.Lines(0).Value
-		      Else
-		        MKFencedCodeBlock(Self).InfoString = ""
-		      End If
+		      // The first child (if present) is always the info string as a text block.
+		      MKFencedCodeBlock(Self).InfoString = MKTextBlock(FirstChild).Contents
 		      Children.RemoveAt(0)
 		    End If
 		    
@@ -286,10 +281,6 @@ Protected Class MKBlock
 
 	#tag Property, Flags = &h0, Description = 54686520312D6261736564206C696E65206E756D62657220696E20746865204D61726B646F776E20646F776E2074686174207468697320626C6F636B206F6363757273206F6E2E
 		LineNumber As Integer = 1
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 416E79206C696E6573206F6620746578742077697468696E207468697320626C6F636B2061667465722070617273696E672074686520626C6F636B207374727563747572652E205468657920747261636B2074686520737461727420706F736974696F6E206F6620746865697220636F6E74656E74732E
-		Lines() As TextLine
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 4966207468697320626C6F636B2069732061206C6973742C20746869732069732069747320646174612E
@@ -440,6 +431,38 @@ Protected Class MKBlock
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Level"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfTightList"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfListItem"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="SetextUnderlineStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="SetextUnderlineLength"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

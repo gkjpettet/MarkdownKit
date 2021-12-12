@@ -1,31 +1,61 @@
 #tag Class
-Protected Class MKHTMLBlock
+Protected Class MKTextBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer = 0)
-		  Super.Constructor(MKBlockTypes.Html, parent, blockStart)
-		  
+		Sub Constructor(parent As MKBlock, blockStart As Integer, contents As String)
+		  Super.Constructor(MKBlockTypes.TextBlock, parent, blockStart)
+		  Self.Contents = contents
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0, Description = 5468652074797065206F662048544D4C20626C6F636B20746869732069732E
-		HTMLBlockType As MKHTMLBlockTypes = MKHTMLBlockTypes.None
+	#tag Property, Flags = &h0, Description = 54686520636F6E74656E7473206F662074686973207465787420626C6F636B2E
+		Contents As String
 	#tag EndProperty
 
-	#tag ComputedProperty, Flags = &h0, Description = 5472756520696620746869732048544D4C20626C6F636B20697320747970652036206F7220372E
+	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686973207465787420626C6F636B20697320656D7074792E
 		#tag Getter
 			Get
-			  Return Self.HTMLBlockType = MKHTMLBlockTypes.InterruptingBlock Or _
-			  Self.HTMLBlockType = MKHTMLBlockTypes.NonInterruptingBlock
-			  
+			  Return Self.Contents = ""
 			End Get
 		#tag EndGetter
-		IsType6Or7 As Boolean
+		IsBlank As Boolean
 	#tag EndComputedProperty
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsChildOfTightList"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfListItem"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="SetextUnderlineStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="SetextUnderlineLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -131,11 +161,19 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="HTMLBlockType"
+			Name="IsBlank"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Integer"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Contents"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

@@ -61,37 +61,21 @@ Protected Class MKBlock
 		    line.Number.ToString + " to closed container " + Self.Type.ToString + ".")
 		  End If
 		  
-		  Select Case Type
-		  Case MKBlockTypes.Paragraph
-		    // ===============
-		    // PARAGRAPH BLOCK
-		    //================
-		    // Get the characters from the current line offset to the end of the line.
-		    Var s As String = line.Value.MiddleCharacters(startPos)
-		    
-		    // Don't add empty lines.
-		    If s = "" Then Return
-		    
-		    Self.Lines.Add(New TextLine(line.Number, line.Start + startPos, s))
-		    
-		  Else
-		    // =====================
-		    // ALL OTHER BLOCK TYPES
-		    // =====================
-		    // Get the characters from the current line offset to the end of the line.
-		    Var s As String = line.Value.MiddleCharacters(startPos)
-		    
-		    // Blank line?
-		    If s = "" Then
-		      Children.Add(New MKTextBlock(Self, line.Start + startPos))
-		      Return
-		    End If
-		    
-		    // Add the text as a text block.
-		    Var b As New MKTextBlock(Self, line.Start + startPos)
-		    b.Lines.Add(New TextLine(line.Number, line.Start + startPos, s))
-		    Children.Add(b)
-		  End Select
+		  // Get the characters from the current line offset to the end of the line.
+		  Var s As String = line.Value.MiddleCharacters(startPos)
+		  
+		  // Don't add empty lines to paragraphs.
+		  If Type = MKBlockTypes.Paragraph And s = "" Then
+		    Return
+		  ElseIf s = "" Then
+		    Children.Add(New MKTextBlock(Self, line.Start + startPos))
+		    Return
+		  End If
+		  
+		  // Add the text as a text block.
+		  Var b As New MKTextBlock(Self, line.Start + startPos)
+		  b.Lines.Add(New TextLine(line.Number, line.Start + startPos, s))
+		  Children.Add(b)
 		  
 		End Sub
 	#tag EndMethod
@@ -157,7 +141,7 @@ Protected Class MKBlock
 		    // If all children of this block quote are blank paragraphs then remove them.
 		    Var removeAllChildren As Boolean = True
 		    For Each child As MKBlock In Self.Children
-		      If child.Type <> MKBlockTypes.Paragraph Or child.Lines.Count <> 0 Then
+		      If child.Type <> MKBlockTypes.Paragraph Or child.Children.Count <> 0 Then
 		        removeAllChildren = False
 		        Exit
 		      End If

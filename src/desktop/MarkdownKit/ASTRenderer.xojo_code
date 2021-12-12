@@ -175,15 +175,9 @@ Implements MKRenderer
 		  
 		  Var node As New TreeViewNode("Paragraph")
 		  
-		  For Each line As TextLine In p.Lines
-		    
-		    Var lineNode As New TreeViewNode("Start:" + line.Start.ToString + _
-		    ",len:" + line.Length.ToString + _
-		    ",Contents:" + line.Value)
-		    
-		    node.AppendNode(lineNode)
-		    
-		  Next line
+		  For Each child As MKBlock In p.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
 		  
 		  Return node
 		  
@@ -213,19 +207,18 @@ Implements MKRenderer
 		Function VisitTextBlock(tb As MKTextBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  Var title As String = If(tb.IsBlank, "Blank ", "") + "Text Block (start:" + tb.Start.ToString + ")"
+		  Var title As String = If(tb.IsBlank, "Blank ", "") + _
+		  "Text Block (start:" + tb.Start.ToString + ")"
 		  
 		  Var node As New TreeViewNode(title)
 		  
 		  If Not tb.IsBlank Then
 		    For Each line As TextLine In tb.Lines
-		      
-		      Var lineNode As New TreeViewNode("Start:" + line.Start.ToString + _
-		      ",len:" + line.Length.ToString + _
-		      ",Contents:" + line.Value)
-		      
+		      Var lineNode As New TreeViewNode("Line")
+		      lineNode.AppendNode(New TreeViewNode("Start: " + line.Start.ToString))
+		      lineNode.AppendNode(New TreeViewNode("Length: " + line.Length.ToString))
+		      lineNode.AppendNode(New TreeViewNode(line.Value))
 		      node.AppendNode(lineNode)
-		      
 		    Next line
 		  End If
 		  

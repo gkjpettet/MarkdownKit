@@ -182,15 +182,22 @@ Protected Class MKParser
 		  
 		  // Create the child block.
 		  Var child As MKBlock
-		  If type = MKBlockTypes.FencedCode Then
+		  Select Case type
+		  Case MKBlockTypes.AtxHeading
+		    child = New MKATXHeadingBlock(parent, blockStartOffset)
+		    
+		  Case MKBlockTypes.FencedCode
 		    child = New MKFencedCodeBlock(parent, blockStartOffset)
-		  ElseIf type = MKBlockTypes.Html Then
+		    
+		  Case MKBlockTypes.Html
 		    child = New MKHTMLBlock(parent, blockStartOffset)
-		  ElseIf type = MKBlockTypes.SetextHeading Then
+		    
+		  Case MKBlockTypes.SetextHeading
 		    child = New MKSetextHeadingBlock(parent, blockStartOffset)
+		    
 		  Else
 		    child = New MKBlock(type, parent, blockStartOffset)
-		  End If
+		  End Select
 		  
 		  // Track source code positions for this child block.
 		  child.LineNumber = line.Number

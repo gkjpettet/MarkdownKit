@@ -6,7 +6,7 @@ Protected Class MKBlock
 		  
 		  Select Case Self.Type
 		  Case MKBlockTypes.AtxHeading
-		    Return visitor.VisitATXHeading(Self)
+		    Return visitor.VisitATXHeading(MKATXHeadingBlock(Self))
 		    
 		  Case MKBlockTypes.Block
 		    Return visitor.VisitBlock(Self)
@@ -119,6 +119,8 @@ Protected Class MKBlock
 		  /// Subclasses can override this method if they have more complicated needs upon block closure.
 		  /// [line] is the line that triggered the `Finalise` invocation.
 		  
+		  #Pragma Unused line
+		  
 		  // Already closed?
 		  If Not IsOpen Then Return
 		  
@@ -126,13 +128,6 @@ Protected Class MKBlock
 		  IsOpen = False
 		  
 		  Select Case Type
-		  Case MKBlockTypes.AtxHeading
-		    // ============
-		    // ATX HEADING
-		    // ============
-		    Self.Start = line.Start
-		    Self.Children.Add(New MKTextBlock(Self, line.Start, line.Value))
-		    
 		  Case MKBlockTypes.BlockQuote
 		    // ============
 		    // BLOCK QUOTES
@@ -146,16 +141,6 @@ Protected Class MKBlock
 		      End If
 		    Next child
 		    If removeAllChildren Then Self.Children.RemoveAll
-		    
-		  Case MKBlockTypes.FencedCode
-		    // ============
-		    // FENCED CODE
-		    // ============
-		    If FirstChild <> Nil Then
-		      // The first child (if present) is always the info string as a text block.
-		      MKFencedCodeBlock(Self).InfoString = MKTextBlock(FirstChild).Contents
-		      Children.RemoveAt(0)
-		    End If
 		    
 		  Case MKBlockTypes.List
 		    // ============

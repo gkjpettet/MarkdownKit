@@ -8,6 +8,22 @@ Inherits MKBlock
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
+		Sub Finalise(line As TextLine)
+		  /// Closes this block and makes any final changes that may be required.
+		  
+		  // Calling the overridden superclass method.
+		  Super.Finalise(line)
+		  
+		  If FirstChild <> Nil Then
+		    // The first child (if present) is always the info string as a text block.
+		    Self.InfoString = MKTextBlock(FirstChild).Contents
+		    Children.RemoveAt(0)
+		  End If
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0, Description = 302D626173656420706F736974696F6E20696E2074686520736F75726365206F6620746865207374617274206F6620746869732066656E63656420636F646520626C6F636B277320636C6F73696E672066656E63652E
 		ClosingFenceStart As Integer = 0
@@ -35,6 +51,38 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsChildOfTightList"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfListItem"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="SetextUnderlineStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="SetextUnderlineLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -144,7 +192,47 @@ Inherits MKBlock
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
+			Type="String"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingFenceStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FenceLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FenceOffset"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="InfoString"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ShouldClose"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

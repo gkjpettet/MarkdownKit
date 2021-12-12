@@ -2,7 +2,7 @@
 Protected Class ASTRenderer
 Implements MKRenderer
 	#tag Method, Flags = &h0
-		Function VisitATXHeading(atx As MKBlock) As Variant
+		Function VisitATXHeading(atx As MKATXHeadingBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("ATX Heading")

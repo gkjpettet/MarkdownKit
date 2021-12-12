@@ -191,14 +191,14 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSetextHeading(stx As MKBlock) As Variant
+		Function VisitSetextHeading(stx As MKSetextHeadingBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Setext Heading")
 		  node.AppendNode(New TreeViewNode("Start: " + stx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + stx.Level.ToString))
-		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.SetextUnderlineStart.ToString))
-		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.SetextUnderlineLength.ToString))
+		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.UnderlineStart.ToString))
+		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.UnderlineLength.ToString))
 		  
 		  For Each child As MKBlock In stx.Children
 		    node.AppendNode(child.Accept(Self))

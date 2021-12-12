@@ -130,7 +130,7 @@ Protected Class MKParser
 		  End If
 		  
 		  // Create a new SetextHeading block to replace the paragraph.
-		  Var stx As New MKBlock(MKBlockTypes.SetextHeading, paragraph.Parent)
+		  Var stx As New MKSetextHeadingBlock(paragraph.Parent)
 		  
 		  // Copy the paragraph's text blocks
 		  stx.Children = paragraph.Children
@@ -186,6 +186,8 @@ Protected Class MKParser
 		    child = New MKFencedCodeBlock(parent, blockStartOffset)
 		  ElseIf type = MKBlockTypes.Html Then
 		    child = New MKHTMLBlock(parent, blockStartOffset)
+		  ElseIf type = MKBlockTypes.SetextHeading Then
+		    child = New MKSetextHeadingBlock(parent, blockStartOffset)
 		  Else
 		    child = New MKBlock(type, parent, blockStartOffset)
 		  End If
@@ -1069,8 +1071,8 @@ Protected Class MKParser
 		        mContainer = ConvertParagraphBlockToSetextHeading(mContainer, mCurrentLine)
 		        mContainer.Level = data.Value("level")
 		        // Store the start and length of the setext underlining on this block.
-		        mContainer.SetextUnderlineStart = mCurrentLine.Start + mCurrentOffset
-		        mContainer.SetextUnderlineLength = mCurrentLine.Length - mCurrentOffset
+		        MKSetextHeadingBlock(mContainer).UnderlineStart = mCurrentLine.Start + mCurrentOffset
+		        MKSetextHeadingBlock(mContainer).UnderlineLength = mCurrentLine.Length - mCurrentOffset
 		        
 		      Catch e As MKEdgeCase
 		        // Happens when the entire contents of the setext heading is a reference link definition. 

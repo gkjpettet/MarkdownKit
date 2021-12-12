@@ -36,7 +36,7 @@ Protected Class MKBlock
 		    Return visitor.VisitParagraph(Self)
 		    
 		  Case MKBlockTypes.SetextHeading
-		    Return visitor.VisitSetextHeading(Self)
+		    Return visitor.VisitSetextHeading(MKSetextHeadingBlock(Self))
 		    
 		  Case MKBlockTypes.TextBlock
 		    Return visitor.VisitTextBlock(MKTextBlock(Self))
@@ -315,14 +315,6 @@ Protected Class MKBlock
 		Parent As MKBlock
 	#tag EndComputedProperty
 
-	#tag Property, Flags = &h0, Description = 4966207468697320626C6F636B20697320612053657465787420686561646572207468656E207468697320697320746865206C656E6774682028696E206368617261637465727329206F66207468652053657465787420756E6465726C696E652E
-		SetextUnderlineLength As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 302D626173656420706F736974696F6E20696E20746865206F726967696E616C20736F7572636520636F6465206F662074686520666972737420636861726163746572206F6620612053657465787420756E6465726C696E6520286966207468697320626C6F636B20697320612053657465787420686561646572292E
-		SetextUnderlineStart As Integer = 0
-	#tag EndProperty
-
 	#tag Property, Flags = &h0, Description = 54686520302D626173656420706F736974696F6E20696E20746865206F726967696E616C204D61726B646F776E20736F757263652074686174207468697320626C6F636B20626567696E732061742E
 		Start As Integer = 0
 	#tag EndProperty
@@ -451,22 +443,6 @@ Protected Class MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineLength"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

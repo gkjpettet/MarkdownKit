@@ -61,7 +61,7 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSetextHeading(stx As MKBlock) As Variant
+		Function VisitSetextHeading(stx As MKSetextHeadingBlock) As Variant
 		  
 		End Function
 	#tag EndMethod

@@ -99,6 +99,63 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitList(list As MKBlock) As Variant
+		  // Title.
+		  Var title As String
+		  Var tight As String = If(list.ListData.IsTight, "Tight", "Loose")
+		  If list.ListData.ListType = MKListTypes.Bullet Then
+		    title = tight + " Unordered List"
+		  Else
+		    title = tight + " Ordered List (begins at " + list.ListData.StartNumber.ToString + ")"
+		  End If
+		  
+		  Var node As New TreeViewNode(title)
+		  
+		  // Delimiter type if ordered list.
+		  If list.ListData.ListType = MKListTypes.Ordered Then
+		    Var delimiter As String
+		    If list.ListData.ListDelimiter = MKListDelimiters.Parenthesis Then
+		      delimiter = ")"
+		    Else
+		      delimiter = "."
+		    End If
+		    node.AppendNode(New TreeViewNode("Delimiter: " + delimiter))
+		  End If
+		  
+		  // Bullet character if unordered list.
+		  If list.ListData.ListType = MKListTypes.Bullet Then
+		    node.AppendNode(New TreeViewNode("Bullet: " + list.ListData.BulletCharacter))
+		  End If
+		  
+		  // List items.
+		  For Each child As MKBlock In list.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitListItem(item As MKBlock) As Variant
+		  Var node As New TreeViewNode("List Item")
+		  
+		  node.AppendNode(New TreeViewNode("Start: " + item.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Line Position: " + item.ListData.LinePosition.ToString))
+		  node.AppendNode(New TreeViewNode("Marker Offset: " + item.ListData.MarkerOffset.ToString))
+		  node.AppendNode(New TreeViewNode("Marker Width: " + item.ListData.MarkerWidth.ToString))
+		  
+		  For Each child As MKBlock In item.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitParagraph(p As MKBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  

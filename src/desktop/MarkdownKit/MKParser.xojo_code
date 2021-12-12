@@ -512,30 +512,29 @@ Protected Class MKParser
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21, Description = 52657475726E732054727565206966205B6D43757272656E744C696E655D2C20626567696E6E696E67206174205B6D4E6578744E57535D2C2069732061207468656D6174696320627265616B2E
-		Private Function IsThematicBreak() As Boolean
-		  /// Returns True if [mCurrentLine], beginning at [mNextNWS], is a thematic break.
+	#tag Method, Flags = &h21, Description = 52657475726E732054727565206966205B6C696E655D207374617274696E67206174205B706F735D2069732061207468656D6174696320627265616B2E
+		Private Function IsThematicBreak(chars() As String, pos As Integer) As Boolean
+		  /// Returns True if [line] starting at [pos] is a thematic break.
 		  ///
 		  /// Valid thematic break lines consist of >= 3 dashes, underscores or asterixes 
 		  /// which may be optionally separated by any amount of spaces or tabs whitespace.
-		  /// The characters must match.
+		  /// The characters must match:
 		  ///   ^([-][ ]*){3,}[\s]*$"
 		  ///   ^([_][ ]*){3,}[\s]*$"
 		  ///   ^([\*][ ]*){3,}[\s]*$"
-		  /// Assumes that [mNextNWS] points to a non-whitespace character in [mCurrentLine].
 		  
-		  Var charsLastIndex As Integer = mCurrentLine.Characters.LastIndex
+		  Var charsLastIndex As Integer = chars.LastIndex
 		  
 		  Var count As Integer = 0
 		  Var i As Integer
 		  Var c, tbChar As String
-		  Var chars() As String = mCurrentLine.Characters
 		  
-		  For i = mNextNWS To charsLastIndex
+		  For i = pos To charsLastIndex
 		    c = chars(i)
-		    If c = " " Or c = &u0009 Then
-		      Continue
-		    ElseIf count = 0 Then
+		    
+		    If c = " " Or c = &u0009 Then Continue
+		    
+		    If count = 0 Then
 		      Select Case c
 		      Case "-", "_", "*"
 		        tbChar = c
@@ -543,14 +542,17 @@ Protected Class MKParser
 		      Else
 		        Return False
 		      End Select
+		      
 		    ElseIf c = tbChar Then
 		      count = count + 1
+		      
 		    Else
 		      Return False
 		    End If
 		  Next i
 		  
 		  Return count >= 3
+		  
 		End Function
 	#tag EndMethod
 
@@ -578,6 +580,24 @@ Protected Class MKParser
 		  Next i
 		  
 		  Return -1
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 4D6174636865732077686974657370616365206F6E205B6C696E655D20626567696E6E696E67206174205B706F735D20616E732072657475726E7320686F77206D616E7920636861726163746572732077657265206D6174636865642E
+		Private Function MatchWhitespaceCharacters(line As TextLine, pos As Integer) As Integer
+		  /// Matches whitespace on [line] beginning at [pos] ans returns how many characters were matched.
+		  
+		  Var charsLastIndex As Integer = line.Characters.LastIndex
+		  
+		  // Sanity check.
+		  If pos > charsLastIndex Then Return 0
+		  
+		  For i As Integer = pos To charsLastIndex
+		    If Not line.Characters(pos).IsMarkdownWhitespace Then Return i - pos
+		  Next i
+		  
+		  Return (charsLastIndex + 1)- pos
 		  
 		End Function
 	#tag EndMethod
@@ -619,6 +639,95 @@ Protected Class MKParser
 		  ParseBlockStructure
 		  
 		  Return mDoc
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 52657475726E7320547275652069662061626C6520746F2070617273652061204C6973744974656D206D61726B65722C20706F70756C6174696E67205B646174615D2077697468207468652064657461696C732E
+		Private Function ParseListMarker(indented As Boolean, line As TextLine, pos As Integer, interruptsParagraph As Boolean, ByRef data As MKListData) As Boolean
+		  /// Returns True if able to parse a ListItem marker, populating [data] with the details.
+		  
+		  Var chars() As String = line.Characters
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  Var c As String
+		  Var startPos As Integer = pos
+		  data = Nil
+		  Var length As Integer = 0
+		  
+		  // Sanity check.
+		  If pos > charsLastIndex Then Return False
+		  
+		  // List items may not be indented more than 3 spaces.
+		  if indented Then Return False
+		  
+		  // Check the character.
+		  c = chars(pos)
+		  If c = "+" Or c = "•" Or ((c = "*" Or c = "-") And Not IsThematicBreak(chars, pos)) Then
+		    pos = pos + 1
+		    
+		    If pos <= charsLastIndex And Not chars(pos).IsMarkdownWhitespace Then Return False
+		    
+		    If interruptsParagraph And MatchWhitespaceCharacters(line, pos + 1) = (charsLastIndex + 1) - pos Then 
+		      Return False
+		    End If
+		    
+		    data = New MKListData
+		    data.BulletCharacter = c
+		    data.StartNumber = 1
+		    data.LinePosition = pos - 1
+		    
+		  ElseIf c.IsDigit Then
+		    Var markerStartPos As Integer = pos
+		    Var numDigits As Integer = 0
+		    Var startText As String // To store the start value for ordered lists.
+		    Var limit As Integer = Min(charsLastIndex, startPos + 8)
+		    For i As Integer = startPos To limit
+		      If chars(i).IsDigit Then
+		        If numDigits = 9 Then Return False // Avoids integer overflows in some browsers.
+		        numDigits = numDigits + 1
+		        startText = startText + chars(i)
+		      Else
+		        Exit
+		      End If
+		    Next i
+		    
+		    Var start As Integer = startText.ToInteger
+		    pos = pos + numDigits
+		    // pos now points to the character after the last digit.
+		    If pos > charsLastIndex Then Return False
+		    
+		    // Need to find a period or parenthesis.
+		    c = chars(pos)
+		    If c <> "." And c <> ")" Then Return False
+		    pos = pos + 1
+		    
+		    // The next character must be whitespace (unless this is the EOL).
+		    If pos <= charsLastIndex And Not chars(pos).IsMarkdownWhitespace Then Return False
+		    
+		    If interruptsParagraph And _
+		      (start <> 1 Or _
+		      MatchWhitespaceCharacters(line, pos + 1) = (charsLastIndex + 1) - pos) Then
+		      Return False
+		    End If
+		    
+		    data = New MKListData
+		    data.ListType = MKListTypes.Ordered
+		    data.BulletCharacter = ""
+		    data.StartNumber = start
+		    data.LinePosition = markerStartPos
+		    data.ListDelimiter = If(c = ".", MKListDelimiters.Period, MKListDelimiters.Parenthesis)
+		  Else
+		    Return False
+		  End If
+		  
+		  length = pos - startPos
+		  If length = 0 Then
+		    data = Nil
+		    Return False
+		  Else
+		    data.Length = length
+		    Return True
+		  End If
 		  
 		End Function
 	#tag EndMethod
@@ -803,6 +912,7 @@ Protected Class MKParser
 		  /// Tries to start a new container block.
 		  
 		  Var data As New Dictionary
+		  Var listData As MKListData
 		  
 		  While mContainer.Type <> MKBlockTypes.FencedCode And mContainer.Type <> MKBlockTypes.IndentedCode And _
 		    mContainer.Type <> MKBlockTypes.Html
@@ -851,7 +961,7 @@ Protected Class MKParser
 		      // NB: We don't adjust `mCurrentOffset` because the tag is part of the text.
 		      
 		    ElseIf Not indented And Not (mContainer.Type = MKBlockTypes.Paragraph And Not mAllMatched) And _
-		      IsThematicBreak Then
+		      IsThematicBreak(mCurrentLine.Characters, mNextNWS) Then
 		      // ======================
 		      // THEMATIC BREAK
 		      // ======================
@@ -859,6 +969,50 @@ Protected Class MKParser
 		      mContainer.Finalise(mCurrentLine)
 		      mContainer = mContainer.Parent
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
+		      
+		    ElseIf (Not indented Or mContainer.Type = MKBlockTypes.List) And _
+		      ParseListMarker(indented, mCurrentLine, mNextNWS, _
+		      mContainer.Type = MKBlockTypes.Paragraph, listData) Then
+		      // ======================
+		      // LIST / LIST ITEM
+		      // ======================
+		      #Pragma Warning "TODO: New lists / list items"
+		      // Compute padding.
+		      AdvanceOffset(mNextNWS + listData.Length - mCurrentOffset, False)
+		      
+		      Var prevOffset As Integer = mCurrentOffset
+		      Var prevColumn As Integer = mCurrentColumn
+		      Var prevRemainingSpaces As Integer = mRemainingSpaces
+		      
+		      While mCurrentColumn - prevColumn <= CODE_INDENT
+		        If Not AdvanceOptionalSpace Then Exit
+		      Wend
+		      
+		      If mCurrentColumn = prevColumn Then
+		        // No spaces at all.
+		        listData.MarkerWidth = listData.Length + 1
+		      ElseIf mCurrentColumn - prevColumn > CODE_INDENT Or mCurrentChar = "" Then
+		        listData.MarkerWidth = listData.Length + 1
+		        // Too many (or no) spaces, ignoring everything but the first one.
+		        mCurrentOffset = prevOffset
+		        mCurrentColumn = prevColumn
+		        mRemainingSpaces = prevRemainingSpaces
+		        Call AdvanceOptionalSpace
+		      Else
+		        listData.MarkerWidth = listData.Length + mCurrentColumn - prevColumn
+		      End If
+		      
+		      // Check the container. If it's a list, see if this list item can continue the list. 
+		      // Otherwise, create a list container.
+		      listData.MarkerOffset = mCurrentIndent
+		      If mContainer.Type <> MKBlockTypes.List Or mContainer.ListData <> listData Then
+		        mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.List, 0)
+		        mContainer.ListData = listData
+		      End If
+		      
+		      // Add the list item.
+		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.ListItem, -listData.MarkerWidth)
+		      mContainer.ListData = listData
 		      
 		    ElseIf indented And Not mMaybeLazy And Not blank Then
 		      // ======================
@@ -905,6 +1059,20 @@ Protected Class MKParser
 		      If mCurrentIndent <= 3 And mCurrentChar= ">" Then
 		        AdvanceOffset(mCurrentIndent + 1, True)
 		        Call AdvanceOptionalSpace
+		      Else
+		        mAllMatched = False
+		      End If
+		      
+		    Case MKBlockTypes.ListItem
+		      // ======================
+		      // LIST ITEM
+		      // ======================
+		      If mCurrentIndent >= mContainer.ListData.MarkerOffset + mContainer.ListData.MarkerWidth Then
+		        AdvanceOffset(mContainer.ListData.MarkerOffset + mContainer.ListData.MarkerWidth, True)
+		      ElseIf blank And mContainer.FirstChild <> Nil Then
+		        // If container.FirstChild is Nil, then the opening line of the list item was blank after 
+		        // the list marker. In this case we're done with the list item.
+		        AdvanceOffset(mNextNWS - mCurrentOffset, False)
 		      Else
 		        mAllMatched = False
 		      End If

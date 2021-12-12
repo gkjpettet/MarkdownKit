@@ -175,6 +175,16 @@ Protected Module MarkdownKit
 		NonInterruptingBlock=7
 	#tag EndEnum
 
+	#tag Enum, Name = MKListDelimiters, Type = Integer, Flags = &h0, Description = 446566696E6573207468652064656C696D69746572207573656420696E2074686520736F7572636520666F72206F726465726564206C697374732E
+		Period=0
+		Parenthesis
+	#tag EndEnum
+
+	#tag Enum, Name = MKListTypes, Type = Integer, Flags = &h0, Description = 446566696E6573207468652074797065206F662061206C69737420626C6F636B20656C656D656E742E
+		Bullet=0
+		Ordered=1
+	#tag EndEnum
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

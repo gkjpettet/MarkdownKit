@@ -37,6 +37,18 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitList(list As MKBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitListItem(item As MKBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitParagraph(p As MKBlock) As Variant
 		  
 		End Function

@@ -157,6 +157,47 @@ Begin DesktopWindow Window1
       WinDrawTreeLines=   True
       WinHighlightFullRow=   False
    End
+   Begin DesktopLabel Info
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      Multiline       =   False
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextAlignment   =   0
+      TextColor       =   &c000000
+      Tooltip         =   ""
+      Top             =   576
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   570
+   End
+   Begin Timer InfoTimer
+      Enabled         =   True
+      Index           =   -2147483648
+      LockedInPosition=   False
+      Period          =   250
+      RunMode         =   2
+      Scope           =   0
+      TabPanelIndex   =   0
+   End
 End
 #tag EndDesktopWindow
 
@@ -177,6 +218,13 @@ End
 		  ASTTreeView.RemoveAllNodes
 		  ASTTreeView.AppendNode(printer.VisitDocument(doc))
 		  ASTTreeView.ExpandAll(True)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events InfoTimer
+	#tag Event
+		Sub Action()
+		  Info.Text = "Pos: " + Source.SelectionStart.ToString
 		End Sub
 	#tag EndEvent
 #tag EndEvents

@@ -23,6 +23,12 @@ Protected Class MKBlock
 		  Case MKBlockTypes.Html
 		    Return visitor.VisitHTMLBlock(MKHTMLBlock(Self))
 		    
+		  Case MKBlockTypes.List
+		    Return visitor.VisitList(Self)
+		    
+		  Case MKBlockTypes.ListItem
+		    Return visitor.VisitListItem(Self)
+		    
 		  Case MKBlockTypes.IndentedCode
 		    Return visitor.VisitIndentedCode(Self)
 		    
@@ -101,9 +107,28 @@ Protected Class MKBlock
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 546869732067656E657269632062617365206D6574686F6420636C6F736573207468697320626C6F636B2E
+	#tag Method, Flags = &h0, Description = 52657475726E732054727565206966207468697320626C6F636B20656E64732077697468206120626C616E6B206C696E652C2064657363656E64696E67206966206E656564656420696E746F206C6973747320616E64207375626C697374732E
+		Function EndsWithBlankLine() As Boolean
+		  /// Returns True if this block ends with a blank line, descending if needed into lists and sublists.
+		  
+		  Var b As MKBlock = Self
+		  
+		  Do
+		    If b.IsLastLineBlank Then Return True
+		    
+		    If b.Type <> MKBlockTypes.List And b.Type <> MKBlockTypes.ListItem Then Return False
+		    
+		    b = b.LastChild
+		    
+		    If b = Nil Then Return False
+		  Loop
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
 		Sub Finalise(line As TextLine)
-		  /// This generic base method closes this block.
+		  /// Closes this block and makes any final changes that may be required.
 		  ///
 		  /// Subclasses can override this method if they have more complicated needs upon block closure.
 		  /// [line] is the line that triggered the `Finalise` invocation.
@@ -137,6 +162,9 @@ Protected Class MKBlock
 		    If removeAllChildren Then Self.Children.RemoveAll
 		    
 		  Case MKBlockTypes.FencedCode
+		    // ============
+		    // FENCED CODE
+		    // ============
 		    If FirstChild <> Nil Then
 		      // The first child (if present) is the info string.
 		      If FirstChild.Lines.Count > 0 Then
@@ -148,10 +176,48 @@ Protected Class MKBlock
 		    End If
 		    
 		  Case MKBlockTypes.List
-		    #Pragma Warning "TODO: Finalise lists"
+		    // ============
+		    // LISTS
+		    // ============
+		    // Determine tight/loose status of the list.
+		    Self.ListData.IsTight = True // Tight by default.
+		    
+		    Var item As MKBlock = Self.FirstChild
+		    Var subItem As MKBlock
+		    
+		    While item <> Nil
+		      // Check for a non-final non-empty ListItem ending with blank line.
+		      If item.IsLastLineBlank And item.NextSibling <> Nil Then
+		        Self.ListData.IsTight = False
+		        Exit
+		      End If
+		      
+		      // Recurse into the children of the ListItem, to see if there are spaces between them.
+		      subitem = item.FirstChild
+		      While subItem <> Nil
+		        If subItem.EndsWithBlankLine And (item.NextSibling <> Nil Or subitem.NextSibling <> Nil) Then
+		          Self.ListData.IsTight = False
+		          Exit
+		        End If
+		        subItem = subitem.NextSibling
+		      Wend
+		      
+		      If Not Self.ListData.IsTight Then Exit
+		      
+		      item = item.NextSibling
+		    Wend
+		    
+		    For i As Integer = 0 To Self.Children.LastIndex
+		      Self.Children(i).IsChildOfTightList = Self.ListData.IsTight
+		    Next i
 		    
 		  Case MKBlockTypes.ListItem
-		    #Pragma Warning "TODO: Finalise list items"
+		    // ============
+		    // LIST ITEM
+		    // ============
+		    For i As Integer = 0 To Self.Children.LastIndex
+		      Self.Children(i).IsChildOfListItem = True
+		    Next i
 		    
 		  Case MKBlockTypes.SetextHeading
 		    #Pragma Warning "TODO: Finalise Setext headings"
@@ -159,6 +225,23 @@ Protected Class MKBlock
 		  End Select
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 52657475726E73207468697320626C6F636B2773206E657874207369626C696E67206F72204E696C2069662074686572652069736E2774206F6E652E
+		Function NextSibling() As MKBlock
+		  /// Returns this block's next sibling or Nil if there isn't one.
+		  
+		  If Self.Parent = Nil Then Return Nil
+		  
+		  Var myIndex As Integer = Self.Parent.Children.IndexOf(Self)
+		  If myIndex = -1 Then Return Nil
+		  If myIndex = Self.Parent.Children.LastIndex Then
+		    Return Nil
+		  Else
+		    Return Self.Parent.Children(myIndex + 1)
+		  End If
+		  
+		End Function
 	#tag EndMethod
 
 
@@ -179,6 +262,14 @@ Protected Class MKBlock
 		#tag EndGetter
 		FirstChild As MKBlock
 	#tag EndComputedProperty
+
+	#tag Property, Flags = &h0, Description = 54727565206966207468697320626C6F636B2069732061206368696C64206F662061206C697374206974656D2E
+		IsChildOfListItem As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54727565206966207468697320626C6F636B2069732061206368696C64206F662061207469676874206C6973742E
+		IsChildOfTightList As Boolean = False
+	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5472756520696620746865206C617374206C696E65206F66207468697320636F6E7461696E657220697320626C616E6B2E
 		IsLastLineBlank As Boolean = False
@@ -212,6 +303,10 @@ Protected Class MKBlock
 
 	#tag Property, Flags = &h0, Description = 416E79206C696E6573206F6620746578742077697468696E207468697320626C6F636B2061667465722070617273696E672074686520626C6F636B207374727563747572652E205468657920747261636B2074686520737461727420706F736974696F6E206F6620746865697220636F6E74656E74732E
 		Lines() As TextLine
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 4966207468697320626C6F636B2069732061206C6973742C20746869732069732069747320646174612E
+		ListData As MKListData
 	#tag EndProperty
 
 	#tag Property, Flags = &h21, Description = 41207765616B207265666572656E636520746F207468697320626C6F636B277320706172656E742E2057696C6C206265204E696C2069662074686973206973206120646F63756D656E7420626C6F636B2E

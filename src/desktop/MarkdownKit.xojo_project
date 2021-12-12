@@ -12,6 +12,7 @@ Module=MarkdownKit;MarkdownKit/MarkdownKit.xojo_code;&h000000002F26BFFF;&h000000
 Class=ASTRenderer;MarkdownKit/ASTRenderer.xojo_code;&h0000000017159FFF;&h000000005230FFFF;false
 Class=MKBlock;MarkdownKit/MKBlock.xojo_code;&h00000000352297FF;&h000000005230FFFF;false
 Class=MKDocument;MarkdownKit/MKDocument.xojo_code;&h000000000AC94FFF;&h000000005230FFFF;false
+Class=MKEdgeCase;MarkdownKit/MKEdgeCase.xojo_code;&h000000000E46CFFF;&h000000005230FFFF;false
 Class=MKException;MarkdownKit/MKException.xojo_code;&h0000000023625FFF;&h000000005230FFFF;false
 Class=MKFencedCodeBlock;MarkdownKit/MKFencedCodeBlock.xojo_code;&h000000001387C7FF;&h000000005230FFFF;false
 Class=MKHTMLBlock;MarkdownKit/MKHTMLBlock.xojo_code;&h000000000F658FFF;&h000000005230FFFF;false

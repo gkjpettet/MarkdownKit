@@ -7,6 +7,12 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitBlock(b As MKBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitBlockQuote(bq As MKBlock) As Variant
 		  
 		End Function
@@ -50,6 +56,12 @@ Protected Interface MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitParagraph(p As MKBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitSetextHeading(stx As MKBlock) As Variant
 		  
 		End Function
 	#tag EndMethod

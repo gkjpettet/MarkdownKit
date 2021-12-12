@@ -6,13 +6,27 @@ Implements MKRenderer
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("ATX Heading")
-		  node.AddSubItem("Start: " + atx.Start.ToString)
-		  node.AddSubItem("Level: " + atx.Level.ToString)
+		  node.AppendNode(New TreeViewNode("Start: " + atx.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Level: " + atx.Level.ToString))
+		  
 		  For Each line As TextLine In atx.Lines
-		    node.AddSubItem(line.Value)
+		    node.AppendNode(New TreeViewNode(line.Value))
 		  Next line
 		  
 		  Return node
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitBlock(b As MKBlock) As Variant
+		  Var node As New TreeViewNode("Generic Block")
+		  
+		  For Each child As MKBlock In b.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
 		End Function
 	#tag EndMethod
 
@@ -169,6 +183,25 @@ Implements MKRenderer
 		    
 		    node.AppendNode(lineNode)
 		    
+		  Next line
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitSetextHeading(stx As MKBlock) As Variant
+		  /// Part of the MKRenderer interface.
+		  
+		  Var node As New TreeViewNode("Setext Heading")
+		  node.AppendNode(New TreeViewNode("Start: " + stx.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Level: " + stx.Level.ToString))
+		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.SetextUnderlineStart.ToString))
+		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.SetextUnderlineLength.ToString))
+		  
+		  For Each line As TextLine In stx.Lines
+		    node.AppendNode(New TreeViewNode(line.Value))
 		  Next line
 		  
 		  Return node

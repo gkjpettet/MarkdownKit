@@ -115,6 +115,58 @@ Protected Class MKParser
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21, Description = 52656D6F7665732074686520706173736564205B7061726167726170685D2066726F6D2069747320706172656E7420616E64207265706C6163657320697420776974682061206E65772053657465787448656164696E6720626C6F636B2077697468207468652073616D65206368696C6472656E2E2052657475726E73207468652053657465787448656164696E6720626C6F636B2E
+		Private Function ConvertParagraphBlockToSetextHeading(ByRef paragraph As MKBlock, line As TextLine) As MKBlock
+		  /// Removes the passed [paragraph] from its parent and replaces it with a new SetextHeading block
+		  /// with the same children. Returns the SetextHeading block.
+		  
+		  // Get a reference to the passed paragraph's parent.
+		  Var paraParent As MKBlock = paragraph.Parent
+		  
+		  // Get the index of the passed paragraph in its parent's Children array.
+		  Var index As Integer = paraParent.Children.IndexOf(paragraph)
+		  If index = -1 Then
+		    Raise New MKException("Unable to convert paragraph block to setext heading.")
+		  End If
+		  
+		  // Create a new SetextHeading block to replace the paragraph.
+		  Var stx As New MKBlock(MKBlockTypes.SetextHeading, paragraph.Parent)
+		  
+		  // Copy the paragraph's lines.
+		  stx.Lines = paragraph.Lines
+		  
+		  stx.Start = paragraph.Start
+		  
+		  // Edge case:
+		  // It's possible for the contents of this setext heading to be a reference link definition only.
+		  // In this scenario, we need to get the definition and add it to the document's reference map (if 
+		  // appropriate), add the setext heading line as content to this paragraph and raise 
+		  // an EdgeCase exception.
+		  #Pragma Warning "TODO: Setext edge case condition"
+		  #Pragma Unused line
+		  
+		  // Remove the paragraph from its parent.
+		  paraParent.Children.RemoveAt(index)
+		  
+		  // Insert our new SetextHeading.
+		  If index = 0 Then
+		    paraParent.Children.Add(stx)
+		  Else
+		    paraParent.Children.AddAt(index, stx)
+		  End If
+		  
+		  // Assign the parent.
+		  stx.Parent = paraParent
+		  
+		  // Nil out the old paragraph.
+		  paragraph = Nil
+		  
+		  // Return the new SetextHeading.
+		  Return stx
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 437265617465732061206E657720626C6F636B206F66205B747970655D2C20616464732069742061732061206368696C64206F66205B706172656E745D2C20747261636B7320746865206162736F6C75746520736F7572636520636F646520737461727420706F736974696F6E20616E642072657475726E7320746865206E657720626C6F636B2E
 		Private Function CreateChildBlock(parent As MKBlock, line As TextLine, type As MKBlockTypes, blockStartOffset As Integer) As MKBlock
 		  /// Creates a new block of [type], adds it as a child of [parent].
@@ -512,6 +564,54 @@ Protected Class MKParser
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21, Description = 52657475726E732054727565206966205B6D43757272656E744C696E655D2C20626567696E6E696E67206174205B6D4E6578744E57535D2069732061207365746578742068656164696E67206C696E652E2053657473205B646174612E56616C756528226C6576656C22295D
+		Private Function IsSetextHeadingLine(ByRef data As Dictionary) As Boolean
+		  /// Returns True if [mCurrentLine], beginning at [mNextNWS] is a setext heading line.
+		  /// Sets [data.Value("level")]
+		  ///
+		  /// Sets [data.Value("level")] to the heading level (1 or 2) or 0 if this is not a setext heading line.
+		  ///   ^[=]+[ ]*$
+		  ///   ^[-]+[ ]*$
+		  
+		  data = New Dictionary("level" : 0)
+		  
+		  Var chars() As String = mCurrentLine.Characters
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  
+		  // Sanity check.
+		  If mNextNWS > charsLastIndex Then Return False
+		  
+		  // Determine the setext heading character.
+		  Var stxChar As String = chars(mNextNWS)
+		  If stxChar <> "=" And stxChar <> "-" Then Return False
+		  
+		  If mNextNWS + 1 > charsLastIndex Then
+		    data.Value("level") = If(stxChar = "=", 1, 2)
+		    Return True
+		  End If
+		  
+		  Var done As Boolean = False
+		  Var c As String
+		  For i As Integer = mNextNWS + 1 To charsLastIndex
+		    c = chars(i)
+		    If c = stxChar And Not Done Then
+		      Continue
+		    ElseIf c = " " Or c = &u0009 Then
+		      Continue
+		    Else
+		      // Not a "=", "-" character or whitespace.
+		      done = True
+		    End If
+		    data.Value("level") = 0
+		    Return False
+		  Next i
+		  
+		  data.Value("level") = If(c = "=", 1, 2)
+		  Return True
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 52657475726E732054727565206966205B6C696E655D207374617274696E67206174205B706F735D2069732061207468656D6174696320627265616B2E
 		Private Function IsThematicBreak(chars() As String, pos As Integer) As Boolean
 		  /// Returns True if [line] starting at [pos] is a thematic break.
@@ -860,7 +960,6 @@ Protected Class MKParser
 		      
 		    ElseIf mContainer.Type <> MKBlockTypes.ThematicBreak And _ 
 		      mContainer.Type <> MKBlockTypes.SetextHeading And Not blank Then
-		      #Pragma Warning "CHECK: Add `Not blank` above from MarkdownKit v1"
 		      // Create a paragraph container for this line.
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.Paragraph, 0)
 		      mContainer.AddLine(mCurrentLine, mNextNWS)
@@ -960,6 +1059,25 @@ Protected Class MKParser
 		      MKHTMLBlock(mContainer).HtmlBlockType = data.Value("type")
 		      // NB: We don't adjust `mCurrentOffset` because the tag is part of the text.
 		      
+		    ElseIf Not indented And mContainer.Type = MKBlockTypes.Paragraph And _
+		      (mCurrentChar = "=" Or mCurrentChar = "-") And IsSetextHeadingLine(data) Then
+		      // ======================
+		      // SETEXT HEADING
+		      // ======================
+		      Try
+		        mContainer = ConvertParagraphBlockToSetextHeading(mContainer, mCurrentLine)
+		        mContainer.Level = data.Value("level")
+		        // Store the start and length of the setext underlining on this block.
+		        mContainer.SetextUnderlineStart = mCurrentLine.Start + mCurrentOffset
+		        mContainer.SetextUnderlineLength = mCurrentLine.Length - mCurrentOffset
+		        
+		      Catch e As MKEdgeCase
+		        // Happens when the entire contents of the setext heading is a reference link definition. 
+		        // In this scenario, `mContainer` remains a paragraph with the setext heading line having been 
+		        // added to the paragraph's contents.
+		      End Try
+		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
+		      
 		    ElseIf Not indented And Not (mContainer.Type = MKBlockTypes.Paragraph And Not mAllMatched) And _
 		      IsThematicBreak(mCurrentLine.Characters, mNextNWS) Then
 		      // ======================
@@ -976,7 +1094,6 @@ Protected Class MKParser
 		      // ======================
 		      // LIST / LIST ITEM
 		      // ======================
-		      #Pragma Warning "TODO: New lists / list items"
 		      // Compute padding.
 		      AdvanceOffset(mNextNWS + listData.Length - mCurrentOffset, False)
 		      

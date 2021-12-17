@@ -192,6 +192,9 @@ Protected Class MKParser
 		  Case MKBlockTypes.Html
 		    child = New MKHTMLBlock(parent, blockStartOffset)
 		    
+		  Case MKBlockTypes.Paragraph
+		    child = New MKParagraphBlock(parent, blockStartOffset)
+		    
 		  Case MKBlockTypes.SetextHeading
 		    child = New MKSetextHeadingBlock(parent, blockStartOffset)
 		    
@@ -693,9 +696,9 @@ Protected Class MKParser
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21, Description = 4D6174636865732077686974657370616365206F6E205B6C696E655D20626567696E6E696E67206174205B706F735D20616E732072657475726E7320686F77206D616E7920636861726163746572732077657265206D6174636865642E
+	#tag Method, Flags = &h21, Description = 4D6174636865732077686974657370616365206F6E205B6C696E655D20626567696E6E696E67206174205B706F735D20616E642072657475726E7320686F77206D616E7920636861726163746572732077657265206D6174636865642E
 		Private Function MatchWhitespaceCharacters(line As TextLine, pos As Integer) As Integer
-		  /// Matches whitespace on [line] beginning at [pos] ans returns how many characters were matched.
+		  /// Matches whitespace on [line] beginning at [pos] and returns how many characters were matched.
 		  
 		  Var charsLastIndex As Integer = line.Characters.LastIndex
 		  
@@ -703,7 +706,7 @@ Protected Class MKParser
 		  If pos > charsLastIndex Then Return 0
 		  
 		  For i As Integer = pos To charsLastIndex
-		    If Not line.Characters(pos).IsMarkdownWhitespace Then Return i - pos
+		    If Not line.Characters(i).IsMarkdownWhitespace Then Return i - pos
 		  Next i
 		  
 		  Return (charsLastIndex + 1)- pos
@@ -1044,6 +1047,7 @@ Protected Class MKParser
 		      // ======================
 		      // ATX HEADER
 		      // ======================
+		      #Pragma Warning "TODO: Capture the value of the header in a dedicated property?"
 		      AdvanceOffset(mNextNWS + data.Value("length") - mCurrentOffset, False)
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.AtxHeading, 0)
 		      mContainer.Level = data.Value("level")
@@ -1087,6 +1091,7 @@ Protected Class MKParser
 		        // added to the paragraph's contents.
 		      End Try
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
+		      #Pragma Warning "TODO: Capture the value of the header in a dedicated property?"
 		      
 		    ElseIf Not indented And Not (mContainer.Type = MKBlockTypes.Paragraph And Not mAllMatched) And _
 		      IsThematicBreak(mCurrentLine.Characters, mNextNWS) Then

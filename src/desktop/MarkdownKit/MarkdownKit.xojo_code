@@ -1,5 +1,20 @@
 #tag Module
 Protected Module MarkdownKit
+	#tag Method, Flags = &h0, Description = 547275652069662074686520636861726163746572206174205B706F735D206973206573636170656420287072656365646564206279206120286E6F6E2D6573636170656429206261636B736C61736820636861726163746572292E
+		Function IsMarkdownEscaped(chars() As String, pos As Integer) As Boolean
+		  /// True if the character at [pos] is escaped (preceded by a (non-escaped) backslash character).
+		  
+		  If pos > chars.LastIndex or pos = 0 Then Return False
+		  
+		  If chars(pos - 1) = "\" And Not IsMarkdownEscaped(chars, pos - 1) Then
+		    Return True
+		  Else
+		    Return False
+		  End If
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, Description = 54727565206966205B636861725D20697320776869746573706163652E
 		Function IsMarkdownWhitespace(Extends char As String, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
 		  /// True if [char] is considered Markdown whitespace.
@@ -145,6 +160,10 @@ Protected Module MarkdownKit
 		#tag EndGetter
 		Protected HTMLTagNames As Dictionary
 	#tag EndComputedProperty
+
+
+	#tag Constant, Name = MAX_REFERENCE_LABEL_LENGTH, Type = Double, Dynamic = False, Default = \"999", Scope = Protected, Description = 546865206D6178696D756D206E756D626572206F662063686172616374657273207065726D69747465642077697468696E207468652073717561726520627261636B657473206F662061206C696E6B206C6162656C2E
+	#tag EndConstant
 
 
 	#tag Enum, Name = MKBlockTypes, Type = Integer, Flags = &h0

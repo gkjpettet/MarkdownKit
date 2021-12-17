@@ -218,6 +218,7 @@ End
 		  ASTTreeView.RemoveAllNodes
 		  ASTTreeView.AppendNode(printer.VisitDocument(doc))
 		  ASTTreeView.ExpandAll(True)
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents

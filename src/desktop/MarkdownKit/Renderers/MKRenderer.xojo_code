@@ -19,7 +19,7 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitDocument(doc As MKBlock) As Variant
+		Function VisitDocument(doc As MKDocument) As Variant
 		  
 		End Function
 	#tag EndMethod
@@ -55,7 +55,7 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitParagraph(p As MKBlock) As Variant
+		Function VisitParagraph(p As MKParagraphBlock) As Variant
 		  
 		End Function
 	#tag EndMethod

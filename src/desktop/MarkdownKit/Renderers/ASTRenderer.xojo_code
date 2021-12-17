@@ -46,12 +46,38 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 57616C6B732074686520706173736564204D61726B646F776E20646F63756D656E7420616E6420637265617465732061206054726565566965774E6F64656020726570726573656E74696E672069742E
-		Function VisitDocument(doc As MKBlock) As Variant
+		Function VisitDocument(doc As MKDocument) As Variant
 		  /// Walks the passed Markdown document and creates a `TreeViewNode` representing it.
 		  ///
 		  /// Part of the MKRenderer interface.
 		  
 		  Var docNode As New TreeViewNode("Document")
+		  
+		  // Link reference definitions.
+		  If doc.References.KeyCount > 0 Then
+		    Var defsNode As New TreeViewNode("Link Reference Definitions")
+		    For Each entry As DictionaryEntry In doc.References
+		      Var lrd As MKLinkReferenceDefinition = MKLinkReferenceDefinition(entry.Value)
+		      Var lrdNode As New TreeViewNode("Definition")
+		      // Link label.
+		      lrdNode.AppendNode(New TreeViewNode("Label (" + lrd.LinkLabelStart.ToString + ", " + _
+		      lrd.LinkLabelLength.ToString + "): " + lrd.LinkLabel))
+		      
+		      // Link destination.
+		      lrdNode.AppendNode(New TreeViewNode("Destination (" + lrd.LinkDestinationStart.ToString + ", " + _
+		      lrd.LinkDestinationLength.ToString + "): " + lrd.LinkDestination))
+		      
+		      // Optional link title.
+		      If lrd.HasTitle Then
+		        lrdNode.AppendNode(New TreeViewNode("Title (" + lrd.LinkTitleStart.ToString + ", " + _
+		        lrd.LinkTitleLength.ToString + "): " + lrd.LinkTitle))
+		      End If
+		      
+		      defsNode.AppendNode(lrdNode)
+		    Next entry
+		    
+		    docNode.AppendNode(defsNode)
+		  End If
 		  
 		  For Each b As MKBlock In doc.Children
 		    
@@ -176,7 +202,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitParagraph(p As MKBlock) As Variant
+		Function VisitParagraph(p As MKParagraphBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Paragraph")

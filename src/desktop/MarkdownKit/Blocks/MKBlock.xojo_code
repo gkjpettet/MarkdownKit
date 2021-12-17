@@ -15,7 +15,7 @@ Protected Class MKBlock
 		    Return visitor.VisitBlockQuote(Self)
 		    
 		  Case MKBlockTypes.Document
-		    Return visitor.VisitDocument(Self)
+		    Return visitor.VisitDocument(MKDocument(Self))
 		    
 		  Case MKBlockTypes.FencedCode
 		    Return visitor.VisitFencedCode(MKFencedCodeBlock(Self))
@@ -33,7 +33,7 @@ Protected Class MKBlock
 		    Return visitor.VisitIndentedCode(Self)
 		    
 		  Case MKBlockTypes.Paragraph
-		    Return visitor.VisitParagraph(Self)
+		    Return visitor.VisitParagraph(MKParagraphBlock(Self))
 		    
 		  Case MKBlockTypes.SetextHeading
 		    Return visitor.VisitSetextHeading(MKSetextHeadingBlock(Self))
@@ -83,6 +83,13 @@ Protected Class MKBlock
 		Sub Constructor(type As MKBlockTypes, parent As MKBlock, blockStart As Integer = 0)
 		  Self.Type = type
 		  Self.Parent = parent
+		  
+		  If type = MKBlockTypes.Document Then
+		    mDocument = New WeakRef(Self)
+		  Else
+		    If parent <> Nil And parent.Document <> Nil Then mDocument = New WeakRef(parent.Document)
+		  End If
+		  
 		  Self.Start = blockStart
 		  
 		  If type = MKBlockTypes.TextBlock Then
@@ -187,7 +194,7 @@ Protected Class MKBlock
 		    Next i
 		    
 		  Case MKBlockTypes.SetextHeading
-		    #Pragma Warning "TODO: Finalise Setext headings (link reference definitions?"
+		    #Pragma Warning "TODO: Finalise Setext headings (link reference definitions?)"
 		    
 		  End Select
 		  
@@ -215,6 +222,20 @@ Protected Class MKBlock
 	#tag Property, Flags = &h0, Description = 5468697320626C6F636B2773206368696C6472656E2E
 		Children() As MKBlock
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0, Description = 54686520646F63756D656E742074686174206F776E73207468697320626C6F636B2E
+		#tag Getter
+			Get
+			  If mDocument = Nil Then
+			    Return Nil
+			  Else
+			    Return MKDocument(mDocument.Value)
+			  End If
+			  
+			End Get
+		#tag EndGetter
+		Document As MKDocument
+	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0, Description = 546865206669727374206368696C64206F66207468697320626C6F636B206F72204E696C20696620746865726520617265206E6F206368696C6472656E2E
 		#tag Getter
@@ -270,6 +291,10 @@ Protected Class MKBlock
 
 	#tag Property, Flags = &h0, Description = 4966207468697320626C6F636B2069732061206C6973742C20746869732069732069747320646174612E
 		ListData As MKListData
+	#tag EndProperty
+
+	#tag Property, Flags = &h21, Description = 41207765616B207265666572656E636520746F2074686520646F63756D656E742074686174206F776E73207468697320626C6F636B2E
+		Private mDocument As WeakRef
 	#tag EndProperty
 
 	#tag Property, Flags = &h21, Description = 41207765616B207265666572656E636520746F207468697320626C6F636B277320706172656E742E2057696C6C206265204E696C2069662074686973206973206120646F63756D656E7420626C6F636B2E

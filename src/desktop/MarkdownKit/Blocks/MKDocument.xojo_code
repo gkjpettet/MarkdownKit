@@ -4,9 +4,29 @@ Inherits MKBlock
 	#tag Method, Flags = &h0
 		Sub Constructor()
 		  Super.Constructor(MKBlockTypes.Document, Nil)
+		  Self.References = New Dictionary
 		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag ComputedProperty, Flags = &h21, Description = 54686520646F63756D656E742074686174206F776E73207468697320626C6F636B2E
+		#tag Getter
+			Get
+			  // Shadowed to prevent access. A document can't be within another document.
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  // Shadowed to prevent access. A document can't be within another document.
+			End Set
+		#tag EndSetter
+		Private Document As MKDocument
+	#tag EndComputedProperty
+
+	#tag Property, Flags = &h0, Description = 5468697320646F63756D656E742773206C696E6B207265666572656E636520646566696E6974696F6E732E204B6579203D206C696E6B206C6162656C2C2056616C7565203D204D4B5265666572656E63654C696E6B446566696E6974696F6E2E
+		References As Dictionary
+	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -40,22 +60,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineLength"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty

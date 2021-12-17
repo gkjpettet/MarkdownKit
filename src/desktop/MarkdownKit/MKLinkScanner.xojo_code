@@ -173,7 +173,7 @@ Protected Class MKLinkScanner
 		  For i As Integer = startPos + 1 To charsLastIndex
 		    c = chars(i)
 		    If c = delimiter And Not IsMarkdownEscaped(chars, i) Then
-		      data.Value("linkTitle") = StringKit.FromArray(chars, startPos + 1, i - startPos - 2)
+		      data.Value("linkTitle") = StringKit.FromArray(chars, startPos + 1, i - startPos - 1)
 		      data.Value("linkTitleStart") = startPos
 		      startPos = i
 		      Return True

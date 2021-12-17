@@ -119,9 +119,10 @@ Protected Class MKBlock
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
-		Sub Finalise(line As TextLine)
-		  /// Closes this block and makes any final changes that may be required.
+	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E2052657475726E732046616C7365206966207468697320626C6F636B2073686F756C64206E6F7420626520616464656420746F206974277320706172656E742E
+		Function Finalise(line As TextLine) As Boolean
+		  /// Closes this block and makes any final changes that may be required. 
+		  /// Returns False if this block should not be added to it's parent.
 		  ///
 		  /// Subclasses can override this method if they have more complicated needs upon block closure.
 		  /// [line] is the line that triggered the `Finalise` invocation.
@@ -129,7 +130,7 @@ Protected Class MKBlock
 		  #Pragma Unused line
 		  
 		  // Already closed?
-		  If Not IsOpen Then Return
+		  If Not IsOpen Then Return True
 		  
 		  // Mark that we're closed.
 		  IsOpen = False
@@ -198,7 +199,8 @@ Protected Class MKBlock
 		    
 		  End Select
 		  
-		End Sub
+		  Return True
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 52657475726E73207468697320626C6F636B2773206E657874207369626C696E67206F72204E696C2069662074686572652069736E2774206F6E652E
@@ -216,6 +218,20 @@ Protected Class MKBlock
 		  End If
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 4966205B6368696C645D206973206120746F702D6C6576656C206368696C64206F66207468697320626C6F636B2069742069732072656D6F7665642E
+		Sub RemoveChild(child As MKBlock)
+		  /// If [child] is a top-level child of this block it is removed.
+		  
+		  For i As Integer = Children.LastIndex DownTo 0
+		    If Children(i) = child Then
+		      Children.RemoveAt(i)
+		      Return
+		    End If
+		  Next i
+		  
+		End Sub
 	#tag EndMethod
 
 

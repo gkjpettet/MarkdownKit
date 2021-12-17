@@ -9,12 +9,19 @@ Inherits MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Finalise(line As TextLine)
+		Function Finalise(line As TextLine) As Boolean
 		  // Calling the overridden superclass method.
-		  Super.Finalise(line)
+		  Call Super.Finalise(line)
 		  
 		  ParseLinkReferenceDefinitions
-		End Sub
+		  
+		  // Don't add this paragraph to its parent if it's empty.
+		  If Children.Count = 0 Then
+		    Return False
+		  Else
+		    Return True
+		  End If
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 4D617463686573207768697465737061636520696E205B63686172735D20626567696E6E696E67206174205B706F735D20616E642072657475726E7320686F77206D616E7920636861726163746572732077657265206D6174636865642E
@@ -106,7 +113,7 @@ Inherits MKBlock
 		    If Not MKLinkScanner.ParseLinkLabel(chars, i, data) Then Continue
 		    linkLabel = data.Value("linkLabel")
 		    labelStart = data.Value("linkLabelStart") + startOffset
-		    labelLength = i - labelStart + startOffset
+		    labelLength = i - labelStart + startOffset + 1 // Account for the flanking `[]`.
 		    
 		    // The next character must be a colon.
 		    If i > charsLastIndex Then Continue
@@ -130,13 +137,13 @@ Inherits MKBlock
 		    destinationLength = i - destinationStart + startOffset
 		    
 		    // Consume optional tabs and spaces.
-		    i = MatchWhitespaceCharactersInArray(chars, i)
+		    i = i + MatchWhitespaceCharactersInArray(chars, i)
 		    
 		    // Can we match a link title?
 		    If MKLinkScanner.ParseLinkTitle(chars, i, data) Then
 		      linkTitle = data.Value("linkTitle")
 		      titleStart = data.Value("linkTitleStart") + startOffset
-		      titleLength = i - titleStart + startOffset
+		      titleLength = i - titleStart + startOffset + 1 // Account for the flanking delimiters.
 		    End If
 		    
 		    // We've found a definition. Add it to the document.

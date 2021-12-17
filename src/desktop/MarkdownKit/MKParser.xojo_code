@@ -176,7 +176,7 @@ Protected Class MKParser
 		  
 		  // If `parent` can't accept this child, then back up until we hit a block that can.
 		  While Not CanContain(parent.Type, type)
-		    parent.Finalise(line)
+		    Call parent.Finalise(line)
 		    parent = parent.Parent
 		  Wend
 		  
@@ -736,7 +736,12 @@ Protected Class MKParser
 		  
 		  // Finalise all blocks in the tree.
 		  While mCurrentBlock <> Nil
-		    If mLines.LastIndex > -1 Then mCurrentBlock.Finalise(mLines(mLines.LastIndex))
+		    If mLines.LastIndex > -1 Then
+		      If Not mCurrentBlock.Finalise(mLines(mLines.LastIndex)) Then
+		        // This block should be removed from its parent.
+		        If mCurrentBlock.Parent <> Nil Then mCurrentBlock.Parent.RemoveChild(mCurrentBlock)
+		      End If
+		    End If
 		    mCurrentBlock = mCurrentBlock.Parent
 		  Wend
 		End Sub
@@ -935,7 +940,7 @@ Protected Class MKParser
 		    // This is NOT a lazy continuation line.
 		    // Finalise any blocks that were not matched.
 		    While mCurrentBlock <> mLastMatchedContainer
-		      mCurrentBlock.Finalise(mCurrentLine)
+		      Call mCurrentBlock.Finalise(mCurrentLine)
 		      mCurrentBlock = mCurrentBlock.Parent
 		      
 		      If mCurrentBlock = Nil Then
@@ -960,12 +965,12 @@ Protected Class MKParser
 		    ElseIf mContainer.Type = MKBlockTypes.Html Then
 		      mContainer.AddLine(mCurrentLine, mCurrentOffset)
 		      If IsCorrectHtmlBlockEnd(MKHTMLBlock(mContainer).HtmlBlockType, mCurrentLine, mNextNWS) Then
-		        mContainer.Finalise(mCurrentLine)
+		        Call mContainer.Finalise(mCurrentLine)
 		        mContainer = mContainer.Parent
 		      End If
 		      
 		    ElseIf mContainer.Type = MKBlockTypes.AtxHeading Then
-		      mContainer.Finalise(mCurrentLine)
+		      Call mContainer.Finalise(mCurrentLine)
 		      mContainer = mContainer.Parent
 		      
 		    ElseIf AcceptsLines(mContainer) Then
@@ -1099,7 +1104,7 @@ Protected Class MKParser
 		      // THEMATIC BREAK
 		      // ======================
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.ThematicBreak, 0)
-		      mContainer.Finalise(mCurrentLine)
+		      Call mContainer.Finalise(mCurrentLine)
 		      mContainer = mContainer.Parent
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
 		      

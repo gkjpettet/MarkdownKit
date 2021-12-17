@@ -9,16 +9,17 @@ Inherits MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
-		Sub Finalise(line As TextLine)
+		Function Finalise(line As TextLine) As Boolean
 		  /// Closes this block and makes any final changes that may be required.
 		  
 		  // Calling the overridden superclass method.
-		  Super.Finalise(line)
+		  Call Super.Finalise(line)
 		  
 		  Self.Start = line.Start
 		  Self.Children.Add(New MKTextBlock(Self, line.Start, line.Value))
 		  
-		End Sub
+		  Return True
+		End Function
 	#tag EndMethod
 
 

@@ -9,11 +9,11 @@ Inherits MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
-		Sub Finalise(line As TextLine)
+		Function Finalise(line As TextLine) As Boolean
 		  /// Closes this block and makes any final changes that may be required.
 		  
 		  // Calling the overridden superclass method.
-		  Super.Finalise(line)
+		  Call Super.Finalise(line)
 		  
 		  If FirstChild <> Nil Then
 		    // The first child (if present) is always the info string as a text block.
@@ -21,7 +21,9 @@ Inherits MKBlock
 		    Children.RemoveAt(0)
 		  End If
 		  
-		End Sub
+		  Return True
+		  
+		End Function
 	#tag EndMethod
 
 
@@ -65,22 +67,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineLength"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -225,7 +211,7 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="ShouldClose"

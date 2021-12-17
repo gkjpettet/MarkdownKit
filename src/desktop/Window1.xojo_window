@@ -198,6 +198,38 @@ Begin DesktopWindow Window1
       Scope           =   0
       TabPanelIndex   =   0
    End
+   Begin DesktopLabel ParseTime
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   719
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   False
+      Multiline       =   False
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextAlignment   =   0
+      TextColor       =   &c000000
+      Tooltip         =   ""
+      Top             =   576
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   229
+   End
 End
 #tag EndDesktopWindow
 
@@ -212,13 +244,17 @@ End
 	#tag Event
 		Sub Pressed()
 		  Var parser As New MKParser
+		  
+		  Var watch As New StopWatch(True)
 		  Var doc As MKDocument = parser.ParseSource(Source.Text)
+		  watch.stop
 		  
 		  Var printer As New ASTRenderer
 		  ASTTreeView.RemoveAllNodes
 		  ASTTreeView.AppendNode(printer.VisitDocument(doc))
 		  ASTTreeView.ExpandAll(True)
 		  
+		  ParseTime.Text = watch.ElapsedMilliseconds.ToString + " ms"
 		End Sub
 	#tag EndEvent
 #tag EndEvents

@@ -1,8 +1,20 @@
 #tag Module
 Protected Module MarkdownKit
-	#tag Method, Flags = &h0, Description = 547275652069662074686520636861726163746572206174205B706F735D206973206573636170656420287072656365646564206279206120286E6F6E2D6573636170656429206261636B736C61736820636861726163746572292E
+	#tag Method, Flags = &h0, Description = 547275652069662074686520636861726163746572206174205B706F736974696F6E5D2069732065736361706564202870726563656465642062792061206E6F6E2D65736361706564206261636B736C61736820636861726163746572292E496620706F73203E2063686172732E4C617374496E646578206F7220706F73203D2030205468656E2052657475726E2046616C7365
+		Function IsEscaped(Extends chars() As MKCharacter, position As Integer) As Boolean
+		  /// True if the character at [position] is escaped (preceded by a non-escaped backslash character).If pos > chars.LastIndex or pos = 0 Then Return False
+		  
+		  If chars(position - 1).Value = "\" And Not chars.IsEscaped(position - 1) Then
+		    Return True
+		  Else
+		    Return False
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 547275652069662074686520636861726163746572206174205B706F735D2069732065736361706564202870726563656465642062792061206E6F6E2D65736361706564206261636B736C61736820636861726163746572292E
 		Function IsMarkdownEscaped(chars() As String, pos As Integer) As Boolean
-		  /// True if the character at [pos] is escaped (preceded by a (non-escaped) backslash character).
+		  /// True if the character at [pos] is escaped (preceded by a non-escaped backslash character).
 		  
 		  If pos > chars.LastIndex or pos = 0 Then Return False
 		  
@@ -32,6 +44,27 @@ Protected Module MarkdownKit
 		      Return False
 		    End If
 		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 52657475726E73205B735D20617320616E206172726179206F66204D4B43686172616374657220696E7374616E6365732E205B73746172745D2069732074686520302D626173656420706F736974696F6E20696E20746865206F726967696E616C20736F75726365206F66207468652066697273742063686172616374657220696E205B735D2E
+		Function MKCharacters(Extends s As String, start As Integer) As MKCharacter()
+		  /// Returns [s] as an array of MKCharacter instances. 
+		  /// [start] is the 0-based position in the original source of the first character in [s].
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
+		  Var tmp() As Text = s.ToText.Split
+		  Var chars() As MKCharacter
+		  Var tmpLastIndex As Integer = tmp.LastIndex
+		  For i As Integer = 0 To tmpLastIndex
+		    chars.Add(New MKCharacter(tmp(i), i + start))
+		  Next i
+		  
+		  Return chars
 		  
 		End Function
 	#tag EndMethod
@@ -170,10 +203,12 @@ Protected Module MarkdownKit
 		AtxHeading
 		  Block
 		  BlockQuote
+		  CodeSpan
 		  Document
 		  FencedCode
 		  Html
 		  IndentedCode
+		  InlineText
 		  List
 		  ListItem
 		  Paragraph

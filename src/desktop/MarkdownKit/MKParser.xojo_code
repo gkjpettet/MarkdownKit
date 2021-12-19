@@ -23,6 +23,10 @@ Protected Class MKParser
 		  /// The offset relates to the location on the current line that is considered the start of the line
 		  /// once indentation and block openers are taken into consideration.
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  If columns Then
 		    If mRemainingSpaces > count Then
 		      mRemainingSpaces = mRemainingSpaces - count
@@ -65,6 +69,10 @@ Protected Class MKParser
 	#tag Method, Flags = &h21, Description = 416476616E63657320612073696E676C65207370616365206F722074616220696620746865206E6578742063686172616374657220697320612073706163652072657475726E696E6720547275652069662074686572652077617320612073706163652E
 		Private Function AdvanceOptionalSpace() As Boolean
 		  /// Advances a single space or tab if the next character is a space returning True if there was a space.
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  If mRemainingSpaces > 0 Then
 		    mRemainingSpaces = mRemainingSpaces - 1
@@ -116,7 +124,7 @@ Protected Class MKParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 52656D6F7665732074686520706173736564205B7061726167726170685D2066726F6D2069747320706172656E7420616E64207265706C6163657320697420776974682061206E65772053657465787448656164696E6720626C6F636B2077697468207468652073616D65206368696C6472656E2E2052657475726E73207468652053657465787448656164696E6720626C6F636B2E
-		Private Function ConvertParagraphBlockToSetextHeading(ByRef paragraph As MKBlock, line As TextLine) As MKBlock
+		Private Function ConvertParagraphBlockToSetextHeading(ByRef paragraph As MKBlock, line As TextLine) As MKSetextHeadingBlock
 		  /// Removes the passed [paragraph] from its parent and replaces it with a new SetextHeading block
 		  /// with the same children. Returns the SetextHeading block.
 		  
@@ -132,8 +140,8 @@ Protected Class MKParser
 		  // Create a new SetextHeading block to replace the paragraph.
 		  Var stx As New MKSetextHeadingBlock(paragraph.Parent)
 		  
-		  // Copy the paragraph's text blocks
-		  stx.Children = paragraph.Children
+		  // Copy the paragraph's characters
+		  stx.Characters = paragraph.Characters
 		  
 		  stx.Start = paragraph.Start
 		  
@@ -176,7 +184,7 @@ Protected Class MKParser
 		  
 		  // If `parent` can't accept this child, then back up until we hit a block that can.
 		  While Not CanContain(parent.Type, type)
-		    Call parent.Finalise(line)
+		    parent.Finalise(line)
 		    parent = parent.Parent
 		  Wend
 		  
@@ -218,6 +226,10 @@ Protected Class MKParser
 		Private Sub FindNextNonWhitespace()
 		  /// Finds the next non-whitespace (NWS) character on this line
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  // Is the entire line blank?
 		  If mCurrentLine.IsBlank Then mCurrentChar = ""
 		  
@@ -256,6 +268,10 @@ Protected Class MKParser
 		Private Function FirstNonBlankIndex() As Integer
 		  /// Finds the index in mLines of the first non-blank line or returns -1 if there are only blank lines.
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  Var iLimit As Integer = mLines.LastIndex
 		  For i As Integer = 0 To iLimit
 		    If Not mLines(i).IsBlank Then
@@ -274,6 +290,12 @@ Protected Class MKParser
 		  /// If True then [data] is a new valid dictionary, otherwise [data] is set to Nil.
 		  ///
 		  /// Assumes that [mNextNWS] points to a "#" in [mCurrentLine].
+		  /// Sets `data.Value("level")` to the header level (1 to 6).
+		  /// Sets `data.Value("length")` to number of characters from the start of the opening sequence to the 
+		  ///      first character of the heading content.
+		  /// Sets `data.Value("closingSequenceCount")` to the number of trailing `#` characters (may be zero).
+		  /// Sets `data.Value("closingSequenceStart")` to the index of the first `#` character in the closing
+		  ///      sequence IF there is one, otherwise data.Value("closingSequenceCount")` is absent.
 		  
 		  data = Nil
 		  Var length As Integer = 0
@@ -313,6 +335,43 @@ Protected Class MKParser
 		    If length > 0 Then data = New Dictionary("level" : headingLevel, "length" : length)
 		  End If
 		  
+		  If data = Nil Then Return False
+		  
+		  // Analyse the optional closing sequence.
+		  Var closingSequenceCount As Integer = 0
+		  Var closingSequenceStart As Integer = -1
+		  For i = mNextNWS + length To charsLastIndex
+		    If chars(i) = "#" Then
+		      closingSequenceStart = i
+		      Exit
+		    End If
+		  Next i
+		  If closingSequenceStart > -1 Then
+		    closingSequenceCount = 1
+		    Var failIfSeeHashSign As Boolean = False
+		    For i = closingSequenceStart + 1 To charsLastIndex
+		      Select Case chars(i)
+		      Case "#"
+		        If failIfSeeHashSign Then
+		          closingSequenceCount = 0
+		          closingSequenceStart = 1
+		          Exit
+		        Else
+		          closingSequenceCount = closingSequenceCount + 1
+		        End If
+		      Case &u0020, &u0009
+		        failIfSeeHashSign = True
+		      Else
+		        closingSequenceCount = 0
+		        closingSequenceStart = -1
+		        Exit
+		      End Select
+		    Next i
+		  End If
+		  
+		  data.Value("closingSequenceCount") = closingSequenceCount
+		  data.Value("closingSequenceStart") = closingSequenceStart
+		  
 		  Return data <> Nil
 		  
 		End Function
@@ -321,6 +380,10 @@ Protected Class MKParser
 	#tag Method, Flags = &h21
 		Private Function IsClosingCodeFence(length As Integer) As Boolean
 		  /// Returns True if mCurrentLine, beginning at `mNextNWS` is a closing fence of at least [length] characters.
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Var chars() As String = mCurrentLine.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -361,6 +424,10 @@ Protected Class MKParser
 		  /// Also assumes that [fenceChar] is either "`" or "~".
 		  /// We don't capture the (optional) info string here as it gets added later as a TextBlock 
 		  /// child of this block.
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  data = Nil
 		  Var charsLastIndex As Integer = mCurrentLine.Characters.LastIndex
@@ -431,6 +498,10 @@ Protected Class MKParser
 		  /// Puts the "type" of HTML block in [data].
 		  ///
 		  /// There are 7 kinds of HTML block. See the note "HTML Block Types" in this class for more detail.
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Var chars() As String = mCurrentLine.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -546,6 +617,10 @@ Protected Class MKParser
 		  /// Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
 		  ///         {closingTag}[•→]+|⮐$
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  data = New Dictionary("type" : MKHTMLBlockTypes.None)
 		  
 		  Var chars() As String = mCurrentLine.Characters
@@ -584,6 +659,10 @@ Protected Class MKParser
 		  /// Sets [data.Value("level")] to the heading level (1 or 2) or 0 if this is not a setext heading line.
 		  ///   ^[=]+[ ]*$
 		  ///   ^[-]+[ ]*$
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  data = New Dictionary("level" : 0)
 		  
@@ -635,6 +714,10 @@ Protected Class MKParser
 		  ///   ^([_][ ]*){3,}[\s]*$"
 		  ///   ^([\*][ ]*){3,}[\s]*$"
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  
 		  Var count As Integer = 0
@@ -675,6 +758,10 @@ Protected Class MKParser
 		  /// [firstNonBlank] should be the index of a valid non-blank line in [mLines] (i.e. [FirstNonBlankIndex] has 
 		  /// been called prior to this method).
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  Var lastIndex As Integer = mLines.LastIndex
 		  
 		  // Edge case: There is only one non-blank line in the array.
@@ -700,6 +787,10 @@ Protected Class MKParser
 		Private Function MatchWhitespaceCharacters(line As TextLine, pos As Integer) As Integer
 		  /// Matches whitespace on [line] beginning at [pos] and returns how many characters were matched.
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  Var charsLastIndex As Integer = line.Characters.LastIndex
 		  
 		  // Sanity check.
@@ -721,6 +812,10 @@ Protected Class MKParser
 		  /// This is part 1 of the parsing process. It gives us the overall structure of the Markdown document.
 		  /// Assumes the parser has been reset before this method is invoked.
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  // We need to process each line but blank lines at the beginning and end of the 
 		  // document are ignored (0.30 4.9).
 		  Var start As Integer = FirstNonBlankIndex
@@ -736,14 +831,44 @@ Protected Class MKParser
 		  
 		  // Finalise all blocks in the tree.
 		  While mCurrentBlock <> Nil
-		    If mLines.LastIndex > -1 Then
-		      If Not mCurrentBlock.Finalise(mLines(mLines.LastIndex)) Then
-		        // This block should be removed from its parent.
-		        If mCurrentBlock.Parent <> Nil Then mCurrentBlock.Parent.RemoveChild(mCurrentBlock)
-		      End If
-		    End If
+		    If mLines.LastIndex > -1 Then mCurrentBlock.Finalise(mLines(mLines.LastIndex))
 		    mCurrentBlock = mCurrentBlock.Parent
 		  Wend
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 57616C6B732074686520646F63756D656E742070617273696E6720696E6C696E6520636F6E74656E742E
+		Private Sub ParseInlines()
+		  /// Walks the document parsing inline content.
+		  ///
+		  /// Assumes that ParseBlockStructure was called immediately prior to this method.
+		  
+		  #Pragma Warning "TODO"
+		  
+		  ' Var stack() As MKBlock
+		  ' Var block As MKBlock = mDoc
+		  ' 
+		  ' While block <> Nil
+		  ' Select Case block.Type
+		  ' Case MKBlockTypes.AtxHeading, MKBlockTypes.Paragraph, MKBlockTypes.SetextHeading
+		  ' MKInlineScanner.ParseInlines(block)
+		  ' End Select
+		  ' 
+		  ' If block.FirstChild <> Nil Then
+		  ' If block.NextSibling <> Nil Then stack.Add(block.NextSibling)
+		  ' block = block.FirstChild
+		  ' 
+		  ' ElseIf block.NextSibling <> Nil Then
+		  ' block = block.NextSibling
+		  ' 
+		  ' ElseIf stack.LastIndex > -1 Then
+		  ' block = stack.Pop
+		  ' 
+		  ' Else
+		  ' block = Nil
+		  ' End If
+		  ' Wend
+		  
 		End Sub
 	#tag EndMethod
 
@@ -755,6 +880,8 @@ Protected Class MKParser
 		  
 		  ParseBlockStructure
 		  
+		  ParseInlines
+		  
 		  Return mDoc
 		  
 		End Function
@@ -763,6 +890,10 @@ Protected Class MKParser
 	#tag Method, Flags = &h21, Description = 52657475726E7320547275652069662061626C6520746F2070617273652061204C6973744974656D206D61726B65722C20706F70756C6174696E67205B646174615D2077697468207468652064657461696C732E
 		Private Function ParseListMarker(indented As Boolean, line As TextLine, pos As Integer, interruptsParagraph As Boolean, ByRef data As MKListData) As Boolean
 		  /// Returns True if able to parse a ListItem marker, populating [data] with the details.
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  Var chars() As String = line.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -853,6 +984,10 @@ Protected Class MKParser
 		Function ParseSource(markdown As String) As MKDocument
 		  /// Parses [markdown] into a Markdown document.
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  Var tmp() As String = markdown.ReplaceLineEndings(&u0A).Split(&u0A)
 		  
 		  Var lines() As TextLine
@@ -904,6 +1039,10 @@ Protected Class MKParser
 		  /// We've tried matching against the open blocks and we've opened any required new blocks. 
 		  /// What now remains at the offset is a text line. Add it to the appropriate container.
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  FindNextNonWhitespace
 		  
 		  Var blank As Boolean = If(mCurrentChar = "", True, False)
@@ -940,7 +1079,7 @@ Protected Class MKParser
 		    // This is NOT a lazy continuation line.
 		    // Finalise any blocks that were not matched.
 		    While mCurrentBlock <> mLastMatchedContainer
-		      Call mCurrentBlock.Finalise(mCurrentLine)
+		      mCurrentBlock.Finalise(mCurrentLine)
 		      mCurrentBlock = mCurrentBlock.Parent
 		      
 		      If mCurrentBlock = Nil Then
@@ -965,12 +1104,12 @@ Protected Class MKParser
 		    ElseIf mContainer.Type = MKBlockTypes.Html Then
 		      mContainer.AddLine(mCurrentLine, mCurrentOffset)
 		      If IsCorrectHtmlBlockEnd(MKHTMLBlock(mContainer).HtmlBlockType, mCurrentLine, mNextNWS) Then
-		        Call mContainer.Finalise(mCurrentLine)
+		        mContainer.Finalise(mCurrentLine)
 		        mContainer = mContainer.Parent
 		      End If
 		      
 		    ElseIf mContainer.Type = MKBlockTypes.AtxHeading Then
-		      Call mContainer.Finalise(mCurrentLine)
+		      mContainer.Finalise(mCurrentLine)
 		      mContainer = mContainer.Parent
 		      
 		    ElseIf AcceptsLines(mContainer) Then
@@ -1028,6 +1167,10 @@ Protected Class MKParser
 		Private Sub TryNewBlocks()
 		  /// Tries to start a new container block.
 		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  
 		  Var data As New Dictionary
 		  Var listData As MKListData
 		  
@@ -1052,10 +1195,17 @@ Protected Class MKParser
 		      // ======================
 		      // ATX HEADER
 		      // ======================
-		      #Pragma Warning "TODO: Capture the value of the header in a dedicated property?"
 		      AdvanceOffset(mNextNWS + data.Value("length") - mCurrentOffset, False)
-		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.AtxHeading, 0)
-		      mContainer.Level = data.Value("level")
+		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.AtxHeading, -data.Value("length"))
+		      MKATXHeadingBlock(mContainer).Level = data.Value("level")
+		      MKATXHeadingBlock(mContainer).OpeningSequenceLength = data.Value("length")
+		      MKATXHeadingBlock(mContainer).ClosingSequenceCount = data.Value("closingSequenceCount")
+		      If data.Value("closingSequenceStart") > -1 Then
+		        MKATXHeadingBlock(mContainer).ClosingSequenceStart = _
+		        data.Value("closingSequenceStart") + mCurrentLine.Start
+		      Else
+		        MKATXHeadingBlock(mContainer).ClosingSequenceStart = -1
+		      End If
 		      
 		    ElseIf Not indented And _
 		      (mCurrentChar = "`" Or mCurrentChar = "~") And IsCodeFenceOpening(mCurrentChar, data) Then
@@ -1085,7 +1235,7 @@ Protected Class MKParser
 		      // ======================
 		      Try
 		        mContainer = ConvertParagraphBlockToSetextHeading(mContainer, mCurrentLine)
-		        mContainer.Level = data.Value("level")
+		        MKSetextHeadingBlock(mContainer).Level = data.Value("level")
 		        // Store the start and length of the setext underlining on this block.
 		        MKSetextHeadingBlock(mContainer).UnderlineStart = mCurrentLine.Start + mCurrentOffset
 		        MKSetextHeadingBlock(mContainer).UnderlineLength = mCurrentLine.Length - mCurrentOffset
@@ -1096,7 +1246,6 @@ Protected Class MKParser
 		        // added to the paragraph's contents.
 		      End Try
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
-		      #Pragma Warning "TODO: Capture the value of the header in a dedicated property?"
 		      
 		    ElseIf Not indented And Not (mContainer.Type = MKBlockTypes.Paragraph And Not mAllMatched) And _
 		      IsThematicBreak(mCurrentLine.Characters, mNextNWS) Then
@@ -1104,7 +1253,7 @@ Protected Class MKParser
 		      // THEMATIC BREAK
 		      // ======================
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.ThematicBreak, 0)
-		      Call mContainer.Finalise(mCurrentLine)
+		      mContainer.Finalise(mCurrentLine)
 		      mContainer = mContainer.Parent
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
 		      
@@ -1177,6 +1326,10 @@ Protected Class MKParser
 		  /// For each open block, check to see if [mCurrentLine] meets the required condition to keep the block open.
 		  ///
 		  /// [mContainer] will be set to the Block which last had a match to the line.
+		  
+		  #Pragma DisableBoundsChecking
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
 		  
 		  mAllMatched = True
 		  

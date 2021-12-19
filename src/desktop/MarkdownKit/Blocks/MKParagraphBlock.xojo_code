@@ -9,19 +9,19 @@ Inherits MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Finalise(line As TextLine) As Boolean
+		Sub Finalise(line As TextLine)
 		  // Calling the overridden superclass method.
-		  Call Super.Finalise(line)
+		  Super.Finalise(line)
 		  
 		  ParseLinkReferenceDefinitions
 		  
-		  // Don't add this paragraph to its parent if it's empty.
-		  If Children.Count = 0 Then
-		    Return False
-		  Else
-		    Return True
+		  // Remove this paragraph from its parent if it's empty.
+		  If Characters.Count = 0 And Parent <> Nil Then
+		    Var parentIndex As Integer = Parent.Children.IndexOf(Self)
+		    If parentIndex <> -1 Then Parent.Children.RemoveAt(parentIndex)
 		  End If
-		End Function
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 4D617463686573207768697465737061636520696E205B63686172735D20626567696E6E696E67206174205B706F735D20616E642072657475726E7320686F77206D616E7920636861726163746572732077657265206D6174636865642E
@@ -158,6 +158,11 @@ Inherits MKBlock
 		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h21, Description = 416C6C206F66207468697320626C6F636B2773206368617261637465727320617320616E206172726179206F66204D4B43686172616374657220696E7374616E6365732E
+		Private mAllCharacters() As MKCharacter
+	#tag EndProperty
 
 
 	#tag ViewBehavior

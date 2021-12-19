@@ -19,6 +19,12 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitDocument(doc As MKDocument) As Variant
 		  
 		End Function
@@ -38,6 +44,12 @@ Protected Interface MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitIndentedCode(ic As MKBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitInlineText(it As MKInlineText) As Variant
 		  
 		End Function
 	#tag EndMethod

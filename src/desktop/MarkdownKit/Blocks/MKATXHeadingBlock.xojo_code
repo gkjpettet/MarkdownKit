@@ -9,21 +9,67 @@ Inherits MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
-		Function Finalise(line As TextLine) As Boolean
+		Sub Finalise(line As TextLine)
 		  /// Closes this block and makes any final changes that may be required.
 		  
 		  // Calling the overridden superclass method.
-		  Call Super.Finalise(line)
+		  Super.Finalise(line)
 		  
-		  Self.Start = line.Start
-		  Self.Children.Add(New MKTextBlock(Self, line.Start, line.Value))
+		  // Get the characters of the title from this line, minus the opening and (optional) closing sequences.
+		  Var s As String
+		  If HasClosingSequence Then
+		    s = line.Value.MiddleCharacters(Self.Start - line.Start + OpeningSequenceLength, _
+		    ClosingSequenceStart - OpeningSequenceLength)
+		  Else
+		    s = line.Value.MiddleCharacters(Self.Start - line.Start + OpeningSequenceLength)
+		  End If
 		  
-		  Return True
-		End Function
+		  // Compute the characters that make up this heading's title. This is required for later inline parsing.
+		  Var tmp() as MKCharacter = s.MKCharacters(line.Start)
+		  For Each character As MKCharacter In tmp
+		    Characters.Add(character)
+		  Next character
+		  Characters.Add(MKCharacter.CreateLineEnding)
+		  
+		End Sub
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h0, Description = 546865206E756D626572206F6620602360206368617261637465727320696E20746865206F7074696F6E616C20636C6F73696E672073657175656E63652E204D6179206265206030602E
+		ClosingSequenceCount As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520302D626173656420696E64657820696E20746865206F726967696E616C20736F75726365206F662074686520666972737420636861726163746572206F6620746865206F7074696F6E616C20636C6F73696E672073657175656E6365206F66206023602063686172616374657273206F7220602D3160206966207468657265206973206E6F20636C6F73696E672073657175656E63652E
+		ClosingSequenceStart As Integer = -1
+	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686973204154582068656164657220686164206F7074696F6E616C20636C6F73696E672060236020636861726163746572732E
+		#tag Getter
+			Get
+			  Return ClosingSequenceCount > 0
+			End Get
+		#tag EndGetter
+		HasClosingSequence As Boolean
+	#tag EndComputedProperty
+
+	#tag Property, Flags = &h0, Description = 5468697320415458206865616465722773206C6576656C2E
+		Level As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206E756D626572206F66206368617261637465727320636F6D70726973696E6720746865206F70656E696E672073657175656E63652028696E636C75646573207768697465737061636520616674657220746865206023602063686172616374657273292E
+		OpeningSequenceLength As Integer = 0
+	#tag EndProperty
+
+
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -75,17 +121,19 @@ Inherits MKBlock
 				"0 - AtxHeading"
 				"1 - Block"
 				"2 - BlockQuote"
-				"3 - Document"
-				"4 - FencedCode"
-				"5 - Html"
-				"6 - IndentedCode"
-				"7 - List"
-				"8 - ListItem"
-				"9 - Paragraph"
-				"10 - ReferenceDefinition"
-				"11 - SetextHeading"
-				"12 - TextBlock"
-				"13 - ThematicBreak"
+				"3 - CodeSpan"
+				"4 - Document"
+				"5 - FencedCode"
+				"6 - Html"
+				"7 - IndentedCode"
+				"8 - InlineText"
+				"9 - List"
+				"10 - ListItem"
+				"11 - Paragraph"
+				"12 - ReferenceDefinition"
+				"13 - SetextHeading"
+				"14 - TextBlock"
+				"15 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -142,6 +190,22 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="HasClosingSequence"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingSequenceCount"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

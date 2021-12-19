@@ -13,7 +13,7 @@ Inherits MKBlock
 		  /// Closes this block and makes any final changes that may be required.
 		  
 		  // Calling the overridden superclass method.
-		  Call Super.Finalise(line)
+		  Super.Finalise(line)
 		  
 		  If FirstChild <> Nil Then
 		    // The first child (if present) is always the info string as a text block.
@@ -21,7 +21,6 @@ Inherits MKBlock
 		    Children.RemoveAt(0)
 		  End If
 		  
-		  Return True
 		  
 		End Function
 	#tag EndMethod

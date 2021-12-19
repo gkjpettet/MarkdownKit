@@ -6,12 +6,29 @@ Implements MKRenderer
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("ATX Heading")
+		  
+		  // Compute the heading title.
+		  Var titleNode As New TreeViewNode("Title")
+		  Var s() As String
+		  For i As Integer = 0 To atx.Characters.LastIndex
+		    Var char As MKCharacter = atx.Characters(i)
+		    If char.IsLineEnding Then
+		      titleNode.AppendNode(New TreeViewNode(String.FromArray(s, "")))
+		      s.RemoveAll
+		    Else
+		      s.Add(char.Value)
+		    End If
+		  Next i
+		  node.AppendNode(titleNode)
+		  
 		  node.AppendNode(New TreeViewNode("Start: " + atx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + atx.Level.ToString))
+		  node.AppendNode(New TreeViewNode("Opening Sequence Length: " + atx.OpeningSequenceLength.ToString))
 		  
-		  For Each child As MKBlock In atx.Children
-		    node.AppendNode(child.Accept(Self))
-		  Next child
+		  If atx.HasClosingSequence Then
+		    node.AppendNode(New TreeViewNode("Closing Sequence Start: " + atx.ClosingSequenceStart.ToString))
+		    node.AppendNode(New TreeViewNode("Closing Sequence Count: " + atx.ClosingSequenceCount.ToString))
+		  End If
 		  
 		  Return node
 		End Function
@@ -39,6 +56,18 @@ Implements MKRenderer
 		  For Each child As MKBlock In bq.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
+		  Var node As New TreeViewNode("Code Span")
+		  node.AppendNode(New TreeViewNode("Start: " + cs.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Delimiter Length: " + cs.BacktickStringLength.ToString))
+		  node.AppendNode(New TreeViewNode("Closing Delimiter Start: " + cs.ClosingBacktickStringStart.ToString))
 		  
 		  Return node
 		  
@@ -145,6 +174,17 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitInlineText(it As MKInlineText) As Variant
+		  Var node As New TreeViewNode("Inline Text")
+		  node.AppendNode(New TreeViewNode("Start: " + it.Start.ToString))
+		  node.AppendNode(New TreeViewNode("End Position: " + it.EndPosition.ToString))
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitList(list As MKBlock) As Variant
 		  // Title.
 		  Var title As String
@@ -207,12 +247,18 @@ Implements MKRenderer
 		  
 		  Var node As New TreeViewNode("Paragraph")
 		  
-		  For Each child As MKBlock In p.Children
-		    node.AppendNode(child.Accept(Self))
-		  Next child
+		  Var s() As String
+		  For i As Integer = 0 To p.Characters.LastIndex
+		    Var char As MKCharacter = p.Characters(i)
+		    If char.IsLineEnding Then
+		      node.AppendNode(New TreeViewNode(String.FromArray(s, "")))
+		      s.RemoveAll
+		    Else
+		      s.Add(char.Value)
+		    End If
+		  Next i
 		  
 		  Return node
-		  
 		End Function
 	#tag EndMethod
 
@@ -221,14 +267,25 @@ Implements MKRenderer
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Setext Heading")
+		  
+		  // Compute the heading title.
+		  Var titleNode As New TreeViewNode("Title")
+		  Var s() As String
+		  For i As Integer = 0 To stx.Characters.LastIndex
+		    Var char As MKCharacter = stx.Characters(i)
+		    If char.IsLineEnding Then
+		      titleNode.AppendNode(New TreeViewNode(String.FromArray(s, "")))
+		      s.RemoveAll
+		    Else
+		      s.Add(char.Value)
+		    End If
+		  Next i
+		  node.AppendNode(titleNode)
+		  
 		  node.AppendNode(New TreeViewNode("Start: " + stx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + stx.Level.ToString))
 		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.UnderlineStart.ToString))
 		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.UnderlineLength.ToString))
-		  
-		  For Each child As MKBlock In stx.Children
-		    node.AppendNode(child.Accept(Self))
-		  Next child
 		  
 		  Return node
 		  

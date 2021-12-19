@@ -14,6 +14,9 @@ Protected Class MKBlock
 		  Case MKBlockTypes.BlockQuote
 		    Return visitor.VisitBlockQuote(Self)
 		    
+		  Case MKBlockTypes.CodeSpan
+		    Return visitor.VisitCodeSpan(MKCodeSpan(Self))
+		    
 		  Case MKBlockTypes.Document
 		    Return visitor.VisitDocument(MKDocument(Self))
 		    
@@ -22,6 +25,9 @@ Protected Class MKBlock
 		    
 		  Case MKBlockTypes.Html
 		    Return visitor.VisitHTMLBlock(MKHTMLBlock(Self))
+		    
+		  Case MKBlockTypes.InlineText
+		    Return visitor.VisitInlineText(MKInlineText(Self))
 		    
 		  Case MKBlockTypes.List
 		    Return visitor.VisitList(Self)
@@ -64,17 +70,22 @@ Protected Class MKBlock
 		  // Get the characters from the current line offset to the end of the line.
 		  Var s As String = line.Value.MiddleCharacters(startPos)
 		  
-		  // Don't add empty lines to paragraphs.
-		  If Type = MKBlockTypes.Paragraph And s = "" Then
-		    Return
-		  ElseIf s = "" Then
-		    Children.Add(New MKTextBlock(Self, line.Start + startPos, ""))
-		    Return
+		  // We add the individual characters to inline containers and text blocks to other block types.
+		  If IsInlineContainer Then
+		    // Don't add empty lines to paragraphs.
+		    If s = "" Then Return
+		    // Append the characters in the line.
+		    Var tmp() As MKCharacter = s.MKCharacters(line.Start + startPos)
+		    For Each character As MKCharacter In tmp
+		      Characters.Add(character)
+		    Next character
+		    // Add a line ending.
+		    Characters.Add(MKCharacter.CreateLineEnding)
+		  Else
+		    // Add the text as a text block.
+		    Var b As New MKTextBlock(Self, line.Start + startPos, s)
+		    Children.Add(b)
 		  End If
-		  
-		  // Add the text as a text block.
-		  Var b As New MKTextBlock(Self, line.Start + startPos, s)
-		  Children.Add(b)
 		  
 		End Sub
 	#tag EndMethod
@@ -119,10 +130,9 @@ Protected Class MKBlock
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E2052657475726E732046616C7365206966207468697320626C6F636B2073686F756C64206E6F7420626520616464656420746F206974277320706172656E742E
-		Function Finalise(line As TextLine) As Boolean
+	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
+		Sub Finalise(line As TextLine)
 		  /// Closes this block and makes any final changes that may be required. 
-		  /// Returns False if this block should not be added to it's parent.
 		  ///
 		  /// Subclasses can override this method if they have more complicated needs upon block closure.
 		  /// [line] is the line that triggered the `Finalise` invocation.
@@ -130,7 +140,7 @@ Protected Class MKBlock
 		  #Pragma Unused line
 		  
 		  // Already closed?
-		  If Not IsOpen Then Return True
+		  If Not IsOpen Then Return
 		  
 		  // Mark that we're closed.
 		  IsOpen = False
@@ -199,7 +209,14 @@ Protected Class MKBlock
 		    
 		  End Select
 		  
-		  Return True
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 54727565206966207468697320626C6F636B2063616E20636F6E7461696E20696E6C696E6520626C6F636B732E
+		Function IsInlineContainer() As Boolean
+		  /// True if this block can contain inline blocks.
+		  
+		  Return Type = MKBlockTypes.Paragraph Or Type = MKBlockTypes.AtxHeading Or Type = MKBlockTypes.SetextHeading
 		End Function
 	#tag EndMethod
 
@@ -235,6 +252,10 @@ Protected Class MKBlock
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h0, Description = 5468652063686172616374657273206F66207468697320626C6F636B2E204F6E6C792076616C696420666F7220696E6C696E6520636F6E7461696E65727320286F7468657220626C6F636B20747970657320757365204D4B54657874426C6F636B73292E
+		Characters() As MKCharacter
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 5468697320626C6F636B2773206368696C6472656E2E
 		Children() As MKBlock
 	#tag EndProperty
@@ -252,6 +273,10 @@ Protected Class MKBlock
 		#tag EndGetter
 		Document As MKDocument
 	#tag EndComputedProperty
+
+	#tag Property, Flags = &h0, Description = 302D626173656420706F736974696F6E20696E20746865206F726967696E616C20736F75726365206F662074686520656E64206F66207468697320626C6F636B2E204F6E6C792076616C696420666F7220696E6C696E6520626C6F636B7320616E6420696E6C696E6520636F6E7461696E657220626C6F636B732E
+		EndPosition As Integer = -1
+	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0, Description = 546865206669727374206368696C64206F66207468697320626C6F636B206F72204E696C20696620746865726520617265206E6F206368696C6472656E2E
 		#tag Getter
@@ -296,10 +321,6 @@ Protected Class MKBlock
 		#tag EndGetter
 		LastChild As MKBlock
 	#tag EndComputedProperty
-
-	#tag Property, Flags = &h0, Description = 536F6D6520626C6F636B7320686176652061206C6576656C2028652E672E20686561646572206C6576656C20666F722041545820626C6F636B73292E
-		Level As Integer = 0
-	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 54686520312D6261736564206C696E65206E756D62657220696E20746865204D61726B646F776E20646F776E2074686174207468697320626C6F636B206F6363757273206F6E2E
 		LineNumber As Integer = 1
@@ -402,17 +423,19 @@ Protected Class MKBlock
 				"0 - AtxHeading"
 				"1 - Block"
 				"2 - BlockQuote"
-				"3 - Document"
-				"4 - FencedCode"
-				"5 - Html"
-				"6 - IndentedCode"
-				"7 - List"
-				"8 - ListItem"
-				"9 - Paragraph"
-				"10 - ReferenceDefinition"
-				"11 - SetextHeading"
-				"12 - TextBlock"
-				"13 - ThematicBreak"
+				"3 - CodeSpan"
+				"4 - Document"
+				"5 - FencedCode"
+				"6 - Html"
+				"7 - IndentedCode"
+				"8 - InlineText"
+				"9 - List"
+				"10 - ListItem"
+				"11 - Paragraph"
+				"12 - ReferenceDefinition"
+				"13 - SetextHeading"
+				"14 - TextBlock"
+				"15 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -448,14 +471,6 @@ Protected Class MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Level"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="IsChildOfTightList"
 			Visible=false
 			Group="Behavior"
@@ -469,6 +484,14 @@ Protected Class MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

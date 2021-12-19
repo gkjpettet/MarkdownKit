@@ -1,50 +1,28 @@
 #tag Class
-Protected Class MKSetextHeadingBlock
+Protected Class MKCodeSpan
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer = 0)
-		  Super.Constructor(MKBlockTypes.SetextHeading, parent, blockStart)
+		Sub Constructor(parent As MKBlock, startPosition As Integer, backtickStringLength As Integer, closingBacktickStringStart As Integer)
+		  Super.Constructor(MKBlockTypes.CodeSpan, parent, 0)
 		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Finalise(line As TextLine)
-		  // Calling the overridden superclass method.
-		  Super.Finalise(line)
-		  
-		  // Remove this heading from its parent if it's empty.
-		  If Characters.Count = 0 And Parent <> Nil Then
-		    Var parentIndex As Integer = Parent.Children.IndexOf(Self)
-		    If parentIndex <> -1 Then Parent.Children.RemoveAt(parentIndex)
-		  End If
-		  
+		  Self.Start = startPosition
+		  Self.EndPosition = closingBacktickStringStart - 1
+		  Self.BacktickStringLength = backtickStringLength
+		  Self.ClosingBacktickStringStart = closingBacktickStringStart
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0, Description = 5468697320415458206865616465722773206C6576656C2E
-		Level As Integer = 0
+	#tag Property, Flags = &h0, Description = 546865206C656E677468206F662074686520666C616E6B696E67206261636B7469636B2064656C696D69746572732061726F756E64207468697320636F6465207370616E2E
+		BacktickStringLength As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 4966207468697320626C6F636B20697320612053657465787420686561646572207468656E207468697320697320746865206C656E6774682028696E206368617261637465727329206F66207468652053657465787420756E6465726C696E652E
-		UnderlineLength As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 302D626173656420706F736974696F6E20696E20746865206F726967696E616C20736F7572636520636F6465206F662074686520666972737420636861726163746572206F6620612053657465787420756E6465726C696E6520286966207468697320626C6F636B20697320612053657465787420686561646572292E
-		UnderlineStart As Integer = 0
+	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E20746865206F726967696E616C20736F75726365206F662074686520666972737420636861726163746572206F662074686520636C6F73696E67206261636B7469636B20737472696E672E
+		ClosingBacktickStringStart As Integer = 0
 	#tag EndProperty
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="EndPosition"
-			Visible=false
-			Group="Behavior"
-			InitialValue="-1"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -101,14 +79,13 @@ Inherits MKBlock
 				"5 - FencedCode"
 				"6 - Html"
 				"7 - IndentedCode"
-				"8 - InlineText"
-				"9 - List"
-				"10 - ListItem"
-				"11 - Paragraph"
-				"12 - ReferenceDefinition"
-				"13 - SetextHeading"
-				"14 - TextBlock"
-				"15 - ThematicBreak"
+				"8 - List"
+				"9 - ListItem"
+				"10 - Paragraph"
+				"11 - ReferenceDefinition"
+				"12 - SetextHeading"
+				"13 - TextBlock"
+				"14 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -168,7 +145,7 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="UnderlineLength"
+			Name="BacktickStringLength"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"
@@ -176,7 +153,7 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="UnderlineStart"
+			Name="ClosingBacktickStringStart"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

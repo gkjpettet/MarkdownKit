@@ -1,24 +1,28 @@
 #tag Class
 Protected Class MKInlineScanner
-	#tag Method, Flags = &h21, Description = 436C6F736573207468652063757272656E7420696E6C696E652070617273696E67206275666665722E
-		Private Shared Sub CloseBuffer(buffer As MKBlock, container As MKBlock, stripTrailingWhitespace As Boolean = False)
-		  /// Closes the current inline parsing buffer.
+	#tag Method, Flags = &h21, Description = 5072697661746520746F2070726576656E7420696E7374616E74696174696F6E2E
+		Private Sub Constructor()
+		  /// Private to prevent instantiation.
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 46696E616C69736573207468652063757272656E7420696E6C696E652070617273696E67206275666665722E
+		Private Shared Sub FinaliseBuffer(ByRef buffer As MKInlineText, container As MKBlock, stripTrailingWhitespace As Boolean = False)
+		  /// Finalises the current inline parsing buffer.
+		  ///
+		  /// As we parse inlines, we perodically keep an open inline text buffer to add characters to
+		  /// until we hit a different type of inline element (e.g. a backtick for a code span).
+		  /// This method is called when we need to close / finalise that open buffer.
 		  
-		  // There's an open preceding text inline. Close it.
-		  'buffer.Close
+		  buffer.Finalise
 		  
+		  #Pragma Warning "TODO: Strip trailing whitespace?"
 		  'If stripTrailingWhitespace Then MarkdownKit.StripTrailingWhitespace(buffer.Chars)
 		  
 		  // Add the buffer to the container block.
 		  container.Children.Add(buffer)
 		  
 		  buffer = Nil
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21, Description = 5072697661746520746F2070726576656E7420696E7374616E74696174696F6E2E
-		Private Sub Constructor()
-		  /// Private to prevent instantiation.
 		End Sub
 	#tag EndMethod
 
@@ -46,7 +50,7 @@ Protected Class MKInlineScanner
 		  Var backtickStringLen As Integer = contentStartPos - startPos
 		  
 		  // Find the start position of the closing backtick string (if there is one).
-		  Var contentEndPos As Integer
+		  Var contentEndPos, localClosingBacktickStringStart As Integer
 		  Var contiguousBackticks As Integer = 0
 		  Var foundClosingBacktickString As Boolean = False
 		  For i As Integer = contentStartPos To charsLastIndex
@@ -56,6 +60,7 @@ Protected Class MKInlineScanner
 		        // Done so long as the next character isn't a backtick.
 		        If i = charsLastIndex Or (i < charsLastIndex And chars(i + 1).Value <> "`") Then
 		          contentEndPos = chars(i).Position - backtickStringLen
+		          localClosingBacktickStringStart = i
 		          foundClosingBacktickString = True
 		          Exit
 		        End If
@@ -67,8 +72,11 @@ Protected Class MKInlineScanner
 		  If Not foundClosingBacktickString Then Return Nil
 		  
 		  // We've found a code span.
-		  Return New MKCodeSpan(parent, startPos, backtickStringLen, contentEndPos + 1)
+		  Var cs As New MKCodeSpan(parent, parent.Start + startPos, startPos, _
+		  backtickStringLen, contentEndPos + 1, localClosingBacktickStringStart)
+		  cs.Finalise
 		  
+		  Return cs
 		End Function
 	#tag EndMethod
 
@@ -80,62 +88,61 @@ Protected Class MKInlineScanner
 		  
 		  #Pragma Warning "TODO"
 		  
-		  ' #Pragma Warning "Bug: Infinite loop"
-		  ' ' This code is causing a circular loop with NextSibling:
-		  ' '        Hello `Xojo code` cool"
-		  ' 
-		  ' // Remove all children from this block as they will be reconstructed from the the block's characters.
-		  ' block.Children.RemoveAll
-		  ' 
-		  ' Var pos As Integer = 0
-		  ' Var chars() As MKCharacter = MKCharacterContainer(block).AllCharacters
-		  ' Var charsLastIndex As Integer = chars.LastIndex
-		  ' Var buffer As MKBlock
-		  ' 
-		  ' While pos <= charsLastIndex
-		  ' Var c As MKCharacter = chars(pos)
-		  ' 
-		  ' If c.Value = "`" And Not chars.IsEscaped(pos) Then
-		  ' // ============
-		  ' // CODE SPAN
-		  ' // ============
-		  ' Var cs As MKCodeSpan = HandleBackticks(block, chars, pos)
-		  ' If cs <> Nil And (pos - 1 >= 0 And chars(pos - 1).Value <> "`") Then
-		  ' // Found a code span.
-		  ' If buffer <> Nil Then CloseBuffer(buffer, block)
-		  ' // Add the code span.
-		  ' block.Children.Add(cs)
-		  ' // Advance the position.
-		  ' pos = cs.EndPosition + cs.BacktickStringLength + 1 - block.Start
-		  ' Else
-		  ' If buffer <> Nil Then
-		  ' buffer.EndPosition = pos
-		  ' Else
-		  ' buffer = New MKInlineText(block)
-		  ' buffer.Start = pos + block.Start
-		  ' buffer.EndPosition = pos + block.Start
-		  ' End If
-		  ' pos = pos + 1
-		  ' End If
-		  ' 
-		  ' Else
-		  ' // This character is not the start of any inline content. If there is an 
-		  ' // open inline text block then append this character to it, otherwise create a 
-		  ' // new open inline text block and append this character to it.
-		  ' If buffer <> Nil Then
-		  ' buffer.EndPosition = pos + block.Start
-		  ' Else
-		  ' buffer = New MKBlock(MKBlockTypes.InlineText, block)
-		  ' buffer.Start = pos + block.Start
-		  ' buffer.EndPosition = pos + block.Start
-		  ' End If
-		  ' pos = pos + 1
-		  ' End If
-		  ' Wend
-		  ' 
-		  ' If buffer <> Nil Then
-		  ' CloseBuffer(buffer, block)
-		  ' End If
+		  Var pos As Integer = 0
+		  Var chars() As MKCharacter = block.Characters
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  Var buffer As MKInlineText
+		  
+		  While pos <= charsLastIndex
+		    Var c As MKCharacter = chars(pos)
+		    
+		    If c.IsLineEnding Then
+		      pos = pos + 1
+		      Continue
+		    End If
+		    
+		    If c.Value = "`" And Not chars.IsEscaped(pos) Then
+		      // ============
+		      // CODE SPAN
+		      // ============
+		      Var cs As MKCodeSpan = HandleBackticks(block, chars, pos)
+		      If cs <> Nil Then
+		        // Found a code span.
+		        If buffer <> Nil Then FinaliseBuffer(buffer, block)
+		        // Add the code span.
+		        block.Children.Add(cs)
+		        // Advance the position.
+		        ' pos = cs.EndPosition + cs.BacktickStringLength + 1 - block.Start
+		        pos = cs.LocalClosingBacktickStringStart + cs.BacktickStringLength
+		      Else
+		        If buffer <> Nil Then
+		          buffer.EndPosition = pos
+		        Else
+		          buffer = New MKInlineText(block)
+		          buffer.Start = pos + block.Start
+		          buffer.EndPosition = pos + block.Start
+		        End If
+		        pos = pos + 1
+		      End If
+		      
+		    Else
+		      // This character is not the start of any inline content. If there is an 
+		      // open inline text block then append this character to it, otherwise create a 
+		      // new open inline text block and append this character to it.
+		      If buffer <> Nil Then
+		        buffer.EndPosition = pos + block.Start
+		      Else
+		        buffer = New MKInlineText(block)
+		        buffer.Start = pos + block.Start
+		        buffer.EndPosition = pos + block.Start
+		      End If
+		      pos = pos + 1
+		    End If
+		  Wend
+		  
+		  If buffer <> Nil Then
+		    FinaliseBuffer(buffer, block)
+		  End If
 		  ' 
 		  ' 'ProcessEmphasis(b, delimiterStack, -1)
 		End Sub

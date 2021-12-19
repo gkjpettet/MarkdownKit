@@ -26,7 +26,7 @@ Protected Class MKCharacter
 	#tag ComputedProperty, Flags = &h0, Description = 5472756520696620746869732069732061207370656369616C206C696E6520656E64696E67206368617261637465722028706F736974696F6E2077696C6C2062652073657420746F20602D3160292E
 		#tag Getter
 			Get
-			  Return Position = -1
+			  Return value = ""
 			End Get
 		#tag EndGetter
 		IsLineEnding As Boolean
@@ -87,6 +87,22 @@ Protected Class MKCharacter
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
+			Type="String"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLineEnding"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Position"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty

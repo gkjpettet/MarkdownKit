@@ -4,6 +4,8 @@ Protected Module MarkdownKit
 		Function IsEscaped(Extends chars() As MKCharacter, position As Integer) As Boolean
 		  /// True if the character at [position] is escaped (preceded by a non-escaped backslash character).If pos > chars.LastIndex or pos = 0 Then Return False
 		  
+		  If position <= 0 Then Return False
+		  
 		  If chars(position - 1).Value = "\" And Not chars.IsEscaped(position - 1) Then
 		    Return True
 		  Else

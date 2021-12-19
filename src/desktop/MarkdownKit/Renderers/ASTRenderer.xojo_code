@@ -1,25 +1,37 @@
 #tag Class
 Protected Class ASTRenderer
 Implements MKRenderer
+	#tag Method, Flags = &h21, Description = 437265617465732061206E6F64652066726F6D20616E206172726179206F66206368617261637465727320776974682074686520737065636966696564205B6E6F64655469746C655D2E
+		Private Function CreateNodeFromCharacters(nodeTitle As String, chars() As MKCharacter) As TreeViewNode
+		  /// Creates a node from an array of characters with the specified [nodeTitle].
+		  
+		  Var node As New TreeViewNode(nodeTitle)
+		  
+		  Var s() As String
+		  For i As Integer = 0 To chars.LastIndex
+		    Var char As MKCharacter = chars(i)
+		    If char.IsLineEnding Then
+		      node.AppendNode(New TreeViewNode(String.FromArray(s, "")))
+		      s.RemoveAll
+		    Else
+		      s.Add(char.Value)
+		    End If
+		  Next i
+		  
+		  If s.Count > 0 Then node.AppendNode(New TreeViewNode(String.FromArray(s, "")))
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function VisitATXHeading(atx As MKATXHeadingBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("ATX Heading")
 		  
-		  // Compute the heading title.
-		  Var titleNode As New TreeViewNode("Title")
-		  Var s() As String
-		  For i As Integer = 0 To atx.Characters.LastIndex
-		    Var char As MKCharacter = atx.Characters(i)
-		    If char.IsLineEnding Then
-		      titleNode.AppendNode(New TreeViewNode(String.FromArray(s, "")))
-		      s.RemoveAll
-		    Else
-		      s.Add(char.Value)
-		    End If
-		  Next i
-		  node.AppendNode(titleNode)
+		  node.AppendNode(CreateNodeFromCharacters("Title", atx.Characters))
 		  
 		  node.AppendNode(New TreeViewNode("Start: " + atx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + atx.Level.ToString))
@@ -65,7 +77,9 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
 		  Var node As New TreeViewNode("Code Span")
+		  node.AppendNode(CreateNodeFromCharacters("Contents", cs.Characters))
 		  node.AppendNode(New TreeViewNode("Start: " + cs.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Local Start: " + cs.LocalStart.ToString))
 		  node.AppendNode(New TreeViewNode("Delimiter Length: " + cs.BacktickStringLength.ToString))
 		  node.AppendNode(New TreeViewNode("Closing Delimiter Start: " + cs.ClosingBacktickStringStart.ToString))
 		  
@@ -247,16 +261,11 @@ Implements MKRenderer
 		  
 		  Var node As New TreeViewNode("Paragraph")
 		  
-		  Var s() As String
-		  For i As Integer = 0 To p.Characters.LastIndex
-		    Var char As MKCharacter = p.Characters(i)
-		    If char.IsLineEnding Then
-		      node.AppendNode(New TreeViewNode(String.FromArray(s, "")))
-		      s.RemoveAll
-		    Else
-		      s.Add(char.Value)
-		    End If
-		  Next i
+		  node.AppendNode(CreateNodeFromCharacters("Raw Text", p.Characters))
+		  
+		  For Each child As MKBlock In p.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
 		  
 		  Return node
 		End Function
@@ -268,20 +277,7 @@ Implements MKRenderer
 		  
 		  Var node As New TreeViewNode("Setext Heading")
 		  
-		  // Compute the heading title.
-		  Var titleNode As New TreeViewNode("Title")
-		  Var s() As String
-		  For i As Integer = 0 To stx.Characters.LastIndex
-		    Var char As MKCharacter = stx.Characters(i)
-		    If char.IsLineEnding Then
-		      titleNode.AppendNode(New TreeViewNode(String.FromArray(s, "")))
-		      s.RemoveAll
-		    Else
-		      s.Add(char.Value)
-		    End If
-		  Next i
-		  node.AppendNode(titleNode)
-		  
+		  node.AppendNode(CreateNodeFromCharacters("Title", stx.Characters))
 		  node.AppendNode(New TreeViewNode("Start: " + stx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + stx.Level.ToString))
 		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.UnderlineStart.ToString))

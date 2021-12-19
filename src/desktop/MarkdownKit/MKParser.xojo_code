@@ -841,33 +841,33 @@ Protected Class MKParser
 		Private Sub ParseInlines()
 		  /// Walks the document parsing inline content.
 		  ///
-		  /// Assumes that ParseBlockStructure was called immediately prior to this method.
+		  /// Assumes that `ParseBlockStructure` was called immediately prior to this method.
 		  
 		  #Pragma Warning "TODO"
 		  
-		  ' Var stack() As MKBlock
-		  ' Var block As MKBlock = mDoc
-		  ' 
-		  ' While block <> Nil
-		  ' Select Case block.Type
-		  ' Case MKBlockTypes.AtxHeading, MKBlockTypes.Paragraph, MKBlockTypes.SetextHeading
-		  ' MKInlineScanner.ParseInlines(block)
-		  ' End Select
-		  ' 
-		  ' If block.FirstChild <> Nil Then
-		  ' If block.NextSibling <> Nil Then stack.Add(block.NextSibling)
-		  ' block = block.FirstChild
-		  ' 
-		  ' ElseIf block.NextSibling <> Nil Then
-		  ' block = block.NextSibling
-		  ' 
-		  ' ElseIf stack.LastIndex > -1 Then
-		  ' block = stack.Pop
-		  ' 
-		  ' Else
-		  ' block = Nil
-		  ' End If
-		  ' Wend
+		  Var stack() As MKBlock
+		  Var block As MKBlock = mDoc
+		  
+		  While block <> Nil
+		    Select Case block.Type
+		    Case MKBlockTypes.AtxHeading, MKBlockTypes.Paragraph, MKBlockTypes.SetextHeading
+		      MKInlineScanner.ParseInlines(block)
+		    End Select
+		    
+		    If block.FirstChild <> Nil Then
+		      If block.NextSibling <> Nil Then stack.Add(block.NextSibling)
+		      block = block.FirstChild
+		      
+		    ElseIf block.NextSibling <> Nil Then
+		      block = block.NextSibling
+		      
+		    ElseIf stack.LastIndex > -1 Then
+		      block = stack.Pop
+		      
+		    Else
+		      block = Nil
+		    End If
+		  Wend
 		  
 		End Sub
 	#tag EndMethod

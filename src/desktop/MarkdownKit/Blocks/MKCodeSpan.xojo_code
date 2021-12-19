@@ -2,13 +2,46 @@
 Protected Class MKCodeSpan
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, startPosition As Integer, backtickStringLength As Integer, closingBacktickStringStart As Integer)
-		  Super.Constructor(MKBlockTypes.CodeSpan, parent, 0)
+		Sub Constructor(parent As MKBlock, absoluteStartPos As Integer, localStartPos As Integer, backtickStringLength As Integer, absoluteClosingBacktickStringStart As Integer, localClosingBacktickStringStart As Integer)
+		  Super.Constructor(MKBlockTypes.CodeSpan, parent, absoluteStartPos)
 		  
-		  Self.Start = startPosition
+		  Self.LocalStart = localStartPos
 		  Self.EndPosition = closingBacktickStringStart - 1
 		  Self.BacktickStringLength = backtickStringLength
-		  Self.ClosingBacktickStringStart = closingBacktickStringStart
+		  Self.ClosingBacktickStringStart = absoluteClosingBacktickStringStart
+		  Self.LocalClosingBacktickStringStart = localClosingBacktickStringStart
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Finalise(line As TextLine = Nil)
+		  // Calling the overridden superclass method.
+		  Super.Finalise(line)
+		  
+		  Var seenNonSpace As Boolean = False
+		  Var iStart As Integer = LocalStart + BacktickStringLength
+		  Var iLimit As Integer = LocalClosingBacktickStringStart - 1
+		  For i As Integer = iStart To iLimit
+		    Var c As MKCharacter = Parent.Characters(i)
+		    If c.IsLineEnding Then
+		      // Newlines are normalised to spaces.
+		      Characters.Add(New MKCharacter(&u0020, -1))
+		    ElseIf c.Value = &u0020 Then
+		      Characters.Add(c)
+		    Else
+		      seenNonSpace = True
+		      Characters.Add(c)
+		    End If
+		  Next i
+		  
+		  // If the resulting content both begins and ends with a space character, but does not consist entirely 
+		  // of space characters, a single space character is removed from the front and back.
+		  If seenNonSpace And Characters.LastIndex >= 1 And _
+		    Characters(0).Value = &u0020 And Characters(Characters.LastIndex).Value = &u0020 Then
+		    Characters.RemoveAt(0)
+		    Call Characters.Pop
+		  End If
+		  
 		End Sub
 	#tag EndMethod
 
@@ -21,8 +54,24 @@ Inherits MKBlock
 		ClosingBacktickStringStart As Integer = 0
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E207468697320636F6465207370616E277320706172656E7420706172616772617068277320604368617261637465727360206172726179206F662074686520666972737420636861726163746572206F662074686520636C6F73696E67206261636B7469636B20737472696E672E
+		LocalClosingBacktickStringStart As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E2060506172656E742E4368617261637465727360207468617420746865206F70656E696E67206261636B7469636B20636861726163746572206F66207468697320636F6465207370616E20626567696E732E
+		LocalStart As Integer = 0
+	#tag EndProperty
+
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -79,13 +128,14 @@ Inherits MKBlock
 				"5 - FencedCode"
 				"6 - Html"
 				"7 - IndentedCode"
-				"8 - List"
-				"9 - ListItem"
-				"10 - Paragraph"
-				"11 - ReferenceDefinition"
-				"12 - SetextHeading"
-				"13 - TextBlock"
-				"14 - ThematicBreak"
+				"8 - InlineText"
+				"9 - List"
+				"10 - ListItem"
+				"11 - Paragraph"
+				"12 - ReferenceDefinition"
+				"13 - SetextHeading"
+				"14 - TextBlock"
+				"15 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -118,14 +168,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Level"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty

@@ -96,11 +96,6 @@ Protected Class MKInlineScanner
 		  While pos <= charsLastIndex
 		    Var c As MKCharacter = chars(pos)
 		    
-		    If c.IsLineEnding Then
-		      pos = pos + 1
-		      Continue
-		    End If
-		    
 		    If c.Value = "`" And Not chars.IsEscaped(pos) Then
 		      // ============
 		      // CODE SPAN
@@ -116,14 +111,23 @@ Protected Class MKInlineScanner
 		        pos = cs.LocalClosingBacktickStringStart + cs.BacktickStringLength
 		      Else
 		        If buffer <> Nil Then
-		          buffer.EndPosition = pos
+		          buffer.EndPosition = pos + block.Start
 		        Else
 		          buffer = New MKInlineText(block)
 		          buffer.Start = pos + block.Start
+		          buffer.LocalStart = pos
 		          buffer.EndPosition = pos + block.Start
 		        End If
 		        pos = pos + 1
 		      End If
+		      
+		      // ============
+		      // LINE ENDING
+		      // ============
+		    ElseIf c.IsLineEnding Then
+		      If buffer <> Nil Then FinaliseBuffer(buffer, block)
+		      pos = pos + 1
+		      Continue
 		      
 		    Else
 		      // This character is not the start of any inline content. If there is an 
@@ -134,6 +138,7 @@ Protected Class MKInlineScanner
 		      Else
 		        buffer = New MKInlineText(block)
 		        buffer.Start = pos + block.Start
+		        buffer.LocalStart = pos
 		        buffer.EndPosition = pos + block.Start
 		      End If
 		      pos = pos + 1
@@ -143,7 +148,7 @@ Protected Class MKInlineScanner
 		  If buffer <> Nil Then
 		    FinaliseBuffer(buffer, block)
 		  End If
-		  ' 
+		  
 		  ' 'ProcessEmphasis(b, delimiterStack, -1)
 		End Sub
 	#tag EndMethod

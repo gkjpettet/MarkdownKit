@@ -77,11 +77,14 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
 		  Var node As New TreeViewNode("Code Span")
-		  node.AppendNode(CreateNodeFromCharacters("Contents", cs.Characters))
 		  node.AppendNode(New TreeViewNode("Start: " + cs.Start.ToString))
-		  node.AppendNode(New TreeViewNode("Local Start: " + cs.LocalStart.ToString))
 		  node.AppendNode(New TreeViewNode("Delimiter Length: " + cs.BacktickStringLength.ToString))
 		  node.AppendNode(New TreeViewNode("Closing Delimiter Start: " + cs.ClosingBacktickStringStart.ToString))
+		  
+		  // Code spans contain text blocks as their children.
+		  For Each child As MKBlock In cs.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
 		  
 		  Return node
 		  
@@ -190,6 +193,7 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitInlineText(it As MKInlineText) As Variant
 		  Var node As New TreeViewNode("Inline Text")
+		  node.AppendNode(CreateNodeFromCharacters("Contents", it.Characters))
 		  node.AppendNode(New TreeViewNode("Start: " + it.Start.ToString))
 		  node.AppendNode(New TreeViewNode("End Position: " + it.EndPosition.ToString))
 		  

@@ -21,25 +21,28 @@ Inherits MKBlock
 		  Var seenNonSpace As Boolean = False
 		  Var iStart As Integer = LocalStart + BacktickStringLength
 		  Var iLimit As Integer = LocalClosingBacktickStringStart - 1
+		  Var textBlockStart As Integer = Self.Start
+		  Var contentsBuffer() As String
 		  For i As Integer = iStart To iLimit
 		    Var c As MKCharacter = Parent.Characters(i)
+		    
 		    If c.IsLineEnding Then
-		      // Newlines are normalised to spaces.
-		      Characters.Add(New MKCharacter(&u0020, -1))
+		      Var s As String = String.FromArray(contentsBuffer, "")
+		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s))
+		      contentsBuffer.RemoveAll
+		      
 		    ElseIf c.Value = &u0020 Then
-		      Characters.Add(c)
+		      contentsBuffer.Add(c.Value)
+		      
 		    Else
 		      seenNonSpace = True
-		      Characters.Add(c)
+		      contentsBuffer.Add(c.Value)
 		    End If
 		  Next i
 		  
-		  // If the resulting content both begins and ends with a space character, but does not consist entirely 
-		  // of space characters, a single space character is removed from the front and back.
-		  If seenNonSpace And Characters.LastIndex >= 1 And _
-		    Characters(0).Value = &u0020 And Characters(Characters.LastIndex).Value = &u0020 Then
-		    Characters.RemoveAt(0)
-		    Call Characters.Pop
+		  If contentsBuffer.Count > 0 Then
+		    Var s As String = String.FromArray(contentsBuffer, "")
+		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s))
 		  End If
 		  
 		End Sub

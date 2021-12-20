@@ -137,6 +137,8 @@ Protected Class MKBlock
 		  /// Subclasses can override this method if they have more complicated needs upon block closure.
 		  /// [line] is the line that triggered the `Finalise` invocation.
 		  
+		  #Pragma Unused line
+		  
 		  // Already closed?
 		  If Not IsOpen Then Return
 		  

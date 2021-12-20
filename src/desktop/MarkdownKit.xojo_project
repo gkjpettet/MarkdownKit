@@ -37,6 +37,7 @@ Class=MKLinkScanner;MarkdownKit/Scanners/MKLinkScanner.xojo_code;&h000000004462B
 Class=MKInlineScanner;MarkdownKit/Scanners/MKInlineScanner.xojo_code;&h000000006B83F7FF;&h00000000230B07FF;false
 Class=MKCodeSpan;MarkdownKit/Blocks/MKCodeSpan.xojo_code;&h0000000043039FFF;&h000000007E5B2FFF;false
 Class=MKInlineText;MarkdownKit/Blocks/MKInlineText.xojo_code;&h0000000057902FFF;&h000000007E5B2FFF;false
+Class=MKInlineHTML;MarkdownKit/Blocks/MKInlineHTML.xojo_code;&h0000000076B31FFF;&h000000007E5B2FFF;false
 DefaultWindow=Window1
 AppMenuBar=MainMenuBar
 MajorVersion=1

@@ -7,7 +7,7 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 46696E616C69736573207468652063757272656E7420696E6C696E652070617273696E67206275666665722E
-		Private Shared Sub FinaliseBuffer(ByRef buffer As MKInlineText, container As MKBlock, stripTrailingWhitespace As Boolean = False)
+		Private Shared Sub FinaliseBuffer(ByRef buffer As MKInlineText, container As MKBlock)
 		  /// Finalises the current inline parsing buffer.
 		  ///
 		  /// As we parse inlines, we perodically keep an open inline text buffer to add characters to
@@ -16,9 +16,6 @@ Protected Class MKInlineScanner
 		  
 		  buffer.Finalise
 		  
-		  #Pragma Warning "TODO: Strip trailing whitespace?"
-		  'If stripTrailingWhitespace Then MarkdownKit.StripTrailingWhitespace(buffer.Chars)
-		  
 		  // Add the buffer to the container block.
 		  container.Children.Add(buffer)
 		  
@@ -26,10 +23,10 @@ Protected Class MKInlineScanner
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20697320612076616C696420696E6C696E6520636F6465207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
+	#tag Method, Flags = &h0, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E6520636F6465207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
 		Shared Function HandleBackticks(parent As MKBlock, chars() As MKCharacter, startPos As Integer) As MKCodeSpan
-		  /// If the character at [startPos] in [chars] is a valid inline code span then one is created and returned, 
-		  /// otherwise Nil is returned.
+		  /// If the character at [startPos] in [chars] begins a valid inline code span then one is created and 
+		  /// returned, otherwise Nil is returned.
 		  /// 
 		  /// Assumes [startPos] in [chars] is a backtick.
 		  
@@ -80,6 +77,16 @@ Protected Class MKInlineScanner
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E652048544D4C207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
+		Shared Function HandleLeftAngleBracket(block As MKBlock, chars() As MKCharacter, startPos As Integer) As MKInlineHTML
+		  /// If the character at [startPos] in [chars] begins a valid inline HTML span then one is created and 
+		  /// returned, otherwise Nil is returned.
+		  
+		  #Pragma Warning "TODO: Inline HTML parsing"
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, Description = 5374657073207468726F7567682074686520636F6E74656E7473206F662074686520696E6C696E6520636F6E7461696E6572205B626C6F636B5D2C2068616E646C696E6720616E7920696E6C696E6520656C656D656E747320697420656E636F756E746572732E
 		Shared Sub ParseInlines(block As MKBlock)
 		  /// Steps through the contents of the inline container [block], handling any inline elements it encounters.
@@ -107,7 +114,6 @@ Protected Class MKInlineScanner
 		        // Add the code span.
 		        block.Children.Add(cs)
 		        // Advance the position.
-		        ' pos = cs.EndPosition + cs.BacktickStringLength + 1 - block.Start
 		        pos = cs.LocalClosingBacktickStringStart + cs.BacktickStringLength
 		      Else
 		        If buffer <> Nil Then
@@ -120,6 +126,31 @@ Protected Class MKInlineScanner
 		        End If
 		        pos = pos + 1
 		      End If
+		      
+		    ElseIf c.Value = "<" And Not chars.IsEscaped(pos) Then
+		      // ============
+		      // INLINE HTML
+		      // ============
+		      Var html As MKInlineHTML = HandleLeftAngleBracket(block, chars, pos)
+		      If html <> Nil Then
+		        // Found inline HTML.
+		        If buffer <> Nil Then FinaliseBuffer(buffer, block)
+		        // Add the inline HTML.
+		        block.Children.Add(html)
+		        // Advance the position.
+		        pos = html.EndPosition - block.Start + 1
+		      Else
+		        If buffer <> Nil Then
+		          buffer.EndPosition = pos + block.Start
+		        Else
+		          buffer = New MKInlineText(block)
+		          buffer.Start = pos + block.Start
+		          buffer.LocalStart = pos
+		          buffer.EndPosition = pos + block.Start
+		        End If
+		        pos = pos + 1
+		      End If
+		      
 		      
 		      // ============
 		      // LINE ENDING

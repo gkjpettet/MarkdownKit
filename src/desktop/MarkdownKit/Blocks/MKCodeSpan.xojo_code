@@ -21,7 +21,7 @@ Inherits MKBlock
 		  Var seenNonSpace As Boolean = False
 		  Var iStart As Integer = LocalStart + BacktickStringLength
 		  Var iLimit As Integer = LocalClosingBacktickStringStart - 1
-		  Var textBlockStart As Integer = Self.Start
+		  Var textBlockStart As Integer = LocalStart
 		  Var contentsBuffer() As String
 		  For i As Integer = iStart To iLimit
 		    Var c As MKCharacter = Parent.Characters(i)
@@ -30,6 +30,7 @@ Inherits MKBlock
 		      Var s As String = String.FromArray(contentsBuffer, "")
 		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s))
 		      contentsBuffer.RemoveAll
+		      textBlockStart = i
 		      
 		    ElseIf c.Value = &u0020 Then
 		      contentsBuffer.Add(c.Value)

@@ -49,6 +49,12 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitInlineHTML(html As MKInlineHTML) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitInlineText(it As MKInlineText) As Variant
 		  
 		End Function

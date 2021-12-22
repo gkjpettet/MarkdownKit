@@ -252,9 +252,13 @@ End
 		  Var printer As New ASTRenderer
 		  ASTTreeView.RemoveAllNodes
 		  ASTTreeView.AppendNode(printer.VisitDocument(doc))
-		  ASTTreeView.ExpandAll(True)
+		  
+		  // Expand the document node.
+		  ASTTreeView.SelectedIndex = 0
+		  ASTTreeView.SelectedNode.SetExpanded(True, True)
 		  
 		  ParseTime.Text = watch.ElapsedMilliseconds.ToString + " ms"
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents

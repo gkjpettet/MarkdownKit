@@ -471,19 +471,19 @@ Protected Class MKParser
 		  
 		  Select Case type
 		  Case MKHTMLBlockTypes.InterruptingBlockWithEmptyLines
-		    Return MKHTMLScanner.IsHTMLBlockType1End(line, pos)
+		    Return MKHTMLBlockScanner.IsHTMLBlockType1End(line, pos)
 		    
 		  Case MKHTMLBlockTypes.Comment
-		    Return MKHTMLScanner.IsHtmlBlockType2End(line, pos)
+		    Return MKHTMLBlockScanner.IsHtmlBlockType2End(line, pos)
 		    
 		  Case MKHTMLBlockTypes.ProcessingInstruction
-		    Return MKHTMLScanner.IsHtmlBlockType3End(line, pos)
+		    Return MKHTMLBlockScanner.IsHtmlBlockType3End(line, pos)
 		    
 		  Case MKHTMLBlockTypes.Document
-		    Return MKHTMLScanner.IsHtmlBlockType4End(line, pos)
+		    Return MKHTMLBlockScanner.IsHtmlBlockType4End(line, pos)
 		    
 		  Case MKHTMLBlockTypes.CData
-		    Return MKHTMLScanner.IsHtmlBlockType5End(line, pos)
+		    Return MKHTMLBlockScanner.IsHtmlBlockType5End(line, pos)
 		    
 		  Else
 		    Return False
@@ -633,9 +633,9 @@ Protected Class MKParser
 		  
 		  Var tagName As String // Will be mutated.
 		  If chars(pos + 1) = "/" Then
-		    pos = MKHTMLScanner.FindClosingTag(mCurrentLine, pos + 2, tagName)
+		    pos = MKHTMLBlockScanner.FindClosingTag(mCurrentLine, pos + 2, tagName)
 		  Else
-		    pos = MKHTMLScanner.FindOpenTag(mCurrentLine, pos + 1, tagName)
+		    pos = MKHTMLBlockScanner.FindOpenTag(mCurrentLine, pos + 1, tagName)
 		    If tagName = "script" Or tagName = "style" Or tagName = "pre" Then Return False
 		  End If
 		  If pos = 0 Then Return False

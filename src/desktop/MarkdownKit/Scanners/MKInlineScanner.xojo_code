@@ -78,12 +78,74 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E652048544D4C207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
-		Shared Function HandleLeftAngleBracket(block As MKBlock, chars() As MKCharacter, startPos As Integer) As MKInlineHTML
+		Shared Function HandleLeftAngleBracket(parent As MKBlock, chars() As MKCharacter, startPos As Integer) As MKInlineHTML
 		  /// If the character at [startPos] in [chars] begins a valid inline HTML span then one is created and 
 		  /// returned, otherwise Nil is returned.
+		  ///
+		  /// Assumes `chars(startPos) = "<"`.
 		  
 		  #Pragma Warning "TODO: Inline HTML parsing"
 		  
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  
+		  // Bare minimum valid inline HTML tag 3 characters long (e.g: `<a>`).
+		  If startPos + 2 > charsLastIndex Then Return Nil
+		  
+		  Var html As MKInlineHTML
+		  Var pos As Integer = 0
+		  Var c As String = chars(startPos + 1).Value
+		  Var tagName As String
+		  
+		  If c = "/" Then
+		    // Does this mark a closing tag?
+		    pos = MKInlineHTMLScanner.FindClosingTag(chars, startPos + 2, tagName)
+		    
+		  ElseIf c = "?" Then
+		    // Processing instruction?
+		    pos = MKInlineHTMLScanner.ScanProcessingInstruction(chars, startPos + 2)
+		    
+		  ElseIf c = "!" Then
+		    // Comment, declaration or CDATA section?
+		    pos = MKInlineHTMLScanner.ScanDeclarationCommentOrCData(chars, startPos + 2)
+		    
+		  Else
+		    // Autolink?
+		    Var uri As String
+		    pos = MKInlineHTMLScanner.ScanAutoLink(chars, startPos + 1, uri)
+		    If pos > 0 Then
+		      html = New MKInlineHTML(parent, parent.Start + startPos, startPos, parent.Start + pos - 1, pos - 1)
+		      html.IsAutoLink = True
+		      html.Title = ""
+		      html.Destination = uri
+		      html.Label = uri
+		      html.Finalise
+		      Return html
+		      
+		    Else
+		      // Email link?
+		      pos = MKInlineHTMLScanner.ScanEmailLink(chars, startPos + 1, uri)
+		      If pos > 0 Then
+		        html = New MKInlineHTML(parent, parent.Start + startPos, startPos, parent.Start + pos - 1, pos - 1)
+		        html.IsAutoLink = True
+		        html.Title = ""
+		        html.Destination = "mailto:" + uri
+		        html.Label = uri
+		        html.Finalise
+		        Return html
+		      Else
+		        // Opening tag?
+		        pos = MKInlineHTMLScanner.FindOpenTag(chars, startPos + 1, tagName)
+		      End If
+		    End If
+		  End If
+		  
+		  If pos = 0 Then
+		    Return Nil
+		  Else
+		    html = New MKInlineHTML(parent, parent.Start + startPos, startPos, parent.Start + pos - 1, pos - 1)
+		    html.Finalise
+		    Return html
+		  End If
 		End Function
 	#tag EndMethod
 

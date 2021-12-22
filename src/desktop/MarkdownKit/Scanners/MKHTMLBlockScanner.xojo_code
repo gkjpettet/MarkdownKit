@@ -1,5 +1,5 @@
 #tag Class
-Protected Class MKHTMLScanner
+Protected Class MKHTMLBlockScanner
 	#tag Method, Flags = &h21
 		Private Sub Constructor()
 		  /// Private to prevent instantiation.
@@ -27,7 +27,7 @@ Protected Class MKHTMLScanner
 		  If Not line.Characters(pos).IsASCIILetter Then Return 0
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
-		  tagName = MKHTMLScanner.GetHtmlTagName(line.Characters, pos)
+		  tagName = MKHTMLBlockScanner.GetHtmlTagName(line.Characters, pos)
 		  If pos > charsLastIndex Then Return 0
 		  If tagName = "" Then Return 0
 		  
@@ -35,7 +35,7 @@ Protected Class MKHTMLScanner
 		  Var c As String = line.Characters(pos)
 		  
 		  // Skip optional whitespace.
-		  Call MKHTMLScanner.SkipWhitespace(line.Characters, pos, c)
+		  Call MKHTMLBlockScanner.SkipWhitespace(line.Characters, pos, c)
 		  If pos > charsLastIndex Then Return 0
 		  
 		  // Check for the tag closing delimiter.
@@ -77,7 +77,7 @@ Protected Class MKHTMLScanner
 		  If Not chars(pos).IsASCIILetter Then Return 0
 		  
 		  // Get the tag name and move `pos` to the position immediately following the tag name.
-		  tagName = MKHTMLScanner.GetHtmlTagName(chars, pos)
+		  tagName = MKHTMLBlockScanner.GetHtmlTagName(chars, pos)
 		  If pos > charsLastIndex Then Return 0
 		  If tagName = "" Then Return 0
 		  
@@ -93,7 +93,7 @@ Protected Class MKHTMLScanner
 		  Var currentChar As String = chars(pos)
 		  While pos <= charsLastIndex
 		    // Skip whitespace.
-		    hadWhitespace = MKHTMLScanner.SkipWhitespace(chars, pos, currentChar)
+		    hadWhitespace = MKHTMLBlockScanner.SkipWhitespace(chars, pos, currentChar)
 		    
 		    // Has the end of the tag been reached?
 		    If currentChar = ">" Then
@@ -115,14 +115,14 @@ Protected Class MKHTMLScanner
 		      // Move past the "=" symbol and any whitespace.
 		      pos = pos + 1
 		      currentChar = chars(pos)
-		      Call MKHTMLScanner.SkipWhitespace(chars, pos, currentChar)
+		      Call MKHTMLBlockScanner.SkipWhitespace(chars, pos, currentChar)
 		      
 		      If currentChar = "'" Or currentChar = """" Then
 		        tmpChar = currentChar
 		        pos = pos + 1
 		        If pos > charsLastIndex Then Return 0
 		        currentChar = chars(pos)
-		        Call MKHTMLScanner.MatchAnythingExcept(line, pos, currentChar, tmpChar)
+		        Call MKHTMLBlockScanner.MatchAnythingExcept(line, pos, currentChar, tmpChar)
 		        If currentChar <> tmpChar Or pos >= charsLastIndex Then Return 0
 		        
 		        pos = pos + 1
@@ -130,7 +130,7 @@ Protected Class MKHTMLScanner
 		        currentChar = chars(pos)
 		      Else
 		        // Unquoted attribute values must have at least one character.
-		        If Not MKHTMLScanner.MatchAnythingExceptInvalidAndWhitespace(line, pos, currentChar, """", "'", "=", "<", ">", "`") Then
+		        If Not MKHTMLBlockScanner.MatchAnythingExceptInvalidAndWhitespace(line, pos, currentChar, """", "'", "=", "<", ">", "`") Then
 		          Return 0
 		        End If
 		      End If
@@ -144,12 +144,12 @@ Protected Class MKHTMLScanner
 		    
 		    // If the end has not been found then there is just one possible alternative - an attribute.
 		    // Ensure that the attribute name starts with a correct character
-		    If Not MKHTMLScanner.MatchASCIILetterOrValidCharacter(line, pos, currentChar, "_", ":") Then
+		    If Not MKHTMLBlockScanner.MatchASCIILetterOrValidCharacter(line, pos, currentChar, "_", ":") Then
 		      Return 0
 		    End If
 		    
 		    // Match any remaining characters in the attribute name.
-		    Call MKHTMLScanner.MatchASCIILetterOrDigit(line, pos, currentChar, "_", ":", ".", "-")
+		    Call MKHTMLBlockScanner.MatchASCIILetterOrDigit(line, pos, currentChar, "_", ":", ".", "-")
 		    hadAttribute = True
 		  Wend
 		  
@@ -158,9 +158,9 @@ Protected Class MKHTMLScanner
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 5374617274696E67206174205B706F735D2C20726561647320612048544D4C20746167206E616D652066726F6D20746865205B63686172735D20616E642072657475726E732069742E2041646A75737473205B706F735D20746F20706F696E7420746F207468652063686172616374657220696D6D6564696174656C792061667465722074686520746167206E616D652E204D61792072657475726E2022222E
+	#tag Method, Flags = &h0, Description = 5374617274696E67206174205B706F735D2C20726561647320612048544D4C20746167206E616D652066726F6D205B63686172735D20616E642072657475726E732069742E2041646A75737473205B706F735D20746F20706F696E7420746F207468652063686172616374657220696D6D6564696174656C792061667465722074686520746167206E616D652E204D61792072657475726E2022222E
 		Shared Function GetHtmlTagName(chars() As String, ByRef pos As Integer) As String
-		  /// Starting at [pos], reads a HTML tag name from the [chars] and returns it. Adjusts [pos] to point to the 
+		  /// Starting at [pos], reads a HTML tag name from [chars] and returns it. Adjusts [pos] to point to the 
 		  /// character immediately after the tag name. May return "".
 		  ///
 		  /// Note: [pos] is passed ByRef.

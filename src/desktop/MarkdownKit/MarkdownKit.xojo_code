@@ -30,21 +30,35 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 54727565206966205B636861725D20697320776869746573706163652E
-		Function IsMarkdownWhitespace(Extends char As String, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
+		Function IsMarkdownWhitespace(Extends char As MKCharacter, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
 		  /// True if [char] is considered Markdown whitespace.
 		  ///
 		  /// If the optional [nonBreakingSpaceIsWhitespace] is True then we also 
 		  /// consider a non-breaking space (&u0A0) to be whitespace.
 		  
-		  Select Case char
-		  Case &u0020, &u0009, &u000A, ""
+		  Select Case char.Value
+		  Case &u0020, &u0009, &u000A
 		    Return True
 		  Else
-		    If nonBreakingSpaceIsWhitespace And char = &u00A0 Then
+		    If nonBreakingSpaceIsWhitespace And char.IsLineEnding Then
 		      Return True
 		    Else
 		      Return False
 		    End If
+		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 54727565206966205B636861725D20697320776869746573706163652E
+		Function IsMarkdownWhitespace(Extends char As String) As Boolean
+		  /// True if [char] is considered Markdown whitespace.
+		  
+		  Select Case char
+		  Case &u0020, &u0009, &u000A, ""
+		    Return True
+		  Else
+		    Return False
 		  End Select
 		  
 		End Function
@@ -210,6 +224,7 @@ Protected Module MarkdownKit
 		  FencedCode
 		  Html
 		  IndentedCode
+		  InlineHTML
 		  InlineText
 		  List
 		  ListItem

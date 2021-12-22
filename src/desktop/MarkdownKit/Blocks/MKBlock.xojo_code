@@ -29,6 +29,9 @@ Protected Class MKBlock
 		  Case MKBlockTypes.InlineText
 		    Return visitor.VisitInlineText(MKInlineText(Self))
 		    
+		  Case MKBlockTypes.InlineHTML
+		    Return visitor.VisitInlineHTML(MKInlineHTML(Self))
+		    
 		  Case MKBlockTypes.List
 		    Return visitor.VisitList(Self)
 		    

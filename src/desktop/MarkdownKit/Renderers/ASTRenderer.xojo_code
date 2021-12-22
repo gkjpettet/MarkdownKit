@@ -191,6 +191,33 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitInlineHTML(html As MKInlineHTML) As Variant
+		  Var node As New TreeViewNode("InlineHTML")
+		  
+		  node.AppendNode(New TreeViewNode("Start: " + html.Start.ToString))
+		  node.AppendNode(New TreeViewNode("End: " + html.EndPosition.ToString))
+		  
+		  If html.IsAutoLink Then
+		    Var autoLinkNode As New TreeViewNode("IsAutoLink: True")
+		    autoLinkNode.AppendNode(New TreeViewNode("Destination: " + html.Destination))
+		    autoLinkNode.AppendNode(New TreeViewNode("Label: " + html.Label))
+		    If html.Title <> "" Then autoLinkNode.AppendNode(New TreeViewNode("Title: " + html.Title))
+		    node.AppendNode(autoLinkNode)
+		  Else
+		    node.AppendNode(New TreeViewNode("IsAutoLink: False"))
+		  End If
+		  
+		  // Inline HTML contain text blocks as their children.
+		  For Each child As MKBlock In html.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitInlineText(it As MKInlineText) As Variant
 		  Var node As New TreeViewNode("Inline Text")
 		  node.AppendNode(CreateNodeFromCharacters("Contents", it.Characters))

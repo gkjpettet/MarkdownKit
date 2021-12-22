@@ -834,6 +834,7 @@ Protected Class MKParser
 		    If mLines.LastIndex > -1 Then mCurrentBlock.Finalise(mLines(mLines.LastIndex))
 		    mCurrentBlock = mCurrentBlock.Parent
 		  Wend
+		  
 		End Sub
 	#tag EndMethod
 
@@ -847,11 +848,12 @@ Protected Class MKParser
 		  
 		  Var stack() As MKBlock
 		  Var block As MKBlock = mDoc
+		  Var delimiterStack() As MKDelimiterStackNode
 		  
 		  While block <> Nil
 		    Select Case block.Type
 		    Case MKBlockTypes.AtxHeading, MKBlockTypes.Paragraph, MKBlockTypes.SetextHeading
-		      MKInlineScanner.ParseInlines(block)
+		      MKInlineScanner.ParseInlines(block, delimiterStack)
 		    End Select
 		    
 		    If block.FirstChild <> Nil Then
@@ -879,6 +881,9 @@ Protected Class MKParser
 		  Reset(lines)
 		  
 		  ParseBlockStructure
+		  
+		  #Pragma Warning "Block quotes have no content"
+		  ' > This is **cool**
 		  
 		  ParseInlines
 		  

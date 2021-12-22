@@ -137,6 +137,20 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitEmphasis(e As MKEmphasis) As Variant
+		  Var node As New TreeViewNode("Emphasis")
+		  node.AppendNode(New TreeViewNode("Start: " + e.Start.ToString))
+		  
+		  For Each child As MKBlock In e.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitFencedCode(fc As MKFencedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
@@ -209,6 +223,25 @@ Implements MKRenderer
 		  
 		  // Inline HTML contain text blocks as their children.
 		  For Each child As MKBlock In html.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitInlineLink(link As MKInlineLink) As Variant
+		  Var node As New TreeViewNode("Inline Link")
+		  node.AppendNode(New TreeViewNode("Start: " + link.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Destination: " + link.Destination))
+		  If link.Title <> "" Then
+		    node.AppendNode(New TreeViewNode("Title: " + link.Title))
+		  End If
+		  node.AppendNode(CreateNodeFromCharacters("Characters", link.Characters))
+		  
+		  For Each child As MKBlock In link.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -313,6 +346,20 @@ Implements MKRenderer
 		  node.AppendNode(New TreeViewNode("Level: " + stx.Level.ToString))
 		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.UnderlineStart.ToString))
 		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.UnderlineLength.ToString))
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
+		  Var node As New TreeViewNode("Strong Emphasis")
+		  node.AppendNode(New TreeViewNode("Start: " + se.Start.ToString))
+		  
+		  For Each child As MKBlock In se.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
 		  
 		  Return node
 		  

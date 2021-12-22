@@ -19,7 +19,7 @@ Inherits MKBlock
 		  Var s As String
 		  If HasClosingSequence Then
 		    s = line.Value.MiddleCharacters(Self.Start - line.Start + OpeningSequenceLength, _
-		    ClosingSequenceStart - OpeningSequenceLength)
+		    ClosingSequenceStart - line.Start - OpeningSequenceLength)
 		  Else
 		    s = line.Value.MiddleCharacters(Self.Start - line.Start + OpeningSequenceLength)
 		  End If

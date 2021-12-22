@@ -31,6 +31,12 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitEmphasis(e As MKEmphasis) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitFencedCode(fc As MKFencedCodeBlock) As Variant
 		  
 		End Function
@@ -50,6 +56,12 @@ Protected Interface MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitInlineHTML(html As MKInlineHTML) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitInlineLink(link As MKInlineLink) As Variant
 		  
 		End Function
 	#tag EndMethod
@@ -80,6 +92,12 @@ Protected Interface MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitSetextHeading(stx As MKSetextHeadingBlock) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
 		  
 		End Function
 	#tag EndMethod

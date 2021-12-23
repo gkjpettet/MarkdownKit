@@ -177,6 +177,7 @@ Inherits MKBlock
 		    Else
 		      upperLimit = destinationStart + destinationLength
 		    End If
+		    
 		    For x As Integer = upperLimit DownTo linkLocalStart
 		      Characters.RemoveAt(x)
 		    Next x
@@ -270,17 +271,21 @@ Inherits MKBlock
 				"2 - BlockQuote"
 				"3 - CodeSpan"
 				"4 - Document"
-				"5 - FencedCode"
-				"6 - Html"
-				"7 - IndentedCode"
-				"8 - InlineText"
-				"9 - List"
-				"10 - ListItem"
-				"11 - Paragraph"
-				"12 - ReferenceDefinition"
-				"13 - SetextHeading"
-				"14 - TextBlock"
-				"15 - ThematicBreak"
+				"5 - Emphasis"
+				"6 - FencedCode"
+				"7 - Html"
+				"8 - IndentedCode"
+				"9 - InlineHTML"
+				"10 - InlineLink"
+				"11 - InlineText"
+				"12 - List"
+				"13 - ListItem"
+				"14 - Paragraph"
+				"15 - ReferenceDefinition"
+				"16 - SetextHeading"
+				"17 - StrongEmphasis"
+				"18 - TextBlock"
+				"19 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

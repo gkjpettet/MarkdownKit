@@ -51,18 +51,21 @@ Protected Class MKLinkScanner
 		  
 		  // Scenario 2:
 		  Var openParensCount, closeParensCount As Integer = 0
+		  Var lineEndingsSeen As Integer = 0
 		  For i = pos To charsLastIndex
 		    c = chars(i).Value
 		    
 		    If chars(i).IsLineEnding Then
-		      If openParensCount <> closeParensCount Then
-		        Return False
-		      Else
-		        data.Value("linkDestination") = chars.ToString(pos, i - pos)
-		        data.Value("linkDestinationStart") = startPos
-		        pos = i
-		        Return True
-		      End If
+		      lineEndingsSeen = lineEndingsSeen + 1
+		      
+		      If lineEndingsSeen > 1 Then Return False
+		      If i >= charsLastIndex And i < pos + 1 Then Return False
+		      If openParensCount <> closeParensCount Then Return False
+		      
+		      data.Value("linkDestination") = chars.ToString(pos, i - pos)
+		      data.Value("linkDestinationStart") = startPos
+		      pos = i
+		      Return True
 		    End If
 		    
 		    Select Case c
@@ -174,7 +177,10 @@ Protected Class MKLinkScanner
 		  
 		  data = New Dictionary
 		  
+		  If chars(startPos).IsLineEnding Then Return False
+		  
 		  Var c As String = chars(startPos).Value
+		  
 		  Var delimiter As String
 		  Select Case c
 		  Case """", "'"

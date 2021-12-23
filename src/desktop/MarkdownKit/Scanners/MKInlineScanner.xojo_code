@@ -174,8 +174,6 @@ Protected Class MKInlineScanner
 		  ///
 		  /// Assumes `chars(startPos) = "<"`.
 		  
-		  #Pragma Warning "TODO: Inline HTML parsing"
-		  
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  
 		  // Bare minimum valid inline HTML tag 3 characters long (e.g: `<a>`).

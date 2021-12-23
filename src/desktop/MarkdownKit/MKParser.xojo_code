@@ -150,8 +150,14 @@ Protected Class MKParser
 		  // In this scenario, we need to get the definition and add it to the document's reference map (if 
 		  // appropriate), add the setext heading line as content to this paragraph and raise 
 		  // an EdgeCase exception.
-		  #Pragma Warning "TODO: Setext edge case condition"
-		  #Pragma Unused line
+		  stx.Finalise(line)
+		  If stx.Characters.Count = 0 Then
+		    If paragraph.Characters.Count = 0 Then paragraph.Start = line.Start
+		    paragraph.AddLine(line, 0)
+		    #Pragma BreakOnExceptions False
+		    Raise New MKEdgeCase
+		    #Pragma BreakOnExceptions True
+		  End If
 		  
 		  // Remove the paragraph from its parent.
 		  paraParent.Children.RemoveAt(index)
@@ -844,8 +850,6 @@ Protected Class MKParser
 		  ///
 		  /// Assumes that `ParseBlockStructure` was called immediately prior to this method.
 		  
-		  #Pragma Warning "TODO"
-		  
 		  Var stack() As MKBlock
 		  Var block As MKBlock = mDoc
 		  Var delimiterStack() As MKDelimiterStackNode
@@ -881,9 +885,6 @@ Protected Class MKParser
 		  Reset(lines)
 		  
 		  ParseBlockStructure
-		  
-		  #Pragma Warning "Block quotes have no content"
-		  ' > This is **cool**
 		  
 		  ParseInlines
 		  

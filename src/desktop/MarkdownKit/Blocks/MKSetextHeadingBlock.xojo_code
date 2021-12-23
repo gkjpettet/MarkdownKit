@@ -13,11 +13,8 @@ Inherits MKBlock
 		  // Calling the overridden superclass method.
 		  Super.Finalise(line)
 		  
-		  // Remove this heading from its parent if it's empty.
-		  If Characters.Count = 0 And Parent <> Nil Then
-		    Var parentIndex As Integer = Parent.Children.IndexOf(Self)
-		    If parentIndex <> -1 Then Parent.Children.RemoveAt(parentIndex)
-		  End If
+		  ParseLinkReferenceDefinitions
+		  
 		  
 		End Sub
 	#tag EndMethod

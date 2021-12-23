@@ -1,6 +1,24 @@
 #tag Class
 Protected Class MKParagraphBlock
 Inherits MKBlock
+	#tag Method, Flags = &h21, Description = 5374617274696E67206174205B706F735D2C20616476616E636573207468726F756768205B436861726163746572735D20746F20746865207374617274206F6620746865206E657874206C696E652E204966207468697320697320746865206C617374206C696E65207468656E205B706F735D2069732073657420746F2060436861726163746572732E4C617374496E646578202B2031602E
+		Private Sub AdvanceToNextLineStart(ByRef pos As Integer)
+		  /// Starting at [pos], advances through [Characters] to the start of the next line. If this is the last line 
+		  /// then [pos] is set to `Characters.LastIndex + 1`.
+		  
+		  Var charsLastIndex As Integer = Characters.LastIndex
+		  For i As Integer = pos To charsLastIndex
+		    If Characters(i).IsLineEnding Then
+		      pos = i + 1
+		      Return
+		    Else
+		      pos = i
+		    End If
+		  Next i
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub Constructor(parent As MKBlock, blockStart As Integer)
 		  Super.Constructor(MKBlockTypes.Paragraph, parent, blockStart)
@@ -25,7 +43,7 @@ Inherits MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 4D617463686573207768697465737061636520696E205B63686172735D20626567696E6E696E67206174205B706F735D20616E642072657475726E7320686F77206D616E7920636861726163746572732077657265206D6174636865642E
-		Private Function MatchWhitespaceCharactersInArray(chars() As String, pos As Integer) As Integer
+		Private Function MatchWhitespaceCharactersInArray(chars() As MKCharacter, pos As Integer) As Integer
 		  /// Matches whitespace in [chars] beginning at [pos] and returns how many characters were matched.
 		  
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -47,21 +65,13 @@ Inherits MKBlock
 		  /// Parses any link reference definitions in this paragraph, excises them, adds them to the document 
 		  /// and re-assembles this paragraph's text blocks.
 		  ///
-		  /// We deviate from the CommonMark spec here. The spec allows line breaks in link labels which we do not.
-		  /// Additionally, the link destination must be on the same line as the link label. This simplifies
-		  /// parsing considerably and I really think it's madness to allow so many line breaks in a definition.
-		  /// Essentially, we assume link reference definitions are no more than one line.
-		  ///
 		  /// Assumes that this method is called during block parsing.
-		  /// At this point in the paragraph's life cycle, it consists of one or more MKTextBlocks. These will always
-		  /// be contiguous. That is:
-		  ///   Children(n + 1).Start = Children(n).Start + Children(n).Start.CharacterCount + 1`.
-		  /// MKTextBlocks at this stage represent lines (complete or partial). Therefore if `Children.Count = 2`, 
-		  /// the text in the MKTextBlock `Children(1)` occurred on the line immediately after `Children(0)`.
+		  /// At this point in the paragraph's life cycle, it consists of contiguous characters. That is:
+		  ///   Characters(n + 1).Position = Characters(n).Position + 1`.
 		  ///
 		  /// A link reference definition consists of a "link label", preceded by up to 3 spaces of indentation, 
-		  /// followed by a colon (`:`), optional spaces or tabs (no line ending - CommonMark deviation), 
-		  /// a "link destination", optional spaces or tabs (no line ending - CommonMark deviation)
+		  /// followed by a colon (`:`), optional spaces or tabs (including up to one line ending), 
+		  /// a "link destination", optional spaces or tabs (including up to one line ending)
 		  /// and an optional "link title" which, if present, must be separated from the "link destination" by 
 		  /// spaces or tabs. No further character may occur.
 		  ///
@@ -86,16 +96,16 @@ Inherits MKBlock
 		  
 		  Var data As Dictionary
 		  Var linkLabel, linkDestination, linkTitle As String
-		  Var i, charsLastIndex, labelStart, destinationStart, titleStart As Integer
-		  Var labelLength, destinationLength, titleLength, startOffset As Integer
+		  Var labelStart, destinationStart, titleStart As Integer
+		  Var labelLength, destinationLength, titleLength, linkLocalStart As Integer
 		  
-		  For childIndex As Integer = Children.LastIndex DownTo 0
-		    
-		    Var chars() As String = MKTextBlock(Children(childIndex)).Contents.CharacterArray
-		    charsLastIndex = chars.LastIndex
-		    startOffset = Children(childIndex).Start
+		  If Characters.Count = 0 Then Return
+		  
+		  Var i As Integer = 0
+		  While i <= Characters.LastIndex
+		    linkLocalStart = i
 		    linkLabel = ""
-		    labelStart = 0
+		    labelStart = linkLocalStart
 		    labelLength = 0
 		    linkDestination = ""
 		    destinationStart = 0
@@ -106,44 +116,52 @@ Inherits MKBlock
 		    data = Nil
 		    
 		    // Up to 3 spaces of indentation are permitted.
-		    i = MatchWhitespaceCharactersInArray(chars, i)
-		    If i > 3 Then Continue
+		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
+		    If i > labelStart + 3 Then
+		      AdvanceToNextLineStart(i)
+		      Continue
+		    End If
 		    
 		    // Can we match a link label?
-		    If Not MKLinkScanner.ParseLinkLabel(chars, i, data) Then Continue
+		    If Not MKLinkScanner.ParseLinkLabel(Characters, i, data) Then
+		      AdvanceToNextLineStart(i)
+		      Continue
+		    End If
 		    linkLabel = data.Value("linkLabel")
-		    labelStart = data.Value("linkLabelStart") + startOffset
-		    labelLength = i - labelStart + startOffset + 1 // Account for the flanking `[]`.
+		    labelStart = data.Value("linkLabelStart") + linkLocalStart
+		    labelLength = i - labelStart + linkLocalStart + 1 // Account for the flanking `[]`.
 		    
 		    // The next character must be a colon.
-		    If i > charsLastIndex Then Continue
-		    
+		    If i > Characters.LastIndex Then Return
 		    i = i + 1
-		    If chars(i) <> ":" Then
+		    If Characters(i).Value <> ":" Then
+		      AdvanceToNextLineStart(i)
 		      Continue
 		    Else
 		      i = i + 1
 		    End If
-		    
-		    If i > i Then Continue
+		    If i > Characters.LastIndex Then Return
 		    
 		    // Skip whitespace after the colon.
-		    i = i + MatchWhitespaceCharactersInArray(chars, i)
+		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
 		    
 		    // Can we match a link destination?
-		    If Not MKLinkScanner.ParseLinkDestination(chars, i, data) Then Continue
+		    If Not MKLinkScanner.ParseLinkDestination(Characters, i, data) Then
+		      AdvanceToNextLineStart(i)
+		      Continue
+		    End If
 		    linkDestination = data.Value("linkDestination")
-		    destinationStart = data.Value("linkDestinationStart") + startOffset
-		    destinationLength = i - destinationStart + startOffset
+		    destinationStart = data.Value("linkDestinationStart") + linkLocalStart
+		    destinationLength = i - destinationStart + linkLocalStart
 		    
 		    // Consume optional tabs and spaces.
-		    i = i + MatchWhitespaceCharactersInArray(chars, i)
+		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
 		    
 		    // Can we match a link title?
-		    If MKLinkScanner.ParseLinkTitle(chars, i, data) Then
+		    If MKLinkScanner.ParseLinkTitle(Characters, i, data) Then
 		      linkTitle = data.Value("linkTitle")
-		      titleStart = data.Value("linkTitleStart") + startOffset
-		      titleLength = i - titleStart + startOffset + 1 // Account for the flanking delimiters.
+		      titleStart = data.Value("linkTitleStart") + linkLocalStart
+		      titleLength = i - titleStart + linkLocalStart + 1 // Account for the flanking delimiters.
 		    End If
 		    
 		    // We've found a definition. Add it to the document.
@@ -152,9 +170,18 @@ Inherits MKBlock
 		    linkDestination, destinationStart, destinationLength, _
 		    linkTitle, titleStart, titleLength, i)
 		    
-		    // Remove this text block from the paragraph.
-		    Children.RemoveAt(childIndex)
-		  Next childIndex
+		    // Remove these characters from the paragraph.
+		    Var upperLimit As Integer
+		    If titleStart <> 0 Then
+		      upperLimit = titleStart + titleLength
+		    Else
+		      upperLimit = destinationStart + destinationLength
+		    End If
+		    For x As Integer = upperLimit DownTo linkLocalStart
+		      Characters.RemoveAt(x)
+		    Next x
+		    i = linkLocalStart
+		  Wend
 		  
 		End Sub
 	#tag EndMethod
@@ -166,6 +193,14 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsChildOfTightList"
 			Visible=false
@@ -233,17 +268,19 @@ Inherits MKBlock
 				"0 - AtxHeading"
 				"1 - Block"
 				"2 - BlockQuote"
-				"3 - Document"
-				"4 - FencedCode"
-				"5 - Html"
-				"6 - IndentedCode"
-				"7 - List"
-				"8 - ListItem"
-				"9 - Paragraph"
-				"10 - ReferenceDefinition"
-				"11 - SetextHeading"
-				"12 - TextBlock"
-				"13 - ThematicBreak"
+				"3 - CodeSpan"
+				"4 - Document"
+				"5 - FencedCode"
+				"6 - Html"
+				"7 - IndentedCode"
+				"8 - InlineText"
+				"9 - List"
+				"10 - ListItem"
+				"11 - Paragraph"
+				"12 - ReferenceDefinition"
+				"13 - SetextHeading"
+				"14 - TextBlock"
+				"15 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -276,14 +313,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Level"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

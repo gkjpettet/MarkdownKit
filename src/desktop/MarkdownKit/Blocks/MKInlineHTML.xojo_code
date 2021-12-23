@@ -19,12 +19,12 @@ Inherits MKBlock
 		  Var textBlockStart As Integer = LocalStart
 		  Var contentsBuffer() As String
 		  For i As Integer = LocalStart To LocalRightAnglePos
+		    If contentsBuffer.Count = 0 Then textBlockStart = i
 		    Var c As MKCharacter = Parent.Characters(i)
 		    If c.IsLineEnding Then
 		      Var s As String = String.FromArray(contentsBuffer, "")
 		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s))
 		      contentsBuffer.RemoveAll
-		      textBlockStart = i
 		    Else
 		      contentsBuffer.Add(c.Value)
 		    End If

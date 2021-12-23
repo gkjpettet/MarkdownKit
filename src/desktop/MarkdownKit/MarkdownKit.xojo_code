@@ -1,5 +1,33 @@
 #tag Module
 Protected Module MarkdownKit
+	#tag Method, Flags = &h1, Description = 52657475726E73206120737472696E672066726F6D205B63686172735D20626567696E6E696E6720617420696E646578205B73746172745D20666F72205B6C656E6774685D20636861726163746572732E20417373756D6573205B63686172735D20697320616E206172726179206F6620696E646976696475616C20636861726163746572732E
+		Protected Function FromMKCharacterArray(chars() As String, start As Integer, length As Integer = -1) As String
+		  /// Returns a string from [chars] beginning at index [start] for [length] characters. 
+		  /// Assumes [chars] is an array of individual characters.
+		  ///
+		  /// If `start + length` > the number of remaining characters then all characters from [start] to the
+		  /// end of [chars] are returned.
+		  /// If [length] = `-1` then all characters from [start] to the end of [chars] are returned.
+		  
+		  Var tmp() As String
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  
+		  Var finish As Integer
+		  If start + length > charsLastIndex Or length = -1 Then
+		    finish = charsLastIndex
+		  Else
+		    finish = start + length - 1
+		  End If
+		  
+		  For i As Integer = start To finish
+		    tmp.Add(chars(i))
+		  Next i
+		  
+		  Return String.FromArray(tmp, "")
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 54727565206966205B636861725D2069732061206261636B736C6173682D657363617061626C65206368617261637465722E
 		Private Function IsEscapable(char As String) As Boolean
 		  /// True if [char] is a backslash-escapable character.
@@ -19,6 +47,21 @@ Protected Module MarkdownKit
 		  Else
 		    Return False
 		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 547275652069662074686520636861726163746572206174205B706F735D2069732065736361706564202870726563656465642062792061206E6F6E2D65736361706564206261636B736C61736820636861726163746572292E
+		Function IsMarkdownEscaped(chars() As MKCharacter, pos As Integer) As Boolean
+		  /// True if the character at [pos] is escaped (preceded by a non-escaped backslash character).
+		  
+		  If pos > chars.LastIndex or pos = 0 Then Return False
+		  
+		  If chars(pos - 1).Value = "\" And Not IsMarkdownEscaped(chars, pos - 1) Then
+		    Return True
+		  Else
+		    Return False
+		  End If
+		  
 		End Function
 	#tag EndMethod
 
@@ -442,24 +485,29 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 4772616273205B6C656E67745D602063686172616374657273205B63686172735D20626567696E6E696E67206174205B73746172745D20616E642072657475726E73207468656D206173206120737472696E672E20496620616E79206F66207468652070617373656420706172616D657465727320617265206F7574206F662072616E6765207468656E2077652072657475726E2022222E
+	#tag Method, Flags = &h0, Description = 52657475726E73206120737472696E672066726F6D205B63686172735D20626567696E6E696E6720617420696E646578205B73746172745D20666F72205B6C656E6774685D20636861726163746572732E
 		Function ToString(Extends chars() As MKCharacter, start As Integer, length As Integer) As String
-		  /// Grabs [lengt]` characters [chars] beginning at [start] and returns them as a string.
-		  /// If any of the passed parameters are out of range then we return "".
+		  /// Returns a string from [chars] beginning at index [start] for [length] characters. 
+		  ///
+		  /// If `start + length` > the number of remaining characters then all characters from [start] to the
+		  /// end of [chars] are returned.
+		  /// If [length] = `-1` then all characters from [start] to the end of [chars] are returned.
 		  
+		  Var tmp() As String
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  
-		  If start < 0 Or start > charsLastIndex Or length <= 0 Or _
-		  (start + length - 1 > charsLastIndex) Then Return ""
+		  Var finish As Integer
+		  If start + length > charsLastIndex Or length = -1 Then
+		    finish = charsLastIndex
+		  Else
+		    finish = start + length - 1
+		  End If
 		  
-		  Var limit As Integer = start + length - 1
-		  Var tmp() As String
-		  For i As Integer = start To limit
+		  For i As Integer = start To finish
 		    tmp.Add(chars(i).Value)
 		  Next i
 		  
 		  Return String.FromArray(tmp, "")
-		  
 		End Function
 	#tag EndMethod
 

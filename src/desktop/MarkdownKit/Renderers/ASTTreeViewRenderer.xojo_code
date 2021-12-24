@@ -1,5 +1,5 @@
 #tag Class
-Protected Class ASTRenderer
+Protected Class ASTTreeViewRenderer
 Implements MKRenderer
 	#tag Method, Flags = &h21, Description = 437265617465732061206E6F64652066726F6D20616E206172726179206F66206368617261637465727320776974682074686520737065636966696564205B6E6F64655469746C655D2E
 		Private Function CreateNodeFromCharacters(nodeTitle As String, chars() As MKCharacter) As TreeViewNode

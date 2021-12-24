@@ -198,7 +198,7 @@ Begin DesktopWindow Window1
       Scope           =   0
       TabPanelIndex   =   0
    End
-   Begin DesktopLabel ParseTime
+   Begin DesktopLabel Time
       AllowAutoDeactivate=   True
       Bold            =   False
       Enabled         =   True
@@ -248,16 +248,21 @@ End
 		  Var watch As New StopWatch(True)
 		  Var doc As MKDocument = parser.ParseSource(Source.Text)
 		  watch.stop
+		  Var parseTime As Integer = watch.ElapsedMilliseconds
 		  
-		  Var printer As New ASTRenderer
+		  Var printer As New ASTTreeViewRenderer
 		  ASTTreeView.RemoveAllNodes
-		  ASTTreeView.AppendNode(printer.VisitDocument(doc))
+		  watch.Start
+		  Var node As TreeViewNode = printer.VisitDocument(doc)
+		  ASTTreeView.AppendNode(node)
+		  watch.Stop
+		  Var renderTime As Integer = watch.ElapsedMilliseconds
 		  
 		  // Expand the document node.
 		  ASTTreeView.SelectedIndex = 0
 		  ASTTreeView.SelectedNode.SetExpanded(True, True)
 		  
-		  ParseTime.Text = watch.ElapsedMilliseconds.ToString + " ms"
+		  Time.Text = "Parsed in " + parseTime.ToString + " ms, rendered in " + renderTime.ToString + " ms" 
 		  
 		End Sub
 	#tag EndEvent

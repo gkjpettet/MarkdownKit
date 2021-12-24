@@ -373,7 +373,18 @@ Protected Class MKInlineScanner
 		      End If
 		      
 		    Case "!["
-		      #Pragma Warning "TODO"
+		      // Parse ahead for an inline image, reference image, compact reference image, or shortcut reference image.
+		      Var imageData As MKInlineImageData = ScanForInlineImage(container, dsn.TextNode.LocalStart, pos)
+		      
+		      If imageData = Nil Then
+		        // Didn't find a valid image. Remove the opening delimiter from the stack.
+		        delimiterStack.RemoveAt(i)
+		        Return False
+		      Else
+		        // Create a new inline image with `container` as its parent.
+		        #Pragma Warning "TODO"
+		        
+		      End If
 		      
 		    End Select
 		    
@@ -805,13 +816,26 @@ Protected Class MKInlineScanner
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21, Description = 5363616E73205B636F6E7461696E65722E436861726163746572735D2066726F6D2074686520626567696E6E696E67206F662074686520617272617920666F7220616E20696E6C696E6520696D6167652E2052657475726E732074686520696D616765206461746120696620666F756E64206F72204E696C206966206E6F742E
+		Private Shared Function ScanForInlineImage(ByRef container As MKBlock, startPos As Integer, closerCharPos As Integer) As MKInlineImageData
+		  /// Scans [container.Characters] from the beginning of the array for an inline image. 
+		  /// Returns the image data if found or Nil if not.
+		  ///
+		  /// Assumes `container.Characters(startPos) = "!"` and `container.Characters(startPos + 1) = "["`.
+		  /// Assumes `container.Characters(closerCharPos)` is the index of a "]" character.
+		  
+		  #Pragma Warning "TODO"
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 5363616E73205B636F6E7461696E65722E436861726163746572735D2066726F6D2074686520626567696E6E696E67206F662074686520617272617920666F7220616E20696E6C696E65206C696E6B2E2052657475726E7320746865206C696E6B206461746120696620666F756E64206F72204E696C206966206E6F742E
 		Private Shared Function ScanForInlineLink(ByRef container As MKBlock, startPos As Integer, closerCharPos As Integer) As MKInlineLinkData
 		  /// Scans [container.Characters] from the beginning of the array for an inline link. 
 		  /// Returns the link data if found or Nil if not.
 		  ///
 		  /// Assumes `container.Characters(startPos) = "["`.
-		  /// `container.Characters(closerCharPos)` is the index of a "]" character.
+		  /// Assumes `container.Characters(closerCharPos)` is the index of a "]" character.
 		  
 		  Var pos As Integer = startPos
 		  Var chars() As MKCharacter = container.Characters

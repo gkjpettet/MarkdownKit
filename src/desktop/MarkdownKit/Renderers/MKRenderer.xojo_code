@@ -61,6 +61,12 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitInlineImage(image As MKInlineImage) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitInlineLink(link As MKInlineLink) As Variant
 		  
 		End Function

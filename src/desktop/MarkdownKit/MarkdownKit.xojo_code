@@ -2835,6 +2835,7 @@ Protected Module MarkdownKit
 		  Html
 		  IndentedCode
 		  InlineHTML
+		  InlineImage
 		  InlineLink
 		  InlineText
 		  List

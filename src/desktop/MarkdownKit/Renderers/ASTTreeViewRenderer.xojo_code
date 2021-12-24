@@ -232,6 +232,25 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitInlineImage(image As MKInlineImage) As Variant
+		  Var node As New TreeViewNode("Inline Image")
+		  node.AppendNode(New TreeViewNode("Start: " + image.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Destination: " + image.Destination))
+		  If image.Title <> "" Then
+		    node.AppendNode(New TreeViewNode("Title: " + image.Title))
+		  End If
+		  node.AppendNode(CreateNodeFromCharacters("Characters", image.Characters))
+		  
+		  For Each child As MKBlock In image.Children
+		    node.AppendNode(child.Accept(Self))
+		  Next child
+		  
+		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitInlineLink(link As MKInlineLink) As Variant
 		  Var node As New TreeViewNode("Inline Link")
 		  node.AppendNode(New TreeViewNode("Start: " + link.Start.ToString))

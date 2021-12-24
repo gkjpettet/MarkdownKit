@@ -32,6 +32,9 @@ Protected Class MKBlock
 		  Case MKBlockTypes.InlineHTML
 		    Return visitor.VisitInlineHTML(MKInlineHTML(Self))
 		    
+		  Case MKBlockTypes.InlineImage
+		    Return visitor.VisitInlineImage(MKInlineImage(Self))
+		    
 		  Case MKBlockTypes.InlineLink
 		    Return visitor.VisitInlineLink(MKInlineLink(Self))
 		    

@@ -1,5 +1,5 @@
 #tag DesktopWindow
-Begin DesktopWindow Window1
+Begin DesktopWindow WinASTTreeView
    Backdrop        =   0
    BackgroundColor =   &cFFFFFF
    Composite       =   False
@@ -20,7 +20,7 @@ Begin DesktopWindow Window1
    MinimumHeight   =   64
    MinimumWidth    =   64
    Resizeable      =   True
-   Title           =   "Untitled"
+   Title           =   "Markdown -> AST TreeView"
    Type            =   0
    Visible         =   True
    Width           =   1060

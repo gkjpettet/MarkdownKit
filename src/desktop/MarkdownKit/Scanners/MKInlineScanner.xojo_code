@@ -1,5 +1,45 @@
 #tag Class
 Protected Class MKInlineScanner
+	#tag Method, Flags = &h21, Description = 54727565206966205B636F6E7461696E65725D2063616E20636F6E7461696E20736F667420627265616B732E
+		Private Shared Function CanContainSoftBreaks(container As MKBlock) As Boolean
+		  /// True if [container] can contain soft breaks.
+		  
+		  Select Case container.Type
+		  Case MKBlockTypes.AtxHeading
+		    Return False
+		    
+		  Else
+		    Return True
+		    
+		  End Select
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 436F6D707574657320746865206162736F6C75746520737461727420706F736974696F6E206F6620696E6C696E6520656C656D656E747320696E2074686973205B636F6E7461696E65725D2E
+		Private Shared Function ComputeInlineStart(container As MKBlock) As Integer
+		  /// Computes the absolute start position of inline elements in this [container].
+		  ///
+		  /// The start of inline elements is not always the same as the start position of the container.
+		  /// For example:
+		  ///   012
+		  ///   Foo
+		  ///   ^
+		  /// Versus
+		  ///   01234
+		  ///   # Foo
+		  ///     ^
+		  
+		  Select Case container.Type
+		  Case MKBlockTypes.AtxHeading
+		    Return container.Start + MKATXHeadingBlock(container).Level + 1 // +1 for the space after the `#`s.
+		    
+		  Else
+		    Return container.Start
+		  End Select
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 5072697661746520746F2070726576656E7420696E7374616E74696174696F6E2E
 		Private Sub Constructor()
 		  /// Private to prevent instantiation.
@@ -67,6 +107,22 @@ Protected Class MKInlineScanner
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21, Description = 46696E616C69736573205B636F6E7461696E65725D2061667465722070617273696E6720616C6C206F662069747320696E6C696E65206368696C6472656E2E
+		Private Shared Sub FinaliseInlineContainer(container As MKBlock)
+		  /// Finalises [container] after parsing all of its inline children.
+		  
+		  Select Case container.Type
+		  Case MKBlockTypes.Paragraph, MKBlockTypes.SetextHeading
+		    If container.Children.Count > 0 And _
+		      container.Children(container.Children.LastIndex).Type = MKBlockTypes.SoftBreak Then
+		      // If the last inline of this container is a soft break, remove it.
+		      Call container.Children.Pop
+		    End If
+		    
+		  End Select
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 52657475726E732065697468657220616E20696E6C696E65206C696E6B206F72204E696C20696620612076616C69642066756C6C207265666572656E6365206C696E6B2063616E6E6F7420626520636F6E73747275637465642E
 		Private Shared Function FullReferenceLinkData(ByRef container As MKBlock, chars() As MKCharacter, linkTextChars() As MKCharacter, startPos As Integer, isInlineImage As Boolean) As MKInlineLinkData
 		  /// Returns either an inline link or Nil if a valid full reference link cannot be constructed.
@@ -115,8 +171,8 @@ Protected Class MKInlineScanner
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E6520636F6465207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
-		Shared Function HandleBackticks(parent As MKBlock, chars() As MKCharacter, startPos As Integer) As MKCodeSpan
+	#tag Method, Flags = &h21, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E6520636F6465207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
+		Private Shared Function HandleBackticks(parent As MKBlock, chars() As MKCharacter, startPos As Integer) As MKCodeSpan
 		  /// If the character at [startPos] in [chars] begins a valid inline code span then one is created and 
 		  /// returned, otherwise Nil is returned.
 		  /// 
@@ -169,8 +225,8 @@ Protected Class MKInlineScanner
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E652048544D4C207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
-		Shared Function HandleLeftAngleBracket(parent As MKBlock, chars() As MKCharacter, startPos As Integer) As MKInlineHTML
+	#tag Method, Flags = &h21, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E652048544D4C207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
+		Private Shared Function HandleLeftAngleBracket(parent As MKBlock, chars() As MKCharacter, startPos As Integer) As MKInlineHTML
 		  /// If the character at [startPos] in [chars] begins a valid inline HTML span then one is created and 
 		  /// returned, otherwise Nil is returned.
 		  ///
@@ -437,6 +493,8 @@ Protected Class MKInlineScanner
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  Var buffer As MKInlineText
 		  
+		  Var inlineStart As Integer = ComputeInlineStart(block)
+		  
 		  While pos <= charsLastIndex
 		    Var c As MKCharacter = chars(pos)
 		    
@@ -457,7 +515,7 @@ Protected Class MKInlineScanner
 		          buffer.EndPosition = pos + block.Start
 		        Else
 		          buffer = New MKInlineText(block)
-		          buffer.Start = pos + block.Start
+		          buffer.Start = pos + inlineStart
 		          buffer.LocalStart = pos
 		          buffer.EndPosition = pos + block.Start
 		        End If
@@ -475,13 +533,13 @@ Protected Class MKInlineScanner
 		        // Add the inline HTML.
 		        block.Children.Add(html)
 		        // Advance the position.
-		        pos = html.EndPosition - block.Start + 1
+		        pos = html.EndPosition + 1
 		      Else
 		        If buffer <> Nil Then
 		          buffer.EndPosition = pos + block.Start
 		        Else
 		          buffer = New MKInlineText(block)
-		          buffer.Start = pos + block.Start
+		          buffer.Start = pos + inlineStart
 		          buffer.LocalStart = pos
 		          buffer.EndPosition = pos + block.Start
 		        End If
@@ -496,7 +554,7 @@ Protected Class MKInlineScanner
 		      
 		      // Create a new text block for this "[" character.
 		      buffer = New MKInlineText(block)
-		      buffer.Start = pos + block.Start
+		      buffer.Start = pos + inlineStart
 		      buffer.LocalStart = pos
 		      buffer.EndPosition = pos + block.Start // One character long.
 		      
@@ -515,7 +573,7 @@ Protected Class MKInlineScanner
 		      
 		      // Create a new text block for this "![" character sequence.
 		      buffer = New MKInlineText(block)
-		      buffer.Start = pos + block.Start
+		      buffer.Start = pos + inlineStart
 		      buffer.LocalStart = pos
 		      buffer.EndPosition = pos + block.Start + 1 // Two characters long.
 		      
@@ -540,7 +598,7 @@ Protected Class MKInlineScanner
 		          // A link or image block will have been inserted as a child of `block` by `LookForLinkOrImage`
 		          // so we need to start a new text block.
 		          buffer = New MKInlineText(block)
-		          buffer.Start = pos + block.Start
+		          buffer.Start = pos + inlineStart
 		          buffer.LocalStart = pos
 		          buffer.EndPosition = pos + block.Start
 		        End If
@@ -554,7 +612,7 @@ Protected Class MKInlineScanner
 		      If buffer <> Nil Then FinaliseBuffer(buffer, block)
 		      Var dsn As MKDelimiterStackNode = ScanDelimiterRun(chars, pos, c.Value)
 		      buffer = New MKInlineText(block)
-		      buffer.Start = pos + block.Start
+		      buffer.Start = pos + inlineStart
 		      buffer.LocalStart = pos
 		      buffer.EndPosition = block.Start + pos + dsn.OriginalLength - 1
 		      dsn.TextNode = buffer
@@ -567,6 +625,10 @@ Protected Class MKInlineScanner
 		      // ============
 		    ElseIf c.IsLineEnding Then
 		      If buffer <> Nil Then FinaliseBuffer(buffer, block)
+		      If CanContainSoftBreaks(block) Then
+		        Var lePos As Integer = If(pos = 0, inlineStart, chars(pos - 1).Position + 1)
+		        block.Children.Add(New MKSoftBreak(block, lePos))
+		      End If
 		      pos = pos + 1
 		      Continue
 		      
@@ -578,7 +640,7 @@ Protected Class MKInlineScanner
 		        buffer.EndPosition = pos + block.Start
 		      Else
 		        buffer = New MKInlineText(block)
-		        buffer.Start = pos + block.Start
+		        buffer.Start = pos + inlineStart
 		        buffer.LocalStart = pos
 		        buffer.EndPosition = pos + block.Start
 		      End If
@@ -591,6 +653,8 @@ Protected Class MKInlineScanner
 		  End If
 		  
 		  ProcessEmphasis(block, delimiterStack, -1)
+		  
+		  FinaliseInlineContainer(block)
 		End Sub
 	#tag EndMethod
 

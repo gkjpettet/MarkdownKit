@@ -56,6 +56,9 @@ Protected Class MKBlock
 		  Case MKBlockTypes.SetextHeading
 		    Return visitor.VisitSetextHeading(MKSetextHeadingBlock(Self))
 		    
+		  Case MKBlockTypes.SoftBreak
+		    Return visitor.VisitSoftBreak(MKSoftBreak(Self))
+		    
 		  Case MKBlockTypes.StrongEmphasis
 		    Return visitor.VisitStrongEmphasis(MKStrongEmphasis(Self))
 		    

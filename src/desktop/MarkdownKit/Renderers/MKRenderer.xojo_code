@@ -103,6 +103,12 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
 		  
 		End Function

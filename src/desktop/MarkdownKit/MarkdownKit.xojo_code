@@ -2843,6 +2843,7 @@ Protected Module MarkdownKit
 		  Paragraph
 		  ReferenceDefinition
 		  SetextHeading
+		  SoftBreak
 		  StrongEmphasis
 		  TextBlock
 		ThematicBreak

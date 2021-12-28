@@ -31,6 +31,8 @@ Inherits MKBlock
 		      Var s As String = String.FromArray(contentsBuffer, "")
 		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s))
 		      contentsBuffer.RemoveAll
+		      // Add in a soft break
+		      Children.Add(New MKSoftBreak(Self, i + 1))
 		      
 		    ElseIf c.Value = &u0020 Then
 		      contentsBuffer.Add(c.Value)

@@ -96,6 +96,25 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
+      Begin DesktopMenuItem UntitledSeparator
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "-"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin DesktopMenuItem EditSelectAll
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Select All"
+         ShortcutKey = "A"
+         Shortcut = "Cmd+A"
+         MenuModifier = True
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
       Begin DesktopMenuItem UntitledMenu0
          SpecialMenu = 0
          Index = -2147483648
@@ -138,6 +157,47 @@ Begin Menu MainMenuBar
          SpecialMenu = 0
          Index = -2147483648
          Text = "&About XojoUnit"
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+   End
+   Begin DesktopMenuItem WindowMenu
+      SpecialMenu = 0
+      Index = -2147483648
+      Text = "Window"
+      AutoEnabled = True
+      AutoEnable = True
+      Visible = True
+      Begin DesktopMenuItem WindowUnitTests
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "Unit Tests"
+         ShortcutKey = "1"
+         Shortcut = "Cmd+1"
+         MenuModifier = True
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin DesktopMenuItem WindowAST
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "AST"
+         ShortcutKey = "2"
+         Shortcut = "Cmd+2"
+         MenuModifier = True
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
+      Begin DesktopMenuItem WindowHTML
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "HTML"
+         ShortcutKey = "3"
+         Shortcut = "Cmd+3"
+         MenuModifier = True
          AutoEnabled = True
          AutoEnable = True
          Visible = True

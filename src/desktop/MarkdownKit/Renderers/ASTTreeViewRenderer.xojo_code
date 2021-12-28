@@ -31,8 +31,6 @@ Implements MKRenderer
 		  
 		  Var node As New TreeViewNode("ATX Heading")
 		  
-		  node.AppendNode(CreateNodeFromCharacters("Title", atx.Characters))
-		  
 		  node.AppendNode(New TreeViewNode("Start: " + atx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + atx.Level.ToString))
 		  node.AppendNode(New TreeViewNode("Opening Sequence Length: " + atx.OpeningSequenceLength.ToString))
@@ -41,6 +39,13 @@ Implements MKRenderer
 		    node.AppendNode(New TreeViewNode("Closing Sequence Start: " + atx.ClosingSequenceStart.ToString))
 		    node.AppendNode(New TreeViewNode("Closing Sequence Count: " + atx.ClosingSequenceCount.ToString))
 		  End If
+		  
+		  node.AppendNode(CreateNodeFromCharacters("Raw Title", atx.Characters))
+		  Var titleNode As New TreeViewNode("Title")
+		  For Each child As MKBlock In atx.Children
+		    titleNode.AppendNode(child.Accept(Self))
+		  Next child
+		  node.AppendNode(titleNode)
 		  
 		  Return node
 		End Function
@@ -345,12 +350,14 @@ Implements MKRenderer
 		  Var node As New TreeViewNode("Paragraph")
 		  
 		  node.AppendNode(CreateNodeFromCharacters("Raw Text", p.Characters))
+		  node.AppendNode(New TreeViewNode("IsChildOfTightList: " + If(p.IsChildOfTightList, "True", "False")))
 		  
 		  For Each child As MKBlock In p.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
 		  Return node
+		  
 		End Function
 	#tag EndMethod
 
@@ -367,6 +374,15 @@ Implements MKRenderer
 		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.UnderlineLength.ToString))
 		  
 		  Return node
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
+		  /// Part of the MKRenderer interface.
+		  
+		  Return New TreeViewNode("Soft Break (pos: " + sb.Start.ToString + ")")
 		  
 		End Function
 	#tag EndMethod

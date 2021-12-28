@@ -1,6 +1,34 @@
 #tag Class
 Protected Class App
 Inherits DesktopApplication
+	#tag MenuHandler
+		Function WindowAST() As Boolean Handles WindowAST.Action
+			WinASTTreeView.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function WindowHTML() As Boolean Handles WindowHTML.Action
+			WinHTML.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function WindowUnitTests() As Boolean Handles WindowUnitTests.Action
+			WinUnitTests.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+
 	#tag Constant, Name = kEditClear, Type = String, Dynamic = False, Default = \"&Delete", Scope = Public
 		#Tag Instance, Platform = Windows, Language = Default, Definition  = \"&Delete"
 		#Tag Instance, Platform = Linux, Language = Default, Definition  = \"&Delete"

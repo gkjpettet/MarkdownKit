@@ -9,7 +9,7 @@ Inherits MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
-		Function Finalise(line As TextLine) As Boolean
+		Sub Finalise(line As TextLine)
 		  /// Closes this block and makes any final changes that may be required.
 		  
 		  // Calling the overridden superclass method.
@@ -22,7 +22,7 @@ Inherits MKBlock
 		  End If
 		  
 		  
-		End Function
+		End Sub
 	#tag EndMethod
 
 
@@ -52,6 +52,14 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsChildOfTightList"
 			Visible=false
@@ -119,17 +127,19 @@ Inherits MKBlock
 				"0 - AtxHeading"
 				"1 - Block"
 				"2 - BlockQuote"
-				"3 - Document"
-				"4 - FencedCode"
-				"5 - Html"
-				"6 - IndentedCode"
-				"7 - List"
-				"8 - ListItem"
-				"9 - Paragraph"
-				"10 - ReferenceDefinition"
-				"11 - SetextHeading"
-				"12 - TextBlock"
-				"13 - ThematicBreak"
+				"3 - CodeSpan"
+				"4 - Document"
+				"5 - FencedCode"
+				"6 - Html"
+				"7 - IndentedCode"
+				"8 - InlineText"
+				"9 - List"
+				"10 - ListItem"
+				"11 - Paragraph"
+				"12 - ReferenceDefinition"
+				"13 - SetextHeading"
+				"14 - TextBlock"
+				"15 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -162,14 +172,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Level"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty

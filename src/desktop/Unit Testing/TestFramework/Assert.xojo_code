@@ -384,6 +384,18 @@ Protected Class Assert
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI), Description = 506173736573207468652074657374206966205B65787065637465645D203D205B61637475616C5D20286361736520696E73656E736974697665292E
+		Sub AreEqualCustom(input As String, expected As String, actual As String)
+		  /// Passes the test if [expected] = [actual] (case insensitive).
+		  
+		  If expected = actual Then
+		    PassCustom(input, expected, actual)
+		  Else
+		    FailCustom(input, expected, actual)
+		  End If
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub AreNotEqual(expected As Color, actual As Color, message As String = "")
 		  Var expectedColor, actualColor As String
@@ -802,6 +814,26 @@ Protected Class Assert
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, Description = 4661696C73207468652063757272656E7420746573742E
+		Sub FailCustom(input As String, expected As String, actual As String)
+		  /// Fails the current test.
+		  
+		  Failed = True
+		  Group.CurrentTestResult.Result = TestResult.Failed
+		  
+		  Group.CurrentTestResult.Input = input
+		  Group.CurrentTestResult.Expected = expected
+		  Group.CurrentTestResult.Actual = actual
+		  
+		  If Group.StopTestOnFail Then
+		    #Pragma BreakOnExceptions False
+		    Raise New XojoUnitTestFailedException
+		    #Pragma BreakOnExceptions Default
+		  End If
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Function FailEqualMessage(expected As String, actual As String) As String
 		  Var message As String
@@ -908,6 +940,24 @@ Protected Class Assert
 		  If Group.CurrentTestResult.Result <> TestResult.Failed Then
 		    Group.CurrentTestResult.Result = TestResult.Passed
 		    Message(message)
+		  End If
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 4D61726B207468652074657374206173207061737365642E
+		Sub PassCustom(input As String, expected As String, actual As String)
+		  /// Mark the test as passed.
+		  
+		  If Group Is Nil Or Group.CurrentTestResult Is Nil Then Return
+		  
+		  Failed = False
+		  If Group.CurrentTestResult.Result <> TestResult.Failed Then
+		    Group.CurrentTestResult.Result = TestResult.Passed
+		    Group.CurrentTestResult.Input = input
+		    Group.CurrentTestResult.Actual = actual
+		    Group.CurrentTestResult.Expected = expected
 		  End If
 		  
 		  

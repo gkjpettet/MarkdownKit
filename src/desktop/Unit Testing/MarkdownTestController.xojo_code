@@ -7,8 +7,7 @@ Inherits TestController
 		  
 		  Var group As TestGroup
 		  
-		  group = New ASTTests(Self, "AST")
-		  
+		  group = New HTMLTests(Self, "HTML")
 		  
 		End Sub
 	#tag EndEvent

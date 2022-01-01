@@ -1,11 +1,23 @@
 #tag Class
 Protected Class TestResult
+	#tag Property, Flags = &h0, Description = 5468652061637475616C207465737420726573756C742E
+		Actual As String
+	#tag EndProperty
+
 	#tag Property, Flags = &h0
 		Duration As Double
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 546865206578706563746564207465737420726573756C742E
+		Expected As String
+	#tag EndProperty
+
 	#tag Property, Flags = &h0
 		IncludeMethod As Boolean = True
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520696E707574204D61726B646F776E2E
+		Input As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

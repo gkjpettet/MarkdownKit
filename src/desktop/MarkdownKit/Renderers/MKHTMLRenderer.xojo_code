@@ -201,15 +201,12 @@ Implements MKRenderer
 		  Var childrenLastIndex As Integer = ic.Children.LastIndex
 		  For i As Integer = 0 To childrenLastIndex
 		    Call ic.Children(i).Accept(Self)
-		    
 		    // Add a line ending after every text block (except the last one).
 		    If i < childrenLastIndex Then mOutput.Add(&u0A)
 		  Next i
 		  
 		  mOutput.Add(&u0A)
 		  mOutput.Add("</code></pre>")
-		  mOutput.Add(&u0A)
-		  
 		End Function
 	#tag EndMethod
 
@@ -374,7 +371,7 @@ Implements MKRenderer
 		  mOutput.Add("</")
 		  mOutput.Add(listTag)
 		  mOutput.Add(">")
-		  mOutput.Add(&u0A)
+		  
 		  
 		End Function
 	#tag EndMethod
@@ -411,6 +408,7 @@ Implements MKRenderer
 		  
 		  If Not p.IsChildOfTightList Then mOutput.Add("</p>")
 		  
+		  mOutput.Add(&u0A)
 		End Function
 	#tag EndMethod
 

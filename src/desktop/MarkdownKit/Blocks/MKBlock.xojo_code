@@ -346,14 +346,16 @@ Protected Class MKBlock
 		    // Up to 3 spaces of indentation are permitted.
 		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
 		    If i > labelStart + 3 Then
-		      AdvanceToNextLineStart(i)
-		      Continue
+		      ' AdvanceToNextLineStart(i)
+		      ' Continue
+		      Return
 		    End If
 		    
 		    // Can we match a link label?
 		    If Not MKLinkScanner.ParseLinkLabel(Characters, i, data) Then
-		      AdvanceToNextLineStart(i)
-		      Continue
+		      ' AdvanceToNextLineStart(i)
+		      ' Continue
+		      Return
 		    End If
 		    linkLabel = data.Value("linkLabel")
 		    labelStart = data.Value("linkLabelStart") + linkLocalStart
@@ -363,8 +365,9 @@ Protected Class MKBlock
 		    If i > Characters.LastIndex Then Return
 		    i = i + 1
 		    If Characters(i).Value <> ":" Then
-		      AdvanceToNextLineStart(i)
-		      Continue
+		      ' AdvanceToNextLineStart(i)
+		      ' Continue
+		      Return
 		    Else
 		      i = i + 1
 		    End If
@@ -375,8 +378,9 @@ Protected Class MKBlock
 		    
 		    // Can we match a link destination?
 		    If Not MKLinkScanner.ParseLinkDestination(Characters, i, data) Then
-		      AdvanceToNextLineStart(i)
-		      Continue
+		      ' AdvanceToNextLineStart(i)
+		      ' Continue
+		      Return
 		    End If
 		    linkDestination = data.Value("linkDestination")
 		    destinationStart = data.Value("linkDestinationStart") + linkLocalStart
@@ -608,16 +612,18 @@ Protected Class MKBlock
 				"7 - Html"
 				"8 - IndentedCode"
 				"9 - InlineHTML"
-				"10 - InlineLink"
-				"11 - InlineText"
-				"12 - List"
-				"13 - ListItem"
-				"14 - Paragraph"
-				"15 - ReferenceDefinition"
-				"16 - SetextHeading"
-				"17 - StrongEmphasis"
-				"18 - TextBlock"
-				"19 - ThematicBreak"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

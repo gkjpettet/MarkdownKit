@@ -520,10 +520,9 @@ Protected Module MarkdownKit
 		  Var chars() As String = s.CharacterArray
 		  Var pos As Integer = 0
 		  Var c As String
-		  Var charsLastIndex As Integer = chars.LastIndex
-		  Do Until pos > charsLastIndex
+		  Do Until pos > chars.LastIndex
 		    c = chars(pos)
-		    If c = "\" And pos < charsLastIndex And IsEscapable(chars(pos + 1)) Then
+		    If c = "\" And pos < chars.LastIndex And IsEscapable(chars(pos + 1)) Then
 		      // Remove the backslash from the array.
 		      chars.RemoveAt(pos)
 		    End If
@@ -541,12 +540,11 @@ Protected Module MarkdownKit
 		  
 		  If chars.IndexOf("\") = -1 Then Return
 		  
-		  Var charsLastIndex As Integer = chars.LastIndex
 		  Var pos As Integer = 0
 		  Var c As String
-		  Do Until pos > charsLastIndex
+		  Do Until pos > chars.LastIndex
 		    c = chars(pos)
-		    If c = "\" And pos < charsLastIndex And IsEscapable(chars(pos + 1)) Then
+		    If c = "\" And pos < chars.LastIndex And IsEscapable(chars(pos + 1)) Then
 		      // Remove the backslash from the array.
 		      chars.RemoveAt(pos)
 		    End If

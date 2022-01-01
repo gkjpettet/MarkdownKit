@@ -576,87 +576,6 @@ Begin DesktopWindow WinUnitTests
          Visible         =   True
          Width           =   659
       End
-      Begin DesktopTextArea TestResultsArea
-         AllowAutoDeactivate=   True
-         AllowFocusRing  =   False
-         AllowSpellChecking=   True
-         AllowStyledText =   True
-         AllowTabs       =   False
-         BackgroundColor =   &cFFFFFF
-         Bold            =   False
-         Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
-         Format          =   ""
-         HasBorder       =   True
-         HasHorizontalScrollbar=   False
-         HasVerticalScrollbar=   True
-         Height          =   135
-         HideSelection   =   True
-         Index           =   -2147483648
-         InitialParent   =   "GroupBoxes$1"
-         Italic          =   False
-         Left            =   306
-         LineHeight      =   0.0
-         LineSpacing     =   0.0
-         LockBottom      =   True
-         LockedInPosition=   True
-         LockLeft        =   True
-         LockRight       =   True
-         LockTop         =   False
-         MaximumCharactersAllowed=   0
-         Multiline       =   True
-         ReadOnly        =   True
-         Scope           =   0
-         TabIndex        =   3
-         TabPanelIndex   =   0
-         TabStop         =   True
-         Text            =   ""
-         TextAlignment   =   0
-         TextColor       =   &c00000000
-         Tooltip         =   ""
-         Top             =   739
-         Transparent     =   False
-         Underline       =   False
-         UnicodeMode     =   0
-         ValidationMask  =   ""
-         Visible         =   True
-         Width           =   1063
-      End
-      Begin DesktopLabel Labels
-         AllowAutoDeactivate=   True
-         Bold            =   False
-         Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
-         Height          =   20
-         Index           =   7
-         InitialParent   =   "GroupBoxes$1"
-         Italic          =   False
-         Left            =   306
-         LockBottom      =   True
-         LockedInPosition=   False
-         LockLeft        =   True
-         LockRight       =   False
-         LockTop         =   False
-         Multiline       =   False
-         Scope           =   0
-         Selectable      =   False
-         TabIndex        =   4
-         TabPanelIndex   =   0
-         TabStop         =   True
-         Text            =   "Messages:"
-         TextAlignment   =   0
-         TextColor       =   &c00000000
-         Tooltip         =   ""
-         Top             =   707
-         Transparent     =   False
-         Underline       =   False
-         Visible         =   True
-         Width           =   100
-      End
       Begin DesktopLabel TestResultLabel
          AllowAutoDeactivate=   True
          Bold            =   False
@@ -739,7 +658,7 @@ Begin DesktopWindow WinUnitTests
          HasBorder       =   True
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   194
+         Height          =   318
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "GroupBoxes$1"
@@ -748,7 +667,7 @@ Begin DesktopWindow WinUnitTests
          LineHeight      =   0.0
          LineSpacing     =   1.0
          LockBottom      =   True
-         LockedInPosition=   False
+         LockedInPosition=   True
          LockLeft        =   True
          LockRight       =   False
          LockTop         =   True
@@ -763,7 +682,7 @@ Begin DesktopWindow WinUnitTests
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   501
+         Top             =   549
          Transparent     =   False
          Underline       =   False
          UnicodeMode     =   1
@@ -787,7 +706,7 @@ Begin DesktopWindow WinUnitTests
          HasBorder       =   True
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   194
+         Height          =   318
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "GroupBoxes$1"
@@ -796,7 +715,7 @@ Begin DesktopWindow WinUnitTests
          LineHeight      =   0.0
          LineSpacing     =   1.0
          LockBottom      =   True
-         LockedInPosition=   False
+         LockedInPosition=   True
          LockLeft        =   True
          LockRight       =   False
          LockTop         =   True
@@ -811,7 +730,7 @@ Begin DesktopWindow WinUnitTests
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   501
+         Top             =   549
          Transparent     =   False
          Underline       =   False
          UnicodeMode     =   1
@@ -832,7 +751,7 @@ Begin DesktopWindow WinUnitTests
          Italic          =   False
          Left            =   306
          LockBottom      =   False
-         LockedInPosition=   False
+         LockedInPosition=   True
          LockLeft        =   True
          LockRight       =   False
          LockTop         =   True
@@ -846,7 +765,7 @@ Begin DesktopWindow WinUnitTests
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   469
+         Top             =   517
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -865,7 +784,7 @@ Begin DesktopWindow WinUnitTests
          Italic          =   False
          Left            =   843
          LockBottom      =   False
-         LockedInPosition=   False
+         LockedInPosition=   True
          LockLeft        =   True
          LockRight       =   False
          LockTop         =   True
@@ -879,7 +798,7 @@ Begin DesktopWindow WinUnitTests
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   469
+         Top             =   517
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -901,7 +820,7 @@ Begin DesktopWindow WinUnitTests
          HasBorder       =   True
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   148
+         Height          =   196
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "GroupBoxes$1"
@@ -910,7 +829,7 @@ Begin DesktopWindow WinUnitTests
          LineHeight      =   0.0
          LineSpacing     =   1.0
          LockBottom      =   False
-         LockedInPosition=   False
+         LockedInPosition=   True
          LockLeft        =   True
          LockRight       =   False
          LockTop         =   True
@@ -946,7 +865,7 @@ Begin DesktopWindow WinUnitTests
          Italic          =   False
          Left            =   306
          LockBottom      =   False
-         LockedInPosition=   False
+         LockedInPosition=   True
          LockLeft        =   True
          LockRight       =   False
          LockTop         =   True
@@ -1116,7 +1035,7 @@ End
 		  // Force a resize to accommodate the toolbar.
 		  Self.Height = Self.Height
 		  
-		  Self.Top = Self.Top + 30
+		  Self.Top = Self.Top + 20
 		End Sub
 	#tag EndEvent
 
@@ -1194,13 +1113,13 @@ End
 		Private Sub RepositionControls()
 		  /// Repositions any controls that aren't managed automatically by Xojo.
 		  
-		  Var outputWidth As Integer = (TestResultsArea.Width / 2) - 8
+		  Var outputWidth As Integer = (GroupBoxes(0).Width / 2) - 18
 		  
 		  InputMarkdown.Width = outputWidth
 		  
 		  ExpectedOutput.Width = outputWidth
 		  
-		  ActualOutput.Left = (TestResultsArea.Left + TestResultsArea.Width) - outputWidth
+		  ActualOutput.Left = (GroupBoxes(0).Left + GroupBoxes(0).Width) - outputWidth - 8
 		  ActualOutput.Width = outputWidth
 		  
 		  LabelActualOutput.Left = ActualOutput.Left
@@ -1498,10 +1417,7 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub UpdateTestSummary()
-		  Var name As String
-		  Var result As String
-		  Var message As String
-		  Var duration As String
+		  Var name, result, message, duration, expected, actual, input As String
 		  
 		  Var item As Variant
 		  If TestGroupList.SelectedRowIndex <> -1 Then
@@ -1514,6 +1430,9 @@ End
 		    result = tr.Result
 		    message = tr.Message
 		    duration = Format(tr.Duration, "#,0.0000000") + "s"
+		    expected = TestResult(item).Expected
+		    actual = TestResult(item).Actual
+		    input = TestResult(item).Input
 		  ElseIf item IsA TestGroup Then
 		    Var tg As TestGroup = item
 		    name = tg.Name + " Group"
@@ -1521,11 +1440,16 @@ End
 		  End If
 		  
 		  TestNameLabel.Text = name
-		  TestResultsArea.Text = message
+		  'TestResultsArea.Text = message
 		  TestDurationLabel.Text = duration
 		  
 		  TestResultLabel.Text = result
 		  TestResultLabel.TextColor = If(result = "Passed", Color.RGB(78, 143, 0), Color.Red)
+		  
+		  ExpectedOutput.Text = expected
+		  ActualOutput.Text = actual
+		  InputMarkdown.Text = input
+		  
 		End Sub
 	#tag EndMethod
 

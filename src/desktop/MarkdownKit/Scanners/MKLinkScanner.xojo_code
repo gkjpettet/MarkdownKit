@@ -6,10 +6,10 @@ Protected Class MKLinkScanner
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 547269657320746F2070617273652061206C696E6B2064657374696E6174696F6E20696E205B63686172735D20626567696E6E696E67206174205B706F735D2E2049662061626C652069742072657475726E7320547275652C2075706461746573205B706F735D20746F2074686520656E64206F66207468652064657374696E6174696F6E20616E6420706F70756C61746573205B646174615D2E
+	#tag Method, Flags = &h0, Description = 547269657320746F2070617273652061206C696E6B2064657374696E6174696F6E20696E205B63686172735D20626567696E6E696E67206174205B706F735D2E2049662061626C652069742072657475726E7320547275652C2075706461746573205B706F735D20746F207468652063686172616374657220696D6D6564696174656C79206166746572207468652064657374696E6174696F6E20616E6420706F70756C61746573205B646174615D2E
 		Shared Function ParseLinkDestination(chars() As MKCharacter, ByRef pos As Integer, ByRef data As Dictionary) As Boolean
 		  /// Tries to parse a link destination in [chars] beginning at [pos]. If able it returns True, 
-		  /// updates [pos] to the end of the destination and populates [data].
+		  /// updates [pos] to the character immediately after the destination and populates [data].
 		  ///
 		  /// Sets [data.Value("linkDestination")] to the link destination (if found).
 		  /// Sets [data.Value("linkDestinationStart")] to the original value of [pos].
@@ -38,9 +38,14 @@ Protected Class MKLinkScanner
 		      c = chars(i).Value
 		      If chars(i).IsLineEnding Then Return False
 		      If c = ">" And Not IsMarkdownEscaped(chars, i) Then
-		        data.Value("linkDestination") = chars.ToString(pos + 1, i - pos - 2)
+		        If i = pos + 1 Then
+		          // Edge case: Empty link destination (`<>`).
+		          data.Value("linkDestination") = ""
+		        Else
+		          data.Value("linkDestination") = chars.ToString(pos + 1, i - pos - 2)
+		        End If
 		        data.Value("linkDestinationStart") = startPos
-		        pos = i
+		        pos = i + 1
 		        Return True
 		      End If
 		      If c = "<" And Not IsMarkdownEscaped(chars, i) Then Return False

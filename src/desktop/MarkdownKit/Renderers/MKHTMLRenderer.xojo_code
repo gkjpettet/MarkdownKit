@@ -256,7 +256,54 @@ Implements MKRenderer
 		Function VisitInlineImage(image As MKInlineImage) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  #Pragma Warning "TODO: Implement"
+		  mOutput.Add("<img src=")
+		  mOutput.Add("""")
+		  mOutput.Add(URLEncode(image.Destination))
+		  mOutput.Add("""")
+		  
+		  // The `alt` attribute is constructed from `image.Children`.
+		  // We only render the plain text content (ignoring emphasis, etc).
+		  Var stack() As MKBlock
+		  Var child As MKBlock = image.FirstChild
+		  
+		  Var alt() As String
+		  Var charsLastIndex As Integer
+		  While child <> Nil
+		    Select Case child.Type
+		    Case MKBlockTypes.InlineText
+		      charsLastIndex = child.Characters.LastIndex
+		      For i As Integer = 0 To charsLastIndex
+		        alt.Add(child.Characters(i).Value)
+		      Next i
+		    End Select
+		    
+		    If child.FirstChild <> Nil Then
+		      If child.NextSibling <> Nil Then stack.Add(child.NextSibling)
+		      child = child.FirstChild
+		    ElseIf child.NextSibling <> Nil Then
+		      child = child.NextSibling
+		    ElseIf stack.LastIndex > -1 Then
+		      child = stack.Pop
+		    Else
+		      child = Nil
+		    End If
+		  Wend
+		  
+		  mOutput.Add(" alt=")
+		  mOutput.Add("""")
+		  If alt.LastIndex > -1 Then mOutput.Add(String.FromArray(alt, ""))
+		  mOutput.Add("""")
+		  
+		  
+		  // Image title.
+		  If image.Title <> "" Then
+		    mOutput.Add(" title=")
+		    mOutput.Add("""")
+		    mOutput.Add(EncodePredefinedEntities(image.Title))
+		    mOutput.Add("""")
+		  End If
+		  
+		  mOutput.Add(" />")
 		  
 		End Function
 	#tag EndMethod

@@ -257,6 +257,7 @@ End
 		  
 		  watch.Start
 		  Var html As String = renderer.VisitDocument(doc)
+		  html = html.Trim
 		  watch.Stop
 		  Var renderTime As Integer = watch.ElapsedMilliseconds
 		  

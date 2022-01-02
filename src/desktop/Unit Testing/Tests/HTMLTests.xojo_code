@@ -3983,11 +3983,15 @@ Inherits TestGroup
 		  
 		  // Convert the input Markdown to HTML.
 		  Var doc As MKDocument = mParser.ParseSource(input)
+		  doc.TestNumber = testNumber
 		  Var actual As String = mRenderer.VisitDocument(doc)
 		  
 		  // Transform whitespace in our result and the expected truth to make it easier to visualise.
 		  TransformWhitespace(actual)
 		  TransformWhitespace(expected)
+		  
+		  // Removing leading / trailing whitespace.
+		  actual = actual.Trim
 		  
 		  // Check the result matches the truth.
 		  Assert.AreEqualCustom(input, expected, actual)

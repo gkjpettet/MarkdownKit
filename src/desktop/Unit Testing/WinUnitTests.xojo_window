@@ -1334,6 +1334,18 @@ End
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h21, Description = 5265706C616365732073706163657320616E6420746162732077697468696E205B735D20776974682076697369626C6520636861726163746572732E
+		Private Function TransformWhitespace(s As String) As String
+		  /// Replaces spaces and tabs within [s] with visible characters.
+		  
+		  Var result As String = s.ReplaceAll(&u0020, "•")
+		  result = result.ReplaceAll(&u0009, "→")
+		  
+		  Return result
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Sub UpdateSummary()
 		  DurationLabel.Text = Format(Controller.Duration, "#,###.0000000") + "s"
@@ -1440,7 +1452,6 @@ End
 		  End If
 		  
 		  TestNameLabel.Text = name
-		  'TestResultsArea.Text = message
 		  TestDurationLabel.Text = duration
 		  
 		  TestResultLabel.Text = result
@@ -1448,7 +1459,7 @@ End
 		  
 		  ExpectedOutput.Text = expected
 		  ActualOutput.Text = actual
-		  InputMarkdown.Text = input
+		  InputMarkdown.Text = TransformWhitespace(input)
 		  
 		End Sub
 	#tag EndMethod

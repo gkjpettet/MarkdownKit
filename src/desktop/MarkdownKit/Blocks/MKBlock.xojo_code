@@ -76,7 +76,7 @@ Protected Class MKBlock
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 4164647320746578742066726F6D205B6C696E655D20626567696E6E696E67206174205B7374617274506F735D20746F2074686520656E64206F6620746865206C696E652E
-		Sub AddLine(line As TextLine, startPos As Integer)
+		Sub AddLine(line As TextLine, startPos As Integer, phantomSpaces As Integer)
 		  /// Adds text from [line] beginning at [startPos] to the end of the line.
 		  
 		  // Prohibit adding new lines to closed blocks.
@@ -101,7 +101,7 @@ Protected Class MKBlock
 		    Characters.Add(MKCharacter.CreateLineEnding)
 		  Else
 		    // Add the text as a text block.
-		    Var b As New MKTextBlock(Self, line.Start + startPos, s)
+		    Var b As New MKTextBlock(Self, line.Start + startPos, s, phantomSpaces)
 		    Children.Add(b)
 		  End If
 		  

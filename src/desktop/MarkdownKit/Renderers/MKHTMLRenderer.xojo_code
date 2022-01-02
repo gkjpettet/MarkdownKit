@@ -17,6 +17,16 @@ Implements MKRenderer
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, Description = 52657475726E73206120737472696E6720636F6E73697374696E67206F66205B636F756E745D207370616365732E
+		Function SpacesString(count As Integer) As String
+		  /// Returns a string consisting of [count] spaces.
+		  
+		  Var tmp() As String
+		  tmp.ResizeTo(count)
+		  Return String.FromArray(tmp, " ")
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 55524C20656E636F64657320636F6D6D6F6E20636861726163746572732E
 		Private Function URLEncode(s As String) As String
 		  /// URL encodes common characters.
@@ -54,14 +64,48 @@ Implements MKRenderer
 		  mOutput.Add(atx.Level.ToString)
 		  mOutput.Add(">")
 		  
+		  // Ensure that any inline text children this heading may have render without surrounding whitespace.
+		  ShouldTrimLeadingWhitespace = True
+		  ShouldTrimTrailingWhitespace = True
+		  
+		  // We need to trim whitespace and the closing sequence (if present). To do this, we need to 
+		  // track where the heading contents begins in `mOutput`.
+		  Var index As Integer = mOutput.LastIndex
+		  
+		  // Visit the children.
 		  For Each child As MKBlock In atx.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
+		  // Get any contents added to `mOutput` whilst visiting the children.
+		  Var tmp() As String
+		  For i As Integer = index + 1 To mOutput.LastIndex
+		    tmp.Add(mOutput(i))
+		  Next i
+		  
+		  // Temporarily remove this content from `mOutput`.
+		  mOutput.ResizeTo(index)
+		  
+		  // Remove the optional closing sequence.
+		  Var s As String = String.FromArray(tmp, "").Trim
+		  If atx.HasClosingSequence Then
+		    tmp = s.CharacterArray
+		    For i As Integer = tmp.LastIndex DownTo 0
+		      If tmp(i) <> "#" Or i = 0 Then Exit
+		      If (tmp(i - 1) <> "#" And tmp(i - 1) <> " " And tmp(i - 1) <> &u0009) Then Exit
+		      Call tmp.Pop
+		    Next i
+		    s = String.FromArray(tmp, "").Trim
+		  End If
+		  mOutput.Add(s)
+		  
 		  mOutput.Add("</h")
 		  mOutput.Add(atx.Level.ToString)
 		  mOutput.Add(">")
+		  mOutput.Add(&u0A)
 		  
+		  ShouldTrimLeadingWhitespace = False
+		  ShouldTrimTrailingWhitespace = False
 		End Function
 	#tag EndMethod
 
@@ -111,6 +155,8 @@ Implements MKRenderer
 		  /// Part of the MKRenderer interface.
 		  
 		  mOutput.RemoveAll
+		  ShouldTrimLeadingWhitespace = False
+		  ShouldTrimTrailingWhitespace = False
 		  
 		  For Each child As MKBlock In doc.Children
 		    Call child.Accept(Self)
@@ -207,6 +253,7 @@ Implements MKRenderer
 		  
 		  mOutput.Add(&u0A)
 		  mOutput.Add("</code></pre>")
+		  mOutput.Add(&u0A)
 		End Function
 	#tag EndMethod
 
@@ -337,7 +384,10 @@ Implements MKRenderer
 		Function VisitInlineText(it As MKInlineText) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  mOutput.Add(EncodePredefinedEntities(it.Characters.ToString))
+		  Var s As String = it.Characters.ToString
+		  MarkdownKit.Unescape(s)
+		  
+		  mOutput.Add(EncodePredefinedEntities(s))
 		  
 		End Function
 	#tag EndMethod
@@ -371,8 +421,7 @@ Implements MKRenderer
 		  mOutput.Add("</")
 		  mOutput.Add(listTag)
 		  mOutput.Add(">")
-		  
-		  
+		  mOutput.Add(&u0A)
 		End Function
 	#tag EndMethod
 
@@ -420,14 +469,38 @@ Implements MKRenderer
 		  mOutput.Add(stx.Level.ToString)
 		  mOutput.Add(">")
 		  
+		  // Ensure that any inline text children this heading may have render without surrounding whitespace.
+		  ShouldTrimLeadingWhitespace = True
+		  ShouldTrimTrailingWhitespace = True
+		  
+		  // We need to trim whitespace and the closing sequence (if present). To do this, we need to 
+		  // track where the heading contents begins in `mOutput`.
+		  Var index As Integer = mOutput.LastIndex
+		  
 		  For Each child As MKBlock In stx.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
+		  // Get any contents added to `mOutput` whilst visiting the children.
+		  Var tmp() As String
+		  For i As Integer = index + 1 To mOutput.LastIndex
+		    tmp.Add(mOutput(i))
+		  Next i
+		  
+		  // Temporarily remove this content from `mOutput`.
+		  mOutput.ResizeTo(index)
+		  
+		  // Trim whitespace.
+		  Var s As String = String.FromArray(tmp, "").Trim
+		  mOutput.Add(s)
+		  
 		  mOutput.Add("</h")
 		  mOutput.Add(stx.Level.ToString)
 		  mOutput.Add(">")
+		  mOutput.Add(&u0A)
 		  
+		  ShouldTrimLeadingWhitespace = False
+		  ShouldTrimTrailingWhitespace = False
 		End Function
 	#tag EndMethod
 
@@ -462,10 +535,15 @@ Implements MKRenderer
 		Function VisitTextBlock(tb As MKTextBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
+		  Var s As String = SpacesString(tb.PhantomSpaces) + tb.Contents
+		  
+		  If ShouldTrimLeadingWhitespace Then s = s.TrimLeft
+		  If ShouldTrimTrailingWhitespace Then s = s.TrimRight
+		  
 		  If tb.Parent.Type = MKBlockTypes.Html Or tb.Parent.Type = MKBlockTypes.InlineHTML Then
-		    mOutput.Add(tb.Contents)
+		    mOutput.Add(s)
 		  Else
-		    mOutput.Add(EncodePredefinedEntities(tb.Contents))
+		    mOutput.Add(EncodePredefinedEntities(s))
 		  End If
 		End Function
 	#tag EndMethod
@@ -484,6 +562,14 @@ Implements MKRenderer
 
 	#tag Property, Flags = &h21, Description = 54686520756E6465722D636F6E737472756374696F6E206F7574707574206F66207468652072656E64657265722E
 		Private mOutput() As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h21, Description = 54727565206966207468652072656E64657265722073686F756C64207472696D206C656164696E6720776869746573706163652066726F6D20696E6C696E652074657874206265666F72652072656E646572696E672069742E
+		Private ShouldTrimLeadingWhitespace As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h21, Description = 54727565206966207468652072656E64657265722073686F756C64207472696D20747261696C696E6720776869746573706163652066726F6D20696E6C696E652074657874206265666F72652072656E646572696E672069742E
+		Private ShouldTrimTrailingWhitespace As Boolean = False
 	#tag EndProperty
 
 

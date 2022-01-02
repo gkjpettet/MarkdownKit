@@ -2,9 +2,10 @@
 Protected Class MKTextBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer, contents As String)
+		Sub Constructor(parent As MKBlock, blockStart As Integer, contents As String, phantomSpaces As Integer)
 		  Super.Constructor(MKBlockTypes.TextBlock, parent, blockStart)
 		  Self.Contents = contents
+		  Self.PhantomSpaces = phantomSpaces
 		End Sub
 	#tag EndMethod
 
@@ -21,6 +22,10 @@ Inherits MKBlock
 		#tag EndGetter
 		IsBlank As Boolean
 	#tag EndComputedProperty
+
+	#tag Property, Flags = &h0, Description = 546865206E756D626572206F662073706163657320746F20626520696E73657274656420617420746865207374617274206F662074686973207465787420626C6F636B207468617420646F6E27742061637475616C6C7920657869737420696E2074686520736F75726365206275742061726520726571756972656420666F7220436F6D6D6F6E4D61726B20636F6D706C69616E63652E
+		PhantomSpaces As Integer = 0
+	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -101,17 +106,23 @@ Inherits MKBlock
 				"2 - BlockQuote"
 				"3 - CodeSpan"
 				"4 - Document"
-				"5 - FencedCode"
-				"6 - Html"
-				"7 - IndentedCode"
-				"8 - InlineText"
-				"9 - List"
-				"10 - ListItem"
-				"11 - Paragraph"
-				"12 - ReferenceDefinition"
-				"13 - SetextHeading"
-				"14 - TextBlock"
-				"15 - ThematicBreak"
+				"5 - Emphasis"
+				"6 - FencedCode"
+				"7 - Html"
+				"8 - IndentedCode"
+				"9 - InlineHTML"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

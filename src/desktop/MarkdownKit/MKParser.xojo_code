@@ -153,7 +153,7 @@ Protected Class MKParser
 		  stx.Finalise(line)
 		  If stx.Characters.Count = 0 Then
 		    If paragraph.Characters.Count = 0 Then paragraph.Start = line.Start
-		    paragraph.AddLine(line, 0)
+		    paragraph.AddLine(line, 0, 0)
 		    #Pragma BreakOnExceptions False
 		    Raise New MKEdgeCase
 		    #Pragma BreakOnExceptions True
@@ -348,8 +348,11 @@ Protected Class MKParser
 		  Var closingSequenceStart As Integer = -1
 		  For i = mNextNWS + length To charsLastIndex
 		    If chars(i) = "#" Then
-		      closingSequenceStart = i
-		      Exit
+		      // The closing sequence must be preceded by a space.
+		      If i - 1 > 0 And chars(i - 1) = " " Then
+		        closingSequenceStart = i
+		        Exit
+		      End If
 		    End If
 		  Next i
 		  If closingSequenceStart > -1 Then
@@ -360,7 +363,7 @@ Protected Class MKParser
 		      Case "#"
 		        If failIfSeeHashSign Then
 		          closingSequenceCount = 0
-		          closingSequenceStart = 1
+		          closingSequenceStart = -1
 		          Exit
 		        Else
 		          closingSequenceCount = closingSequenceCount + 1
@@ -687,20 +690,26 @@ Protected Class MKParser
 		    Return True
 		  End If
 		  
-		  Var done As Boolean = False
+		  // Trailing whitespace after the heading line is allowed, internal whitespace is not.
+		  Var seenWhitespace As Boolean = False
 		  Var c As String
 		  For i As Integer = mNextNWS + 1 To charsLastIndex
 		    c = chars(i)
-		    If c = stxChar And Not Done Then
-		      Continue
+		    If c = stxChar Then
+		      If seenWhitespace Then
+		        data.Value("level") = 0
+		        Return False
+		      Else
+		        Continue
+		      End If
 		    ElseIf c = " " Or c = &u0009 Then
+		      seenWhitespace = True
 		      Continue
 		    Else
 		      // Not a "=", "-" character or whitespace.
-		      done = True
+		      data.Value("level") = 0
+		      Return False
 		    End If
-		    data.Value("level") = 0
-		    Return False
 		  Next i
 		  
 		  data.Value("level") = If(c = "=", 1, 2)
@@ -1079,7 +1088,7 @@ Protected Class MKParser
 		    mContainer = mLastMatchedContainer And _
 		    Not blank And _
 		    mCurrentBlock.Type = MKBlockTypes.Paragraph Then
-		    mCurrentBlock.AddLine(mCurrentLine, mCurrentOffset)
+		    mCurrentBlock.AddLine(mCurrentLine, mCurrentOffset, mRemainingSpaces)
 		    
 		  Else
 		    // This is NOT a lazy continuation line.
@@ -1095,7 +1104,7 @@ Protected Class MKParser
 		    Wend
 		    
 		    If mContainer.Type = MKBlockTypes.IndentedCode Then
-		      mContainer.AddLine(mCurrentLine, mCurrentOffset)
+		      mContainer.AddLine(mCurrentLine, mCurrentOffset, mRemainingSpaces)
 		      
 		    ElseIf mContainer.Type = MKBlockTypes.FencedCode Then
 		      If mCurrentIndent <= 3 And mCurrentChar = MKFencedCodeBlock(mContainer).FenceChar And _
@@ -1104,11 +1113,11 @@ Protected Class MKParser
 		        MKFencedCodeBlock(mContainer).ShouldClose = True
 		        MKFencedCodeBlock(mContainer).ClosingFenceStart = mCurrentLine.Start + mNextNWS
 		      Else
-		        mContainer.AddLine(mCurrentLine, mCurrentOffset)
+		        mContainer.AddLine(mCurrentLine, mCurrentOffset, mRemainingSpaces)
 		      End If
 		      
 		    ElseIf mContainer.Type = MKBlockTypes.Html Then
-		      mContainer.AddLine(mCurrentLine, mCurrentOffset)
+		      mContainer.AddLine(mCurrentLine, mCurrentOffset, mRemainingSpaces)
 		      If IsCorrectHtmlBlockEnd(MKHTMLBlock(mContainer).HtmlBlockType, mCurrentLine, mNextNWS) Then
 		        mContainer.Finalise(mCurrentLine)
 		        mContainer = mContainer.Parent
@@ -1119,13 +1128,13 @@ Protected Class MKParser
 		      mContainer = mContainer.Parent
 		      
 		    ElseIf AcceptsLines(mContainer) Then
-		      mContainer.AddLine(mCurrentLine, mNextNWS)
+		      mContainer.AddLine(mCurrentLine, mNextNWS, mRemainingSpaces)
 		      
 		    ElseIf mContainer.Type <> MKBlockTypes.ThematicBreak And _ 
 		      mContainer.Type <> MKBlockTypes.SetextHeading And Not blank Then
 		      // Create a paragraph container for this line.
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.Paragraph, 0)
-		      mContainer.AddLine(mCurrentLine, mNextNWS)
+		      mContainer.AddLine(mCurrentLine, mNextNWS, mRemainingSpaces)
 		      
 		    End If
 		    

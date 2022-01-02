@@ -24,6 +24,7 @@ Class=MKATXHeadingBlock;MarkdownKit/Blocks/MKATXHeadingBlock.xojo_code;&h0000000
 Class=MKBlock;MarkdownKit/Blocks/MKBlock.xojo_code;&h00000000352297FF;&h000000007E5B2FFF;false
 Class=MKDocument;MarkdownKit/Blocks/MKDocument.xojo_code;&h000000000AC94FFF;&h000000007E5B2FFF;false
 Class=MKFencedCodeBlock;MarkdownKit/Blocks/MKFencedCodeBlock.xojo_code;&h000000001387C7FF;&h000000007E5B2FFF;false
+Class=MKIndentedCodeBlock;MarkdownKit/Blocks/MKIndentedCodeBlock.xojo_code;&h0000000008E9FFFF;&h000000007E5B2FFF;false
 Class=MKHTMLBlock;MarkdownKit/Blocks/MKHTMLBlock.xojo_code;&h000000000F658FFF;&h000000007E5B2FFF;false
 Class=MKParagraphBlock;MarkdownKit/Blocks/MKParagraphBlock.xojo_code;&h0000000011AADFFF;&h000000007E5B2FFF;false
 Class=MKSetextHeadingBlock;MarkdownKit/Blocks/MKSetextHeadingBlock.xojo_code;&h0000000036801FFF;&h000000007E5B2FFF;false

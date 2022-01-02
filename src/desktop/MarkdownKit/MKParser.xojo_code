@@ -206,6 +206,9 @@ Protected Class MKParser
 		  Case MKBlockTypes.Html
 		    child = New MKHTMLBlock(parent, blockStartOffset)
 		    
+		  Case MKBlockTypes.IndentedCode
+		    child = New MKIndentedCodeBlock(parent, blockStartOffset)
+		    
 		  Case MKBlockTypes.Paragraph
 		    child = New MKParagraphBlock(parent, blockStartOffset)
 		    

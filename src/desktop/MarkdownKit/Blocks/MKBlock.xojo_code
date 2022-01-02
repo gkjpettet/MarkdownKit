@@ -29,6 +29,9 @@ Protected Class MKBlock
 		  Case MKBlockTypes.Html
 		    Return visitor.VisitHTMLBlock(MKHTMLBlock(Self))
 		    
+		  Case MKBlockTypes.IndentedCode
+		    Return visitor.VisitIndentedCode(MKIndentedCodeBlock(Self))
+		    
 		  Case MKBlockTypes.InlineHTML
 		    Return visitor.VisitInlineHTML(MKInlineHTML(Self))
 		    
@@ -46,9 +49,6 @@ Protected Class MKBlock
 		    
 		  Case MKBlockTypes.ListItem
 		    Return visitor.VisitListItem(Self)
-		    
-		  Case MKBlockTypes.IndentedCode
-		    Return visitor.VisitIndentedCode(Self)
 		    
 		  Case MKBlockTypes.Paragraph
 		    Return visitor.VisitParagraph(MKParagraphBlock(Self))

@@ -239,7 +239,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitIndentedCode(ic As MKBlock) As Variant
+		Function VisitIndentedCode(ic As MKIndentedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  mOutput.Add("<pre><code>")

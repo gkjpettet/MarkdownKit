@@ -49,7 +49,7 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitIndentedCode(ic As MKBlock) As Variant
+		Function VisitIndentedCode(ic As MKIndentedCodeBlock) As Variant
 		  
 		End Function
 	#tag EndMethod

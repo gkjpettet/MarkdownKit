@@ -258,6 +258,7 @@ Implements MKRenderer
 		    If i < childrenLastIndex Then mOutput.Add(&u0A)
 		  Next i
 		  
+		  mOutput.Add(&u0A)
 		End Function
 	#tag EndMethod
 

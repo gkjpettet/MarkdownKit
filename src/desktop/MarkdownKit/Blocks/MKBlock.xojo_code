@@ -345,28 +345,21 @@ Protected Class MKBlock
 		    
 		    // Up to 3 spaces of indentation are permitted.
 		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
-		    If i > labelStart + 3 Then
-		      ' AdvanceToNextLineStart(i)
-		      ' Continue
-		      Return
-		    End If
+		    If i > labelStart + 3 Then Return
 		    
 		    // Can we match a link label?
 		    If Not MKLinkScanner.ParseLinkLabel(Characters, i, data) Then
-		      ' AdvanceToNextLineStart(i)
-		      ' Continue
 		      Return
+		    Else
+		      linkLabel = data.Value("linkLabel")
+		      labelStart = data.Value("linkLabelStart") + linkLocalStart
+		      labelLength = i - labelStart + linkLocalStart + 1 // Account for the flanking `[]`.
 		    End If
-		    linkLabel = data.Value("linkLabel")
-		    labelStart = data.Value("linkLabelStart") + linkLocalStart
-		    labelLength = i - labelStart + linkLocalStart + 1 // Account for the flanking `[]`.
 		    
 		    // The next character must be a colon.
 		    If i > Characters.LastIndex Then Return
 		    i = i + 1
 		    If Characters(i).Value <> ":" Then
-		      ' AdvanceToNextLineStart(i)
-		      ' Continue
 		      Return
 		    Else
 		      i = i + 1
@@ -376,18 +369,23 @@ Protected Class MKBlock
 		    // Skip whitespace after the colon.
 		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
 		    
+		    // Match up to one line ending.
+		    If i < Characters.LastIndex And Characters(i).IsLineEnding Then i = i + 1
+		    
 		    // Can we match a link destination?
 		    If Not MKLinkScanner.ParseLinkDestination(Characters, i, data) Then
-		      ' AdvanceToNextLineStart(i)
-		      ' Continue
 		      Return
+		    Else
+		      linkDestination = data.Value("linkDestination")
+		      destinationStart = data.Value("linkDestinationStart") + linkLocalStart
+		      destinationLength = i - destinationStart + linkLocalStart
 		    End If
-		    linkDestination = data.Value("linkDestination")
-		    destinationStart = data.Value("linkDestinationStart") + linkLocalStart
-		    destinationLength = i - destinationStart + linkLocalStart
 		    
 		    // Consume optional tabs and spaces.
 		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
+		    
+		    // Match up to one line ending.
+		    If i < Characters.LastIndex And Characters(i).IsLineEnding Then i = i + 1
 		    
 		    // Can we match a link title?
 		    If MKLinkScanner.ParseLinkTitle(Characters, i, data) Then
@@ -403,14 +401,7 @@ Protected Class MKBlock
 		    linkTitle, titleStart, titleLength, i)
 		    
 		    // Remove these characters from the paragraph.
-		    Var upperLimit As Integer
-		    If titleStart <> 0 Then
-		      upperLimit = titleStart + titleLength
-		    Else
-		      upperLimit = destinationStart + destinationLength
-		    End If
-		    
-		    For x As Integer = upperLimit DownTo linkLocalStart
+		    For x As Integer = Characters.LastIndex DownTo linkLocalStart
 		      Characters.RemoveAt(x)
 		    Next x
 		    i = linkLocalStart

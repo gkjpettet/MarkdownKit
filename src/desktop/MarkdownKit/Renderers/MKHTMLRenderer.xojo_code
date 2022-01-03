@@ -141,9 +141,31 @@ Implements MKRenderer
 		  
 		  mOutput.Add("<code>")
 		  
+		  // Track where the code span's contents begins in `mOutput`.
+		  Var index As Integer = mOutput.LastIndex
+		  
+		  // Visit the children.
 		  For Each child As MKBlock In cs.Children
 		    Call child.Accept(Self)
 		  Next child
+		  
+		  // Get any contents added to `mOutput` whilst visiting the children.
+		  Var tmp() As String
+		  For i As Integer = index + 1 To mOutput.LastIndex
+		    tmp.Add(mOutput(i))
+		  Next i
+		  Var contents As String = String.FromArray(tmp, "")
+		  
+		  // Temporarily remove this content from `mOutput`.
+		  mOutput.ResizeTo(index)
+		  
+		  // If `contents` both begins and ends with a space character, but does not consist entirely of space characters, 
+		  // a single space character is removed from the front and back.
+		  If contents.Trim(" ").Length > 0 And contents.Length > 2 And contents.Left(1) = " " And _
+		    contents.Right(1) = " " Then
+		    contents = contents.MiddleCharacters(1, contents.CharacterCount - 2)
+		  End If
+		  mOutput.Add(contents)
 		  
 		  mOutput.Add("</code>")
 		  
@@ -196,12 +218,13 @@ Implements MKRenderer
 		    mOutput.Add("language-")
 		    
 		    // When rendering the info string, use only the first word.
-		    Var wsIndex As Integer = fc.InfoString.IndexOf(" ")
-		    If wsIndex = -1 Then wsIndex = fc.InfoString.IndexOf(&u0009)
+		    Var trimmedInfoString As String = fc.InfoString.Trim
+		    Var wsIndex As Integer = trimmedInfoString.IndexOf(" ")
+		    If wsIndex = -1 Then wsIndex = trimmedInfoString.IndexOf(&u0009)
 		    If wsIndex = -1 Then
-		      mOutput.Add(fc.InfoString)
+		      mOutput.Add(trimmedInfoString)
 		    Else
-		      mOutput.Add(fc.InfoString.Left(wsIndex))
+		      mOutput.Add(trimmedInfoString.Left(wsIndex))
 		    End If
 		    
 		    mOutput.Add("""")
@@ -216,7 +239,7 @@ Implements MKRenderer
 		    If i < childrenLastIndex Then mOutput.Add(&u0A)
 		  Next i
 		  
-		  mOutput.Add(&u0A)
+		  If fc.Children.Count > 0 Then mOutput.Add(&u0A)
 		  mOutput.Add("</code></pre>")
 		  mOutput.Add(&u0A)
 		  

@@ -29,7 +29,9 @@ Inherits MKBlock
 		    
 		    If c.IsLineEnding Then
 		      Var s As String = String.FromArray(contentsBuffer, "")
-		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s, 0))
+		      If s <> "" Then
+		        Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s, 0))
+		      End If
 		      contentsBuffer.RemoveAll
 		      // Add in a soft break
 		      Children.Add(New MKSoftBreak(Self, i + 1))
@@ -48,6 +50,8 @@ Inherits MKBlock
 		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s, 0))
 		  End If
 		  
+		  If FirstChild <> Nil And FirstChild IsA MKSoftBreak Then Children.RemoveAt(0)
+		  If LastChild <> Nil And LastChild IsA MKSoftBreak Then Children.RemoveAt(Children.LastIndex)
 		End Sub
 	#tag EndMethod
 

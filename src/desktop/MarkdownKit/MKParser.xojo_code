@@ -408,16 +408,25 @@ Protected Class MKParser
 		  
 		  Var count As Integer = 1
 		  
+		  Var lastFenceCharIndex As Integer = -1
 		  For i As Integer = mNextNWS + 1 To charsLastIndex
-		    If count = length Then Return True
-		    
-		    Var char As String = chars(i)
-		    
-		    If char = fenceChar Then
+		    If chars(i) = fenceChar Then
 		      count = count + 1
+		      lastFenceCharIndex = i
 		    Else
-		      Return False
+		      If count < length Then
+		        Return False
+		      Else
+		        Exit
+		      End If
 		    End If
+		  Next i
+		  
+		  If count < length Then Return False
+		  
+		  // Ensure there are no other non-whitespace characters after the last seen fence character.
+		  For i As Integer = lastFenceCharIndex + 1 To charsLastIndex
+		    If chars(i) <> "" Then Return False
 		  Next i
 		  
 		  Return If(count < length, False, True)
@@ -466,6 +475,14 @@ Protected Class MKParser
 		      End If
 		    End If
 		  Next i
+		  
+		  // If the fence character is a backtick, ensure that there are no more backticks on this line 
+		  // after `lastFenceCharIndex`.
+		  If fenceChar = "`" Then
+		    For i As Integer = lastFenceCharIndex + 1 To charsLastIndex
+		      If chars(i) = fenceChar Then Return False
+		    Next i
+		  End If
 		  
 		  If fenceLength < 3 Then Return False
 		  

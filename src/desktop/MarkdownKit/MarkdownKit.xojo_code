@@ -477,7 +477,11 @@ Protected Module MarkdownKit
 		  
 		  Var tmp() As String
 		  For Each c As MKCharacter In chars
-		    tmp.Add(c.Value)
+		    If c.IsLineEnding Then
+		      tmp.Add(&u0A)
+		    Else
+		      tmp.Add(c.Value)
+		    End If
 		  Next c
 		  
 		  Return String.FromArray(tmp, "")
@@ -504,7 +508,11 @@ Protected Module MarkdownKit
 		  End If
 		  
 		  For i As Integer = start To finish
-		    tmp.Add(chars(i).Value)
+		    If chars(i).IsLineEnding Then
+		      tmp.Add(&u0A)
+		    Else
+		      tmp.Add(chars(i).Value)
+		    End If
 		  Next i
 		  
 		  Return String.FromArray(tmp, "")

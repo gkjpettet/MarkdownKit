@@ -42,7 +42,7 @@ Protected Class MKLinkScanner
 		          // Edge case: Empty link destination (`<>`).
 		          data.Value("linkDestination") = ""
 		        Else
-		          data.Value("linkDestination") = chars.ToString(pos + 1, i - pos - 2)
+		          data.Value("linkDestination") = chars.ToString(pos + 1, i - pos - 1)
 		        End If
 		        data.Value("linkDestinationStart") = startPos
 		        pos = i + 1

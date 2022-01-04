@@ -396,8 +396,8 @@ Protected Class MKBlock
 		    End If
 		    
 		    // We've found a definition. Add it to the document.
-		    Self.Document.References.Value(linkLabel) = _
-		    New MKLinkReferenceDefinition(start, linkLabel, labelStart, labelLength, _
+		    Self.Document.References.Value(linkLabel.Lowercase) = _
+		    New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
 		    linkDestination, destinationStart, destinationLength, _
 		    linkTitle, titleStart, titleLength, i)
 		    

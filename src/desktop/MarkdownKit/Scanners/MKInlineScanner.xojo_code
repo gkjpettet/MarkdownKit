@@ -79,7 +79,7 @@ Protected Class MKInlineScanner
 		  data.EndPosition = endPos
 		  
 		  // Get the reference destination and title from the document's reference map.
-		  Var ref As MKLinkReferenceDefinition = MKLinkReferenceDefinition(container.Document.References.Value(linkLabel))
+		  Var ref As MKLinkReferenceDefinition = MKLinkReferenceDefinition(container.Document.References.Value(linkLabel.Lowercase))
 		  
 		  data.Destination = ref.LinkDestination
 		  data.Title = ref.LinkTitle
@@ -163,7 +163,7 @@ Protected Class MKInlineScanner
 		  
 		  // Does the document's reference map contain a reference with the same label?
 		  Var linkLabel As String = String.FromArray(linkLabelChars, "")
-		  If Not container.Document.References.HasKey(linkLabel) Then Return Nil
+		  If Not container.Document.References.HasKey(linkLabel.Lowercase) Then Return Nil
 		  
 		  // Construct this reference link.
 		  Return CreateReferenceLinkData(container, linkLabel, linkTextChars, indexOfClosingBracket, isInlineImage)
@@ -976,7 +976,7 @@ Protected Class MKInlineScanner
 		  Var validLinkLabel As Boolean = False
 		  If tmpCharacters.Count > 0 Then
 		    linkLabel = tmpCharacters.ToString
-		    If container.Document.References.HasKey(linkLabel) Then
+		    If container.Document.References.HasKey(linkLabel.Lowercase) Then
 		      validLinkLabel = True
 		    End If
 		  End If
@@ -1086,7 +1086,7 @@ Protected Class MKInlineScanner
 		  Var validLinkLabel As Boolean = False
 		  If linkTextChars.Count > 0 Then
 		    linkLabel = linkTextChars.ToString
-		    If container.Document.References.HasKey(linkLabel) Then
+		    If container.Document.References.HasKey(linkLabel.Lowercase) Then
 		      validLinkLabel = True
 		    End If
 		  End If

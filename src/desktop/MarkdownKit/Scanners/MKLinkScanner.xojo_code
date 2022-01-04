@@ -30,6 +30,7 @@ Protected Class MKLinkScanner
 		  Var i As Integer
 		  Var c As String
 		  Var startPos As Integer = pos
+		  Var linkDestination As String
 		  
 		  // Scenario 1:
 		  If chars(pos).Value = "<" Then
@@ -42,7 +43,9 @@ Protected Class MKLinkScanner
 		          // Edge case: Empty link destination (`<>`).
 		          data.Value("linkDestination") = ""
 		        Else
-		          data.Value("linkDestination") = chars.ToString(pos + 1, i - pos - 1)
+		          linkDestination = chars.ToString(pos + 1, i - pos - 1)
+		          MarkdownKit.Unescape(linkDestination)
+		          data.Value("linkDestination") = linkDestination
 		        End If
 		        data.Value("linkDestinationStart") = startPos
 		        pos = i + 1
@@ -67,7 +70,9 @@ Protected Class MKLinkScanner
 		      If i >= charsLastIndex And i < pos + 1 Then Return False
 		      If openParensCount <> closeParensCount Then Return False
 		      
-		      data.Value("linkDestination") = chars.ToString(pos, i - pos)
+		      linkDestination = chars.ToString(pos, i - pos)
+		      MarkdownKit.Unescape(linkDestination)
+		      data.Value("linkDestination") = linkDestination
 		      data.Value("linkDestinationStart") = startPos
 		      pos = i
 		      Return True
@@ -84,7 +89,9 @@ Protected Class MKLinkScanner
 		      If openParensCount <> closeParensCount Then
 		        Return False
 		      Else
-		        data.Value("linkDestination") = chars.ToString(pos, i - pos)
+		        linkDestination = chars.ToString(pos, i - pos)
+		        MarkdownKit.Unescape(linkDestination)
+		        data.Value("linkDestination") = linkDestination
 		        data.Value("linkDestinationStart") = startPos
 		        pos = i
 		        Return True
@@ -95,7 +102,9 @@ Protected Class MKLinkScanner
 		  If openParensCount <> closeParensCount Then
 		    Return False
 		  Else
-		    data.Value("linkDestination") = chars.ToString(pos, -1)
+		    linkDestination = chars.ToString(pos, -1)
+		    MarkdownKit.Unescape(linkDestination)
+		    data.Value("linkDestination") = linkDestination
 		    data.Value("linkDestinationStart") = startPos
 		    pos = i
 		    Return True
@@ -207,7 +216,9 @@ Protected Class MKLinkScanner
 		    c = chars(i).Value
 		    If c = delimiter And Not IsMarkdownEscaped(chars, i) Then
 		      // Link titles may not contain blank lines.
-		      data.Value("linkTitle") = chars.ToString(startPos + 1, i - startPos - 1)
+		      Var linkTitle As String = chars.ToString(startPos + 1, i - startPos - 1)
+		      MarkdownKit.Unescape(linkTitle)
+		      data.Value("linkTitle") = linkTitle
 		      data.Value("linkTitleStart") = startPos
 		      data.Value("linkTitleValid") = True
 		      startPos = i

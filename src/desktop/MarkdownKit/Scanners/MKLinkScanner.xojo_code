@@ -168,6 +168,7 @@ Protected Class MKLinkScanner
 		  ///
 		  /// Sets [data.Value("linkTitle")] to the link title (if found).
 		  /// Sets [data.Value("linkTitleStart")] to the original value of [pos].
+		  /// Sets [data.Value("linkTitleValid")] to False if there is a link title but it is invalid.
 		  /// Note that [pos] is passed ByRef.
 		  ///
 		  /// A "link title" consists of either:
@@ -192,20 +193,32 @@ Protected Class MKLinkScanner
 		    delimiter = c
 		  Case "("
 		    delimiter = ")"
+		  Else
+		    Return False
 		  End Select
+		  
+		  // The link title must be separated from the preceding link destination by whitespace.
+		  If Not chars(startPos - 1).IsMarkdownWhitespace(True) Then
+		    data.Value("linkTitleValid") = False
+		    Return True
+		  End If
 		  
 		  For i As Integer = startPos + 1 To charsLastIndex
 		    c = chars(i).Value
 		    If c = delimiter And Not IsMarkdownEscaped(chars, i) Then
+		      // Link titles may not contain blank lines.
 		      data.Value("linkTitle") = chars.ToString(startPos + 1, i - startPos - 1)
 		      data.Value("linkTitleStart") = startPos
+		      data.Value("linkTitleValid") = True
 		      startPos = i
 		      Return True
 		    End If
 		  Next i
 		  
-		  Return False
+		  data.Value("linkTitleValid") = False
+		  startPos = charsLastIndex
 		  
+		  Return True
 		End Function
 	#tag EndMethod
 

@@ -389,6 +389,7 @@ Protected Class MKBlock
 		    
 		    // Can we match a link title?
 		    If MKLinkScanner.ParseLinkTitle(Characters, i, data) Then
+		      If Not data.Value("linkTitleValid") Then Return
 		      linkTitle = data.Value("linkTitle")
 		      titleStart = data.Value("linkTitleStart") + linkLocalStart
 		      titleLength = i - titleStart + linkLocalStart + 1 // Account for the flanking delimiters.

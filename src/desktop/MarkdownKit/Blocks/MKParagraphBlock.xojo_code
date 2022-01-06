@@ -15,6 +15,16 @@ Inherits MKBlock
 		  
 		  ParseLinkReferenceDefinitions
 		  
+		  // If this paragraph consists only of whitespace, empty out its character array.
+		  Var seenNonWhitespace As Boolean = False
+		  For Each char As MKCharacter In Characters
+		    If Not char.IsMarkdownWhitespace(True) Then
+		      seenNonWhitespace = True
+		      Exit
+		    End If
+		  Next char
+		  If Not seenNonWhitespace Then Characters.RemoveAll
+		  
 		  // Remove this paragraph from its parent if it's empty.
 		  If Characters.Count = 0 And Parent <> Nil Then
 		    Var parentIndex As Integer = Parent.Children.IndexOf(Self)
@@ -113,16 +123,18 @@ Inherits MKBlock
 				"7 - Html"
 				"8 - IndentedCode"
 				"9 - InlineHTML"
-				"10 - InlineLink"
-				"11 - InlineText"
-				"12 - List"
-				"13 - ListItem"
-				"14 - Paragraph"
-				"15 - ReferenceDefinition"
-				"16 - SetextHeading"
-				"17 - StrongEmphasis"
-				"18 - TextBlock"
-				"19 - ThematicBreak"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

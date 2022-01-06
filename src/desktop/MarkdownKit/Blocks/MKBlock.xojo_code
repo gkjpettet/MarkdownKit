@@ -377,32 +377,63 @@ Protected Class MKBlock
 		      Return
 		    Else
 		      linkDestination = data.Value("linkDestination")
-		      destinationStart = data.Value("linkDestinationStart") + linkLocalStart
-		      destinationLength = i - destinationStart + linkLocalStart
+		      destinationStart = data.Value("linkDestinationStart") // Absolute position.
+		      destinationLength = data.Value("linkDestinationLength")
 		    End If
 		    
-		    // Consume optional tabs and spaces.
+		    // Consume tabs and spaces.
+		    Var indexBeforeWhitespaceCheck As Integer = i
 		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
+		    ' Var whitespaceAfterDestination As Boolean = i > indexBeforeWhitespaceCheck
 		    
 		    // Match up to one line ending.
-		    If i < Characters.LastIndex And Characters(i).IsLineEnding Then i = i + 1
+		    Var destinationEndsLine As Boolean = False
+		    If i < Characters.LastIndex And Characters(i).IsLineEnding Then
+		      destinationEndsLine = True
+		      i = i + 1
+		    ElseIf i = Characters.LastIndex Then
+		      destinationEndsLine = True
+		    End If
+		    Var whitespaceAfterDestination As Boolean = i > indexBeforeWhitespaceCheck
+		    
+		    'break
 		    
 		    // Can we match a link title?
-		    If MKLinkScanner.ParseLinkTitle(Characters, i, data) Then
-		      If Not data.Value("linkTitleValid") Then Return
-		      linkTitle = data.Value("linkTitle")
-		      titleStart = data.Value("linkTitleStart") + linkLocalStart
-		      titleLength = i - titleStart + linkLocalStart + 1 // Account for the flanking delimiters.
+		    If whitespaceAfterDestination Then
+		      If MKLinkScanner.ParseLinkTitle(Characters, i, data) Then
+		        If Not data.Value("linkTitleValid") And Not destinationEndsLine Then
+		          // The title is invalid but the reference is OK up until this point. We therefore have a 
+		          // valid reference link and the title is just text following it.
+		          Return
+		          
+		        ElseIf data.Value("linkTitleValid") Then
+		          linkTitle = data.Value("linkTitle")
+		          titleStart = data.Value("linkTitleStart") + linkLocalStart
+		          titleLength = i - titleStart + linkLocalStart + 1 // Account for the flanking delimiters.
+		        End If
+		      End If
+		      
+		    Else
+		      If Not destinationEndsLine Then Return
+		    End If
+		    Var hasTitle As Boolean = titleLength > 0
+		    
+		    // We've found a definition. Add it to the document only if it's unique.
+		    If Not Self.Document.References.HasKey(linkLabel.Lowercase) Then
+		      Self.Document.References.Value(linkLabel.Lowercase) = _
+		      New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
+		      linkDestination, destinationStart, destinationLength, _
+		      linkTitle, titleStart, titleLength, i)
 		    End If
 		    
-		    // We've found a definition. Add it to the document.
-		    Self.Document.References.Value(linkLabel.Lowercase) = _
-		    New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
-		    linkDestination, destinationStart, destinationLength, _
-		    linkTitle, titleStart, titleLength, i)
+		    If titleLength > 0 Then
+		      // Skip past any whitespace to the end of the line.
+		      i = i + MatchWhitespaceCharactersInArray(Characters, i)
+		    End If
 		    
 		    // Remove these characters from the paragraph.
-		    For x As Integer = Characters.LastIndex DownTo linkLocalStart
+		    For x As Integer = If(hasTitle, i, i - 1) DownTo linkLocalStart
+		      ' For x As Integer = i DownTo linkLocalStart
 		      Characters.RemoveAt(x)
 		    Next x
 		    i = linkLocalStart

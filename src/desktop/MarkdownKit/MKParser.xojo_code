@@ -152,7 +152,7 @@ Protected Class MKParser
 		  // an EdgeCase exception.
 		  stx.Finalise(line)
 		  If stx.Characters.Count = 0 Then
-		    If paragraph.Characters.Count = 0 Then paragraph.Start = line.Start
+		    paragraph.Start = line.Start
 		    paragraph.AddLine(line, 0, 0)
 		    #Pragma BreakOnExceptions False
 		    Raise New MKEdgeCase

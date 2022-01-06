@@ -13,6 +13,7 @@ Protected Class MKLinkScanner
 		  ///
 		  /// Sets [data.Value("linkDestination")] to the link destination (if found).
 		  /// Sets [data.Value("linkDestinationStart")] to the original value of [pos].
+		  /// Sets [data.Value("linkDestinationLength")] to the length of the destination.
 		  /// Note that [pos] is passed ByRef.
 		  ///
 		  /// A "link destination" consists of either:
@@ -47,7 +48,8 @@ Protected Class MKLinkScanner
 		          MarkdownKit.Unescape(linkDestination)
 		          data.Value("linkDestination") = linkDestination
 		        End If
-		        data.Value("linkDestinationStart") = startPos
+		        data.Value("linkDestinationStart") = chars(startPos).Position
+		        data.Value("linkDestinationLength") = i - startPos
 		        pos = i + 1
 		        Return True
 		      End If
@@ -73,7 +75,8 @@ Protected Class MKLinkScanner
 		      linkDestination = chars.ToString(pos, i - pos)
 		      MarkdownKit.Unescape(linkDestination)
 		      data.Value("linkDestination") = linkDestination
-		      data.Value("linkDestinationStart") = startPos
+		      data.Value("linkDestinationStart") = chars(startPos).Position
+		      data.Value("linkDestinationLength") = i - startPos
 		      pos = i
 		      Return True
 		    End If
@@ -92,7 +95,8 @@ Protected Class MKLinkScanner
 		        linkDestination = chars.ToString(pos, i - pos)
 		        MarkdownKit.Unescape(linkDestination)
 		        data.Value("linkDestination") = linkDestination
-		        data.Value("linkDestinationStart") = startPos
+		        data.Value("linkDestinationStart") = chars(startPos).Position
+		        data.Value("linkDestinationLength") = i - startPos
 		        pos = i
 		        Return True
 		      End If
@@ -105,7 +109,8 @@ Protected Class MKLinkScanner
 		    linkDestination = chars.ToString(pos, -1)
 		    MarkdownKit.Unescape(linkDestination)
 		    data.Value("linkDestination") = linkDestination
-		    data.Value("linkDestinationStart") = startPos
+		    data.Value("linkDestinationStart") = chars(startPos).Position
+		    data.Value("linkDestinationLength") = i - startPos
 		    pos = i
 		    Return True
 		  End If
@@ -151,7 +156,7 @@ Protected Class MKLinkScanner
 		        Continue
 		      ElseIf seenNonWhitespace Then
 		        // This is the end of a valid label.
-		        data.Value("linkLabel") = chars.ToString(pos + 1, i - pos - 1)
+		        data.Value("linkLabel") = chars.ToString(pos + 1, i - pos - 1).Trim
 		        data.Value("linkLabelStart") = labelStart
 		        pos = i
 		        Return True
@@ -173,7 +178,7 @@ Protected Class MKLinkScanner
 	#tag Method, Flags = &h0, Description = 547269657320746F2070617273652061206C696E6B207469746C6520696E205B63686172735D20626567696E6E696E67206174205B706F735D2E2049662061626C652069742072657475726E7320547275652C2075706461746573205B706F735D20746F2074686520656E64206F6620746865206C696E6B207469746C6520616E6420706F70756C61746573205B646174615D2E
 		Shared Function ParseLinkTitle(chars() As MKCharacter, ByRef startPos As Integer, ByRef data As Dictionary) As Boolean
 		  /// Tries to parse a link title in [chars] beginning at [pos]. If able it returns True, updates [pos] to 
-		  /// the end of the link title and populates [data].
+		  /// the end of the link title (the delimiter) and populates [data].
 		  ///
 		  /// Sets [data.Value("linkTitle")] to the link title (if found).
 		  /// Sets [data.Value("linkTitleStart")] to the original value of [pos].
@@ -206,16 +211,26 @@ Protected Class MKLinkScanner
 		    Return False
 		  End Select
 		  
-		  // The link title must be separated from the preceding link destination by whitespace.
-		  If Not chars(startPos - 1).IsMarkdownWhitespace(True) Then
-		    data.Value("linkTitleValid") = False
-		    Return True
-		  End If
+		  ' // The link title must be separated from the preceding link destination by whitespace.
+		  ' If Not chars(startPos - 1).IsMarkdownWhitespace(True) Then
+		  ' data.Value("linkTitleValid") = False
+		  ' Return True
+		  ' End If
 		  
 		  For i As Integer = startPos + 1 To charsLastIndex
 		    c = chars(i).Value
 		    If c = delimiter And Not IsMarkdownEscaped(chars, i) Then
-		      // Link titles may not contain blank lines.
+		      // Ensure that there are no non-whitespace characters remaining on this line.
+		      For j As Integer = i + 1 To charsLastIndex
+		        If chars(j).IsLineEnding Then
+		          Exit
+		        ElseIf Not chars(j).IsMarkdownWhitespace Then
+		          data.Value("linkTitleValid") = False
+		          Return True
+		        End If
+		      Next j
+		      
+		      // Compute the unescaped link title.
 		      Var linkTitle As String = chars.ToString(startPos + 1, i - startPos - 1)
 		      MarkdownKit.Unescape(linkTitle)
 		      data.Value("linkTitle") = linkTitle

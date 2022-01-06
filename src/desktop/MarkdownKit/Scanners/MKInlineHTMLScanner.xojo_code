@@ -118,7 +118,7 @@ Protected Class MKInlineHTMLScanner
 		        If pos > charsLastIndex Then Return 0
 		        currentChar = chars(pos).Value
 		      Else
-		        // Unquoted attribute values must have at least one character.
+		        // Unquoted attribute values must have at least one valid character.
 		        If Not MatchAnythingExceptInvalidAndWhitespace(chars, pos, currentChar, """", "'", "=", "<", ">", "`") Then
 		          Return 0
 		        End If
@@ -209,7 +209,7 @@ Protected Class MKInlineHTMLScanner
 		  invalidChars.Add(" ")
 		  invalidChars.Add(&u000A)
 		  
-		  While invalidChars.IndexOf(currentChar) = -1 And pos < charsLastIndex
+		  While pos < charsLastIndex And (currentChar.IsASCIILetterOrDigitOrHyphen Or currentChar = ":") And invalidChars.IndexOf(currentChar) = -1
 		    pos = pos + 1
 		    currentChar = chars(pos).Value
 		    matched = True
@@ -415,7 +415,7 @@ Protected Class MKInlineHTMLScanner
 		    // Declaration?
 		    // Consume the uppercase ASCII letters.
 		    For pos = startPos + 1 To charsLastIndex
-		      If Not chars(pos).Value.IsUppercaseASCIICharacter Then Exit
+		      If Not chars(pos).Value.IsUppercaseASCIILetter Then Exit
 		    Next pos
 		    
 		    // Must see whitespace at `pos`.

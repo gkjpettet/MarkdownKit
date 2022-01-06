@@ -544,6 +544,16 @@ Protected Class MKBlock
 		IsFirstChild As Boolean
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0, Description = 54727565206966207468697320626C6F636B20697320746865206C617374206368696C64206F662069747320706172656E742E
+		#tag Getter
+			Get
+			  If Parent = Nil Then Return True
+			  Return Parent.LastChild = Self
+			End Get
+		#tag EndGetter
+		IsLastChild As Boolean
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h0, Description = 5472756520696620746865206C617374206C696E65206F66207468697320636F6E7461696E657220697320626C616E6B2E
 		IsLastLineBlank As Boolean = False
 	#tag EndProperty

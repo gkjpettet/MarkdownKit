@@ -419,18 +419,21 @@ Implements MKRenderer
 		  
 		  s = EncodePredefinedEntities(s)
 		  
-		  If it.Parent.Type = MKBlockTypes.Paragraph Then
-		    If s.Length > 1 And s.Right(1) = "\" Then
-		      // A backslash at the end of the line is a hard line break.
-		      s = s.Left(s.Length - 1) + "<br />"
-		    ElseIf s.Length > 3 Then
-		      // > 2 characters of trailing whitespace results in a hard line break after the text.
-		      Var trimmed As String = s.TrimRight(" ")
-		      If s.Length >= trimmed.Length + 2 Then
-		        s = trimmed + "<br />"
+		  Select Case it.Parent.Type
+		  Case MKBlockTypes.Paragraph, MKBlockTypes.Emphasis, MKBlockTypes.StrongEmphasis
+		    If Not it.IsLastChild Then
+		      If s.Length > 1 And s.Right(1) = "\" Then
+		        // A backslash at the end of the line is a hard line break.
+		        s = s.Left(s.Length - 1) + "<br />"
+		      ElseIf s.Length > 3 Then
+		        // > 2 characters of trailing whitespace results in a hard line break after the text.
+		        Var trimmed As String = s.TrimRight(" ")
+		        If s.Length >= trimmed.Length + 2 Then
+		          s = trimmed + "<br />"
+		        End If
 		      End If
 		    End If
-		  End If
+		  End Select
 		  
 		  mOutput.Add(s)
 		End Function
@@ -552,9 +555,22 @@ Implements MKRenderer
 		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
 		  /// Part of the MKRenderer interface.
 		  
+		  Var mOutputLastIndex As Integer = mOutput.LastIndex
+		  
 		  If sb.Parent.Type = MKBlockTypes.CodeSpan Then
 		    // Line endings withing a code span are converted to spaces (6.1).
 		    mOutput.Add(" ")
+		    
+		  ElseIf sb.Parent.Type = MKBlockTypes.Paragraph And mOutput(mOutputLastIndex).Trim = "" Then
+		    // Edge case: If the previous block contained only whitespace then remove it from the output.
+		    Call mOutput.Pop
+		    mOutput.Add(&u0A)
+		    
+		  ElseIf sb.Parent.Type = MKBlockTypes.Paragraph Then
+		    // Edge case: Always trim the whitespace from the end of the block above. 
+		    mOutput(mOutputLastIndex) = mOutput(mOutputLastIndex).TrimRight
+		    mOutput.Add(&u0A)
+		    
 		  Else
 		    mOutput.Add(&u0A)
 		  End If

@@ -25,6 +25,19 @@ Inherits MKBlock
 		  Next char
 		  If Not seenNonWhitespace Then Characters.RemoveAll
 		  
+		  // Removing a single trailing line ending if present.
+		  If Characters.Count > 0 And Characters(Characters.LastIndex).IsLineEnding Then Call Characters.Pop
+		  
+		  // Final spaces are stripped before inline parsing.
+		  For i As Integer = Characters.LastIndex DownTo 0
+		    Select Case Characters(i).Value
+		    Case " "
+		      Characters.RemoveAt(i)
+		    Else
+		      Exit
+		    End Select
+		  Next i
+		  
 		  // Remove this paragraph from its parent if it's empty.
 		  If Characters.Count = 0 And Parent <> Nil Then
 		    Var parentIndex As Integer = Parent.Children.IndexOf(Self)

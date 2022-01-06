@@ -179,6 +179,7 @@ Implements MKRenderer
 		  mOutput.RemoveAll
 		  ShouldTrimLeadingWhitespace = False
 		  ShouldTrimTrailingWhitespace = False
+		  TrailingWhitespaceIsHardBreak = False
 		  
 		  For Each child As MKBlock In doc.Children
 		    Call child.Accept(Self)
@@ -411,8 +412,18 @@ Implements MKRenderer
 		  Var s As String = it.Characters.ToString
 		  MarkdownKit.Unescape(s)
 		  
-		  mOutput.Add(EncodePredefinedEntities(s))
+		  s = EncodePredefinedEntities(s)
 		  
+		  If TrailingWhitespaceIsHardBreak Then
+		    If s.Length > 3 Then
+		      Var trimmed As String = s.TrimRight(" ")
+		      If s.Length >= trimmed.Length + 2 Then
+		        s = trimmed + "<br />"
+		      End If
+		    End If
+		  End If
+		  
+		  mOutput.Add(s)
 		End Function
 	#tag EndMethod
 
@@ -475,9 +486,13 @@ Implements MKRenderer
 		  
 		  If Not p.IsChildOfTightList Then mOutput.Add("<p>")
 		  
+		  TrailingWhitespaceIsHardBreak = True
+		  
 		  For Each child As MKBlock In p.Children
 		    Call child.Accept(Self)
 		  Next child
+		  
+		  TrailingWhitespaceIsHardBreak = True
 		  
 		  If Not p.IsChildOfTightList Then mOutput.Add("</p>")
 		  
@@ -594,6 +609,10 @@ Implements MKRenderer
 
 	#tag Property, Flags = &h21, Description = 54727565206966207468652072656E64657265722073686F756C64207472696D20747261696C696E6720776869746573706163652066726F6D20696E6C696E652074657874206265666F72652072656E646572696E672069742E
 		Private ShouldTrimTrailingWhitespace As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h21, Description = 53657420746F205472756520696E7465726E616C6C7920696620696E6C696E65207465787420626C6F636B732073686F756C642072656E64657220747261696C696E67207768697465737061636520617320612068617264206C696E6520627265616B2E
+		Private TrailingWhitespaceIsHardBreak As Boolean = False
 	#tag EndProperty
 
 

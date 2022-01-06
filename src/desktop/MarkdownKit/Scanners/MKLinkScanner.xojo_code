@@ -156,11 +156,12 @@ Protected Class MKLinkScanner
 		      ElseIf seenNonWhitespace Then
 		        // This is the end of a valid label.
 		        Var linkLabel As String = chars.ToString(pos + 1, i - pos - 1).Trim
+		        
+		        // If we've ended up with an empty label then this is invalid.
+		        If linkLabel.Length = 0 Then Return False
+		        
 		        data.Value("linkLabelLength") = linkLabel.Length + 2 // +2 to account for the `[]` delimiters.
-		        
 		        linkLabel = MarkdownKit.CollapseInternalWhitespace(linkLabel)
-		        
-		        ' data.Value("linkLabel") = chars.ToString(pos + 1, i - pos - 1).Trim
 		        data.Value("linkLabel") = linkLabel
 		        data.Value("linkLabelStart") = labelStart
 		        pos = i

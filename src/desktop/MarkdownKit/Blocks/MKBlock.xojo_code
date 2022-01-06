@@ -396,8 +396,6 @@ Protected Class MKBlock
 		    End If
 		    Var whitespaceAfterDestination As Boolean = i > indexBeforeWhitespaceCheck
 		    
-		    'break
-		    
 		    // Can we match a link title?
 		    If whitespaceAfterDestination Then
 		      If MKLinkScanner.ParseLinkTitle(Characters, i, data) Then
@@ -436,7 +434,13 @@ Protected Class MKBlock
 		      ' For x As Integer = i DownTo linkLocalStart
 		      Characters.RemoveAt(x)
 		    Next x
+		    
 		    i = linkLocalStart
+		    
+		    If Characters(i).IsLineEnding Then
+		      Characters.RemoveAt(i)
+		      If i > Characters.LastIndex Then Return
+		    End If
 		  Wend
 		  
 		End Sub

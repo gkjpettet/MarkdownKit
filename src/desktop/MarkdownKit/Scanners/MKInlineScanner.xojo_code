@@ -182,6 +182,10 @@ Protected Class MKInlineScanner
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  
+		  // If the character immediately before the starting backtick is another backtick then this
+		  // can't be a valid code span.
+		  If startPos > 0 And chars(startPos - 1).Value = "`" Then Return Nil
+		  
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  
 		  // Compute the length of the backtickString and the index of the first character after the 
@@ -332,7 +336,7 @@ Protected Class MKInlineScanner
 		  
 		  Var seenWhiteSpace As Boolean = False
 		  // Advance past any optional whitespace.
-		  While pos <= charsLastIndex And chars(pos).IsMarkdownWhitespace
+		  While pos <= charsLastIndex And chars(pos).IsMarkdownWhitespace(True)
 		    seenWhiteSpace = True
 		    pos = pos + 1
 		  Wend
@@ -1082,6 +1086,8 @@ Protected Class MKInlineScanner
 		  Var linkLabel As String
 		  Var validLinkLabel As Boolean = False
 		  If linkTextChars.Count > 0 Then
+		    // Consecutive internal whitespace is treated as one space for purposes of determining matching
+		    ' linkLabel = MarkdownKit.CollapseInternalWhitespace(linkTextChars.ToString)
 		    linkLabel = linkTextChars.ToString
 		    If container.Document.References.HasKey(linkLabel.Lowercase) Then
 		      validLinkLabel = True

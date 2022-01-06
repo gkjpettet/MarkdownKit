@@ -1,5 +1,61 @@
 #tag Module
 Protected Module MarkdownKit
+	#tag Method, Flags = &h1, Description = 5265647563657320636F6E736563757469766520696E7465726E616C207768697465737061636520746F20612073696E676C652073706163652E
+		Protected Function CollapseInternalWhitespace(s As String) As String
+		  /// Reduces consecutive internal whitespace to a single space.
+		  
+		  // Exit early if there's no whitespace in [s].
+		  If s.IndexOf(" ") = -1 And s.IndexOf(&u0009) = -1 And s.IndexOf(&u0A) = -1 Then Return s
+		  
+		  Var chars() As String = s.CharacterArray
+		  Var tmp() As String
+		  
+		  // Find the first non-space character.
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  Var start As Integer = -1
+		  For i As Integer = 0 To charsLastIndex
+		    Select Case chars(i)
+		    Case " ", &u0009, &u0A
+		      Continue
+		    Else
+		      start = i
+		      Exit
+		    End Select
+		  Next i
+		  If start = -1 Then Return s
+		  
+		  // Find the last non-space character.
+		  Var finish As Integer = start
+		  For i As Integer = charsLastIndex DownTo start
+		    Select Case chars(i)
+		    Case " ", &u0009, &u0A
+		      Continue
+		    Else
+		      finish = i
+		      Exit
+		    End Select
+		  Next i
+		  If finish = start Then Return s
+		  
+		  // Collapse internal whitespace.
+		  Var previousCharWasWhitespace As Boolean = False
+		  For i As Integer = start To finish
+		    Var char As String = chars(i)
+		    Select Case char
+		    Case " ", &u0009, &u0A
+		      If Not previousCharWasWhitespace Then tmp.Add(" ")
+		      previousCharWasWhitespace = True
+		    Else
+		      tmp.Add(char)
+		      previousCharWasWhitespace = False
+		    End Select
+		  Next i
+		  
+		  Return String.FromArray(tmp, "")
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1, Description = 52657475726E73206120737472696E672066726F6D205B63686172735D20626567696E6E696E6720617420696E646578205B73746172745D20666F72205B6C656E6774685D20636861726163746572732E20417373756D6573205B63686172735D20697320616E206172726179206F6620696E646976696475616C20636861726163746572732E
 		Protected Function FromMKCharacterArray(chars() As String, start As Integer, length As Integer = -1) As String
 		  /// Returns a string from [chars] beginning at index [start] for [length] characters. 
@@ -80,18 +136,17 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 54727565206966205B636861725D20697320776869746573706163652E
-		Function IsMarkdownWhitespace(Extends char As MKCharacter, nonBreakingSpaceIsWhitespace As Boolean = False) As Boolean
+	#tag Method, Flags = &h0, Description = 54727565206966205B636861725D20697320636F6E73696465726564204D61726B646F776E20776869746573706163652E
+		Function IsMarkdownWhitespace(Extends char As MKCharacter, lineEndingIsWhitespace As Boolean = False) As Boolean
 		  /// True if [char] is considered Markdown whitespace.
 		  ///
-		  /// If the optional [nonBreakingSpaceIsWhitespace] is True then we also 
-		  /// consider a non-breaking space (&u0A0) to be whitespace.
+		  /// If the optional [lineEndingIsWhitespace] is True then we also consider a line ending to be whitespace.
 		  
 		  Select Case char.Value
-		  Case &u0020, &u0009
+		  Case &u0020, &u0009, &uA0
 		    Return True
 		  Else
-		    If nonBreakingSpaceIsWhitespace And char.IsLineEnding Then
+		    If lineEndingIsWhitespace And char.IsLineEnding Then
 		      Return True
 		    Else
 		      Return False
@@ -106,7 +161,7 @@ Protected Module MarkdownKit
 		  /// True if [char] is considered Markdown whitespace.
 		  
 		  Select Case char
-		  Case &u0020, &u0009, &u000A, ""
+		  Case &u0020, &u0009, ""
 		    Return True
 		  Else
 		    Return False

@@ -361,7 +361,8 @@ Protected Class MKBlock
 		    Else
 		      linkLabel = data.Value("linkLabel")
 		      labelStart = data.Value("linkLabelStart") + linkLocalStart
-		      labelLength = i - labelStart + linkLocalStart + 1 // Account for the flanking `[]`.
+		      ' labelLength = i - labelStart + linkLocalStart + 1 // Account for the flanking `[]`.
+		      labelLength = data.Value("linkLabelLength")
 		    End If
 		    
 		    // The next character must be a colon.

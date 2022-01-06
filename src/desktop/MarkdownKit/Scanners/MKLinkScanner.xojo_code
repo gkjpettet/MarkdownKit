@@ -122,6 +122,8 @@ Protected Class MKLinkScanner
 		  ///
 		  /// Sets [data.Value("linkLabel")] to the link label (if found).
 		  /// Sets [data.Value("linkLabelStart")] to the original [pos] value.
+		  /// Sets [data.Value("linkLabelLength")] to the length of the trimmed label before any 
+		  /// consecutive internal whitespace is collapsed.
 		  /// Note that [pos] is passed ByRef.
 		  ///
 		  /// A "link label" begins with a left bracket (`[`) and ends with the first right bracket (`]`) that is not 
@@ -153,7 +155,13 @@ Protected Class MKLinkScanner
 		        Continue
 		      ElseIf seenNonWhitespace Then
 		        // This is the end of a valid label.
-		        data.Value("linkLabel") = chars.ToString(pos + 1, i - pos - 1).Trim
+		        Var linkLabel As String = chars.ToString(pos + 1, i - pos - 1).Trim
+		        data.Value("linkLabelLength") = linkLabel.Length + 2 // +2 to account for the `[]` delimiters.
+		        
+		        linkLabel = MarkdownKit.CollapseInternalWhitespace(linkLabel)
+		        
+		        ' data.Value("linkLabel") = chars.ToString(pos + 1, i - pos - 1).Trim
+		        data.Value("linkLabel") = linkLabel
 		        data.Value("linkLabelStart") = labelStart
 		        pos = i
 		        Return True

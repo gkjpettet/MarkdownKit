@@ -92,11 +92,19 @@ Protected Class MKBlock
 		  If IsInlineContainer Then
 		    // Don't add empty lines to paragraphs.
 		    If s = "" Then Return
-		    // Append the characters in the line.
+		    
+		    // Append the characters in the line, skipping leading whitespace.
 		    Var tmp() As MKCharacter = s.MKCharacters(line.Start + startPos)
+		    Var seenNWS As Boolean = False
 		    For Each character As MKCharacter In tmp
-		      Characters.Add(character)
+		      If Not character.IsMarkdownWhitespace Then
+		        seenNWS = True
+		        Characters.Add(character)
+		      Else
+		        If seenNWS Then Characters.Add(character)
+		      End If
 		    Next character
+		    
 		    // Add a line ending.
 		    Characters.Add(MKCharacter.CreateLineEnding)
 		  Else
@@ -377,14 +385,13 @@ Protected Class MKBlock
 		      Return
 		    Else
 		      linkDestination = data.Value("linkDestination")
-		      destinationStart = data.Value("linkDestinationStart") // Absolute position.
+		      destinationStart = data.Value("linkDestinationStart")
 		      destinationLength = data.Value("linkDestinationLength")
 		    End If
 		    
 		    // Consume tabs and spaces.
 		    Var indexBeforeWhitespaceCheck As Integer = i
 		    i = i + MatchWhitespaceCharactersInArray(Characters, i)
-		    ' Var whitespaceAfterDestination As Boolean = i > indexBeforeWhitespaceCheck
 		    
 		    // Match up to one line ending.
 		    Var destinationEndsLine As Boolean = False
@@ -407,7 +414,7 @@ Protected Class MKBlock
 		        ElseIf data.Value("linkTitleValid") Then
 		          linkTitle = data.Value("linkTitle")
 		          titleStart = data.Value("linkTitleStart") + linkLocalStart
-		          titleLength = i - titleStart + linkLocalStart + 1 // Account for the flanking delimiters.
+		          titleLength = data.Value("linkTitleLength")
 		        End If
 		      End If
 		      
@@ -444,6 +451,23 @@ Protected Class MKBlock
 		  Wend
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 52657475726E73207468697320626C6F636B27732070726576696F7573207369626C696E67206F72204E696C2069662074686572652069736E2774206F6E652E
+		Function PreviousSibling() As MKBlock
+		  /// Returns this block's next sibling or Nil if there isn't one.
+		  
+		  If Self.Parent = Nil Then Return Nil
+		  
+		  Var myIndex As Integer = Self.Parent.Children.IndexOf(Self)
+		  If myIndex = -1 Then Return Nil
+		  If myIndex = Self.Parent.Children.FirstIndex Then
+		    Return Nil
+		  Else
+		    Return Self.Parent.Children(myIndex - 1)
+		  End If
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 4966205B6368696C645D206973206120746F702D6C6576656C206368696C64206F66207468697320626C6F636B2069742069732072656D6F7665642E
@@ -508,6 +532,16 @@ Protected Class MKBlock
 	#tag Property, Flags = &h0, Description = 54727565206966207468697320626C6F636B2069732061206368696C64206F662061207469676874206C6973742E
 		IsChildOfTightList As Boolean = False
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0, Description = 54727565206966207468697320626C6F636B20697320746865206669727374206368696C64206F662069747320706172656E742E
+		#tag Getter
+			Get
+			  If Parent = Nil Then Return True
+			  Return Parent.FirstChild = Self
+			End Get
+		#tag EndGetter
+		IsFirstChild As Boolean
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0, Description = 5472756520696620746865206C617374206C696E65206F66207468697320636F6E7461696E657220697320626C616E6B2E
 		IsLastLineBlank As Boolean = False
@@ -707,6 +741,14 @@ Protected Class MKBlock
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

@@ -194,8 +194,6 @@ Protected Class MKInlineScanner
 		  If contentStartPos = charsLastIndex Then Return Nil
 		  Var backtickStringLen As Integer = contentStartPos - startPos
 		  
-		  'break
-		  
 		  // Find the start position of the closing backtick string (if there is one).
 		  Var firstBackTickSeenIndex As Integer = -1
 		  Var contentEndPos, localClosingBacktickStringStart As Integer
@@ -208,9 +206,7 @@ Protected Class MKInlineScanner
 		      If contiguousBackticks = backtickStringLen Then
 		        // Done so long as the next character isn't a backtick.
 		        If i = charsLastIndex Or (i < charsLastIndex And chars(i + 1).Value <> "`") Then
-		          ' contentEndPos = chars(i).Position - backtickStringLen
 		          contentEndPos = chars(firstBackTickSeenIndex).Position - backtickStringLen
-		          ' localClosingBacktickStringStart = i
 		          localClosingBacktickStringStart = firstBackTickSeenIndex
 		          foundClosingBacktickString = True
 		          Exit
@@ -218,6 +214,7 @@ Protected Class MKInlineScanner
 		      End If
 		    Else
 		      contiguousBackticks = 0
+		      firstBackTickSeenIndex = -1
 		    End If
 		  Next i
 		  If Not foundClosingBacktickString Then Return Nil

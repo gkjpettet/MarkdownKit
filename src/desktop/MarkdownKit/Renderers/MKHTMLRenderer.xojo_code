@@ -179,7 +179,6 @@ Implements MKRenderer
 		  mOutput.RemoveAll
 		  ShouldTrimLeadingWhitespace = False
 		  ShouldTrimTrailingWhitespace = False
-		  TrailingWhitespaceIsHardBreak = False
 		  
 		  For Each child As MKBlock In doc.Children
 		    Call child.Accept(Self)
@@ -219,15 +218,14 @@ Implements MKRenderer
 		    mOutput.Add("language-")
 		    
 		    // When rendering the info string, use only the first word.
-		    Var trimmedInfoString As String = fc.InfoString.Trim
-		    Var wsIndex As Integer = trimmedInfoString.IndexOf(" ")
-		    If wsIndex = -1 Then wsIndex = trimmedInfoString.IndexOf(&u0009)
-		    If wsIndex = -1 Then
-		      mOutput.Add(trimmedInfoString)
-		    Else
-		      mOutput.Add(trimmedInfoString.Left(wsIndex))
-		    End If
+		    Var infoString As String = fc.InfoString.Trim
+		    Var wsIndex As Integer = infoString.IndexOf(" ")
+		    If wsIndex = -1 Then wsIndex = infoString.IndexOf(&u0009)
+		    If wsIndex <> -1 Then infoString = infoString.Left(wsIndex)
 		    
+		    infoString = MarkdownKit.ReplaceEntities(infoString)
+		    MarkdownKit.Unescape(infoString)
+		    mOutput.Add(infoString)
 		    mOutput.Add("""")
 		    mOutput.Add(">")
 		  End If
@@ -410,12 +408,23 @@ Implements MKRenderer
 		  /// Part of the MKRenderer interface.
 		  
 		  Var s As String = it.Characters.ToString
+		  
+		  If s.Length = 0 Then Return Nil
+		  
+		  If it.Parent.Type = MKBlockTypes.Paragraph Then
+		    s = MarkdownKit.ReplaceEntities(s)
+		  End If
+		  
 		  MarkdownKit.Unescape(s)
 		  
 		  s = EncodePredefinedEntities(s)
 		  
-		  If TrailingWhitespaceIsHardBreak Then
-		    If s.Length > 3 Then
+		  If it.Parent.Type = MKBlockTypes.Paragraph Then
+		    If s.Length > 1 And s.Right(1) = "\" Then
+		      // A backslash at the end of the line is a hard line break.
+		      s = s.Left(s.Length - 1) + "<br />"
+		    ElseIf s.Length > 3 Then
+		      // > 2 characters of trailing whitespace results in a hard line break after the text.
 		      Var trimmed As String = s.TrimRight(" ")
 		      If s.Length >= trimmed.Length + 2 Then
 		        s = trimmed + "<br />"
@@ -486,13 +495,9 @@ Implements MKRenderer
 		  
 		  If Not p.IsChildOfTightList Then mOutput.Add("<p>")
 		  
-		  TrailingWhitespaceIsHardBreak = True
-		  
 		  For Each child As MKBlock In p.Children
 		    Call child.Accept(Self)
 		  Next child
-		  
-		  TrailingWhitespaceIsHardBreak = True
 		  
 		  If Not p.IsChildOfTightList Then mOutput.Add("</p>")
 		  
@@ -609,10 +614,6 @@ Implements MKRenderer
 
 	#tag Property, Flags = &h21, Description = 54727565206966207468652072656E64657265722073686F756C64207472696D20747261696C696E6720776869746573706163652066726F6D20696E6C696E652074657874206265666F72652072656E646572696E672069742E
 		Private ShouldTrimTrailingWhitespace As Boolean = False
-	#tag EndProperty
-
-	#tag Property, Flags = &h21, Description = 53657420746F205472756520696E7465726E616C6C7920696620696E6C696E65207465787420626C6F636B732073686F756C642072656E64657220747261696C696E67207768697465737061636520617320612068617264206C696E6520627265616B2E
-		Private TrailingWhitespaceIsHardBreak As Boolean = False
 	#tag EndProperty
 
 

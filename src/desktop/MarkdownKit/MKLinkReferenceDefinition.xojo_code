@@ -7,10 +7,15 @@ Protected Class MKLinkReferenceDefinition
 		  Self.LinkLabelStart = labelStart
 		  Self.LinkLabelLength = labelLength
 		  
+		  
+		  destination = MarkdownKit.ReplaceEntities(destination)
+		  MarkdownKit.Unescape(destination)
 		  Self.LinkDestination = destination
 		  Self.LinkDestinationStart = destinationStart
 		  Self.LinkDestinationLength = destinationLength
 		  
+		  title = MarkdownKit.ReplaceEntities(title)
+		  MarkdownKit.Unescape(title)
 		  Self.LinkTitle = title
 		  Self.LinkTitleStart = titleStart
 		  Self.LinkTitleLength = titleLength
@@ -112,6 +117,102 @@ Protected Class MKLinkReferenceDefinition
 			Name="Top"
 			Visible=true
 			Group="Position"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="HasTitle"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkDestination"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkDestinationLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkDestinationStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkLabel"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkLabelLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkLabelStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkTitle"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkTitleLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkTitleStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Start"
+			Visible=false
+			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
 			EditorType=""

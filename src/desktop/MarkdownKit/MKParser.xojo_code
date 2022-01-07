@@ -23,9 +23,12 @@ Protected Class MKParser
 		  /// The offset relates to the location on the current line that is considered the start of the line
 		  /// once indentation and block openers are taken into consideration.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  If columns Then
 		    If mRemainingSpaces > count Then
@@ -70,9 +73,12 @@ Protected Class MKParser
 		Private Function AdvanceOptionalSpace() As Boolean
 		  /// Advances a single space or tab if the next character is a space returning True if there was a space.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  If mRemainingSpaces > 0 Then
 		    mRemainingSpaces = mRemainingSpaces - 1
@@ -235,9 +241,12 @@ Protected Class MKParser
 		Private Sub FindNextNonWhitespace()
 		  /// Finds the next non-whitespace (NWS) character on this line
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  // Is the entire line blank?
 		  If mCurrentLine.IsBlank Then mCurrentChar = ""
@@ -277,9 +286,12 @@ Protected Class MKParser
 		Private Function FirstNonBlankIndex() As Integer
 		  /// Finds the index in mLines of the first non-blank line or returns -1 if there are only blank lines.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var iLimit As Integer = mLines.LastIndex
 		  For i As Integer = 0 To iLimit
@@ -393,9 +405,12 @@ Protected Class MKParser
 		Private Function IsClosingCodeFence(length As Integer) As Boolean
 		  /// Returns True if mCurrentLine, beginning at `mNextNWS` is a closing fence of at least [length] characters.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var chars() As String = mCurrentLine.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -446,9 +461,12 @@ Protected Class MKParser
 		  /// We don't capture the (optional) info string here as it gets added later as a TextBlock 
 		  /// child of this block.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  data = Nil
 		  Var charsLastIndex As Integer = mCurrentLine.Characters.LastIndex
@@ -528,9 +546,12 @@ Protected Class MKParser
 		  ///
 		  /// There are 7 kinds of HTML block. See the note "HTML Block Types" in this class for more detail.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var chars() As String = mCurrentLine.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -646,9 +667,12 @@ Protected Class MKParser
 		  /// Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
 		  ///         {closingTag}[•→]+|⮐$
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  data = New Dictionary("type" : MKHTMLBlockTypes.None)
 		  
@@ -689,9 +713,12 @@ Protected Class MKParser
 		  ///   ^[=]+[ ]*$
 		  ///   ^[-]+[ ]*$
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  data = New Dictionary("level" : 0)
 		  
@@ -749,9 +776,12 @@ Protected Class MKParser
 		  ///   ^([_][ ]*){3,}[\s]*$"
 		  ///   ^([\*][ ]*){3,}[\s]*$"
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  
@@ -793,9 +823,12 @@ Protected Class MKParser
 		  /// [firstNonBlank] should be the index of a valid non-blank line in [mLines] (i.e. [FirstNonBlankIndex] has 
 		  /// been called prior to this method).
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var lastIndex As Integer = mLines.LastIndex
 		  
@@ -822,9 +855,12 @@ Protected Class MKParser
 		Private Function MatchWhitespaceCharacters(line As TextLine, pos As Integer) As Integer
 		  /// Matches whitespace on [line] beginning at [pos] and returns how many characters were matched.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var charsLastIndex As Integer = line.Characters.LastIndex
 		  
@@ -847,9 +883,12 @@ Protected Class MKParser
 		  /// This is part 1 of the parsing process. It gives us the overall structure of the Markdown document.
 		  /// Assumes the parser has been reset before this method is invoked.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  // We need to process each line but blank lines at the beginning and end of the 
 		  // document are ignored (0.30 4.9).
@@ -926,9 +965,12 @@ Protected Class MKParser
 		Private Function ParseListMarker(indented As Boolean, line As TextLine, pos As Integer, interruptsParagraph As Boolean, ByRef data As MKListData) As Boolean
 		  /// Returns True if able to parse a ListItem marker, populating [data] with the details.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var chars() As String = line.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -1019,9 +1061,12 @@ Protected Class MKParser
 		Function ParseSource(markdown As String) As MKDocument
 		  /// Parses [markdown] into a Markdown document.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var tmp() As String = markdown.ReplaceLineEndings(&u0A).Split(&u0A)
 		  
@@ -1074,9 +1119,12 @@ Protected Class MKParser
 		  /// We've tried matching against the open blocks and we've opened any required new blocks. 
 		  /// What now remains at the offset is a text line. Add it to the appropriate container.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  FindNextNonWhitespace
 		  
@@ -1202,9 +1250,12 @@ Protected Class MKParser
 		Private Sub TryNewBlocks()
 		  /// Tries to start a new container block.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var data As New Dictionary
 		  Var listData As MKListData
@@ -1362,9 +1413,12 @@ Protected Class MKParser
 		  ///
 		  /// [mContainer] will be set to the Block which last had a match to the line.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  mAllMatched = True
 		  

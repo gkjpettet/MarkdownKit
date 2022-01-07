@@ -178,9 +178,12 @@ Protected Class MKInlineScanner
 		  /// 
 		  /// Assumes [startPos] in [chars] is a backtick.
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  // If the character immediately before the starting backtick is another backtick then this
 		  // can't be a valid code span.
@@ -683,10 +686,11 @@ Protected Class MKInlineScanner
 		  /// then we can go all the way to the bottom. Otherwise, we stop before visiting [stackBottom].
 		  
 		  #If Not TargetWeb
-		    #Pragma DisableBoundsChecking
+		    #Pragma DisableBackgroundTasks
 		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  If delimiterStack.Count = 0 Then Return
 		  
@@ -858,10 +862,11 @@ Protected Class MKInlineScanner
 		  /// [delimiter] is either "*" or "_".
 		  
 		  #If Not TargetWeb
-		    #Pragma DisableBoundsChecking
+		    #Pragma DisableBackgroundTasks
 		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var startPos As integer = pos
 		  Var charsLastIndex As Integer = chars.LastIndex
@@ -1253,10 +1258,11 @@ Protected Class MKInlineScanner
 		  ///    it's backslash-escaped.
 		  
 		  #If Not TargetWeb
-		    #Pragma DisableBoundsChecking
+		    #Pragma DisableBackgroundTasks
 		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  

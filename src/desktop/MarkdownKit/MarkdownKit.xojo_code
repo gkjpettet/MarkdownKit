@@ -191,9 +191,12 @@ Protected Module MarkdownKit
 		  /// Returns [s] as an array of MKCharacter instances. 
 		  /// [start] is the 0-based position in the original source of the first character in [s].
 		  
-		  #Pragma DisableBoundsChecking
+		  #If Not TargetWeb
+		    #Pragma DisableBackgroundTasks
+		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  Var tmp() As Text = s.ToText.Split
 		  Var chars() As MKCharacter
@@ -224,10 +227,11 @@ Protected Module MarkdownKit
 		  /// &#[Xx][a-fA-F0-9]{1-6};
 		  
 		  #If Not TargetWeb
-		    #Pragma DisableBoundsChecking
+		    #Pragma DisableBackgroundTasks
 		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 		  
 		  // Quick check to see if we can bail early.
 		  Var start As Integer = chars.IndexOf("&")

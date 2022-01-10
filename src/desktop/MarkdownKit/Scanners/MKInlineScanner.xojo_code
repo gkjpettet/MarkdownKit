@@ -387,7 +387,7 @@ Protected Class MKInlineScanner
 		    Select Case dsn.Delimiter
 		    Case "["
 		      // Parse ahead for an inline link, reference link, compact reference link, or shortcut reference link.
-		      Var linkData As MKInlineLinkData = ScanForInlineLink(container, dsn.TextNode.LocalStart, pos)
+		      Var linkData As MKInlineLinkData = ScanForInlineLink(container, dsn.TextNode.ParentStart, pos)
 		      
 		      If linkData = Nil Then
 		        // Didn't find a valid link. Remove the opening delimiter from the stack.
@@ -441,7 +441,7 @@ Protected Class MKInlineScanner
 		      
 		    Case "!["
 		      // Parse ahead for an inline image, reference image, compact reference image, or shortcut reference image.
-		      Var imageData As MKInlineLinkData = ScanForInlineImage(container, dsn.TextNode.LocalStart, pos)
+		      Var imageData As MKInlineLinkData = ScanForInlineImage(container, dsn.TextNode.ParentStart, pos)
 		      
 		      If imageData = Nil Then
 		        // Didn't find a valid image. Remove the opening delimiter from the stack.
@@ -527,7 +527,8 @@ Protected Class MKInlineScanner
 		          buffer = New MKInlineText(block)
 		          buffer.LineNumber = c.Line.Number
 		          buffer.Start = pos + inlineStart
-		          buffer.LocalStart = pos
+		          buffer.ParentStart = pos
+		          buffer.LocalStart = buffer.Start - c.Line.Start
 		          buffer.EndPosition = pos + block.Start
 		        End If
 		        pos = pos + 1
@@ -552,7 +553,8 @@ Protected Class MKInlineScanner
 		          buffer = New MKInlineText(block)
 		          buffer.LineNumber = c.Line.Number
 		          buffer.Start = pos + inlineStart
-		          buffer.LocalStart = pos
+		          buffer.ParentStart = pos
+		          buffer.LocalStart = buffer.Start - c.Line.Start
 		          buffer.EndPosition = pos + block.Start
 		        End If
 		        pos = pos + 1
@@ -568,7 +570,8 @@ Protected Class MKInlineScanner
 		      buffer = New MKInlineText(block)
 		      buffer.LineNumber = c.Line.Number
 		      buffer.Start = pos + inlineStart
-		      buffer.LocalStart = pos
+		      buffer.ParentStart = pos
+		      buffer.LocalStart = buffer.Start - c.Line.Start
 		      buffer.EndPosition = pos + block.Start // One character long.
 		      
 		      // Add a delimiter node to the stack pointing to this text block.
@@ -588,7 +591,8 @@ Protected Class MKInlineScanner
 		      buffer = New MKInlineText(block)
 		      buffer.LineNumber = c.Line.Number
 		      buffer.Start = pos + inlineStart
-		      buffer.LocalStart = pos
+		      buffer.ParentStart = pos
+		      buffer.LocalStart = buffer.Start - c.Line.Start
 		      buffer.EndPosition = pos + block.Start + 1 // Two characters long.
 		      
 		      // Add a delimiter node to the stack pointing to this text block.
@@ -614,7 +618,8 @@ Protected Class MKInlineScanner
 		          buffer = New MKInlineText(block)
 		          buffer.LineNumber = c.Line.Number
 		          buffer.Start = pos + inlineStart
-		          buffer.LocalStart = pos
+		          buffer.ParentStart = pos
+		          buffer.LocalStart = buffer.Start - c.Line.Start
 		          buffer.EndPosition = pos + block.Start
 		        End If
 		        pos = pos + 1
@@ -629,7 +634,8 @@ Protected Class MKInlineScanner
 		      buffer = New MKInlineText(block)
 		      buffer.LineNumber = c.Line.Number
 		      buffer.Start = pos + inlineStart
-		      buffer.LocalStart = pos
+		      buffer.ParentStart = pos
+		      buffer.LocalStart = buffer.Start - c.Line.Start
 		      buffer.EndPosition = block.Start + pos + dsn.OriginalLength - 1
 		      dsn.TextNode = buffer
 		      FinaliseBuffer(buffer, block)
@@ -658,7 +664,8 @@ Protected Class MKInlineScanner
 		        buffer = New MKInlineText(block)
 		        buffer.LineNumber = c.Line.Number
 		        buffer.Start = pos + inlineStart
-		        buffer.LocalStart = pos
+		        buffer.ParentStart = pos
+		        buffer.LocalStart = buffer.Start - c.Line.Start
 		        buffer.EndPosition = pos + block.Start
 		      End If
 		      pos = pos + 1
@@ -753,6 +760,9 @@ Protected Class MKInlineScanner
 		            // Regular. 
 		            emphasis = New MKEmphasis(container, openerNode.TextNode.Start)
 		          End If
+		          
+		          emphasis.OpeningDelimiterAbsoluteStart = openerNode.TextNode.Start
+		          emphasis.OpeningDelimiterLocalStart = openerNode.TextNode.LocalStart
 		          emphasis.OpeningDelimiterLineNumber = openerNode.TextNode.LineNumber
 		          emphasis.Delimiter = openerNode.Delimiter
 		          emphasis.DelimiterLength = openerNode.CurrentLength
@@ -805,6 +815,7 @@ Protected Class MKInlineScanner
 		            // Track the position of the start of the closing delimiter.
 		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters.Pop
 		            emphasis.ClosingDelimiterLineNumber = closingDelimiterChar.Line.Number
+		            emphasis.ClosingDelimiterAbsoluteStart = closingDelimiterChar.AbsolutePosition
 		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition
 		          Else
 		            // Regular. 
@@ -813,6 +824,7 @@ Protected Class MKInlineScanner
 		            // Track the position of the start of the closing delimiter.
 		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters.Pop
 		            emphasis.ClosingDelimiterLineNumber = closingDelimiterChar.Line.Number
+		            emphasis.ClosingDelimiterAbsoluteStart = closingDelimiterChar.AbsolutePosition
 		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition
 		          End If
 		          

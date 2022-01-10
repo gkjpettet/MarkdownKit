@@ -58,15 +58,23 @@ Implements MKRenderer
 		Function VisitEmphasis(e As MKEmphasis) As Variant
 		  // Part of the MKRenderer interface.
 		  
-		  #Pragma Warning "TODO: Tokenise the delimiters"
-		  
 		  Var wasInEmphasis As Boolean = InEmphasis
 		  
 		  InEmphasis = True
 		  
+		  // Opening delimiter.
+		  Tokens.Add(New LineToken( _
+		  e.OpeningDelimiterAbsoluteStart, e.OpeningDelimiterLocalStart, 1, e.OpeningDelimiterLineNumber, _
+		  "emphasisDelimiter"))
+		  
 		  For Each child As MKBlock In e.Children
 		    Call child.Accept(Self)
 		  Next child
+		  
+		  // Closing delimiter.
+		  Tokens.Add(New LineToken( _
+		  e.ClosingDelimiterAbsoluteStart, e.ClosingDelimiterLocalStart, 1, e.ClosingDelimiterLineNumber, _
+		  "emphasisDelimiter"))
 		  
 		  InEmphasis = wasInEmphasis
 		  
@@ -147,7 +155,7 @@ Implements MKRenderer
 		    
 		  End If
 		  
-		  Tokens.Add(New LineToken(it.Start, it.Start - it.LocalStart, it.Characters.Count, it.LineNumber, type))
+		  Tokens.Add(New LineToken(it.Start, it.LocalStart, it.Characters.Count, it.LineNumber, type))
 		  
 		End Function
 	#tag EndMethod
@@ -203,15 +211,23 @@ Implements MKRenderer
 		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
 		  // Part of the MKRenderer interface.
 		  
-		  #Pragma Warning "TODO: Tokenise the delimiters"
-		  Break
 		  Var wasInStrongEmphasis As Boolean = InStrongEmphasis
 		  
 		  InStrongEmphasis = True
 		  
+		  // Opening delimiter.
+		  Tokens.Add(New LineToken( _
+		  se.OpeningDelimiterAbsoluteStart, se.OpeningDelimiterLocalStart, 2, se.OpeningDelimiterLineNumber, _
+		  "strongEmphasisDelimiter"))
+		  
 		  For Each child As MKBlock In se.Children
 		    Call child.Accept(Self)
 		  Next child
+		  
+		  // Closing delimiter.
+		  Tokens.Add(New LineToken( _
+		  se.ClosingDelimiterAbsoluteStart, se.ClosingDelimiterLocalStart, 2, se.ClosingDelimiterLineNumber, _
+		  "strongEmphasisDelimiter"))
 		  
 		  InStrongEmphasis = wasInStrongEmphasis
 		  

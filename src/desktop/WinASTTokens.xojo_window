@@ -102,61 +102,6 @@ Begin DesktopWindow WinASTTokens
       Visible         =   True
       Width           =   80
    End
-   Begin DesktopTreeView ASTTokenView
-      AutoDeactivate  =   True
-      BackColor       =   &cFFFFFF00
-      ColumnCount     =   1
-      DarkBackColor   =   &c2D2D2D00
-      DarkNodeTextColor=   &cFFFFFF00
-      DragReceiveBehavior=   1
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      HasBackColor    =   False
-      HasBorder       =   True
-      HasHeader       =   False
-      HasInactiveSelectionColor=   False
-      HasNodeColor    =   False
-      HasNodeTextColor=   False
-      HasSelectionColor=   False
-      Height          =   544
-      InactiveSelectionColor=   &cD3D3D300
-      Index           =   -2147483648
-      InitialParent   =   ""
-      Left            =   602
-      LinuxDrawTreeLines=   False
-      LinuxExpanderStyle=   0
-      LinuxHighlightFullRow=   True
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   True
-      LockTop         =   True
-      MacDrawTreeLines=   False
-      MacExpanderStyle=   0
-      MacHighlightFullRow=   True
-      MultiSelection  =   False
-      NodeEvenColor   =   &cFFFFFF00
-      NodeHeight      =   18
-      NodeOddColor    =   &cFFFFFF00
-      NodeTextColor   =   &c00000000
-      QuartzShading   =   False
-      Scope           =   0
-      SelectionColor  =   &c478A1A00
-      SelectionSeparator=   0
-      SystemNodeColors=   True
-      TabIndex        =   2
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Tooltip         =   ""
-      Top             =   20
-      UseFocusRing    =   True
-      Visible         =   True
-      Width           =   438
-      WinDrawTreeLines=   True
-      WinHighlightFullRow=   False
-   End
    Begin DesktopLabel Info
       AllowAutoDeactivate=   True
       Bold            =   False
@@ -230,6 +175,53 @@ Begin DesktopWindow WinASTTokens
       Visible         =   True
       Width           =   229
    End
+   Begin DesktopListBox ASTListBox
+      AllowAutoDeactivate=   True
+      AllowAutoHideScrollbars=   True
+      AllowExpandableRows=   False
+      AllowFocusRing  =   False
+      AllowResizableColumns=   False
+      AllowRowDragging=   False
+      AllowRowReordering=   False
+      Bold            =   False
+      ColumnCount     =   6
+      ColumnWidths    =   "*, 50, 70, 70, 70, 70"
+      DefaultRowHeight=   -1
+      DropIndicatorVisible=   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      GridLineStyle   =   0
+      HasBorder       =   True
+      HasHeader       =   True
+      HasHorizontalScrollbar=   False
+      HasVerticalScrollbar=   True
+      HeadingIndex    =   -1
+      Height          =   544
+      Index           =   -2147483648
+      InitialValue    =   "Type	Line	Abs Start	Local Start	 Length	End Pos"
+      Italic          =   False
+      Left            =   602
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      RequiresSelection=   False
+      RowSelectionType=   0
+      Scope           =   0
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   20
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   438
+      _ScrollWidth    =   -1
+   End
 End
 #tag EndDesktopWindow
 
@@ -243,6 +235,55 @@ End
 			
 		End Function
 	#tag EndMenuHandler
+
+
+	#tag Method, Flags = &h21, Description = 506F70756C617465732074686520746F6B656E73206C697374626F782077697468205B746F6B656E735D2E
+		Private Sub PopulateTokenListbox(tokens() As LineToken)
+		  /// Populates the tokens listbox with [tokens].
+		  ///
+		  /// Assumes that [tokens] has been sorted with `SortTokens()` prior to this method being called.
+		  
+		  ASTListBox.RemoveAllRows
+		  
+		  For Each t As LineToken In tokens
+		    ASTListBox.AddRow( _
+		    t.Type, _
+		    t.LineNumber.ToString, _
+		    t.StartAbsolute.ToString, _
+		    t.StartLocal.ToString, _
+		    t.Length.ToString, _
+		    t.EndLocal.ToString)
+		  Next t
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 5573656420746F20736F727420616E206172726179206F66204C696E65546F6B656E73206279206C696E65206E756D62657220616E64206162736F6C75746520737461727420706F736974696F6E2E
+		Private Function SortTokens(t1 As LineToken, t2 As LineToken) As Integer
+		  /// Used to sort an array of LineTokens by line number and absolute start position.
+		  
+		  If t1.LineNumber > t2.LineNumber Then
+		    Return 1
+		    
+		  ElseIf t1.LineNumber < t2.LineNumber Then
+		    Return -1
+		    
+		  Else
+		    If t1.StartAbsolute > t2.StartAbsolute Then
+		      Return 1
+		      
+		    ElseIf t1.StartAbsolute < t2.StartAbsolute Then
+		      Return -1
+		      
+		    Else
+		      Return 0
+		      
+		    End If
+		    
+		  End If
+		  
+		End Function
+	#tag EndMethod
 
 
 	#tag Constant, Name = SAMPLE_MARKDOWN, Type = String, Dynamic = False, Default = \"### Hello World\nThis is some text.\n\nAnother paragraph.", Scope = Public
@@ -262,22 +303,24 @@ End
 		  Var parseTime As Integer = watch.ElapsedMilliseconds
 		  
 		  Var printer As New ASTTokenArrayRenderer
-		  ASTTokenView.RemoveAllNodes
+		  
 		  watch.Start
 		  Var tokens() As LineToken = printer.VisitDocument(doc)
 		  watch.Stop
+		  
 		  Var renderTime As Integer = watch.ElapsedMilliseconds
 		  
 		  Time.Text = "Parsed in " + parseTime.ToString + " ms, rendered in " + renderTime.ToString + " ms" 
 		  
-		  Break
+		  tokens.Sort(AddressOf SortTokens)
+		  PopulateTokenListbox(tokens)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events InfoTimer
 	#tag Event
 		Sub Action()
-		  Info.Text = "Pos: " + Source.SelectionStart.ToString
+		  Info.Text = "Abs Pos: " + Source.SelectionStart.ToString
 		End Sub
 	#tag EndEvent
 #tag EndEvents

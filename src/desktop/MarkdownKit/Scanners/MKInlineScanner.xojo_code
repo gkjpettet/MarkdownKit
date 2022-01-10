@@ -213,7 +213,7 @@ Protected Class MKInlineScanner
 		      If contiguousBackticks = backtickStringLen Then
 		        // Done so long as the next character isn't a backtick.
 		        If i = charsLastIndex Or (i < charsLastIndex And chars(i + 1).Value <> "`") Then
-		          contentEndPos = chars(firstBackTickSeenIndex).Position - backtickStringLen
+		          contentEndPos = chars(firstBackTickSeenIndex).AbsolutePosition - backtickStringLen
 		          localClosingBacktickStringStart = firstBackTickSeenIndex
 		          foundClosingBacktickString = True
 		          Exit
@@ -525,6 +525,7 @@ Protected Class MKInlineScanner
 		          buffer.EndPosition = pos + block.Start
 		        Else
 		          buffer = New MKInlineText(block)
+		          buffer.LineNumber = c.Line.Number
 		          buffer.Start = pos + inlineStart
 		          buffer.LocalStart = pos
 		          buffer.EndPosition = pos + block.Start
@@ -549,6 +550,7 @@ Protected Class MKInlineScanner
 		          buffer.EndPosition = pos + block.Start
 		        Else
 		          buffer = New MKInlineText(block)
+		          buffer.LineNumber = c.Line.Number
 		          buffer.Start = pos + inlineStart
 		          buffer.LocalStart = pos
 		          buffer.EndPosition = pos + block.Start
@@ -564,6 +566,7 @@ Protected Class MKInlineScanner
 		      
 		      // Create a new text block for this "[" character.
 		      buffer = New MKInlineText(block)
+		      buffer.LineNumber = c.Line.Number
 		      buffer.Start = pos + inlineStart
 		      buffer.LocalStart = pos
 		      buffer.EndPosition = pos + block.Start // One character long.
@@ -583,6 +586,7 @@ Protected Class MKInlineScanner
 		      
 		      // Create a new text block for this "![" character sequence.
 		      buffer = New MKInlineText(block)
+		      buffer.LineNumber = c.Line.Number
 		      buffer.Start = pos + inlineStart
 		      buffer.LocalStart = pos
 		      buffer.EndPosition = pos + block.Start + 1 // Two characters long.
@@ -608,6 +612,7 @@ Protected Class MKInlineScanner
 		          // A link or image block will have been inserted as a child of `block` by `LookForLinkOrImage`
 		          // so we need to start a new text block.
 		          buffer = New MKInlineText(block)
+		          buffer.LineNumber = c.Line.Number
 		          buffer.Start = pos + inlineStart
 		          buffer.LocalStart = pos
 		          buffer.EndPosition = pos + block.Start
@@ -622,6 +627,7 @@ Protected Class MKInlineScanner
 		      If buffer <> Nil Then FinaliseBuffer(buffer, block)
 		      Var dsn As MKDelimiterStackNode = ScanDelimiterRun(chars, pos, c.Value)
 		      buffer = New MKInlineText(block)
+		      buffer.LineNumber = c.Line.Number
 		      buffer.Start = pos + inlineStart
 		      buffer.LocalStart = pos
 		      buffer.EndPosition = block.Start + pos + dsn.OriginalLength - 1
@@ -636,7 +642,7 @@ Protected Class MKInlineScanner
 		    ElseIf c.IsLineEnding Then
 		      If buffer <> Nil Then FinaliseBuffer(buffer, block)
 		      If CanContainSoftBreaks(block) Then
-		        Var lePos As Integer = If(pos = 0, inlineStart, chars(pos - 1).Position + 1)
+		        Var lePos As Integer = If(pos = 0, inlineStart, chars(pos - 1).AbsolutePosition + 1)
 		        block.Children.Add(New MKSoftBreak(block, lePos))
 		      End If
 		      pos = pos + 1
@@ -650,6 +656,7 @@ Protected Class MKInlineScanner
 		        buffer.EndPosition = pos + block.Start
 		      Else
 		        buffer = New MKInlineText(block)
+		        buffer.LineNumber = c.Line.Number
 		        buffer.Start = pos + inlineStart
 		        buffer.LocalStart = pos
 		        buffer.EndPosition = pos + block.Start
@@ -705,7 +712,7 @@ Protected Class MKInlineScanner
 		  
 		  Var incrementCurrentPosition As Boolean = False
 		  Var openerTextNode, closerTextNode As MKInlineText
-		  Var emphasis As MKBlock
+		  Var emphasis As MKAbstractEmphasis
 		  Var openerTextNodeIndex, closerTextNodeIndex, numToTranspose, limit As Integer
 		  
 		  While currentPosition <= delimiterStack.LastIndex
@@ -742,14 +749,13 @@ Protected Class MKInlineScanner
 		          If closerNode.CurrentLength >= 2 And openerNode.CurrentLength >= 2 Then
 		            // Strong.
 		            emphasis = New MKStrongEmphasis(container, openerNode.TextNode.Start)
-		            MKStrongEmphasis(emphasis).Delimiter = openerNode.Delimiter
-		            MKStrongEmphasis(emphasis).DelimiterLength = openerNode.CurrentLength
 		          Else
 		            // Regular. 
 		            emphasis = New MKEmphasis(container, openerNode.TextNode.Start)
-		            MKEmphasis(emphasis).Delimiter = openerNode.Delimiter
-		            MKEmphasis(emphasis).DelimiterLength = openerNode.CurrentLength
 		          End If
+		          emphasis.OpeningDelimiterLineNumber = openerNode.TextNode.LineNumber
+		          emphasis.Delimiter = openerNode.Delimiter
+		          emphasis.DelimiterLength = openerNode.CurrentLength
 		          
 		          // Insert the newly created emphasis node, after the text node corresponding to the opener.
 		          // Get the index of the opener text node in the container's chidren.
@@ -795,11 +801,19 @@ Protected Class MKInlineScanner
 		            Call openerNode.TextNode.Characters.Pop
 		            Call openerNode.TextNode.Characters.Pop
 		            Call closerNode.TextNode.Characters.Pop
-		            Call closerNode.TextNode.Characters.Pop
+		            
+		            // Track the position of the start of the closing delimiter.
+		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters.Pop
+		            emphasis.ClosingDelimiterLineNumber = closingDelimiterChar.Line.Number
+		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition
 		          Else
 		            // Regular. 
 		            Call openerNode.TextNode.Characters.Pop
-		            Call closerNode.TextNode.Characters.Pop
+		            
+		            // Track the position of the start of the closing delimiter.
+		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters.Pop
+		            emphasis.ClosingDelimiterLineNumber = closingDelimiterChar.Line.Number
+		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition
 		          End If
 		          
 		          // If the text node becomes empty as a result, remove it and 

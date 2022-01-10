@@ -202,6 +202,17 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
+      Begin DesktopMenuItem WindowASTTokens
+         SpecialMenu = 0
+         Index = -2147483648
+         Text = "AST Tokens"
+         ShortcutKey = "4"
+         Shortcut = "Cmd+4"
+         MenuModifier = True
+         AutoEnabled = True
+         AutoEnable = True
+         Visible = True
+      End
    End
 End
 #tag EndMenu

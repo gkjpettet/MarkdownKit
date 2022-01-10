@@ -1,47 +1,38 @@
 #tag Class
-Protected Class MKInlineText
+Protected Class MKAbstractEmphasis
 Inherits MKBlock
-	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock)
-		  Super.Constructor(MKBlockTypes.InlineText, parent, 0)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Finalise(line As TextLine = Nil)
-		  // Calling the overridden superclass method.
-		  Super.Finalise(line)
-		  
-		  Var iLimit As Integer = EndPosition - Parent.Start
-		  For i As Integer = LocalStart To iLimit
-		    Var c As MKCharacter = Parent.Characters(i)
-		    ' If c.IsLineEnding Then
-		    ' Raise New MKException("Unexpected line ending in inline text.")
-		    ' Else
-		    ' Characters.Add(c)
-		    ' End If
-		    If Not c.IsLineEnding Then Characters.Add(c)
-		  Next i
-		  
-		End Sub
-	#tag EndMethod
+	#tag Note, Name = About
+		An abstract base class for MKEmphasis and MKStrongEmphasis blocks.
+		
+	#tag EndNote
 
 
-	#tag Property, Flags = &h0, Description = 546865206C6F63616C20302D626173656420696E64657820696E2060506172656E742E43686172616374657273602074686174207468697320696E6C696E652074657874207370616E20626567696E732061742E
-		LocalStart As Integer = 0
+	#tag Property, Flags = &h0, Description = 546865206C696E65206E756D62657220746861742074686520636C6F73696E672064656C696D69746572206F6363757273206F6E2E
+		ClosingDelimiterLineNumber As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C20706F736974696F6E206F662074686520666972737420636861726163746572206F662074686520636C6F73696E672064656C696D697465722E
+		ClosingDelimiterLocalStart As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 5468652064656C696D697465722E
+		Delimiter As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206C656E677468206F66207468652064656C696D697465722E
+		DelimiterLength As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206C696E65206E756D626572207468617420746865206F70656E696E672064656C696D69746572206F6363757273206F6E2E
+		OpeningDelimiterLineNumber As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C20706F736974696F6E206F662074686520666972737420636861726163746572206F6620746865206F70656E696E672064656C696D697465722E
+		OpeningDelimiterLocalStart As Integer = 0
 	#tag EndProperty
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="IsFirstChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -171,7 +162,39 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="LocalStart"
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingDelimiterLineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningDelimiterLineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningDelimiterLocalStart"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

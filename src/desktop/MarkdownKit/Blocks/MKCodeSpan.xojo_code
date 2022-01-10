@@ -23,14 +23,15 @@ Inherits MKBlock
 		  Var iLimit As Integer = LocalClosingBacktickStringStart - 1
 		  Var textBlockStart As Integer = LocalStart
 		  Var contentsBuffer() As String
+		  Var c As MKCharacter
 		  For i As Integer = iStart To iLimit
 		    If contentsBuffer.Count = 0 Then textBlockStart = i
-		    Var c As MKCharacter = Parent.Characters(i)
+		    c = Parent.Characters(i)
 		    
 		    If c.IsLineEnding Then
 		      Var s As String = String.FromArray(contentsBuffer, "")
 		      If s <> "" Then
-		        Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s, 0))
+		        Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, s, 0, c.Line))
 		      End If
 		      contentsBuffer.RemoveAll
 		      // Add in a soft break
@@ -47,7 +48,7 @@ Inherits MKBlock
 		  
 		  If contentsBuffer.Count > 0 Then
 		    Var s As String = String.FromArray(contentsBuffer, "")
-		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s, 0))
+		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, s, 0, c.Line))
 		  End If
 		  
 		  If FirstChild <> Nil And FirstChild IsA MKSoftBreak Then Children.RemoveAt(0)
@@ -74,6 +75,14 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="EndPosition"
 			Visible=false

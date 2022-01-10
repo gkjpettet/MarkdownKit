@@ -18,12 +18,13 @@ Inherits MKBlock
 		  
 		  Var textBlockStart As Integer = LocalStart
 		  Var contentsBuffer() As String
+		  Var c As MKCharacter
 		  For i As Integer = LocalStart To LocalRightAnglePos
 		    If contentsBuffer.Count = 0 Then textBlockStart = i
-		    Var c As MKCharacter = Parent.Characters(i)
+		    c = Parent.Characters(i)
 		    If c.IsLineEnding Then
 		      Var s As String = String.FromArray(contentsBuffer, "")
-		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s, 0))
+		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, s, 0, c.Line))
 		      contentsBuffer.RemoveAll
 		    Else
 		      contentsBuffer.Add(c.Value)
@@ -32,7 +33,7 @@ Inherits MKBlock
 		  
 		  If contentsBuffer.Count > 0 Then
 		    Var s As String = String.FromArray(contentsBuffer, "")
-		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).Position, s, 0))
+		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, s, 0, c.Line))
 		  End If
 		  
 		End Sub
@@ -65,6 +66,14 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -207,7 +216,7 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsAutoLink"
@@ -223,7 +232,7 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LocalStart"
@@ -239,7 +248,7 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

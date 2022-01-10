@@ -25,11 +25,11 @@ Inherits MKBlock
 		  End If
 		  
 		  // Compute the characters that make up this heading's title. This is required for later inline parsing.
-		  Var tmp() as MKCharacter = s.MKCharacters(line.Start)
+		  Var tmp() as MKCharacter = s.MKCharacters(line, line.Start)
 		  For Each character As MKCharacter In tmp
 		    Characters.Add(character)
 		  Next character
-		  Characters.Add(MKCharacter.CreateLineEnding)
+		  Characters.Add(MKCharacter.CreateLineEnding(line))
 		  
 		End Sub
 	#tag EndMethod
@@ -62,6 +62,14 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="EndPosition"
 			Visible=false
@@ -123,17 +131,23 @@ Inherits MKBlock
 				"2 - BlockQuote"
 				"3 - CodeSpan"
 				"4 - Document"
-				"5 - FencedCode"
-				"6 - Html"
-				"7 - IndentedCode"
-				"8 - InlineText"
-				"9 - List"
-				"10 - ListItem"
-				"11 - Paragraph"
-				"12 - ReferenceDefinition"
-				"13 - SetextHeading"
-				"14 - TextBlock"
-				"15 - ThematicBreak"
+				"5 - Emphasis"
+				"6 - FencedCode"
+				"7 - Html"
+				"8 - IndentedCode"
+				"9 - InlineHTML"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -202,6 +216,22 @@ Inherits MKBlock
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="ClosingSequenceCount"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingSequenceStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningSequenceLength"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

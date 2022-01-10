@@ -48,7 +48,7 @@ Protected Class MKLinkScanner
 		          data.Value("linkDestinationLength") = linkDestination.Length
 		          data.Value("linkDestination") = linkDestination
 		        End If
-		        data.Value("linkDestinationStart") = chars(startPos).Position
+		        data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		        data.Value("linkDestinationLength") = linkDestination.Length
 		        pos = i + 1
 		        Return True
@@ -74,7 +74,7 @@ Protected Class MKLinkScanner
 		      
 		      linkDestination = chars.ToString(pos, i - pos)
 		      data.Value("linkDestination") = linkDestination
-		      data.Value("linkDestinationStart") = chars(startPos).Position
+		      data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		      data.Value("linkDestinationLength") = linkDestination.Length
 		      pos = i
 		      Return True
@@ -93,7 +93,7 @@ Protected Class MKLinkScanner
 		      Else
 		        linkDestination = chars.ToString(pos, i - pos)
 		        data.Value("linkDestination") = linkDestination
-		        data.Value("linkDestinationStart") = chars(startPos).Position
+		        data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		        data.Value("linkDestinationLength") = linkDestination.Length
 		        pos = i
 		        Return True
@@ -106,7 +106,7 @@ Protected Class MKLinkScanner
 		  Else
 		    linkDestination = chars.ToString(pos, -1)
 		    data.Value("linkDestination") = linkDestination
-		    data.Value("linkDestinationStart") = chars(startPos).Position
+		    data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		    data.Value("linkDestinationLength") = linkDestination.Length
 		    pos = i
 		    Return True
@@ -237,7 +237,7 @@ Protected Class MKLinkScanner
 		      // +2 accounts for the delimiters.
 		      data.Value("linkTitleLength") = linkTitle.CharacterCount + 2
 		      data.Value("linkTitle") = linkTitle
-		      data.Value("linkTitleStart") = chars(startPos).Position
+		      data.Value("linkTitleStart") = chars(startPos).AbsolutePosition
 		      data.Value("linkTitleValid") = True
 		      startPos = i
 		      Return True

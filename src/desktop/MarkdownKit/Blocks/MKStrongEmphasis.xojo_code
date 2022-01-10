@@ -1,6 +1,6 @@
 #tag Class
 Protected Class MKStrongEmphasis
-Inherits MKBlock
+Inherits MKAbstractEmphasis
 	#tag Method, Flags = &h0
 		Sub Constructor(parent As MKBlock, absoluteStart As Integer)
 		  Super.Constructor(MKBlockTypes.StrongEmphasis, parent, absoluteStart)
@@ -9,16 +9,47 @@ Inherits MKBlock
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0
-		Delimiter As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		DelimiterLength As Integer = 0
-	#tag EndProperty
-
-
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="ClosingDelimiterLineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningDelimiterLineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningDelimiterLocalStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -72,19 +103,23 @@ Inherits MKBlock
 				"2 - BlockQuote"
 				"3 - CodeSpan"
 				"4 - Document"
-				"5 - FencedCode"
-				"6 - Html"
-				"7 - IndentedCode"
-				"8 - InlineHTML"
-				"9 - InlineLink"
-				"10 - InlineText"
-				"11 - List"
-				"12 - ListItem"
-				"13 - Paragraph"
-				"14 - ReferenceDefinition"
-				"15 - SetextHeading"
-				"16 - TextBlock"
-				"17 - ThematicBreak"
+				"5 - Emphasis"
+				"6 - FencedCode"
+				"7 - Html"
+				"8 - IndentedCode"
+				"9 - InlineHTML"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

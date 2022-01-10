@@ -27,6 +27,22 @@ Inherits MKBlock
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="IsChildOfTightList"
 			Visible=false
 			Group="Behavior"
@@ -40,22 +56,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="SetextUnderlineLength"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -109,17 +109,25 @@ Inherits MKBlock
 				"0 - AtxHeading"
 				"1 - Block"
 				"2 - BlockQuote"
-				"3 - Document"
-				"4 - FencedCode"
-				"5 - Html"
-				"6 - IndentedCode"
-				"7 - List"
-				"8 - ListItem"
-				"9 - Paragraph"
-				"10 - ReferenceDefinition"
-				"11 - SetextHeading"
-				"12 - TextBlock"
-				"13 - ThematicBreak"
+				"3 - CodeSpan"
+				"4 - Document"
+				"5 - Emphasis"
+				"6 - FencedCode"
+				"7 - Html"
+				"8 - IndentedCode"
+				"9 - InlineHTML"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -152,14 +160,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Level"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty

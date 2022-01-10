@@ -24,6 +24,14 @@ Inherits MKBlock
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
@@ -81,16 +89,18 @@ Inherits MKBlock
 				"7 - Html"
 				"8 - IndentedCode"
 				"9 - InlineHTML"
-				"10 - InlineLink"
-				"11 - InlineText"
-				"12 - List"
-				"13 - ListItem"
-				"14 - Paragraph"
-				"15 - ReferenceDefinition"
-				"16 - SetextHeading"
-				"17 - StrongEmphasis"
-				"18 - TextBlock"
-				"19 - ThematicBreak"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty

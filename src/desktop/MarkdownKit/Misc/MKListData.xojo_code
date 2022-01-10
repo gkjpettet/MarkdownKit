@@ -113,7 +113,7 @@ Protected Class MKListData
 			Name="IsTight"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
+			InitialValue="False"
 			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
@@ -131,6 +131,38 @@ Protected Class MKListData
 			Group="Behavior"
 			InitialValue=""
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Length"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinePosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ListDelimiter"
+			Visible=false
+			Group="Behavior"
+			InitialValue="MKListDelimiters.Period"
+			Type="MKListDelimiters"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ListType"
+			Visible=false
+			Group="Behavior"
+			InitialValue="MKListTypes.Bullet"
+			Type="MKListTypes"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

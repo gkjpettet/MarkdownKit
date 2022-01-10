@@ -24,6 +24,14 @@ Inherits MKBlock
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
@@ -76,19 +84,23 @@ Inherits MKBlock
 				"2 - BlockQuote"
 				"3 - CodeSpan"
 				"4 - Document"
-				"5 - FencedCode"
-				"6 - Html"
-				"7 - IndentedCode"
-				"8 - InlineHTML"
-				"9 - InlineLink"
-				"10 - InlineText"
-				"11 - List"
-				"12 - ListItem"
-				"13 - Paragraph"
-				"14 - ReferenceDefinition"
-				"15 - SetextHeading"
-				"16 - TextBlock"
-				"17 - ThematicBreak"
+				"5 - Emphasis"
+				"6 - FencedCode"
+				"7 - Html"
+				"8 - IndentedCode"
+				"9 - InlineHTML"
+				"10 - InlineImage"
+				"11 - InlineLink"
+				"12 - InlineText"
+				"13 - List"
+				"14 - ListItem"
+				"15 - Paragraph"
+				"16 - ReferenceDefinition"
+				"17 - SetextHeading"
+				"18 - SoftBreak"
+				"19 - StrongEmphasis"
+				"20 - TextBlock"
+				"21 - ThematicBreak"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -161,7 +173,7 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Destination"
@@ -169,7 +181,7 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

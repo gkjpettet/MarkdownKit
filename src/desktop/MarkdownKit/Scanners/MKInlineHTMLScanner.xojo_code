@@ -295,9 +295,6 @@ Protected Class MKInlineHTMLScanner
 		  /// Absolute URI = scheme, :, >=0 characters (not WS, <, >)
 		  /// Scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -460,9 +457,6 @@ Protected Class MKInlineHTMLScanner
 		  ///      [a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?
 		  ///      (?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -568,9 +562,6 @@ Protected Class MKInlineHTMLScanner
 		  ///
 		  /// Valid scheme = [A-Za-z]{1}[A-Za-z0-9\+\.\-]{1, 31}
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking

@@ -191,9 +191,6 @@ Protected Module MarkdownKit
 		  /// Returns [s] as an array of MKCharacter instances. 
 		  /// [start] is the 0-based local position in the containing line of the first character in [s].
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -226,9 +223,6 @@ Protected Module MarkdownKit
 		  /// Hexadecimal numeric character reference:
 		  /// &#[Xx][a-fA-F0-9]{1-6};
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking

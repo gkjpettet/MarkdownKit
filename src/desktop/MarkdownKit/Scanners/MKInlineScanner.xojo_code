@@ -178,9 +178,6 @@ Protected Class MKInlineScanner
 		  /// 
 		  /// Assumes [startPos] in [chars] is a backtick.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -699,9 +696,6 @@ Protected Class MKInlineScanner
 		  /// [stackBottom] sets a lower bound to how far we descend in the delimiter stack. If it's `-1`, 
 		  /// then we can go all the way to the bottom. Otherwise, we stop before visiting [stackBottom].
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -760,10 +754,6 @@ Protected Class MKInlineScanner
 		            // Regular. 
 		            emphasis = New MKEmphasis(container, openerNode.TextNode.Start)
 		          End If
-		          
-		          emphasis.OpeningDelimiterAbsoluteStart = openerNode.TextNode.Start
-		          emphasis.OpeningDelimiterLocalStart = openerNode.TextNode.LocalStart
-		          emphasis.OpeningDelimiterLineNumber = openerNode.TextNode.LineNumber
 		          emphasis.Delimiter = openerNode.Delimiter
 		          emphasis.DelimiterLength = openerNode.CurrentLength
 		          
@@ -807,25 +797,46 @@ Protected Class MKInlineScanner
 		          // Remove 1 (for regular emph) or 2 (for strong emphasis) delimiters from the opening 
 		          // and closing text nodes. 
 		          If emphasis.Type = MKBlockTypes.StrongEmphasis Then
-		            // Strong.
+		            // Track the position of the opening delimiter.
 		            Call openerNode.TextNode.Characters.Pop
-		            Call openerNode.TextNode.Characters.Pop
+		            
+		            Var openingDelimiterChar As MKCharacter = openerNode.TextNode.Characters.Pop
+		            emphasis.OpeningDelimiterLineNumber = openingDelimiterChar.Line.Number
+		            emphasis.OpeningDelimiterAbsoluteStart = openingDelimiterChar.AbsolutePosition
+		            emphasis.OpeningDelimiterLocalStart = openingDelimiterChar.LocalPosition
+		            
+		            // Track the position of the start of the closing delimiter.
+		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters(0)
+		            
+		            Call closerNode.TextNode.Characters.Pop
 		            Call closerNode.TextNode.Characters.Pop
 		            
-		            // Track the position of the start of the closing delimiter.
-		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters.Pop
+		            // Compute the locations of the closing delimiter.
 		            emphasis.ClosingDelimiterLineNumber = closingDelimiterChar.Line.Number
-		            emphasis.ClosingDelimiterAbsoluteStart = closingDelimiterChar.AbsolutePosition
-		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition
+		            emphasis.ClosingDelimiterAbsoluteStart = closingDelimiterChar.AbsolutePosition + closerNode.PoppedCharacters
+		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition + closerNode.PoppedCharacters
+		            
+		            // Track how many characters have been popped so far from this node during processing.
+		            closerNode.PoppedCharacters = closerNode.PoppedCharacters + 2
 		          Else
-		            // Regular. 
-		            Call openerNode.TextNode.Characters.Pop
+		            // Track the position of the opening delimiter.
+		            Var openingDelimiterChar As MKCharacter = openerNode.TextNode.Characters.Pop
+		            emphasis.OpeningDelimiterLineNumber = openingDelimiterChar.Line.Number
+		            emphasis.OpeningDelimiterAbsoluteStart = openingDelimiterChar.AbsolutePosition
+		            emphasis.OpeningDelimiterLocalStart = openingDelimiterChar.LocalPosition
 		            
 		            // Track the position of the start of the closing delimiter.
-		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters.Pop
+		            Var closingDelimiterChar As MKCharacter = closerNode.TextNode.Characters(0)
+		            
+		            Call closerNode.TextNode.Characters.Pop
+		            
+		            // Compute the locations of the closing delimiter.
 		            emphasis.ClosingDelimiterLineNumber = closingDelimiterChar.Line.Number
-		            emphasis.ClosingDelimiterAbsoluteStart = closingDelimiterChar.AbsolutePosition
-		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition
+		            emphasis.ClosingDelimiterAbsoluteStart = closingDelimiterChar.AbsolutePosition + closerNode.PoppedCharacters
+		            emphasis.ClosingDelimiterLocalStart = closingDelimiterChar.LocalPosition + closerNode.PoppedCharacters
+		            
+		            // Track how many characters have been popped so far from this node during processing.
+		            closerNode.PoppedCharacters = closerNode.PoppedCharacters + 1
 		          End If
 		          
 		          // If the text node becomes empty as a result, remove it and 
@@ -887,9 +898,6 @@ Protected Class MKInlineScanner
 		  /// Assumes `chars(pos)` points to the begining of the emphasis run.
 		  /// [delimiter] is either "*" or "_".
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -1283,9 +1291,6 @@ Protected Class MKInlineScanner
 		  /// 3. >= 0 characters between matching parentheses ((...)), including a ( or ) character only if 
 		  ///    it's backslash-escaped.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking

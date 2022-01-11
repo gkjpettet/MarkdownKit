@@ -23,9 +23,6 @@ Protected Class MKParser
 		  /// The offset relates to the location on the current line that is considered the start of the line
 		  /// once indentation and block openers are taken into consideration.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -73,9 +70,6 @@ Protected Class MKParser
 		Private Function AdvanceOptionalSpace() As Boolean
 		  /// Advances a single space or tab if the next character is a space returning True if there was a space.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -241,9 +235,6 @@ Protected Class MKParser
 		Private Sub FindNextNonWhitespace()
 		  /// Finds the next non-whitespace (NWS) character on this line
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -286,9 +277,6 @@ Protected Class MKParser
 		Private Function FirstNonBlankIndex() As Integer
 		  /// Finds the index in mLines of the first non-blank line or returns -1 if there are only blank lines.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -405,9 +393,6 @@ Protected Class MKParser
 		Private Function IsClosingCodeFence(length As Integer) As Boolean
 		  /// Returns True if mCurrentLine, beginning at `mNextNWS` is a closing fence of at least [length] characters.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -461,9 +446,6 @@ Protected Class MKParser
 		  /// We don't capture the (optional) info string here as it gets added later as a TextBlock 
 		  /// child of this block.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -546,9 +528,6 @@ Protected Class MKParser
 		  ///
 		  /// There are 7 kinds of HTML block. See the note "HTML Block Types" in this class for more detail.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -667,9 +646,6 @@ Protected Class MKParser
 		  /// Type 7: {openTag NOT script|style|pre}[•→]+|⮐$   or
 		  ///         {closingTag}[•→]+|⮐$
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -713,9 +689,6 @@ Protected Class MKParser
 		  ///   ^[=]+[ ]*$
 		  ///   ^[-]+[ ]*$
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -776,9 +749,6 @@ Protected Class MKParser
 		  ///   ^([_][ ]*){3,}[\s]*$"
 		  ///   ^([\*][ ]*){3,}[\s]*$"
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -823,9 +793,6 @@ Protected Class MKParser
 		  /// [firstNonBlank] should be the index of a valid non-blank line in [mLines] (i.e. [FirstNonBlankIndex] has 
 		  /// been called prior to this method).
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -855,9 +822,6 @@ Protected Class MKParser
 		Private Function MatchWhitespaceCharacters(line As TextLine, pos As Integer) As Integer
 		  /// Matches whitespace on [line] beginning at [pos] and returns how many characters were matched.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -883,9 +847,6 @@ Protected Class MKParser
 		  /// This is part 1 of the parsing process. It gives us the overall structure of the Markdown document.
 		  /// Assumes the parser has been reset before this method is invoked.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -965,9 +926,6 @@ Protected Class MKParser
 		Private Function ParseListMarker(indented As Boolean, line As TextLine, pos As Integer, interruptsParagraph As Boolean, ByRef data As MKListData) As Boolean
 		  /// Returns True if able to parse a ListItem marker, populating [data] with the details.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -1061,9 +1019,6 @@ Protected Class MKParser
 		Function ParseSource(markdown As String) As MKDocument
 		  /// Parses [markdown] into a Markdown document.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -1119,9 +1074,6 @@ Protected Class MKParser
 		  /// We've tried matching against the open blocks and we've opened any required new blocks. 
 		  /// What now remains at the offset is a text line. Add it to the appropriate container.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -1250,9 +1202,6 @@ Protected Class MKParser
 		Private Sub TryNewBlocks()
 		  /// Tries to start a new container block.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
@@ -1413,9 +1362,6 @@ Protected Class MKParser
 		  ///
 		  /// [mContainer] will be set to the Block which last had a match to the line.
 		  
-		  #If Not TargetWeb
-		    #Pragma DisableBackgroundTasks
-		  #EndIf
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking

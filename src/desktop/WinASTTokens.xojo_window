@@ -220,6 +220,7 @@ Begin DesktopWindow WinASTTokens
       Underline       =   False
       Visible         =   True
       Width           =   438
+      _ScrollOffset   =   0
       _ScrollWidth    =   -1
    End
 End
@@ -312,7 +313,7 @@ End
 		  
 		  Time.Text = "Parsed in " + parseTime.ToString + " ms, rendered in " + renderTime.ToString + " ms" 
 		  
-		  tokens.Sort(AddressOf SortTokens)
+		  'tokens.Sort(AddressOf SortTokens)
 		  PopulateTokenListbox(tokens)
 		End Sub
 	#tag EndEvent

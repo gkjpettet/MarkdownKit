@@ -28,10 +28,11 @@ Implements MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitBlock(b As MKBlock) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		  /// Part of the MKRenderer interface.
+		  ///
+		  /// Nothing to do.
 		  
-		  
+		  #Pragma Unused b
 		End Function
 	#tag EndMethod
 
@@ -241,10 +242,11 @@ Implements MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		  /// Part of the MKRenderer interface.
+		  ///
+		  /// Nothing to do.
 		  
-		  
+		  #Pragma Unused sb
 		End Function
 	#tag EndMethod
 

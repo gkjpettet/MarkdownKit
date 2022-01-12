@@ -330,6 +330,8 @@ Protected Class MKBlock
 		  /// 2. >= 0 characters between `'` characters, including a `'` character only if it is backslash-escaped
 		  /// 3. >= 0 characters between matching parentheses, including a `(` or `)` only if it's backslash-escaped.
 		  
+		  #Pragma Warning "TODO: Track positions of the start and end of the destination if present"
+		  
 		  Var data As Dictionary
 		  Var linkLabel, linkDestination, linkTitle As String
 		  Var labelStart, destinationStart, titleStart As Integer

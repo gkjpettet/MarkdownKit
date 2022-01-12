@@ -148,10 +148,10 @@ Implements MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitInlineHTML(html As MKInlineHTML) As Variant
-		  // Part of the MKRenderer interface.
+		  /// Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
-		  
+		  break
 		End Function
 	#tag EndMethod
 
@@ -169,7 +169,7 @@ Implements MKRenderer
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
-		  
+		  break
 		End Function
 	#tag EndMethod
 

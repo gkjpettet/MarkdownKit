@@ -1,14 +1,19 @@
 #tag Class
 Protected Class MKInlineLinkData
 	#tag Method, Flags = &h0
-		Sub Constructor(isInlineImage As Boolean)
+		Sub Constructor(isInlineImage As Boolean, type As MKLinkTypes)
 		  Self.IsInlineImage = isInlineImage
+		  Self.LinkType = type
 		End Sub
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h0, Description = 546865206368617261637465727320726570726573656E74696E67207468697320696E6C696E65206C696E6B2773204C696E6B54657874206F722C20696620616E20696E6C696E6520696D6167652C20697427732022616C7422206465736372697074696F6E2E
 		Characters() As MKCharacter
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206C696E6B20636C6F73696E6720627261636B6574206368617261637465722E20436F6D65732065697468657220616674657220746865206C696E6B206C6162656C206F7220746865206C696E6B20746578742028646570656E64696E67206F6E20746865206C696E6B2074797065292E
+		CloserCharacter As MKCharacter
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -25,6 +30,14 @@ Protected Class MKInlineLinkData
 
 	#tag Property, Flags = &h0
 		Label As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 5468652074797065206F66206C696E6B20746869732069732E
+		LinkType As MKLinkTypes
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206C696E6B206F70656E6572206368617261637465722028605B6020666F72206C696E6B7320616E642060216020666F7220696D61676573292E
+		OpenerCharacter As MKCharacter
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -124,6 +137,20 @@ Protected Class MKInlineLinkData
 			InitialValue="False"
 			Type="Boolean"
 			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LinkType"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="MKLinkTypes"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - CollapsedReference"
+				"1 - FullReference"
+				"2 - ShortcutReference"
+				"3 - Standard"
+			#tag EndEnumValues
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

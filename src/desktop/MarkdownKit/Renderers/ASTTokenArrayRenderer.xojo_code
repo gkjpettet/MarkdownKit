@@ -4,8 +4,24 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitATXHeading(atx As MKATXHeadingBlock) As Variant
 		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
 		  
+		  // Opening sequence.
+		  Tokens.Add(New LineToken(atx.OpeningSequenceAbsoluteStart, atx.OpeningSequenceLocalStart, _
+		  atx.Level, atx.LineNumber, "atxDelimiter"))
+		  
+		  IsWithinATXHeading = True
+		  
+		  For Each child As MKBlock In atx.Children
+		    Call child.Accept(Self)
+		  Next child
+		  
+		  IsWithinATXHeading = False
+		  
+		  // Closing sequence.
+		  If atx.HasClosingSequence Then
+		    Tokens.Add(New LineToken(atx.ClosingSequenceAbsoluteStart, atx.ClosingSequenceLocalStart, _
+		    atx.ClosingSequenceCount, atx.LineNumber, "atxDelimiter"))
+		  End If
 		  
 		End Function
 	#tag EndMethod
@@ -20,10 +36,14 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlockQuote(bq As MKBlock) As Variant
+		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
 		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
 		  
+		  Tokens.Add(New LineToken(bq.AbsoluteOpenerStart, bq.LocalOpenerStart, 1, bq.LineNumber, "blockQuote"))
+		  
+		  For Each child As MKBlock In bq.Children
+		    Call child.Accept(Self)
+		  Next child
 		  
 		End Function
 	#tag EndMethod
@@ -31,8 +51,21 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
 		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
 		  
+		  // Opening delimiter.
+		  Tokens.Add(New LineToken(cs.Start, cs.LocalStart, cs.BacktickStringLength, cs.LineNumber, "codespanDelimiter"))
+		  
+		  IsWithinCodeSpan = True
+		  
+		  For Each child As MKBlock In cs.Children
+		    Call child.Accept(Self)
+		  Next child
+		  
+		  IsWithinCodeSpan = False
+		  
+		  // Closing delimiter.
+		  Tokens.Add(New LineToken(cs.ClosingBacktickStringStart, cs.ClosingBacktickStringLocalStart, _
+		  cs.BacktickStringLength, cs.LineNumber, "codespanDelimiter"))
 		  
 		End Function
 	#tag EndMethod
@@ -44,6 +77,8 @@ Implements MKRenderer
 		  Tokens.RemoveAll
 		  InEmphasis = False
 		  InStrongEmphasis = False
+		  IsWithinCodeSpan = False
+		  IsWithinATXHeading = False
 		  
 		  For Each child As MKBlock In doc.Children
 		    Call child.Accept(Self)
@@ -141,7 +176,13 @@ Implements MKRenderer
 		  
 		  Var type As String
 		  
-		  If InEmphasis And InStrongEmphasis Then
+		  If IsWithinATXHeading Then
+		    type = "atx"
+		    
+		  ElseIf IsWithinCodeSpan Then
+		    type = "codeSpan"
+		    
+		  ElseIf InEmphasis And InStrongEmphasis Then
 		    type = "strongAndEmphasis"
 		    
 		  ElseIf InEmphasis Then
@@ -240,7 +281,15 @@ Implements MKRenderer
 		  
 		  If tb.IsBlank Then Return Nil
 		  
-		  Tokens.Add(New LineToken(tb.Start, tb.Line.Start + tb.Start, tb.Contents.CharacterCount, tb.Line.Number))
+		  Var type As String
+		  If IsWithinCodeSpan Then
+		    type = "codespan"
+		  Else
+		    type = "default"
+		  End If
+		  
+		  Tokens.Add(New LineToken(tb.Start, tb.Line.Start + tb.Start, tb.Contents.CharacterCount, tb.Line.Number, type))
+		  
 		End Function
 	#tag EndMethod
 
@@ -260,6 +309,14 @@ Implements MKRenderer
 
 	#tag Property, Flags = &h21, Description = 54727565206966207468652072656E64657265722069732063757272656E746C792077697468696E207374726F6E6720656D7068617369732E
 		Private InStrongEmphasis As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54727565206966207468652072656E64657265722069732063757272656E746C792077697468696E20616E204154582068656164696E672E
+		IsWithinATXHeading As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		IsWithinCodeSpan As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

@@ -120,7 +120,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlockQuote(bq As MKBlock) As Variant
+		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  mOutput.Add("<blockquote>")

@@ -2,14 +2,15 @@
 Protected Class MKCodeSpan
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, absoluteStartPos As Integer, localStartPos As Integer, backtickStringLength As Integer, absoluteClosingBacktickStringStart As Integer, localClosingBacktickStringStart As Integer)
+		Sub Constructor(parent As MKBlock, absoluteStartPos As Integer, localStartPos As Integer, backtickStringLength As Integer, absoluteClosingBacktickStringStart As Integer, parentClosingBacktickStringStart As Integer, closingBacktickStringLocalStart As Integer)
 		  Super.Constructor(MKBlockTypes.CodeSpan, parent, absoluteStartPos)
 		  
 		  Self.LocalStart = localStartPos
 		  Self.EndPosition = closingBacktickStringStart - 1
 		  Self.BacktickStringLength = backtickStringLength
 		  Self.ClosingBacktickStringStart = absoluteClosingBacktickStringStart
-		  Self.LocalClosingBacktickStringStart = localClosingBacktickStringStart
+		  Self.ParentClosingBacktickStringStart = parentClosingBacktickStringStart
+		  Self.ClosingBacktickStringLocalStart = closingBacktickStringLocalStart
 		End Sub
 	#tag EndMethod
 
@@ -20,7 +21,7 @@ Inherits MKBlock
 		  
 		  Var seenNonSpace As Boolean = False
 		  Var iStart As Integer = LocalStart + BacktickStringLength
-		  Var iLimit As Integer = LocalClosingBacktickStringStart - 1
+		  Var iLimit As Integer = ParentClosingBacktickStringStart - 1
 		  Var textBlockStart As Integer = LocalStart
 		  Var contentsBuffer() As String
 		  Var c As MKCharacter
@@ -61,20 +62,32 @@ Inherits MKBlock
 		BacktickStringLength As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E20746865206F726967696E616C20736F75726365206F662074686520666972737420636861726163746572206F662074686520636C6F73696E67206261636B7469636B20737472696E672E
-		ClosingBacktickStringStart As Integer = 0
+	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C20706F736974696F6E206F6E20746865206C696E65206F662074686520666972737420636861726163746572206F662074686520636C6F73696E67206261636B737472696E672E
+		ClosingBacktickStringLocalStart As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E207468697320636F6465207370616E277320706172656E7420706172616772617068277320604368617261637465727360206172726179206F662074686520666972737420636861726163746572206F662074686520636C6F73696E67206261636B7469636B20737472696E672E
-		LocalClosingBacktickStringStart As Integer = 0
+	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E20746865206F726967696E616C20736F75726365206F662074686520666972737420636861726163746572206F662074686520636C6F73696E67206261636B7469636B20737472696E672E
+		ClosingBacktickStringStart As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E2060506172656E742E4368617261637465727360207468617420746865206F70656E696E67206261636B7469636B20636861726163746572206F66207468697320636F6465207370616E20626567696E732E
 		LocalStart As Integer = 0
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E207468697320636F6465207370616E277320706172656E7420706172616772617068277320604368617261637465727360206172726179206F662074686520666972737420636861726163746572206F662074686520636C6F73696E67206261636B7469636B20737472696E672E
+		ParentClosingBacktickStringStart As Integer = 0
+	#tag EndProperty
+
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsFirstChild"
 			Visible=false
@@ -228,7 +241,7 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="LocalClosingBacktickStringStart"
+			Name="ParentClosingBacktickStringStart"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

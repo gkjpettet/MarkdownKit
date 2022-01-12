@@ -12,7 +12,7 @@ Protected Class MKBlock
 		    Return visitor.VisitBlock(Self)
 		    
 		  Case MKBlockTypes.BlockQuote
-		    Return visitor.VisitBlockQuote(Self)
+		    Return visitor.VisitBlockQuote(MKBlockQuote(Self))
 		    
 		  Case MKBlockTypes.CodeSpan
 		    Return visitor.VisitCodeSpan(MKCodeSpan(Self))
@@ -756,6 +756,14 @@ Protected Class MKBlock
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""

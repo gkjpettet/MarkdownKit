@@ -36,7 +36,7 @@ Implements MKRenderer
 		  node.AppendNode(New TreeViewNode("Opening Sequence Length: " + atx.OpeningSequenceLength.ToString))
 		  
 		  If atx.HasClosingSequence Then
-		    node.AppendNode(New TreeViewNode("Closing Sequence Start: " + atx.ClosingSequenceStart.ToString))
+		    node.AppendNode(New TreeViewNode("Closing Sequence Start: " + atx.ClosingSequenceAbsoluteStart.ToString))
 		    node.AppendNode(New TreeViewNode("Closing Sequence Count: " + atx.ClosingSequenceCount.ToString))
 		  End If
 		  
@@ -65,7 +65,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlockQuote(bq As MKBlock) As Variant
+		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Block Quote (start: " + bq.Start.ToString + ")")

@@ -200,9 +200,10 @@ Protected Class MKInlineScanner
 		  
 		  // Find the start position of the closing backtick string (if there is one).
 		  Var firstBackTickSeenIndex As Integer = -1
-		  Var contentEndPos, localClosingBacktickStringStart As Integer
+		  Var contentEndPos, parentClosingBacktickStringStart As Integer
 		  Var contiguousBackticks As Integer = 0
 		  Var foundClosingBacktickString As Boolean = False
+		  Var closingBackstringFirstCharacter As MKCharacter
 		  For i As Integer = contentStartPos To charsLastIndex
 		    If chars(i).Value = "`" Then
 		      If firstBackTickSeenIndex = -1 Then firstBackTickSeenIndex = i
@@ -211,8 +212,9 @@ Protected Class MKInlineScanner
 		        // Done so long as the next character isn't a backtick.
 		        If i = charsLastIndex Or (i < charsLastIndex And chars(i + 1).Value <> "`") Then
 		          contentEndPos = chars(firstBackTickSeenIndex).AbsolutePosition - backtickStringLen
-		          localClosingBacktickStringStart = firstBackTickSeenIndex
+		          parentClosingBacktickStringStart = firstBackTickSeenIndex
 		          foundClosingBacktickString = True
+		          closingBackstringFirstCharacter = chars(i)
 		          Exit
 		        End If
 		      End If
@@ -225,7 +227,8 @@ Protected Class MKInlineScanner
 		  
 		  // We've found a code span.
 		  Var cs As New MKCodeSpan(parent, parent.Start + startPos, startPos, _
-		  backtickStringLen, contentEndPos + 1, localClosingBacktickStringStart)
+		  backtickStringLen, contentEndPos + 1, parentClosingBacktickStringStart, _
+		  closingBackstringFirstCharacter.LocalPosition)
 		  cs.Finalise
 		  
 		  Return cs
@@ -516,7 +519,7 @@ Protected Class MKInlineScanner
 		        // Add the code span.
 		        block.Children.Add(cs)
 		        // Advance the position.
-		        pos = cs.LocalClosingBacktickStringStart + cs.BacktickStringLength
+		        pos = cs.ParentClosingBacktickStringStart + cs.BacktickStringLength
 		      Else
 		        If buffer <> Nil Then
 		          buffer.EndPosition = pos + block.Start

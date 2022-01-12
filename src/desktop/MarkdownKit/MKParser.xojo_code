@@ -200,6 +200,9 @@ Protected Class MKParser
 		  Case MKBlockTypes.AtxHeading
 		    child = New MKATXHeadingBlock(parent, blockStartOffset)
 		    
+		  Case MKBlockTypes.BlockQuote
+		    child = New MKBlockQuote(parent, blockStartOffset)
+		    
 		  Case MKBlockTypes.FencedCode
 		    child = New MKFencedCodeBlock(parent, blockStartOffset)
 		    
@@ -1225,6 +1228,8 @@ Protected Class MKParser
 		      Var blockStartOffset As Integer = -1
 		      blockStartOffset = blockStartOffset - If(AdvanceOptionalSpace, 1, 0)
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.BlockQuote, blockStartOffset)
+		      MKBlockQuote(mContainer).AbsoluteOpenerStart = mCurrentLine.Start + mNextNWS
+		      MKBlockQuote(mContainer).LocalOpenerStart = mNextNWS
 		      
 		    ElseIf Not indented And mCurrentChar = "#" And IsATXHeader(data) Then
 		      // ======================
@@ -1232,14 +1237,18 @@ Protected Class MKParser
 		      // ======================
 		      AdvanceOffset(mNextNWS + data.Value("length") - mCurrentOffset, False)
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.AtxHeading, -data.Value("length"))
+		      MKATXHeadingBlock(mContainer).OpeningSequenceLocalStart = mNextNWS
+		      MKATXHeadingBlock(mContainer).OpeningSequenceAbsoluteStart = mCurrentLine.Start + mNextNWS
 		      MKATXHeadingBlock(mContainer).Level = data.Value("level")
 		      MKATXHeadingBlock(mContainer).OpeningSequenceLength = data.Value("length")
 		      MKATXHeadingBlock(mContainer).ClosingSequenceCount = data.Value("closingSequenceCount")
 		      If data.Value("closingSequenceStart") > -1 Then
-		        MKATXHeadingBlock(mContainer).ClosingSequenceStart = _
+		        MKATXHeadingBlock(mContainer).ClosingSequenceAbsoluteStart = _
 		        data.Value("closingSequenceStart") + mCurrentLine.Start
+		        MKATXHeadingBlock(mContainer).ClosingSequenceLocalStart = data.Value("closingSequenceStart")
 		      Else
-		        MKATXHeadingBlock(mContainer).ClosingSequenceStart = -1
+		        MKATXHeadingBlock(mContainer).ClosingSequenceAbsoluteStart = -1
+		        MKATXHeadingBlock(mContainer).ClosingSequenceLocalStart = -1
 		      End If
 		      
 		    ElseIf Not indented And _

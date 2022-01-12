@@ -10,7 +10,7 @@ Begin DesktopWindow WinASTTokens
    HasFullScreenButton=   False
    HasMaximizeButton=   True
    HasMinimizeButton=   True
-   Height          =   616
+   Height          =   720
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
@@ -23,7 +23,7 @@ Begin DesktopWindow WinASTTokens
    Title           =   "Markdown -> AST Tokens"
    Type            =   0
    Visible         =   True
-   Width           =   1060
+   Width           =   1214
    Begin BetterTextArea Source
       AllowAutoDeactivate=   True
       AllowFocusRing  =   True
@@ -40,7 +40,7 @@ Begin DesktopWindow WinASTTokens
       HasBorder       =   True
       HasHorizontalScrollbar=   False
       HasVerticalScrollbar=   True
-      Height          =   544
+      Height          =   648
       HideSelection   =   True
       Index           =   -2147483648
       Italic          =   False
@@ -84,7 +84,7 @@ Begin DesktopWindow WinASTTokens
       Height          =   20
       Index           =   -2147483648
       Italic          =   False
-      Left            =   960
+      Left            =   1114
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   False
@@ -96,7 +96,7 @@ Begin DesktopWindow WinASTTokens
       TabPanelIndex   =   0
       TabStop         =   True
       Tooltip         =   ""
-      Top             =   576
+      Top             =   680
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -128,7 +128,7 @@ Begin DesktopWindow WinASTTokens
       TextAlignment   =   0
       TextColor       =   &c000000
       Tooltip         =   ""
-      Top             =   576
+      Top             =   680
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -153,7 +153,7 @@ Begin DesktopWindow WinASTTokens
       Height          =   20
       Index           =   -2147483648
       Italic          =   False
-      Left            =   719
+      Left            =   873
       LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   False
@@ -169,7 +169,7 @@ Begin DesktopWindow WinASTTokens
       TextAlignment   =   0
       TextColor       =   &c000000
       Tooltip         =   ""
-      Top             =   576
+      Top             =   680
       Transparent     =   False
       Underline       =   False
       Visible         =   True
@@ -198,7 +198,7 @@ Begin DesktopWindow WinASTTokens
       HasHorizontalScrollbar=   False
       HasVerticalScrollbar=   True
       HeadingIndex    =   -1
-      Height          =   544
+      Height          =   648
       Index           =   -2147483648
       InitialValue    =   "Type	Line	Abs Start	Local Start	 Length	End Pos"
       Italic          =   False
@@ -219,7 +219,7 @@ Begin DesktopWindow WinASTTokens
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   438
+      Width           =   592
       _ScrollOffset   =   0
       _ScrollWidth    =   -1
    End

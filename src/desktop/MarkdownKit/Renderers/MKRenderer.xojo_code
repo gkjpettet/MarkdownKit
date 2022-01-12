@@ -13,7 +13,7 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlockQuote(bq As MKBlock) As Variant
+		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
 		  
 		End Function
 	#tag EndMethod

@@ -109,7 +109,7 @@ Protected Class MKBlock
 		    Characters.Add(MKCharacter.CreateLineEnding(line))
 		  Else
 		    // Add the text as a text block.
-		    Var b As New MKTextBlock(Self, line.Start + startPos, s, phantomSpaces, line)
+		    Var b As New MKTextBlock(Self, line.Start + startPos, startPos, s, phantomSpaces, line)
 		    Children.Add(b)
 		  End If
 		  

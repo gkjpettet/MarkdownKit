@@ -24,7 +24,8 @@ Inherits MKBlock
 		    c = Parent.Characters(i)
 		    If c.IsLineEnding Then
 		      Var s As String = String.FromArray(contentsBuffer, "")
-		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, s, 0, c.Line))
+		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, textBlockStart, _
+		      s, 0, c.Line))
 		      contentsBuffer.RemoveAll
 		    Else
 		      contentsBuffer.Add(c.Value)
@@ -33,7 +34,8 @@ Inherits MKBlock
 		  
 		  If contentsBuffer.Count > 0 Then
 		    Var s As String = String.FromArray(contentsBuffer, "")
-		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, s, 0, c.Line))
+		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, textBlockStart, _
+		    s, 0, c.Line))
 		  End If
 		  
 		End Sub
@@ -66,6 +68,14 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsFirstChild"
 			Visible=false

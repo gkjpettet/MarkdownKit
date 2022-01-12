@@ -2,8 +2,9 @@
 Protected Class MKTextBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer, contents As String, phantomSpaces As Integer, line As TextLine)
-		  Super.Constructor(MKBlockTypes.TextBlock, parent, blockStart)
+		Sub Constructor(parent As MKBlock, absoluteStart As Integer, localStart As Integer, contents As String, phantomSpaces As Integer, line As TextLine)
+		  Super.Constructor(MKBlockTypes.TextBlock, parent, absoluteStart)
+		  Self.LocalStart = localStart
 		  Self.Contents = contents
 		  Self.PhantomSpaces = phantomSpaces
 		  Self.Line = line
@@ -29,12 +30,24 @@ Inherits MKBlock
 		Line As TextLine
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C20706F736974696F6E206F6E20746865206C696E6520746861742074686973207465787420626C6F636B207374617274732E
+		LocalStart As Integer = -1
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 546865206E756D626572206F662073706163657320746F20626520696E73657274656420617420746865207374617274206F662074686973207465787420626C6F636B207468617420646F6E27742061637475616C6C7920657869737420696E2074686520736F75726365206275742061726520726571756972656420666F7220436F6D6D6F6E4D61726B20636F6D706C69616E63652E
 		PhantomSpaces As Integer = 0
 	#tag EndProperty
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsFirstChild"
 			Visible=false

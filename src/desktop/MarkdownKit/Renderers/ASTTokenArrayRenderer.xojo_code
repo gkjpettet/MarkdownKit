@@ -128,9 +128,11 @@ Implements MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitHTMLBlock(html As MKHTMLBlock) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		  /// Part of the MKRenderer interface.
 		  
+		  For Each child As MKBlock In html.Children
+		    Call child.Accept(Self)
+		  Next child
 		  
 		End Function
 	#tag EndMethod
@@ -290,7 +292,7 @@ Implements MKRenderer
 		    type = "default"
 		  End If
 		  
-		  Tokens.Add(New LineToken(tb.Start, tb.Line.Start + tb.Start, tb.Contents.CharacterCount, tb.Line.Number, type))
+		  Tokens.Add(New LineToken(tb.Start, tb.LocalStart, tb.Contents.CharacterCount, tb.Line.Number, type))
 		  
 		End Function
 	#tag EndMethod

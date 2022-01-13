@@ -151,7 +151,6 @@ Implements MKRenderer
 		  /// Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
-		  break
 		End Function
 	#tag EndMethod
 
@@ -169,7 +168,6 @@ Implements MKRenderer
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
-		  break
 		End Function
 	#tag EndMethod
 
@@ -367,6 +365,22 @@ Implements MKRenderer
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsWithinATXHeading"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsWithinCodeSpan"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

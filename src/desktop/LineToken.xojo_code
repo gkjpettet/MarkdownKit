@@ -11,6 +11,26 @@ Protected Class LineToken
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, Description = 54727565206966207468697320746F6B656E2068617320646174612077697468207468652073706563696669656420286361736520696E73656E73697469766529205B6B65795D2E
+		Function HasDataKey(key As String) As Boolean
+		  /// True if this token has data with the specified (case insensitive) [key].
+		  
+		  If mData = Nil Then Return False
+		  Return mData.HasKey(key)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 52657475726E732074686520646174612076616C7565206173736F6369617465642077697468205B6B65795D206F72205B64656661756C745D206966207468657265206973206E6F206D61746368696E67206B65792E
+		Function LookupData(key As String, default As Variant) As Variant
+		  /// Returns the data value associated with [key] or [default] if there is no matching key.
+		  
+		  If mData = Nil Then Return Default
+		  Return mData.Lookup(key, Default)
+		  
+		End Function
+	#tag EndMethod
+
 
 	#tag ComputedProperty, Flags = &h0, Description = 302D626173656420706F736974696F6E206F662074686520656E64206F66207468697320746F6B656E206C6F63616C20746F2074686973206C696E652E
 		#tag Getter
@@ -28,6 +48,10 @@ Protected Class LineToken
 
 	#tag Property, Flags = &h0, Description = 54686520312D6261736564206E756D626572206F6620746865206C696E65207468697320746F6B656E2062656C6F6E677320746F2E
 		LineNumber As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h1, Description = 4261636B696E672064696374696F6E61727920666F7220616E79206172626974726172792064617461207468697320746F6B656E206D617920636F6E7461696E2E
+		Protected mData As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 546865206162736F6C75746520302D626173656420737461727420706F736974696F6E206F66207468697320746F6B656E20696E20746865206F726967696E616C20736F7572636520746578742E
@@ -115,6 +139,22 @@ Protected Class LineToken
 			InitialValue="0"
 			Type="Integer"
 			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Type"
+			Visible=false
+			Group="Behavior"
+			InitialValue="default"
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

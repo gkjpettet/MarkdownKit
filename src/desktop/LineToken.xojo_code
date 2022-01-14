@@ -31,6 +31,16 @@ Protected Class LineToken
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, Description = 53657473207468652064617461205B6B65795D20746F205B76616C75655D2E2057696C6C206F766572777269746520746865206578697374696E672076616C7565206F66205B6B65795D20696620616C7265616479207365742E
+		Sub SetData(key As String, value As Variant)
+		  /// Sets the data [key] to [value]. Will overwrite the existing value of [key] if already set.
+		  
+		  If mData = Nil Then mData = New Dictionary
+		  mData.Value(key) = value
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag ComputedProperty, Flags = &h0, Description = 302D626173656420706F736974696F6E206F662074686520656E64206F66207468697320746F6B656E206C6F63616C20746F2074686973206C696E652E
 		#tag Getter

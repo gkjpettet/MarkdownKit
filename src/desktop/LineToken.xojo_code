@@ -45,8 +45,7 @@ Protected Class LineToken
 	#tag ComputedProperty, Flags = &h0, Description = 302D626173656420706F736974696F6E206F662074686520656E64206F66207468697320746F6B656E206C6F63616C20746F2074686973206C696E652E
 		#tag Getter
 			Get
-			  Return StartLocal + Length - 1
-			  
+			  Return StartLocal + Length
 			End Get
 		#tag EndGetter
 		EndLocal As Integer

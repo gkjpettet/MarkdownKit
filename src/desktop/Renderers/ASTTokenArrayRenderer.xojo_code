@@ -1,6 +1,20 @@
 #tag Class
 Protected Class ASTTokenArrayRenderer
 Implements MarkdownKit.MKRenderer
+	#tag Method, Flags = &h21, Description = 536F72747320616E206172726179206F66204C696E65546F6B656E73206279207468656972206162736F6C75746520706F736974696F6E2E
+		Private Function SortTokensByAbsolutePosition(tok1 As LineToken, tok2 As LineToken) As Integer
+		  /// Sorts an array of LineTokens by their absolute position.
+		  
+		  If tok1.StartAbsolute < tok2.StartAbsolute Then
+		    Return -1
+		  ElseIf tok1.StartAbsolute > tok2.StartAbsolute Then
+		    Return 1
+		  Else
+		    Return 0
+		  End If
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function VisitATXHeading(atx As MarkdownKit.MKATXHeadingBlock) As Variant
 		  // Part of the MKRenderer interface.
@@ -40,7 +54,11 @@ Implements MarkdownKit.MKRenderer
 		Function VisitBlockQuote(bq As MarkdownKit.MKBlockQuote) As Variant
 		  // Part of the MKRenderer interface.
 		  
-		  Tokens.Add(New LineToken(bq.AbsoluteOpenerStart, bq.LocalOpenerStart, 1, bq.LineNumber, "blockQuote"))
+		  // Add the block quote opening delimiters.
+		  For Each delimiter As MarkdownKit.MKCharacter In bq.OpeningDelimiters
+		    Tokens.Add(New LineToken(delimiter.AbsolutePosition, delimiter.LocalPosition, 1, _
+		    delimiter.Line.Number, "blockQuoteDelimiter"))
+		  Next delimiter
 		  
 		  For Each child As MarkdownKit.MKBlock In bq.Children
 		    Call child.Accept(Self)
@@ -86,8 +104,9 @@ Implements MarkdownKit.MKRenderer
 		    Call child.Accept(Self)
 		  Next child
 		  
-		  Return Tokens
+		  Tokens.Sort(AddressOf SortTokensByAbsolutePosition)
 		  
+		  Return Tokens
 		End Function
 	#tag EndMethod
 
@@ -172,7 +191,11 @@ Implements MarkdownKit.MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitInlineHTML(html As MarkdownKit.MKInlineHTML) As Variant
 		  /// Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		  
+		  For Each child As MarkdownKit.MKBlock In html.Children
+		    Var tb As MarkdownKit.MKTextBlock = MarkdownKit.MKTextBlock(child)
+		    Tokens.Add(New LineToken(tb.Start, tb.LocalStart, tb.Contents.CharacterCount, tb.Line.Number, "inlineHTML"))
+		  Next child
 		  
 		End Function
 	#tag EndMethod
@@ -414,6 +437,14 @@ Implements MarkdownKit.MKRenderer
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsWithinCodeSpan"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsWithinSetextHeading"
 			Visible=false
 			Group="Behavior"
 			InitialValue="False"

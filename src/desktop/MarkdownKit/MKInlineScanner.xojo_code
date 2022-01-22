@@ -519,7 +519,7 @@ Protected Class MKInlineScanner
 		  Var inlineStart As Integer = ComputeInlineStart(block)
 		  
 		  While pos <= charsLastIndex
-		    Var c As MKCharacter = chars(pos)
+		    Var c As MarkdownKit.MKCharacter = chars(pos)
 		    
 		    If c.Value = "`" And Not chars.IsEscaped(pos) Then
 		      // ============
@@ -539,9 +539,9 @@ Protected Class MKInlineScanner
 		        Else
 		          buffer = New MKInlineText(block)
 		          buffer.LineNumber = c.Line.Number
-		          buffer.Start = pos + inlineStart
+		          buffer.Start = c.AbsolutePosition
 		          buffer.ParentStart = pos
-		          buffer.LocalStart = buffer.Start - c.Line.Start
+		          buffer.LocalStart = c.LocalPosition
 		          buffer.EndPosition = pos + block.Start
 		        End If
 		        pos = pos + 1
@@ -565,9 +565,9 @@ Protected Class MKInlineScanner
 		        Else
 		          buffer = New MKInlineText(block)
 		          buffer.LineNumber = c.Line.Number
-		          buffer.Start = pos + inlineStart
+		          buffer.Start = c.AbsolutePosition
 		          buffer.ParentStart = pos
-		          buffer.LocalStart = buffer.Start - c.Line.Start
+		          buffer.LocalStart = c.LocalPosition
 		          buffer.EndPosition = pos + block.Start
 		        End If
 		        pos = pos + 1
@@ -582,9 +582,9 @@ Protected Class MKInlineScanner
 		      // Create a new text block for this "[" character.
 		      buffer = New MKInlineText(block)
 		      buffer.LineNumber = c.Line.Number
-		      buffer.Start = pos + inlineStart
+		      buffer.Start = c.AbsolutePosition
 		      buffer.ParentStart = pos
-		      buffer.LocalStart = buffer.Start - c.Line.Start
+		      buffer.LocalStart = c.LocalPosition
 		      buffer.EndPosition = pos + block.Start // One character long.
 		      
 		      // Add a delimiter node to the stack pointing to this text block.
@@ -603,9 +603,9 @@ Protected Class MKInlineScanner
 		      // Create a new text block for this "![" character sequence.
 		      buffer = New MKInlineText(block)
 		      buffer.LineNumber = c.Line.Number
-		      buffer.Start = pos + inlineStart
+		      buffer.Start = c.AbsolutePosition
 		      buffer.ParentStart = pos
-		      buffer.LocalStart = buffer.Start - c.Line.Start
+		      buffer.LocalStart = c.LocalPosition
 		      buffer.EndPosition = pos + block.Start + 1 // Two characters long.
 		      
 		      // Add a delimiter node to the stack pointing to this text block.
@@ -630,9 +630,9 @@ Protected Class MKInlineScanner
 		          // so we need to start a new text block.
 		          buffer = New MKInlineText(block)
 		          buffer.LineNumber = c.Line.Number
-		          buffer.Start = pos + inlineStart
+		          buffer.Start = c.AbsolutePosition
 		          buffer.ParentStart = pos
-		          buffer.LocalStart = buffer.Start - c.Line.Start
+		          buffer.LocalStart = c.LocalPosition
 		          buffer.EndPosition = pos + block.Start
 		        End If
 		        pos = pos + 1
@@ -646,9 +646,9 @@ Protected Class MKInlineScanner
 		      Var dsn As MKDelimiterStackNode = ScanDelimiterRun(chars, pos, c.Value)
 		      buffer = New MKInlineText(block)
 		      buffer.LineNumber = c.Line.Number
-		      buffer.Start = pos + inlineStart
+		      buffer.Start = c.AbsolutePosition
 		      buffer.ParentStart = pos
-		      buffer.LocalStart = buffer.Start - c.Line.Start
+		      buffer.LocalStart = c.LocalPosition
 		      buffer.EndPosition = block.Start + pos + dsn.OriginalLength - 1
 		      dsn.TextNode = buffer
 		      FinaliseBuffer(buffer, block)
@@ -676,9 +676,9 @@ Protected Class MKInlineScanner
 		      Else
 		        buffer = New MKInlineText(block)
 		        buffer.LineNumber = c.Line.Number
-		        buffer.Start = pos + inlineStart
+		        buffer.Start = c.AbsolutePosition
 		        buffer.ParentStart = pos
-		        buffer.LocalStart = buffer.Start - c.Line.Start
+		        buffer.LocalStart = c.LocalPosition
 		        buffer.EndPosition = pos + block.Start
 		      End If
 		      pos = pos + 1

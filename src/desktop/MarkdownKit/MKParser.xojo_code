@@ -1227,12 +1227,14 @@ Protected Class MKParser
 		      // ======================
 		      // BLOCK QUOTE
 		      // ======================
+		      Var blockQuoteChar As New MKCharacter(">", mCurrentLine, mNextNWS)
 		      AdvanceOffset(mNextNWS + 1 - mCurrentOffset, False)
 		      Var blockStartOffset As Integer = -1
 		      blockStartOffset = blockStartOffset - If(AdvanceOptionalSpace, 1, 0)
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.BlockQuote, blockStartOffset)
 		      MKBlockQuote(mContainer).AbsoluteOpenerStart = mCurrentLine.Start + mNextNWS
 		      MKBlockQuote(mContainer).LocalOpenerStart = mNextNWS
+		      MKBlockQuote(mContainer).OpeningDelimiters.Add(blockQuoteChar)
 		      
 		    ElseIf Not indented And mCurrentChar = "#" And IsATXHeader(data) Then
 		      // ======================
@@ -1399,6 +1401,7 @@ Protected Class MKParser
 		      // BLOCK QUOTE
 		      // ======================
 		      If mCurrentIndent <= 3 And mCurrentChar= ">" Then
+		        MKBlockQuote(mContainer).OpeningDelimiters.Add(New MKCharacter(">", mCurrentLine, mNextNWS))
 		        AdvanceOffset(mCurrentIndent + 1, True)
 		        Call AdvanceOptionalSpace
 		      Else

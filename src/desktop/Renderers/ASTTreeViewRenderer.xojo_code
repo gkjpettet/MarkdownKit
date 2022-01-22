@@ -384,7 +384,9 @@ Implements MarkdownKit.MKRenderer
 		  node.AppendNode(CreateNodeFromCharacters("Title", stx.Characters))
 		  node.AppendNode(New TreeViewNode("Start: " + stx.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Level: " + stx.Level.ToString))
-		  node.AppendNode(New TreeViewNode("Underline Start: " + stx.UnderlineStart.ToString))
+		  node.AppendNode(New TreeViewNode("Underline Start (line, abs, local): " + _
+		  stx.UnderlineLineNumber.ToString + ", " + stx.UnderlineStart.ToString + _
+		  ", " + stx.UnderlineLocalStart.ToString))
 		  node.AppendNode(New TreeViewNode("Underline Length: " + stx.UnderlineLength.ToString))
 		  
 		  Return node

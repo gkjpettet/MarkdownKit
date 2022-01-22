@@ -1287,6 +1287,8 @@ Protected Class MKParser
 		        // Store the start and length of the setext underlining on this block.
 		        MKSetextHeadingBlock(mContainer).UnderlineStart = mCurrentLine.Start + mCurrentOffset
 		        MKSetextHeadingBlock(mContainer).UnderlineLength = mCurrentLine.Length - mCurrentOffset
+		        MKSetextHeadingBlock(mContainer).UnderlineLocalStart = mNextNWS
+		        MKSetextHeadingBlock(mContainer).UnderlineLineNumber = mCurrentLine.Number
 		        
 		      Catch e As MKEdgeCase
 		        // Happens when the entire contents of the setext heading is a reference link definition. 

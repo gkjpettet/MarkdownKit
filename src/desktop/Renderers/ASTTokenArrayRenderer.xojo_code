@@ -80,6 +80,7 @@ Implements MarkdownKit.MKRenderer
 		  InStrongEmphasis = False
 		  IsWithinCodeSpan = False
 		  IsWithinATXHeading = False
+		  IsWithinSetextHeading = False
 		  
 		  For Each child As MarkdownKit.MKBlock In doc.Children
 		    Call child.Accept(Self)
@@ -214,6 +215,9 @@ Implements MarkdownKit.MKRenderer
 		  ElseIf InStrongEmphasis Then
 		    type = "strong"
 		    
+		  ElseIf IsWithinSetextHeading Then
+		    type = "setext"
+		    
 		  Else
 		    type = "default"
 		    
@@ -256,9 +260,17 @@ Implements MarkdownKit.MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitSetextHeading(stx As MarkdownKit.MKSetextHeadingBlock) As Variant
 		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
 		  
+		  IsWithinSetextHeading = True
 		  
+		  For Each child As MarkdownKit.MKBlock In stx.Children
+		    Call child.Accept(Self)
+		  Next child
+		  
+		  IsWithinSetextHeading = False
+		  
+		  Tokens.Add(New LineToken(stx.UnderlineStart, stx.UnderlineLocalStart, _
+		  stx.UnderlineLength, stx.UnderlineLineNumber, "setextUnderline"))
 		End Function
 	#tag EndMethod
 
@@ -340,6 +352,10 @@ Implements MarkdownKit.MKRenderer
 
 	#tag Property, Flags = &h0
 		IsWithinCodeSpan As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54727565206966207468652072656E64657265722069732063757272656E746C792077697468696E2061207365746578742068656164696E672E
+		IsWithinSetextHeading As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

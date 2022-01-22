@@ -17,14 +17,27 @@ Inherits MKBlock
 		  
 		  If FirstChild <> Nil Then
 		    // The first child (if present) is always the info string as a text block.
+		    Self.InfoStringStart = MKTextBlock(FirstChild).Start
+		    Self.InfoStringLocalStart = MKTextBlock(FirstChild).LocalStart
+		    Self.InfoStringLength = MKTextBlock(FirstChild).Contents.CharacterCount
 		    Self.InfoString = MKTextBlock(FirstChild).Contents
 		    Children.RemoveAt(0)
 		  End If
 		  
+		  ClosingFenceLocalStart = ClosingFenceStart - line.Start
+		  ClosingFenceLineNumber = line.Number
 		  
 		End Sub
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h0, Description = 546865206E756D626572206F6620746865206C696E6520746861742074686520636C6F73696E672066656E6365206973206F6E2E
+		ClosingFenceLineNumber As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520302D6261736564206C6F63616C20706F736974696F6E206F6E20746865206C696E6520746861742074686520636C6F73696E672066656E636520636861726163746572207374617274732061742E
+		ClosingFenceLocalStart As Integer = 0
+	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 302D626173656420706F736974696F6E20696E2074686520736F75726365206F6620746865207374617274206F6620746869732066656E63656420636F646520626C6F636B277320636C6F73696E672066656E63652E
 		ClosingFenceStart As Integer = 0
@@ -42,8 +55,33 @@ Inherits MKBlock
 		FenceOffset As Integer
 	#tag EndProperty
 
+	#tag ComputedProperty, Flags = &h0, Description = 5472756520696620746869732066656E63656420636F646520626C6F636B2068617320616E20696E666F20737472696E672E
+		#tag Getter
+			Get
+			  Return InfoStringLength > 0
+			End Get
+		#tag EndGetter
+		HasInfoString As Boolean
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h0, Description = 54686520286F7074696F6E616C2920696E666F20737472696E672E
 		InfoString As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206C656E677468206F662074686520696E666F20737472696E672E
+		InfoStringLength As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520302D6261736564206C6F63616C20737461727420706F736974696F6E206F6E20746865206C696E65206F6620746865207374617274206F662074686520696E666F20737472696E6720286F7220602D31602069662074686572652069736E2774206F6E65292E
+		InfoStringLocalStart As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520302D6261736564206162736F6C75746520737461727420706F736974696F6E20696E20746865206F726967696E616C20736F75726365206F6620746865207374617274206F662074686520696E666F20737472696E6720286F7220602D31602069662074686572652069736E2774206F6E65292E
+		InfoStringStart As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520302D6261736564206C6F63616C20706F736974696F6E206F6E20746865206C696E65207468617420746865206F70656E696E672066656E636520636861726163746572207374617274732061742E
+		OpeningFenceLocalStart As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 53657420746F205472756520696E206050726F6365737352656D61696E6465724F664C696E656020696620746869732066656E63656420636F646520626C6F636B206E6565647320636C6F73696E672E
@@ -52,46 +90,6 @@ Inherits MKBlock
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="IsFirstChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsLastChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="EndPosition"
-			Visible=false
-			Group="Behavior"
-			InitialValue="-1"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsChildOfTightList"
-			Visible=false
-			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsChildOfListItem"
-			Visible=false
-			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -130,70 +128,6 @@ Inherits MKBlock
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Type"
-			Visible=false
-			Group="Behavior"
-			InitialValue="MKBlockTypes.Block"
-			Type="MKBlockTypes"
-			EditorType="Enum"
-			#tag EnumValues
-				"0 - AtxHeading"
-				"1 - Block"
-				"2 - BlockQuote"
-				"3 - CodeSpan"
-				"4 - Document"
-				"5 - Emphasis"
-				"6 - FencedCode"
-				"7 - Html"
-				"8 - IndentedCode"
-				"9 - InlineHTML"
-				"10 - InlineImage"
-				"11 - InlineLink"
-				"12 - InlineText"
-				"13 - List"
-				"14 - ListItem"
-				"15 - Paragraph"
-				"16 - ReferenceDefinition"
-				"17 - SetextHeading"
-				"18 - SoftBreak"
-				"19 - StrongEmphasis"
-				"20 - TextBlock"
-				"21 - ThematicBreak"
-			#tag EndEnumValues
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsOpen"
-			Visible=false
-			Group="Behavior"
-			InitialValue="True"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LineNumber"
-			Visible=false
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Start"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsLastLineBlank"
-			Visible=false
-			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -242,6 +176,46 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningFenceLocalStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingFenceLocalStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="InfoStringStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="InfoStringLocalStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="InfoStringLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

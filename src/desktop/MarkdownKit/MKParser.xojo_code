@@ -1260,6 +1260,7 @@ Protected Class MKParser
 		      // FENCED CODE BLOCK
 		      // ======================
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.FencedCode, 0)
+		      MKFencedCodeBlock(mContainer).OpeningFenceLocalStart = mNextNWS
 		      MKFencedCodeBlock(mContainer).FenceChar = data.Value("fenceChar")
 		      MKFencedCodeBlock(mContainer).FenceLength = data.Value("fenceLength")
 		      MKFencedCodeBlock(mContainer).FenceOffset = mNextNWS - mCurrentOffset

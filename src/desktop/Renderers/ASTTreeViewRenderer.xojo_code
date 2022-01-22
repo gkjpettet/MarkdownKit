@@ -159,16 +159,30 @@ Implements MarkdownKit.MKRenderer
 		Function VisitFencedCode(fc As MarkdownKit.MKFencedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  Var node As New TreeViewNode("Fenced Code (start: " + fc.Start.ToString + ")")
+		  Var node As New TreeViewNode("Fenced Code")
 		  
 		  If fc.FenceChar = "`" Then
 		    node.AppendNode(New TreeViewNode("Fence Char: backtick ""`"""))
 		  Else
 		    node.AppendNode(New TreeViewNode("Fence Char: tilde ""~"""))
 		  End If
+		  
+		  node.AppendNode(New TreeViewNode("Opening Fence Start (abs, local): " + _
+		  fc.Start.ToString + ", " + fc.OpeningFenceLocalStart.ToString))
+		  
 		  node.AppendNode(New TreeViewNode("Opening Fence Length: " + fc.FenceLength.ToString))
-		  node.AppendNode(New TreeViewNode("Closing Fence Start: " + fc.ClosingFenceStart.ToString))
-		  node.AppendNode(New TreeViewNode("Info String: " + fc.InfoString))
+		  
+		  node.AppendNode(New TreeViewNode("Closing Fence Start (abs, local): " + _
+		  fc.ClosingFenceStart.ToString + ", " + fc.ClosingFenceLocalStart.ToString))
+		  
+		  If fc.HasInfoString Then
+		    Var infoStringNode As New TreeViewNode("Info String")
+		    infoStringNode.AppendNode(New TreeViewNode("Start(abs, local): " + _
+		    fc.InfoStringStart.ToString + ", " + fc.InfoStringLocalStart.ToString))
+		    infoStringNode.AppendNode(New TreeViewNode("Length: " + fc.InfoStringLength.ToString))
+		    infoStringNode.AppendNode(New TreeViewNode("Value: " + fc.InfoString))
+		    node.AppendNode(infoStringNode)
+		  End If
 		  
 		  For Each child As MarkdownKit.MKBlock In fc.Children
 		    node.AppendNode(child.Accept(Self))

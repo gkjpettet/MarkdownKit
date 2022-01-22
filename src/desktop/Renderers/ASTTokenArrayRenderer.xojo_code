@@ -119,9 +119,27 @@ Implements MarkdownKit.MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitFencedCode(fc As MarkdownKit.MKFencedCodeBlock) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		  /// Part of the MKRenderer interface.
 		  
+		  // Opening delimiter.
+		  Tokens.Add(New LineToken(fc.Start, fc.OpeningFenceLocalStart, fc.FenceLength, fc.LineNumber, "fenceDelimiter"))
+		  
+		  // Info string?
+		  If fc.HasInfoString Then
+		    Tokens.Add(New LineToken(fc.InfoStringStart, fc.InfoStringLocalStart, _
+		    fc.InfoStringLength, fc.LineNumber, "infoString"))
+		  End If
+		  
+		  // Contents.
+		  For Each child As MarkdownKit.MKBlock In fc.Children
+		    Var codeLine As MarkdownKit.MKTextBlock = MarkdownKit.MKTextBlock(child)
+		    Tokens.Add(New LineToken(codeLine.Start, codeLine.LocalStart, _
+		    codeLine.Contents.CharacterCount, codeLine.Line.Number, "codeLine"))
+		  Next child
+		  
+		  // Closing delimiter.
+		  Tokens.Add(New LineToken(fc.ClosingFenceStart, fc.ClosingFenceLocalStart, _
+		  fc.FenceLength, fc.ClosingFenceLineNumber, "fenceDelimiter"))
 		  
 		End Function
 	#tag EndMethod
@@ -140,8 +158,12 @@ Implements MarkdownKit.MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitIndentedCode(ic As MarkdownKit.MKIndentedCodeBlock) As Variant
 		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
 		  
+		  For Each child As MarkdownKit.MKBlock In ic.Children
+		    Var codeLine As MarkdownKit.MKTextBlock = MarkdownKit.MKTextBlock(child)
+		    Tokens.Add(New LineToken(codeLine.Start, codeLine.LocalStart, _
+		    codeLine.Contents.CharacterCount, codeLine.Line.Number, "codeLine"))
+		  Next child
 		  
 		End Function
 	#tag EndMethod

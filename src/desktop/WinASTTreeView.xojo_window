@@ -254,6 +254,8 @@ End
 #tag Events ButtonParse
 	#tag Event
 		Sub Pressed()
+		  Using MarkdownKit
+		  
 		  Var parser As New MKParser
 		  
 		  Var watch As New StopWatch(True)

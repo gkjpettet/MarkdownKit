@@ -143,7 +143,7 @@ Protected Class MKLinkReferenceDefinition
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LinkDestinationLength"
@@ -167,7 +167,7 @@ Protected Class MKLinkReferenceDefinition
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LinkLabelLength"
@@ -191,7 +191,7 @@ Protected Class MKLinkReferenceDefinition
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LinkTitleLength"

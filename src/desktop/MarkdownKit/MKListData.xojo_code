@@ -155,7 +155,11 @@ Protected Class MKListData
 			Group="Behavior"
 			InitialValue="MKListDelimiters.Period"
 			Type="MKListDelimiters"
-			EditorType=""
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Period"
+				"1 - Parenthesis"
+			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="ListType"
@@ -163,7 +167,11 @@ Protected Class MKListData
 			Group="Behavior"
 			InitialValue="MKListTypes.Bullet"
 			Type="MKListTypes"
-			EditorType=""
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Bullet"
+				"1 - Ordered"
+			#tag EndEnumValues
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

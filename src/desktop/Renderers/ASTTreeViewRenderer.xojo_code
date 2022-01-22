@@ -1,15 +1,15 @@
 #tag Class
 Protected Class ASTTreeViewRenderer
-Implements MKRenderer
+Implements MarkdownKit.MKRenderer
 	#tag Method, Flags = &h21, Description = 437265617465732061206E6F64652066726F6D20616E206172726179206F66206368617261637465727320776974682074686520737065636966696564205B6E6F64655469746C655D2E
-		Private Function CreateNodeFromCharacters(nodeTitle As String, chars() As MKCharacter) As TreeViewNode
+		Private Function CreateNodeFromCharacters(nodeTitle As String, chars() As MarkdownKit.MKCharacter) As TreeViewNode
 		  /// Creates a node from an array of characters with the specified [nodeTitle].
 		  
 		  Var node As New TreeViewNode(nodeTitle)
 		  
 		  Var s() As String
 		  For i As Integer = 0 To chars.LastIndex
-		    Var char As MKCharacter = chars(i)
+		    Var char As MarkdownKit.MKCharacter = chars(i)
 		    If char.IsLineEnding Then
 		      node.AppendNode(New TreeViewNode(String.FromArray(s, "")))
 		      s.RemoveAll
@@ -26,7 +26,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitATXHeading(atx As MKATXHeadingBlock) As Variant
+		Function VisitATXHeading(atx As MarkdownKit.MKATXHeadingBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("ATX Heading")
@@ -42,7 +42,7 @@ Implements MKRenderer
 		  
 		  node.AppendNode(CreateNodeFromCharacters("Raw Title", atx.Characters))
 		  Var titleNode As New TreeViewNode("Title")
-		  For Each child As MKBlock In atx.Children
+		  For Each child As MarkdownKit.MKBlock In atx.Children
 		    titleNode.AppendNode(child.Accept(Self))
 		  Next child
 		  node.AppendNode(titleNode)
@@ -52,10 +52,10 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlock(b As MKBlock) As Variant
+		Function VisitBlock(b As MarkdownKit.MKBlock) As Variant
 		  Var node As New TreeViewNode("Generic Block")
 		  
-		  For Each child As MKBlock In b.Children
+		  For Each child As MarkdownKit.MKBlock In b.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -65,12 +65,12 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
+		Function VisitBlockQuote(bq As MarkdownKit.MKBlockQuote) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Block Quote (start: " + bq.Start.ToString + ")")
 		  
-		  For Each child As MKBlock In bq.Children
+		  For Each child As MarkdownKit.MKBlock In bq.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -80,14 +80,14 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
+		Function VisitCodeSpan(cs As MarkdownKit.MKCodeSpan) As Variant
 		  Var node As New TreeViewNode("Code Span")
 		  node.AppendNode(New TreeViewNode("Start: " + cs.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Delimiter Length: " + cs.BacktickStringLength.ToString))
 		  node.AppendNode(New TreeViewNode("Closing Delimiter Start: " + cs.ClosingBacktickStringStart.ToString))
 		  
 		  // Code spans contain text blocks as their children.
-		  For Each child As MKBlock In cs.Children
+		  For Each child As MarkdownKit.MKBlock In cs.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -97,7 +97,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 57616C6B732074686520706173736564204D61726B646F776E20646F63756D656E7420616E6420637265617465732061206054726565566965774E6F64656020726570726573656E74696E672069742E
-		Function VisitDocument(doc As MKDocument) As Variant
+		Function VisitDocument(doc As MarkdownKit.MKDocument) As Variant
 		  /// Walks the passed Markdown document and creates a `TreeViewNode` representing it.
 		  ///
 		  /// Part of the MKRenderer interface.
@@ -108,7 +108,7 @@ Implements MKRenderer
 		  If doc.References.KeyCount > 0 Then
 		    Var defsNode As New TreeViewNode("Link Reference Definitions")
 		    For Each entry As DictionaryEntry In doc.References
-		      Var lrd As MKLinkReferenceDefinition = MKLinkReferenceDefinition(entry.Value)
+		      Var lrd As MarkdownKit.MKLinkReferenceDefinition = MarkdownKit.MKLinkReferenceDefinition(entry.Value)
 		      Var lrdNode As New TreeViewNode("Definition")
 		      // Link label.
 		      lrdNode.AppendNode(New TreeViewNode("Label (" + lrd.LinkLabelStart.ToString + ", " + _
@@ -130,7 +130,7 @@ Implements MKRenderer
 		    docNode.AppendNode(defsNode)
 		  End If
 		  
-		  For Each b As MKBlock In doc.Children
+		  For Each b As MarkdownKit.MKBlock In doc.Children
 		    
 		    docNode.AppendNode(b.Accept(Self))
 		    
@@ -142,11 +142,11 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitEmphasis(e As MKEmphasis) As Variant
+		Function VisitEmphasis(e As MarkdownKit.MKEmphasis) As Variant
 		  Var node As New TreeViewNode("Emphasis")
 		  node.AppendNode(New TreeViewNode("Start: " + e.Start.ToString))
 		  
-		  For Each child As MKBlock In e.Children
+		  For Each child As MarkdownKit.MKBlock In e.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -156,7 +156,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitFencedCode(fc As MKFencedCodeBlock) As Variant
+		Function VisitFencedCode(fc As MarkdownKit.MKFencedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Fenced Code (start: " + fc.Start.ToString + ")")
@@ -170,7 +170,7 @@ Implements MKRenderer
 		  node.AppendNode(New TreeViewNode("Closing Fence Start: " + fc.ClosingFenceStart.ToString))
 		  node.AppendNode(New TreeViewNode("Info String: " + fc.InfoString))
 		  
-		  For Each child As MKBlock In fc.Children
+		  For Each child As MarkdownKit.MKBlock In fc.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -180,12 +180,12 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitHTMLBlock(html As MKHTMLBlock) As Variant
+		Function VisitHTMLBlock(html As MarkdownKit.MKHTMLBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("HTML Block (start: " + html.Start.ToString + ")")
 		  
-		  For Each child As MKBlock In html.Children
+		  For Each child As MarkdownKit.MKBlock In html.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -195,12 +195,12 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitIndentedCode(ic As MKIndentedCodeBlock) As Variant
+		Function VisitIndentedCode(ic As MarkdownKit.MKIndentedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Indented Code")
 		  
-		  For Each child As MKBlock In ic.Children
+		  For Each child As MarkdownKit.MKBlock In ic.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -210,7 +210,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineHTML(html As MKInlineHTML) As Variant
+		Function VisitInlineHTML(html As MarkdownKit.MKInlineHTML) As Variant
 		  Var node As New TreeViewNode("InlineHTML")
 		  
 		  node.AppendNode(New TreeViewNode("Start: " + html.Start.ToString))
@@ -227,7 +227,7 @@ Implements MKRenderer
 		  End If
 		  
 		  // Inline HTML contain text blocks as their children.
-		  For Each child As MKBlock In html.Children
+		  For Each child As MarkdownKit.MKBlock In html.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -237,7 +237,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineImage(image As MKInlineImage) As Variant
+		Function VisitInlineImage(image As MarkdownKit.MKInlineImage) As Variant
 		  Var node As New TreeViewNode("Inline Image")
 		  node.AppendNode(New TreeViewNode("Start: " + image.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Destination: " + image.Destination))
@@ -246,7 +246,7 @@ Implements MKRenderer
 		  End If
 		  node.AppendNode(CreateNodeFromCharacters("Characters", image.Characters))
 		  
-		  For Each child As MKBlock In image.Children
+		  For Each child As MarkdownKit.MKBlock In image.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -256,7 +256,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineLink(link As MKInlineLink) As Variant
+		Function VisitInlineLink(link As MarkdownKit.MKInlineLink) As Variant
 		  Var node As New TreeViewNode("Inline Link")
 		  node.AppendNode(New TreeViewNode("Start: " + link.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Destination: " + link.Destination))
@@ -265,7 +265,7 @@ Implements MKRenderer
 		  End If
 		  node.AppendNode(CreateNodeFromCharacters("Characters", link.Characters))
 		  
-		  For Each child As MKBlock In link.Children
+		  For Each child As MarkdownKit.MKBlock In link.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -275,7 +275,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineText(it As MKInlineText) As Variant
+		Function VisitInlineText(it As MarkdownKit.MKInlineText) As Variant
 		  Var node As New TreeViewNode("Inline Text")
 		  node.AppendNode(CreateNodeFromCharacters("Contents", it.Characters))
 		  node.AppendNode(New TreeViewNode("Start: " + it.Start.ToString))
@@ -287,7 +287,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitList(list As MKBlock) As Variant
+		Function VisitList(list As MarkdownKit.MKBlock) As Variant
 		  // Title.
 		  Var title As String
 		  Var tight As String = If(list.ListData.IsTight, "Tight", "Loose")
@@ -316,7 +316,7 @@ Implements MKRenderer
 		  End If
 		  
 		  // List items.
-		  For Each child As MKBlock In list.Children
+		  For Each child As MarkdownKit.MKBlock In list.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -326,7 +326,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitListItem(item As MKBlock) As Variant
+		Function VisitListItem(item As MarkdownKit.MKBlock) As Variant
 		  Var node As New TreeViewNode("List Item")
 		  
 		  node.AppendNode(New TreeViewNode("Start: " + item.Start.ToString))
@@ -334,7 +334,7 @@ Implements MKRenderer
 		  node.AppendNode(New TreeViewNode("Marker Offset: " + item.ListData.MarkerOffset.ToString))
 		  node.AppendNode(New TreeViewNode("Marker Width: " + item.ListData.MarkerWidth.ToString))
 		  
-		  For Each child As MKBlock In item.Children
+		  For Each child As MarkdownKit.MKBlock In item.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -344,7 +344,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitParagraph(p As MKParagraphBlock) As Variant
+		Function VisitParagraph(p As MarkdownKit.MKParagraphBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Paragraph")
@@ -352,7 +352,7 @@ Implements MKRenderer
 		  node.AppendNode(CreateNodeFromCharacters("Raw Text", p.Characters))
 		  node.AppendNode(New TreeViewNode("IsChildOfTightList: " + If(p.IsChildOfTightList, "True", "False")))
 		  
-		  For Each child As MKBlock In p.Children
+		  For Each child As MarkdownKit.MKBlock In p.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -362,7 +362,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSetextHeading(stx As MKSetextHeadingBlock) As Variant
+		Function VisitSetextHeading(stx As MarkdownKit.MKSetextHeadingBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Setext Heading")
@@ -379,7 +379,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
+		Function VisitSoftBreak(sb As MarkdownKit.MKSoftBreak) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Return New TreeViewNode("Soft Break (pos: " + sb.Start.ToString + ")")
@@ -388,11 +388,11 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
+		Function VisitStrongEmphasis(se As MarkdownKit.MKStrongEmphasis) As Variant
 		  Var node As New TreeViewNode("Strong Emphasis")
 		  node.AppendNode(New TreeViewNode("Start: " + se.Start.ToString))
 		  
-		  For Each child As MKBlock In se.Children
+		  For Each child As MarkdownKit.MKBlock In se.Children
 		    node.AppendNode(child.Accept(Self))
 		  Next child
 		  
@@ -402,7 +402,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitTextBlock(tb As MKTextBlock) As Variant
+		Function VisitTextBlock(tb As MarkdownKit.MKTextBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var title As String = If(tb.IsBlank, "Blank ", "") + _
@@ -420,7 +420,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitThematicBreak(tb As MKBlock) As Variant
+		Function VisitThematicBreak(tb As MarkdownKit.MKBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var node As New TreeViewNode("Thematic Break (start:" + tb.Start.ToString + ")")

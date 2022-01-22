@@ -1,127 +1,127 @@
 #tag Interface
 Protected Interface MKRenderer
 	#tag Method, Flags = &h0
-		Function VisitATXHeading(atx As MKATXHeadingBlock) As Variant
+		Function VisitATXHeading(atx As MarkdownKit.MKATXHeadingBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlock(b As MKBlock) As Variant
+		Function VisitBlock(b As MarkdownKit.MKBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
+		Function VisitBlockQuote(bq As MarkdownKit.MKBlockQuote) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
+		Function VisitCodeSpan(cs As MarkdownKit.MKCodeSpan) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitDocument(doc As MKDocument) As Variant
+		Function VisitDocument(doc As MarkdownKit.MKDocument) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitEmphasis(e As MKEmphasis) As Variant
+		Function VisitEmphasis(e As MarkdownKit.MKEmphasis) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitFencedCode(fc As MKFencedCodeBlock) As Variant
+		Function VisitFencedCode(fc As MarkdownKit.MKFencedCodeBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitHTMLBlock(html As MKHTMLBlock) As Variant
+		Function VisitHTMLBlock(html As MarkdownKit.MKHTMLBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitIndentedCode(ic As MKIndentedCodeBlock) As Variant
+		Function VisitIndentedCode(ic As MarkdownKit.MKIndentedCodeBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineHTML(html As MKInlineHTML) As Variant
+		Function VisitInlineHTML(html As MarkdownKit.MKInlineHTML) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineImage(image As MKInlineImage) As Variant
+		Function VisitInlineImage(image As MarkdownKit.MKInlineImage) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineLink(link As MKInlineLink) As Variant
+		Function VisitInlineLink(link As MarkdownKit.MKInlineLink) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineText(it As MKInlineText) As Variant
+		Function VisitInlineText(it As MarkdownKit.MKInlineText) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitList(list As MKBlock) As Variant
+		Function VisitList(list As MarkdownKit.MKBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitListItem(item As MKBlock) As Variant
+		Function VisitListItem(item As MarkdownKit.MKBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitParagraph(p As MKParagraphBlock) As Variant
+		Function VisitParagraph(p As MarkdownKit.MKParagraphBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSetextHeading(stx As MKSetextHeadingBlock) As Variant
+		Function VisitSetextHeading(stx As MarkdownKit.MKSetextHeadingBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
+		Function VisitSoftBreak(sb As MarkdownKit.MKSoftBreak) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
+		Function VisitStrongEmphasis(se As MarkdownKit.MKStrongEmphasis) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitTextBlock(tb As MKTextBlock) As Variant
+		Function VisitTextBlock(tb As MarkdownKit.MKTextBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitThematicBreak(tb As MKBlock) As Variant
+		Function VisitThematicBreak(tb As MarkdownKit.MKBlock) As Variant
 		  
 		End Function
 	#tag EndMethod

@@ -1,63 +1,46 @@
 #tag Class
-Protected Class MKInlineLink
+Protected Class MKAbstractEmphasis
 Inherits MKBlock
-	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, absoluteStart As Integer, data As MKInlineLinkData)
-		  Super.Constructor(MKBlockTypes.InlineLink, parent, absoluteStart)
-		  
-		  Self.Title = data.Title
-		  Self.Destination = data.Destination
-		  Self.Characters = data.Characters
-		  
-		  Self.OpenerCharacter = data.OpenerCharacter
-		  Self.CloserCharacter = data.CloserCharacter
-		  Self.LinkType = data.LinkType
-		End Sub
-	#tag EndMethod
+	#tag Note, Name = About
+		An abstract base class for MKEmphasis and MKStrongEmphasis blocks.
+		
+	#tag EndNote
 
 
-	#tag Property, Flags = &h0, Description = 546865206C696E6B20636C6F73696E6720627261636B6574206368617261637465722E20436F6D65732065697468657220616674657220746865206C696E6B206C6162656C206F7220746865206C696E6B20746578742028646570656E64696E67206F6E20746865206C696E6B2074797065292E
-		CloserCharacter As MKCharacter
+	#tag Property, Flags = &h0, Description = 302D62617365642061626F736C75746520706F736974696F6E206F662074686520666972737420636861726163746572206F662074686520636C6F73696E672064656C696D6974657220696E20746865206F726967696E616C20736F757263652E
+		ClosingDelimiterAbsoluteStart As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 5468697320696E6C696E65206C696E6B27732064657374696E6174696F6E2E
-		Destination As String
+	#tag Property, Flags = &h0, Description = 546865206C696E65206E756D62657220746861742074686520636C6F73696E672064656C696D69746572206F6363757273206F6E2E
+		ClosingDelimiterLineNumber As Integer = 1
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 5468652074797065206F66206C696E6B20746869732069732E
-		LinkType As MKLinkTypes
+	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C20706F736974696F6E206F662074686520666972737420636861726163746572206F662074686520636C6F73696E672064656C696D697465722E
+		ClosingDelimiterLocalStart As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 546865206C6F63616C20302D626173656420696E64657820696E2060506172656E742E43686172616374657273602074686174207468697320696E6C696E65206C696E6B20626567696E732061742E
-		LocalStart As Integer = 0
+	#tag Property, Flags = &h0, Description = 5468652064656C696D697465722E
+		Delimiter As String
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 546865206C696E6B206F70656E6572206368617261637465722028605B60292E
-		OpenerCharacter As MKCharacter
+	#tag Property, Flags = &h0, Description = 546865206C656E677468206F66207468652064656C696D697465722E
+		DelimiterLength As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 5468697320696E6C696E65206C696E6B277320286F7074696F6E616C29207469746C652E
-		Title As String
+	#tag Property, Flags = &h0, Description = 302D62617365642061626F736C75746520706F736974696F6E206F662074686520666972737420636861726163746572206F6620746865206F70656E696E672064656C696D6974657220696E20746865206F726967696E616C20736F757263652E
+		OpeningDelimiterAbsoluteStart As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206C696E65206E756D626572207468617420746865206F70656E696E672064656C696D69746572206F6363757273206F6E2E
+		OpeningDelimiterLineNumber As Integer = 1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C20706F736974696F6E206F662074686520666972737420636861726163746572206F6620746865206F70656E696E672064656C696D697465722E
+		OpeningDelimiterLocalStart As Integer = 0
 	#tag EndProperty
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="IsLastChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsFirstChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -187,7 +170,39 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="LocalStart"
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingDelimiterLineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningDelimiterLineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningDelimiterLocalStart"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"
@@ -195,7 +210,23 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Title"
+			Name="ClosingDelimiterAbsoluteStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingDelimiterLocalStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Delimiter"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
@@ -203,42 +234,20 @@ Inherits MKBlock
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Destination"
+			Name="DelimiterLength"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="CloserCharacter"
-			Visible=false
-			Group="Behavior"
-			InitialValue="-1"
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="OpenerCharacter"
+			Name="OpeningDelimiterAbsoluteStart"
 			Visible=false
 			Group="Behavior"
-			InitialValue="-1"
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LinkType"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="MKLinkTypes"
-			EditorType="Enum"
-			#tag EnumValues
-				"0 - CollapsedReference"
-				"1 - FullReference"
-				"2 - ShortcutReference"
-				"3 - Standard"
-			#tag EndEnumValues
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

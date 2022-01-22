@@ -1,24 +1,71 @@
 #tag Class
-Protected Class MKBlockQuote
+Protected Class MKHTMLBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer)
-		  Super.Constructor(MKBlockTypes.BlockQuote, parent, blockStart)
+		Sub Constructor(parent As MKBlock, blockStart As Integer = 0)
+		  Super.Constructor(MKBlockTypes.Html, parent, blockStart)
 		  
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0, Description = 302D6261736564206F666673657420696E20746865206F726967696E616C20736F7572636520746861742074686520603E602063686172616374657220617070656172732E
-		AbsoluteOpenerStart As Integer = 0
+	#tag Property, Flags = &h0, Description = 5468652074797065206F662048544D4C20626C6F636B20746869732069732E
+		HTMLBlockType As MKHTMLBlockTypes = MKHTMLBlockTypes.None
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C206F6666736574206F6E20746865206C696E6520746861742074686520603E602063686172616374657220617070656172732E
-		LocalOpenerStart As Integer = 0
-	#tag EndProperty
+	#tag ComputedProperty, Flags = &h0, Description = 5472756520696620746869732048544D4C20626C6F636B20697320747970652036206F7220372E
+		#tag Getter
+			Get
+			  Return Self.HTMLBlockType = MKHTMLBlockTypes.InterruptingBlock Or _
+			  Self.HTMLBlockType = MKHTMLBlockTypes.NonInterruptingBlock
+			  
+			End Get
+		#tag EndGetter
+		IsType6Or7 As Boolean
+	#tag EndComputedProperty
 
 
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfTightList"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfListItem"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -124,39 +171,25 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="IsChildOfTightList"
+			Name="HTMLBlockType"
 			Visible=false
 			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-			EditorType=""
+			InitialValue="MKHTMLBlockTypes.None"
+			Type="MKHTMLBlockTypes"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - None"
+				"1 - InterruptingBlockWithEmptyLines"
+				"2 - Comment"
+				"3 - ProcessingInstruction"
+				"4 - Document"
+				"5 - CData"
+				"6 - InterruptingBlock"
+				"7 - NonInterruptingBlock"
+			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="IsChildOfListItem"
-			Visible=false
-			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="EndPosition"
-			Visible=false
-			Group="Behavior"
-			InitialValue="-1"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsFirstChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsLastChild"
+			Name="IsType6Or7"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""

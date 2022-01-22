@@ -1,8 +1,8 @@
 #tag Class
 Protected Class ASTTokenArrayRenderer
-Implements MKRenderer
+Implements MarkdownKit.MKRenderer
 	#tag Method, Flags = &h0
-		Function VisitATXHeading(atx As MKATXHeadingBlock) As Variant
+		Function VisitATXHeading(atx As MarkdownKit.MKATXHeadingBlock) As Variant
 		  // Part of the MKRenderer interface.
 		  
 		  // Opening sequence.
@@ -11,7 +11,7 @@ Implements MKRenderer
 		  
 		  IsWithinATXHeading = True
 		  
-		  For Each child As MKBlock In atx.Children
+		  For Each child As MarkdownKit.MKBlock In atx.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -27,7 +27,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlock(b As MKBlock) As Variant
+		Function VisitBlock(b As MarkdownKit.MKBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  ///
 		  /// Nothing to do.
@@ -37,12 +37,12 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
+		Function VisitBlockQuote(bq As MarkdownKit.MKBlockQuote) As Variant
 		  // Part of the MKRenderer interface.
 		  
 		  Tokens.Add(New LineToken(bq.AbsoluteOpenerStart, bq.LocalOpenerStart, 1, bq.LineNumber, "blockQuote"))
 		  
-		  For Each child As MKBlock In bq.Children
+		  For Each child As MarkdownKit.MKBlock In bq.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -50,7 +50,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
+		Function VisitCodeSpan(cs As MarkdownKit.MKCodeSpan) As Variant
 		  // Part of the MKRenderer interface.
 		  
 		  // Opening delimiter.
@@ -58,7 +58,7 @@ Implements MKRenderer
 		  
 		  IsWithinCodeSpan = True
 		  
-		  For Each child As MKBlock In cs.Children
+		  For Each child As MarkdownKit.MKBlock In cs.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -72,7 +72,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitDocument(doc As MKDocument) As Variant
+		Function VisitDocument(doc As MarkdownKit.MKDocument) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Tokens.RemoveAll
@@ -81,7 +81,7 @@ Implements MKRenderer
 		  IsWithinCodeSpan = False
 		  IsWithinATXHeading = False
 		  
-		  For Each child As MKBlock In doc.Children
+		  For Each child As MarkdownKit.MKBlock In doc.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -91,7 +91,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitEmphasis(e As MKEmphasis) As Variant
+		Function VisitEmphasis(e As MarkdownKit.MKEmphasis) As Variant
 		  // Part of the MKRenderer interface.
 		  
 		  Var wasInEmphasis As Boolean = InEmphasis
@@ -103,7 +103,7 @@ Implements MKRenderer
 		  e.OpeningDelimiterAbsoluteStart, e.OpeningDelimiterLocalStart, 1, e.OpeningDelimiterLineNumber, _
 		  "emphasisDelimiter"))
 		  
-		  For Each child As MKBlock In e.Children
+		  For Each child As MarkdownKit.MKBlock In e.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -118,7 +118,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitFencedCode(fc As MKFencedCodeBlock) As Variant
+		Function VisitFencedCode(fc As MarkdownKit.MKFencedCodeBlock) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -127,10 +127,10 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitHTMLBlock(html As MKHTMLBlock) As Variant
+		Function VisitHTMLBlock(html As MarkdownKit.MKHTMLBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  For Each child As MKBlock In html.Children
+		  For Each child As MarkdownKit.MKBlock In html.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -138,7 +138,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitIndentedCode(ic As MKIndentedCodeBlock) As Variant
+		Function VisitIndentedCode(ic As MarkdownKit.MKIndentedCodeBlock) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -147,7 +147,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineHTML(html As MKInlineHTML) As Variant
+		Function VisitInlineHTML(html As MarkdownKit.MKInlineHTML) As Variant
 		  /// Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -155,7 +155,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineImage(image As MKInlineImage) As Variant
+		Function VisitInlineImage(image As MarkdownKit.MKInlineImage) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -164,7 +164,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineLink(link As MKInlineLink) As Variant
+		Function VisitInlineLink(link As MarkdownKit.MKInlineLink) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -172,7 +172,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineText(it As MKInlineText) As Variant
+		Function VisitInlineText(it As MarkdownKit.MKInlineText) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var type As String
@@ -203,7 +203,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitList(list As MKBlock) As Variant
+		Function VisitList(list As MarkdownKit.MKBlock) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -212,7 +212,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitListItem(item As MKBlock) As Variant
+		Function VisitListItem(item As MarkdownKit.MKBlock) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -221,10 +221,10 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitParagraph(p As MKParagraphBlock) As Variant
+		Function VisitParagraph(p As MarkdownKit.MKParagraphBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  For Each child As MKBlock In p.Children
+		  For Each child As MarkdownKit.MKBlock In p.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -232,7 +232,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSetextHeading(stx As MKSetextHeadingBlock) As Variant
+		Function VisitSetextHeading(stx As MarkdownKit.MKSetextHeadingBlock) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  
@@ -241,7 +241,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
+		Function VisitSoftBreak(sb As MarkdownKit.MKSoftBreak) As Variant
 		  /// Part of the MKRenderer interface.
 		  ///
 		  /// Nothing to do.
@@ -251,7 +251,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
+		Function VisitStrongEmphasis(se As MarkdownKit.MKStrongEmphasis) As Variant
 		  // Part of the MKRenderer interface.
 		  
 		  Var wasInStrongEmphasis As Boolean = InStrongEmphasis
@@ -263,7 +263,7 @@ Implements MKRenderer
 		  se.OpeningDelimiterAbsoluteStart, se.OpeningDelimiterLocalStart, 2, se.OpeningDelimiterLineNumber, _
 		  "strongEmphasisDelimiter"))
 		  
-		  For Each child As MKBlock In se.Children
+		  For Each child As MarkdownKit.MKBlock In se.Children
 		    Call child.Accept(Self)
 		  Next child
 		  
@@ -278,7 +278,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitTextBlock(tb As MKTextBlock) As Variant
+		Function VisitTextBlock(tb As MarkdownKit.MKTextBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  If tb.IsBlank Then Return Nil
@@ -296,7 +296,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitThematicBreak(tb As MKBlock) As Variant
+		Function VisitThematicBreak(tb As MarkdownKit.MKBlock) As Variant
 		  // Part of the MKRenderer interface.
 		  #Pragma Warning  "Needs implementing"
 		  

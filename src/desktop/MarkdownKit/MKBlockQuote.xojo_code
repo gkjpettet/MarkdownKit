@@ -1,55 +1,24 @@
 #tag Class
-Protected Class MKEmphasis
-Inherits MKAbstractEmphasis
+Protected Class MKBlockQuote
+Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, absoluteStart As Integer)
-		  Super.Constructor(MKBlockTypes.Emphasis, parent, absoluteStart)
+		Sub Constructor(parent As MKBlock, blockStart As Integer)
+		  Super.Constructor(MKBlockTypes.BlockQuote, parent, blockStart)
 		  
 		End Sub
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h0, Description = 302D6261736564206F666673657420696E20746865206F726967696E616C20736F7572636520746861742074686520603E602063686172616374657220617070656172732E
+		AbsoluteOpenerStart As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 302D6261736564206C6F63616C206F6666736574206F6E20746865206C696E6520746861742074686520603E602063686172616374657220617070656172732E
+		LocalOpenerStart As Integer = 0
+	#tag EndProperty
+
+
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="ClosingDelimiterLineNumber"
-			Visible=false
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="OpeningDelimiterLineNumber"
-			Visible=false
-			Group="Behavior"
-			InitialValue="1"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="OpeningDelimiterLocalStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsLastChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsFirstChild"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
@@ -175,6 +144,38 @@ Inherits MKAbstractEmphasis
 			Visible=false
 			Group="Behavior"
 			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="AbsoluteOpenerStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="LocalOpenerStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty

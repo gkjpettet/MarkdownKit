@@ -3,8 +3,8 @@ Protected Class HTMLTests
 Inherits TestGroup
 	#tag Event
 		Sub Setup()
-		  mParser = New MKParser
-		  mRenderer = New MKHTMLRenderer
+		  mParser = New MarkdownKit.MKParser
+		  mRenderer = New MarkdownKit.MKHTMLRenderer
 		  
 		End Sub
 	#tag EndEvent
@@ -3982,7 +3982,7 @@ Inherits TestGroup
 		  End If
 		  
 		  // Convert the input Markdown to HTML.
-		  Var doc As MKDocument = mParser.ParseSource(input)
+		  Var doc As MarkdownKit.MKDocument = mParser.ParseSource(input)
 		  doc.TestNumber = testNumber
 		  Var actual As String = mRenderer.VisitDocument(doc)
 		  
@@ -4012,11 +4012,11 @@ Inherits TestGroup
 
 
 	#tag Property, Flags = &h21
-		Private mParser As MKParser
+		Private mParser As MarkdownKit.MKParser
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mRenderer As MKHTMLRenderer
+		Private mRenderer As MarkdownKit.MKHTMLRenderer
 	#tag EndProperty
 
 

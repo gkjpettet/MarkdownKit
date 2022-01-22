@@ -1,46 +1,67 @@
 #tag Class
-Protected Class MKSetextHeadingBlock
+Protected Class MKIndentedCodeBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer = 0)
-		  Super.Constructor(MKBlockTypes.SetextHeading, parent, blockStart)
+		Sub Constructor(parent As MKBlock, blockStartOffset As Integer = 0)
+		  Super.Constructor(MKBlockTypes.IndentedCode, parent, blockStartOffset)
 		  
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, Description = 436C6F736573207468697320626C6F636B20616E64206D616B657320616E792066696E616C206368616E6765732074686174206D61792062652072657175697265642E
 		Sub Finalise(line As TextLine)
+		  /// Closes this block and makes any final changes that may be required.
+		  
 		  // Calling the overridden superclass method.
 		  Super.Finalise(line)
 		  
-		  ParseLinkReferenceDefinitions
+		  // Blank lines preceding or following an indented code block are not included in it.
+		  If FirstChild <> Nil And MKTextBlock(FirstChild).IsBlank Then Children.RemoveAt(0)
+		  If LastChild <> Nil And MKTextBlock(LastChild).IsBlank Then Call Children.Pop
 		  
-		  // Edge case: The setext heading only contained a link reference definition.
-		  If Characters.Count = 1 And Characters(0).IsLineEnding Then Characters.RemoveAll
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0, Description = 5468697320415458206865616465722773206C6576656C2E
-		Level As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 4966207468697320626C6F636B20697320612053657465787420686561646572207468656E207468697320697320746865206C656E6774682028696E206368617261637465727329206F66207468652053657465787420756E6465726C696E652E
-		UnderlineLength As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 302D626173656420706F736974696F6E20696E20746865206F726967696E616C20736F7572636520636F6465206F662074686520666972737420636861726163746572206F6620612053657465787420756E6465726C696E6520286966207468697320626C6F636B20697320612053657465787420686561646572292E
-		UnderlineStart As Integer = 0
-	#tag EndProperty
-
-
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="EndPosition"
 			Visible=false
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfTightList"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsChildOfListItem"
+			Visible=false
+			Group="Behavior"
+			InitialValue="False"
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -145,46 +166,6 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="False"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Level"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsChildOfTightList"
-			Visible=false
-			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsChildOfListItem"
-			Visible=false
-			Group="Behavior"
-			InitialValue="False"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="UnderlineLength"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="UnderlineStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

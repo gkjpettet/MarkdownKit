@@ -35,6 +35,22 @@ Inherits MKBlock
 
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="IsFirstChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="EndPosition"
 			Visible=false
 			Group="Behavior"
@@ -156,6 +172,14 @@ Inherits MKBlock
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Start"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="TestNumber"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

@@ -1,45 +1,81 @@
 #tag Class
-Protected Class MKHTMLBlock
+Protected Class MKParagraphBlock
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, blockStart As Integer = 0)
-		  Super.Constructor(MKBlockTypes.Html, parent, blockStart)
+		Sub Constructor(parent As MKBlock, blockStart As Integer)
+		  Super.Constructor(MKBlockTypes.Paragraph, parent, blockStart)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Finalise(line As TextLine)
+		  // Calling the overridden superclass method.
+		  Super.Finalise(line)
+		  
+		  ParseLinkReferenceDefinitions
+		  
+		  // If this paragraph consists only of whitespace, empty out its character array.
+		  Var seenNonWhitespace As Boolean = False
+		  For Each char As MKCharacter In Characters
+		    If Not char.IsMarkdownWhitespace(True) Then
+		      seenNonWhitespace = True
+		      Exit
+		    End If
+		  Next char
+		  If Not seenNonWhitespace Then Characters.RemoveAll
+		  
+		  // Removing a single trailing line ending if present.
+		  If Characters.Count > 0 And Characters(Characters.LastIndex).IsLineEnding Then Call Characters.Pop
+		  
+		  // Final spaces are stripped before inline parsing.
+		  For i As Integer = Characters.LastIndex DownTo 0
+		    Select Case Characters(i).Value
+		    Case " "
+		      Characters.RemoveAt(i)
+		    Else
+		      Exit
+		    End Select
+		  Next i
+		  
+		  // Remove this paragraph from its parent if it's empty.
+		  If Characters.Count = 0 And Parent <> Nil Then
+		    Var parentIndex As Integer = Parent.Children.IndexOf(Self)
+		    If parentIndex <> -1 Then Parent.Children.RemoveAt(parentIndex)
+		  End If
 		  
 		End Sub
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h0, Description = 5468652074797065206F662048544D4C20626C6F636B20746869732069732E
-		HTMLBlockType As MKHTMLBlockTypes = MKHTMLBlockTypes.None
+	#tag Property, Flags = &h21, Description = 416C6C206F66207468697320626C6F636B2773206368617261637465727320617320616E206172726179206F66204D4B43686172616374657220696E7374616E6365732E
+		Private mAllCharacters() As MKCharacter
 	#tag EndProperty
-
-	#tag ComputedProperty, Flags = &h0, Description = 5472756520696620746869732048544D4C20626C6F636B20697320747970652036206F7220372E
-		#tag Getter
-			Get
-			  Return Self.HTMLBlockType = MKHTMLBlockTypes.InterruptingBlock Or _
-			  Self.HTMLBlockType = MKHTMLBlockTypes.NonInterruptingBlock
-			  
-			End Get
-		#tag EndGetter
-		IsType6Or7 As Boolean
-	#tag EndComputedProperty
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="EndPosition"
-			Visible=false
-			Group="Behavior"
-			InitialValue="-1"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="IsFirstChild"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
 			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="IsLastChild"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="EndPosition"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -159,32 +195,6 @@ Inherits MKBlock
 			Visible=false
 			Group="Behavior"
 			InitialValue="False"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="HTMLBlockType"
-			Visible=false
-			Group="Behavior"
-			InitialValue="MKHTMLBlockTypes.None"
-			Type="MKHTMLBlockTypes"
-			EditorType="Enum"
-			#tag EnumValues
-				"0 - None"
-				"1 - InterruptingBlockWithEmptyLines"
-				"2 - Comment"
-				"3 - ProcessingInstruction"
-				"4 - Document"
-				"5 - CData"
-				"6 - InterruptingBlock"
-				"7 - NonInterruptingBlock"
-			#tag EndEnumValues
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsType6Or7"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
 			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty

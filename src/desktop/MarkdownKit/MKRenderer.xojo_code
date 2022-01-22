@@ -79,13 +79,13 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitList(list As MarkdownKit.MKBlock) As Variant
+		Function VisitList(list As MarkdownKit.MKListBlock) As Variant
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitListItem(item As MarkdownKit.MKBlock) As Variant
+		Function VisitListItem(item As MarkdownKit.MKListItemBlock) As Variant
 		  
 		End Function
 	#tag EndMethod

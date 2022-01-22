@@ -440,7 +440,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitList(list As MKBlock) As Variant
+		Function VisitList(list As MKListBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  Var listTag As String
@@ -473,7 +473,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitListItem(item As MKBlock) As Variant
+		Function VisitListItem(item As MKListItemBlock) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  mOutput.Add("<li>")

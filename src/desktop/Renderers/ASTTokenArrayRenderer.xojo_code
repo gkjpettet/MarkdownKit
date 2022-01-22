@@ -252,19 +252,28 @@ Implements MarkdownKit.MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitList(list As MarkdownKit.MKBlock) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		Function VisitList(list As MarkdownKit.MKListBlock) As Variant
+		  /// Part of the MKRenderer interface.
 		  
+		  For Each child As MarkdownKit.MKBlock In list.Children
+		    Call child.Accept(Self)
+		  Next child
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitListItem(item As MarkdownKit.MKBlock) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		Function VisitListItem(item As MarkdownKit.MKListItemBlock) As Variant
+		  /// Part of the MKRenderer interface.
 		  
+		  // List marker.
+		  Tokens.Add(New LineToken(item.Start, item.ListData.LinePosition, item.ListData.MarkerWidth, _
+		  item.LineNumber, "listMarker"))
+		  
+		  // Children.
+		  For Each child As MarkdownKit.MKBlock In item.Children
+		    Call child.Accept(Self)
+		  Next child
 		  
 		End Function
 	#tag EndMethod

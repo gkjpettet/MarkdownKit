@@ -203,6 +203,12 @@ Protected Class MKParser
 		  Case MKBlockTypes.BlockQuote
 		    child = New MKBlockQuote(parent, blockStartOffset)
 		    
+		  Case MKBlockTypes.List
+		    child = New MKListBlock(parent, blockStartOffset)
+		    
+		  Case MKBlockTypes.ListItem
+		    child = New MKListItemBlock(parent, blockStartOffset)
+		    
 		  Case MKBlockTypes.FencedCode
 		    child = New MKFencedCodeBlock(parent, blockStartOffset)
 		    
@@ -1345,14 +1351,14 @@ Protected Class MKParser
 		      // Check the container. If it's a list, see if this list item can continue the list. 
 		      // Otherwise, create a list container.
 		      listData.MarkerOffset = mCurrentIndent
-		      If mContainer.Type <> MKBlockTypes.List Or mContainer.ListData <> listData Then
+		      If mContainer.Type <> MKBlockTypes.List Or MKListBlock(mContainer).ListData <> listData Then
 		        mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.List, 0)
-		        mContainer.ListData = listData
+		        MKListBlock(mContainer).ListData = listData
 		      End If
 		      
 		      // Add the list item.
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.ListItem, -listData.MarkerWidth)
-		      mContainer.ListData = listData
+		      MKAbstractList(mContainer).ListData = listData
 		      
 		    ElseIf indented And Not mMaybeLazy And Not blank Then
 		      // ======================
@@ -1412,8 +1418,10 @@ Protected Class MKParser
 		      // ======================
 		      // LIST ITEM
 		      // ======================
-		      If mCurrentIndent >= mContainer.ListData.MarkerOffset + mContainer.ListData.MarkerWidth Then
-		        AdvanceOffset(mContainer.ListData.MarkerOffset + mContainer.ListData.MarkerWidth, True)
+		      If mCurrentIndent >= MKListItemBlock(mContainer).ListData.MarkerOffset + _
+		        MKListItemBlock(mContainer).ListData.MarkerWidth Then
+		        AdvanceOffset(MKListItemBlock(mContainer).ListData.MarkerOffset + _
+		        MKListItemBlock(mContainer).ListData.MarkerWidth, True)
 		      ElseIf blank And mContainer.FirstChild <> Nil Then
 		        // If container.FirstChild is Nil, then the opening line of the list item was blank after 
 		        // the list marker. In this case we're done with the list item.

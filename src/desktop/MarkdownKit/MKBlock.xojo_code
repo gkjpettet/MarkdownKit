@@ -45,10 +45,10 @@ Protected Class MKBlock
 		    Return visitor.VisitInlineText(MKInlineText(Self))
 		    
 		  Case MKBlockTypes.List
-		    Return visitor.VisitList(Self)
+		    Return visitor.VisitList(MKListBlock(Self))
 		    
 		  Case MKBlockTypes.ListItem
-		    Return visitor.VisitListItem(Self)
+		    Return visitor.VisitListItem(MKListItemBlock(Self))
 		    
 		  Case MKBlockTypes.Paragraph
 		    Return visitor.VisitParagraph(MKParagraphBlock(Self))
@@ -203,42 +203,6 @@ Protected Class MKBlock
 		      End If
 		    Next child
 		    If removeAllChildren Then Self.Children.RemoveAll
-		    
-		  Case MKBlockTypes.List
-		    // ============
-		    // LISTS
-		    // ============
-		    // Determine tight/loose status of the list.
-		    Self.ListData.IsTight = True // Tight by default.
-		    
-		    Var item As MKBlock = Self.FirstChild
-		    Var subItem As MKBlock
-		    
-		    While item <> Nil
-		      // Check for a non-final non-empty ListItem ending with blank line.
-		      If item.IsLastLineBlank And item.NextSibling <> Nil Then
-		        Self.ListData.IsTight = False
-		        Exit
-		      End If
-		      
-		      // Recurse into the children of the ListItem, to see if there are spaces between them.
-		      subitem = item.FirstChild
-		      While subItem <> Nil
-		        If subItem.EndsWithBlankLine And (item.NextSibling <> Nil Or subitem.NextSibling <> Nil) Then
-		          Self.ListData.IsTight = False
-		          Exit
-		        End If
-		        subItem = subitem.NextSibling
-		      Wend
-		      
-		      If Not Self.ListData.IsTight Then Exit
-		      
-		      item = item.NextSibling
-		    Wend
-		    
-		    For i As Integer = 0 To Self.Children.LastIndex
-		      Self.Children(i).IsChildOfTightList = Self.ListData.IsTight
-		    Next i
 		    
 		  Case MKBlockTypes.ListItem
 		    // ============
@@ -580,10 +544,6 @@ Protected Class MKBlock
 
 	#tag Property, Flags = &h0, Description = 54686520312D6261736564206C696E65206E756D62657220696E20746865204D61726B646F776E20646F776E2074686174207468697320626C6F636B206F6363757273206F6E2E
 		LineNumber As Integer = 1
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 4966207468697320626C6F636B2069732061206C6973742C20746869732069732069747320646174612E
-		ListData As MKListData
 	#tag EndProperty
 
 	#tag Property, Flags = &h21, Description = 41207765616B207265666572656E636520746F2074686520646F63756D656E742074686174206F776E73207468697320626C6F636B2E

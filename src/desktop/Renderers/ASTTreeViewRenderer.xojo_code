@@ -301,7 +301,7 @@ Implements MarkdownKit.MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitList(list As MarkdownKit.MKBlock) As Variant
+		Function VisitList(list As MarkdownKit.MKListBlock) As Variant
 		  // Title.
 		  Var title As String
 		  Var tight As String = If(list.ListData.IsTight, "Tight", "Loose")
@@ -340,7 +340,7 @@ Implements MarkdownKit.MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitListItem(item As MarkdownKit.MKBlock) As Variant
+		Function VisitListItem(item As MarkdownKit.MKListItemBlock) As Variant
 		  Var node As New TreeViewNode("List Item")
 		  
 		  node.AppendNode(New TreeViewNode("Start: " + item.Start.ToString))

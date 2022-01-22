@@ -121,7 +121,7 @@ Protected Interface MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitThematicBreak(tb As MarkdownKit.MKBlock) As Variant
+		Function VisitThematicBreak(tb As MarkdownKit.MKThematicBreak) As Variant
 		  
 		End Function
 	#tag EndMethod

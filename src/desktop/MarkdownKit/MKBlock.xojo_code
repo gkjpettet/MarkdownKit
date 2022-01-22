@@ -66,7 +66,7 @@ Protected Class MKBlock
 		    Return visitor.VisitTextBlock(MKTextBlock(Self))
 		    
 		  Case MKBlockTypes.ThematicBreak
-		    Return visitor.VisitThematicBreak(Self)
+		    Return visitor.VisitThematicBreak(MKThematicBreak(Self))
 		    
 		  Else
 		    Raise New MKException("Unknown block type.")

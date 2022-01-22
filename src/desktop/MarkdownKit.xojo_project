@@ -67,6 +67,7 @@ Class=TestResult;Unit Testing/TestFramework/TestResult.xojo_code;&h000000001624A
 Class=XojoUnitTestFailedException;Unit Testing/TestFramework/XojoUnitTestFailedException.xojo_code;&h000000000AF4DFFF;&h000000003E1A9B41;false
 Class=BetterDictionary;Dependencies/Better Dictionary/BetterDictionary.xojo_code;&h0000000027F6E7FF;&h00000000694F37FF;false
 Class=BetterDictionaryIterator;Dependencies/Better Dictionary/BetterDictionaryIterator.xojo_code;&h000000007431D7FF;&h00000000694F37FF;false
+Class=MKThematicBreak;MarkdownKit/MKThematicBreak.xojo_code;&h000000002518BFFF;&h000000002F26BFFF;false
 DefaultWindow=WinUnitTests
 AppMenuBar=MainMenuBar
 MajorVersion=1

@@ -218,6 +218,9 @@ Protected Class MKParser
 		  Case MKBlockTypes.SetextHeading
 		    child = New MKSetextHeadingBlock(parent, blockStartOffset)
 		    
+		  Case MKBlockTypes.ThematicBreak
+		    child = New MKThematicBreak(parent, blockStartOffset)
+		    
 		  Else
 		    child = New MKBlock(type, parent, blockStartOffset)
 		  End Select
@@ -1297,9 +1300,11 @@ Protected Class MKParser
 		      // THEMATIC BREAK
 		      // ======================
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.ThematicBreak, 0)
+		      MKThematicBreak(mContainer).LocalStart = mNextNWS
 		      mContainer.Finalise(mCurrentLine)
-		      mContainer = mContainer.Parent
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
+		      MKThematicBreak(mContainer).Length = mCurrentOffset - MKThematicBreak(mContainer).LocalStart
+		      mContainer = mContainer.Parent
 		      
 		    ElseIf (Not indented Or mContainer.Type = MKBlockTypes.List) And _
 		      ParseListMarker(indented, mCurrentLine, mNextNWS, _

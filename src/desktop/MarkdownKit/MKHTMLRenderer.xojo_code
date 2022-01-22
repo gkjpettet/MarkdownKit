@@ -609,7 +609,7 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitThematicBreak(tb As MKBlock) As Variant
+		Function VisitThematicBreak(tb As MKThematicBreak) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  #Pragma Unused tb

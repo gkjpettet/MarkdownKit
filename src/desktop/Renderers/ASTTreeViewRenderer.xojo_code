@@ -420,10 +420,12 @@ Implements MarkdownKit.MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitThematicBreak(tb As MarkdownKit.MKBlock) As Variant
+		Function VisitThematicBreak(tb As MarkdownKit.MKThematicBreak) As Variant
 		  /// Part of the MKRenderer interface.
 		  
-		  Var node As New TreeViewNode("Thematic Break (start:" + tb.Start.ToString + ")")
+		  Var node As New TreeViewNode("Thematic Break (abs: " + tb.Start.ToString + ", " + _
+		  "local: " + tb.LocalStart.ToString + ", length: " + tb.Length.ToString + ")")
+		  
 		  Return node
 		  
 		End Function

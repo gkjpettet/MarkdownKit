@@ -296,11 +296,10 @@ Implements MarkdownKit.MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitThematicBreak(tb As MarkdownKit.MKBlock) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		Function VisitThematicBreak(tb As MarkdownKit.MKThematicBreak) As Variant
+		  /// Part of the MKRenderer interface.
 		  
-		  
+		  Tokens.Add(New LineToken(tb.Start, tb.LocalStart, tb.Length, tb.LineNumber))
 		End Function
 	#tag EndMethod
 

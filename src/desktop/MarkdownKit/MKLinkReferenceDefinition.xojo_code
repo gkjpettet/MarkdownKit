@@ -24,33 +24,6 @@ Protected Class MKLinkReferenceDefinition
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub ConstructorOLD(start As Integer, label As String, labelStart As Integer, labelLength As Integer, destination As String, destinationStart As Integer, destinationLength As Integer, title As String, titleStart As Integer, titleLength As Integer, endPos As Integer)
-		  #Pragma Warning "REMOVE"
-		  
-		  ' Self.Start = start
-		  ' Self.LinkLabel = label
-		  ' Self.LinkLabelStart = labelStart
-		  ' Self.LinkLabelLength = labelLength
-		  ' 
-		  ' 
-		  ' destination = MarkdownKit.ReplaceEntities(destination)
-		  ' MarkdownKit.Unescape(destination)
-		  ' Self.LinkDestination = destination
-		  ' Self.LinkDestinationStart = destinationStart
-		  ' Self.LinkDestinationLength = destinationLength
-		  ' 
-		  ' title = MarkdownKit.ReplaceEntities(title)
-		  ' MarkdownKit.Unescape(title)
-		  ' Self.LinkTitle = title
-		  ' Self.LinkTitleStart = titleStart
-		  ' Self.LinkTitleLength = titleLength
-		  ' 
-		  ' Self.EndPosition = endPos
-		  
-		End Sub
-	#tag EndMethod
-
 
 	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E2074686520736F7572636520746861742074686973206C696E6B207265666572656E636520646566696E6974696F6E20656E64732E
 		EndPosition As Integer = 0

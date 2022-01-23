@@ -20,14 +20,6 @@ Protected Class MKInlineLinkData
 		Destination As MarkdownKit.MKLinkDestination
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 54686520605D60206F722060296020636861726163746572207468617420656E6473207468652064657374696E6174696F6E2E204D6179206265204E696C20666F722073686F7274637574207265666572656E6365206C696E6B732E
-		DestinationCloserCharacter As MarkdownKit.MKCharacter
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 54686520605B60206F722060286020636861726163746572207468617420626567696E73207468652064657374696E6174696F6E2E204D6179206265204E696C20666F722073686F7274637574207265666572656E6365206C696E6B732E
-		DestinationOpenerCharacter As MarkdownKit.MKCharacter
-	#tag EndProperty
-
 	#tag Property, Flags = &h0, Description = 54686520706F736974696F6E20696E2074686520636F6E7461696E6572277320604368617261637465727360206172726179206F662074686520636C6F73696E6720225D222E
 		EndPosition As Integer = -1
 	#tag EndProperty
@@ -116,14 +108,6 @@ Protected Class MKInlineLinkData
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Label"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Destination"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""

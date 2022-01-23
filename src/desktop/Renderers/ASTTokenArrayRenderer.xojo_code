@@ -218,8 +218,6 @@ Implements MarkdownKit.MKRenderer
 		  /// Collapsed: [foo][]
 		  /// Full: [foo](foo.com)
 		  
-		  #Pragma Warning  "Needs implementing"
-		  
 		  // ===============
 		  // LINK LABEL
 		  // ===============
@@ -244,25 +242,30 @@ Implements MarkdownKit.MKRenderer
 		    
 		  ElseIf link.LinkType = MarkdownKit.MKLinkTypes.CollapsedReference Then
 		    // `[]`
-		    Var destOpener As MarkdownKit.MKCharacter = link.DestinationOpenerCharacter
+		    Var destOpener As MarkdownKit.MKCharacter = link.Destination.StartCharacter
 		    Tokens.Add(New LineToken(destOpener.AbsolutePosition, destOpener.LocalPosition, 1, _
 		    destOpener.Line.Number, "linkDestinationDelimiter"))
 		    
-		    Var destCloser As MarkdownKit.MKCharacter = link.DestinationCloserCharacter
+		    Var destCloser As MarkdownKit.MKCharacter = link.Destination.EndCharacter
 		    Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
 		    destCloser.Line.Number, "linkDestinationDelimiter"))
 		    
 		  ElseIf link.LinkType = MarkdownKit.MKLinkTypes.Standard Then
 		    // `(`
-		    Var destOpener As MarkdownKit.MKCharacter = link.DestinationOpenerCharacter
+		    Var destOpener As MarkdownKit.MKCharacter = link.Destination.StartCharacter
 		    Tokens.Add(New LineToken(destOpener.AbsolutePosition, destOpener.LocalPosition, 1, _
 		    destOpener.Line.Number, "linkDestinationDelimiter"))
 		    
 		    // Destination.
-		    #Pragma Warning "TODO"
+		    If link.HasDestination Then
+		      // +1 since `StartCharacter` is the destination opening delimiter `(`.
+		      Var destStart As MarkdownKit.MKCharacter = link.Destination.StartCharacter
+		      Tokens.Add(New LineToken(destStart.AbsolutePosition + 1, destStart.LocalPosition + 1, _
+		      link.Destination.Length, link.LineNumber))
+		    End If
 		    
 		    // `)`
-		    Var destCloser As MarkdownKit.MKCharacter = link.DestinationCloserCharacter
+		    Var destCloser As MarkdownKit.MKCharacter = link.Destination.EndCharacter
 		    Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
 		    destCloser.Line.Number, "linkDestinationDelimiter"))
 		    

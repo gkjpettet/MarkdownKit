@@ -320,12 +320,12 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineImage(image As MKInlineImage) As Variant
+		Function VisitInlineImage(image As MarkdownKit.MKInlineImage) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  mOutput.Add("<img src=")
 		  mOutput.Add("""")
-		  mOutput.Add(URLEncode(image.Destination))
+		  mOutput.Add(URLEncode(image.Destination.Value))
 		  mOutput.Add("""")
 		  
 		  // The `alt` attribute is constructed from `image.Children`.
@@ -376,12 +376,12 @@ Implements MKRenderer
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function VisitInlineLink(link As MKInlineLink) As Variant
+		Function VisitInlineLink(link As MarkdownKit.MKInlineLink) As Variant
 		  /// Part of the MKRenderer interface.
 		  
 		  mOutput.Add("<a href=")
 		  mOutput.Add("""")
-		  mOutput.Add(URLEncode(link.Destination))
+		  mOutput.Add(URLEncode(link.Destination.Value))
 		  mOutput.Add("""")
 		  
 		  If link.Title <> "" Then

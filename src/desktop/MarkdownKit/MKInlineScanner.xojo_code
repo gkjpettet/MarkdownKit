@@ -72,7 +72,7 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 4765747320746865206461746120666F7220612076616C696461746564207265666572656E6365206C696E6B206E616D6564205B6C696E6B4C6162656C5D2066726F6D2074686520646F63756D656E742773207265666572656E6365206D61702073746F72696E6720746865206C696E6B277320656E6420706F736974696F6E20616E642063686172616374657220646174612E
-		Private Shared Function CreateReferenceLinkData(ByRef container As MKBlock, linkLabel As String, chars() As MKCharacter, containerEndPos As Integer, isInlineImage As Boolean, openerChar As MKCharacter, closerChar As MKCharacter, linkType As MKLinkTypes, destinationOpenerChar As MKCharacter, destinationCloserChar As MKCharacter) As MKInlineLinkData
+		Private Shared Function CreateReferenceLinkData(ByRef container As MKBlock, linkLabel As String, chars() As MKCharacter, containerEndPos As Integer, isInlineImage As Boolean, openerChar As MKCharacter, closerChar As MKCharacter, linkType As MKLinkTypes) As MKInlineLinkData
 		  /// Gets the data for a validated reference link named [linkLabel] from the document's reference map
 		  /// storing the link's end position and character data.
 		  ///
@@ -83,8 +83,6 @@ Protected Class MKInlineScanner
 		  ///
 		  /// [openerChar] is the opening `[` character (for links) or `!` character (for images).
 		  /// [closerChar] is the closing `]` character.
-		  /// [destinationOpenerChar] is the `[` or `(` after the link label (if present).
-		  /// [destinationCloserChar] is the `]` or `)` after the end of the destination (if present).
 		  
 		  Var data As New MarkdownKit.MKInlineLinkData(isInlineImage, linkType)
 		  data.EndPosition = containerEndPos
@@ -100,8 +98,6 @@ Protected Class MKInlineScanner
 		  
 		  data.OpenerCharacter = openerChar
 		  data.CloserCharacter = closerChar
-		  data.DestinationOpenerCharacter = destinationOpenerChar
-		  data.DestinationCloserCharacter = destinationCloserChar
 		  
 		  Return data
 		  
@@ -187,7 +183,7 @@ Protected Class MKInlineScanner
 		  
 		  // Construct this reference link.
 		  Return CreateReferenceLinkData(container, linkLabel, linkTextChars, indexOfClosingBracket, isInlineImage, _
-		  openerChar, closerChar, MKLinkTypes.FullReference, Nil, Nil)
+		  openerChar, closerChar, MKLinkTypes.FullReference)
 		  
 		End Function
 	#tag EndMethod
@@ -353,13 +349,13 @@ Protected Class MKInlineScanner
 		  Wend
 		  
 		  // Optional link destination?
-		  Var destinationData As New MarkdownKit.MKLinkDestination(chars(pos), "", 0, Nil)
+		  Var destinationData As New MarkdownKit.MKLinkDestination(chars(parenthStartPos), "", 0, Nil)
 		  Var destination As String = ScanInlineLinkDestination(chars, pos)
 		  MarkdownKit.Unescape(destination)
 		  If destination.Length > 0 Then
 		    destinationData.Value = destination
 		    destinationData.Length = pos - destinationData.StartCharacter.AbsolutePosition - 1
-		    destinationData.EndCharacter = chars(pos - 1)
+		    destinationData.EndCharacter = chars(pos)
 		  Else
 		    destinationData.StartCharacter = Nil
 		  End If
@@ -395,16 +391,14 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 486176696E6720686974206120225D222C2072657475726E7320547275652069662061206C696E6B206F7220696D6167652070726563656465732069742E20496620547275652C20746865206C696E6B206F7220696D61676520697320616464656420746F205B636F6E7461696E65725D20616E64205B706F735D206973206D7574617465642E
-		Private Shared Function LookForLinkOrImage(ByRef container As MKBlock, ByRef delimiterStack() As MKDelimiterStackNode, ByRef pos As Integer) As Boolean
+		Private Shared Function LookForLinkOrImage(ByRef container As MarkdownKit.MKBlock, ByRef delimiterStack() As MKDelimiterStackNode, ByRef pos As Integer) As Boolean
 		  /// Having hit a "]", returns True if a link or image precedes it. If True, the link or image is added to
 		  /// [container] and [pos] is mutated.
-		  ///
-		  /// Assumes `container.Chars(pos) = `
 		  
 		  // Starting at the top of the delimiter stack, we look backwards through 
 		  // for an opening "[" or "![" delimiter.
 		  For i As Integer = delimiterStack.LastIndex DownTo 0
-		    Var dsn As MKDelimiterStackNode = delimiterStack(i)
+		    Var dsn As MarkdownKit.MKDelimiterStackNode = delimiterStack(i)
 		    
 		    // Can this delimiter open a link or image?
 		    If Not dsn.CanOpenLinkOrImage Then Continue
@@ -426,7 +420,8 @@ Protected Class MKInlineScanner
 		        Return False
 		      Else
 		        // Create a new inline link with `container` as its parent.
-		        Var link As New MKInlineLink(container, dsn.TextNode.Start, linkData)
+		        Var link As New MarkdownKit.MKInlineLink(container, dsn.TextNode.Start, linkData)
+		        link.LineNumber = container.Characters(pos).Line.Number
 		        
 		        // The children of this inline link are the child blocks of the container 
 		        // AFTER the text node pointed to by the opening delimiter.
@@ -477,7 +472,8 @@ Protected Class MKInlineScanner
 		        Return False
 		      Else
 		        // Create a new inline image with `container` as its parent.
-		        Var image As New MKInlineImage(container, dsn.TextNode.Start, imageData)
+		        Var image As New MarkdownKit.MKInlineImage(container, dsn.TextNode.Start, imageData)
+		        image.LineNumber = container.Characters(pos).Line.Number
 		        
 		        // The children of this inline image are the child blocks of the container 
 		        // AFTER the text node pointed to by the opening delimiter.
@@ -995,8 +991,6 @@ Protected Class MKInlineScanner
 		  /// Assumes `container.Characters(startPos) = "!"` and `container.Characters(startPos + 1) = "["`.
 		  /// Assumes `container.Characters(closerCharPos)` is the index of a "]" character.
 		  
-		  #Pragma Warning "TODO: Store the type of image link in MKInlineLinkData (e.g: IsCollapsed, etc)"
-		  
 		  Var chars() As MKCharacter = container.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  
@@ -1064,11 +1058,11 @@ Protected Class MKInlineScanner
 		    If pos >= charsLastIndex Or pos + 1 > charsLastIndex Then
 		      // Found a shortcut reference image.
 		      Return CreateReferenceLinkData(container, linkLabel, tmpCharacters, pos - 1, True, _
-		      openerChar, closerChar, MKLinkTypes.ShortcutReference, Nil, Nil)
+		      openerChar, closerChar, MKLinkTypes.ShortcutReference)
 		    ElseIf chars(pos).Value <> "[" And chars(pos + 1).Value <> "]" Then
 		      // Found a shortcut reference link.
 		      Return CreateReferenceLinkData(container, linkLabel, tmpCharacters, pos - 1, True, _
-		      openerChar, closerChar, MKLinkTypes.ShortcutReference, Nil, Nil)
+		      openerChar, closerChar, MKLinkTypes.ShortcutReference)
 		    End If
 		  End If
 		  
@@ -1077,7 +1071,7 @@ Protected Class MKInlineScanner
 		    If pos + 1 <= charsLastIndex And chars(pos).Value = "[" And chars(pos + 1).Value = "]" Then
 		      // Found a collapsed reference image.
 		      Return CreateReferenceLinkData(container, linkLabel, tmpCharacters, pos + 1, True, _
-		      openerChar, closerChar, MKLinkTypes.CollapsedReference, chars(pos), chars(pos + 1))
+		      openerChar, closerChar, MKLinkTypes.CollapsedReference)
 		    End If
 		  End If
 		  
@@ -1090,7 +1084,7 @@ Protected Class MKInlineScanner
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference image immediately followed by a "(".
 		      Return CreateReferenceLinkData(container, linkLabel, tmpCharacters, pos - 1, True, _
-		      openerChar, closerChar, MKLinkTypes.ShortcutReference, Nil, Nil)
+		      openerChar, closerChar, MKLinkTypes.ShortcutReference)
 		    Else
 		      Return result
 		    End If
@@ -1182,11 +1176,11 @@ Protected Class MKInlineScanner
 		    If pos >= charsLastIndex Or pos + 1 > charsLastIndex Then
 		      // Found a shortcut reference link.
 		      Return CreateReferenceLinkData(container, linkLabel, linkTextChars, pos - 1, False, _
-		      openerChar, closerChar, MKLinkTypes.ShortcutReference, Nil, Nil)
+		      openerChar, closerChar, MKLinkTypes.ShortcutReference)
 		    ElseIf chars(pos).Value <> "[" And chars(pos + 1).Value <> "]" Then
 		      // Found a shortcut reference link.
 		      Return CreateReferenceLinkData(container, linkLabel, linkTextChars, pos - 1, False, _
-		      openerChar, closerChar, MKLinkTypes.ShortcutReference, Nil, Nil)
+		      openerChar, closerChar, MKLinkTypes.ShortcutReference)
 		    End If
 		  End If
 		  
@@ -1195,7 +1189,7 @@ Protected Class MKInlineScanner
 		    If pos + 1 <= charsLastIndex And chars(pos).Value = "[" And chars(pos + 1).Value = "]" Then
 		      // Found a collapsed reference link.
 		      Return CreateReferenceLinkData(container, linkLabel, linkTextChars, pos + 1, False, _
-		      openerChar, closerChar, MKLinkTypes.CollapsedReference, chars(pos), chars(pos + 1))
+		      openerChar, closerChar, MKLinkTypes.CollapsedReference)
 		    End If
 		  End If
 		  
@@ -1208,7 +1202,7 @@ Protected Class MKInlineScanner
 		    If result = Nil And validLinkLabel Then
 		      // Edge case: Could still be a shortcut reference link immediately followed by a "(".
 		      Return CreateReferenceLinkData(container, linkLabel, linkTextChars, pos - 1, False, _
-		      openerChar, closerChar, MKLinkTypes.ShortcutReference, Nil, Nil)
+		      openerChar, closerChar, MKLinkTypes.ShortcutReference)
 		    Else
 		      Return result
 		    End If
@@ -1241,8 +1235,6 @@ Protected Class MKInlineScanner
 		  // Since we are looking for an inline link destination, we may encounter either a 
 		  // closing ")" (representing the end of the inline link definition without providing 
 		  // a title) or whitespace followed by the " character (indicating a trailing title).
-		  
-		  #Pragma Warning "TODO: Track positions of the start and end of the destination if present"
 		  
 		  Var i As Integer
 		  Var c As MKCharacter

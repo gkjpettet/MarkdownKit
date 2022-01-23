@@ -12,7 +12,6 @@ Protected Class MKLinkScanner
 		  /// updates [pos] to the character immediately after the destination and populates [data].
 		  ///
 		  /// Sets [data.Value("linkDestination")] to the link destination (if found).
-		  /// Sets [data.Value("linkDestinationStart")] to the original value of [pos].
 		  /// Sets [data.Value("linkDestinationLength")] to the length of the destination.
 		  /// Note that [pos] is passed ByRef.
 		  ///
@@ -30,7 +29,6 @@ Protected Class MKLinkScanner
 		  data = New Dictionary
 		  Var i As Integer
 		  Var c As String
-		  Var startPos As Integer = pos
 		  Var linkDestination As String
 		  
 		  // Scenario 1:
@@ -48,7 +46,6 @@ Protected Class MKLinkScanner
 		          data.Value("linkDestinationLength") = linkDestination.Length
 		          data.Value("linkDestination") = linkDestination
 		        End If
-		        data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		        data.Value("linkDestinationLength") = linkDestination.Length
 		        pos = i + 1
 		        Return True
@@ -74,7 +71,6 @@ Protected Class MKLinkScanner
 		      
 		      linkDestination = chars.ToString(pos, i - pos)
 		      data.Value("linkDestination") = linkDestination
-		      data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		      data.Value("linkDestinationLength") = linkDestination.Length
 		      pos = i
 		      Return True
@@ -93,7 +89,6 @@ Protected Class MKLinkScanner
 		      Else
 		        linkDestination = chars.ToString(pos, i - pos)
 		        data.Value("linkDestination") = linkDestination
-		        data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		        data.Value("linkDestinationLength") = linkDestination.Length
 		        pos = i
 		        Return True
@@ -106,7 +101,6 @@ Protected Class MKLinkScanner
 		  Else
 		    linkDestination = chars.ToString(pos, -1)
 		    data.Value("linkDestination") = linkDestination
-		    data.Value("linkDestinationStart") = chars(startPos).AbsolutePosition
 		    data.Value("linkDestinationLength") = linkDestination.Length
 		    pos = i
 		    Return True

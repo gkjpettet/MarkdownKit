@@ -6,14 +6,12 @@ Inherits MKBlock
 		  Super.Constructor(MKBlockTypes.InlineLink, parent, absoluteStart)
 		  
 		  Self.Title = data.Title
-		  Self.Destination = data.Destination.Value
+		  Self.Destination = data.Destination
 		  Self.Characters = data.Characters
 		  
 		  Self.OpenerCharacter = data.OpenerCharacter
 		  Self.CloserCharacter = data.CloserCharacter
 		  Self.LinkType = data.LinkType
-		  Self.DestinationOpenerCharacter = data.DestinationOpenerCharacter
-		  Self.DestinationCloserCharacter = data.DestinationCloserCharacter
 		End Sub
 	#tag EndMethod
 
@@ -23,16 +21,17 @@ Inherits MKBlock
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468697320696E6C696E65206C696E6B27732064657374696E6174696F6E2E
-		Destination As String
+		Destination As MarkdownKit.MKLinkDestination
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 54686520605D60206F722060296020636861726163746572207468617420656E6473207468652064657374696E6174696F6E2E204D6179206265204E696C20666F722073686F7274637574207265666572656E6365206C696E6B732E
-		DestinationCloserCharacter As MarkdownKit.MKCharacter
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 54686520605B60206F722060286020636861726163746572207468617420626567696E73207468652064657374696E6174696F6E2E204D6179206265204E696C20666F722073686F7274637574207265666572656E6365206C696E6B732E
-		DestinationOpenerCharacter As MarkdownKit.MKCharacter
-	#tag EndProperty
+	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686973206C696E6B2068617320612064657374696E6174696F6E2E
+		#tag Getter
+			Get
+			  Return Destination <> Nil And Destination.Length > 0
+			End Get
+		#tag EndGetter
+		HasDestination As Boolean
+	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0, Description = 5468652074797065206F66206C696E6B20746869732069732E
 		LinkType As MarkdownKit.MKLinkTypes
@@ -102,14 +101,6 @@ Inherits MKBlock
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Title"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Destination"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""

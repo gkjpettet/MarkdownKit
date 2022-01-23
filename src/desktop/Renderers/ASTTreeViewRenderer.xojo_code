@@ -255,7 +255,7 @@ Implements MarkdownKit.MKRenderer
 		Function VisitInlineImage(image As MarkdownKit.MKInlineImage) As Variant
 		  Var node As New TreeViewNode("Inline Image")
 		  node.AppendNode(New TreeViewNode("Start: " + image.Start.ToString))
-		  node.AppendNode(New TreeViewNode("Destination: " + image.Destination))
+		  node.AppendNode(New TreeViewNode("Destination: " + image.Destination.Value))
 		  If image.Title <> "" Then
 		    node.AppendNode(New TreeViewNode("Title: " + image.Title))
 		  End If
@@ -274,7 +274,7 @@ Implements MarkdownKit.MKRenderer
 		Function VisitInlineLink(link As MarkdownKit.MKInlineLink) As Variant
 		  Var node As New TreeViewNode("Inline Link")
 		  node.AppendNode(New TreeViewNode("Start: " + link.Start.ToString))
-		  node.AppendNode(New TreeViewNode("Destination: " + link.Destination))
+		  node.AppendNode(New TreeViewNode("Destination: " + link.Destination.Value))
 		  If link.Title <> "" Then
 		    node.AppendNode(New TreeViewNode("Title: " + link.Title))
 		  End If

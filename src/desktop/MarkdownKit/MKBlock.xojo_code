@@ -294,12 +294,9 @@ Protected Class MKBlock
 		  /// 2. >= 0 characters between `'` characters, including a `'` character only if it is backslash-escaped
 		  /// 3. >= 0 characters between matching parentheses, including a `(` or `)` only if it's backslash-escaped.
 		  
-		  #Pragma Warning "TODO: Track positions of the start and end of the destination if present"
-		  
 		  Var data As Dictionary
-		  Var linkLabel, linkDestination, linkTitle As String
-		  Var labelStart, destinationStart, titleStart As Integer
-		  Var labelLength, destinationLength, titleLength, linkLocalStart As Integer
+		  Var linkLabel, linkTitle As String
+		  Var labelStart, titleStart, labelLength, titleLength, linkLocalStart As Integer
 		  Var destinationData As MarkdownKit.MKLinkDestination
 		  Var destinationCharactersStart As Integer
 		  
@@ -311,9 +308,6 @@ Protected Class MKBlock
 		    linkLabel = ""
 		    labelStart = linkLocalStart
 		    labelLength = 0
-		    ' linkDestination = ""
-		    ' destinationStart = 0
-		    ' destinationLength = 0
 		    destinationData = New MKLinkDestination
 		    destinationCharactersStart = 0
 		    linkTitle = ""
@@ -331,7 +325,6 @@ Protected Class MKBlock
 		    Else
 		      linkLabel = data.Value("linkLabel")
 		      labelStart = data.Value("linkLabelStart") + linkLocalStart
-		      ' labelLength = i - labelStart + linkLocalStart + 1 // Account for the flanking `[]`.
 		      labelLength = data.Value("linkLabelLength")
 		    End If
 		    
@@ -359,9 +352,6 @@ Protected Class MKBlock
 		      destinationData.StartCharacter = Characters(destinationCharactersStart)
 		      destinationData.Value = data.Value("linkDestination")
 		      destinationData.Length = data.Value("linkDestinationLength")
-		      ' linkDestination = data.Value("linkDestination")
-		      'destinationStart = data.Value("linkDestinationStart")
-		      'destinationLength = data.Value("linkDestinationLength")
 		    End If
 		    
 		    // Consume tabs and spaces.
@@ -403,9 +393,6 @@ Protected Class MKBlock
 		      Self.Document.References.Value(linkLabel.Lowercase) = _
 		      New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
 		      destinationData, linkTitle, titleStart, titleLength, i)
-		      ' New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
-		      ' linkDestination, destinationStart, destinationLength, _
-		      ' linkTitle, titleStart, titleLength, i)
 		    End If
 		    
 		    If titleLength > 0 Then

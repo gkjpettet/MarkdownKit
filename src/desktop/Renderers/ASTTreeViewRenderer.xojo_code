@@ -121,8 +121,9 @@ Implements MarkdownKit.MKRenderer
 		      
 		      // Optional link title.
 		      If lrd.HasTitle Then
-		        lrdNode.AppendNode(New TreeViewNode("Title (" + lrd.LinkTitleStart.ToString + ", " + _
-		        lrd.LinkTitleLength.ToString + "): " + lrd.LinkTitle))
+		        lrdNode.AppendNode(New TreeViewNode("Title (" + _
+		        lrd.LinkTitle.OpeningDelimiter.AbsolutePosition.ToString + ", " + _
+		        lrd.LinkTitle.Length.ToString + "): " + lrd.LinkTitle.Value))
 		      End If
 		      
 		      defsNode.AppendNode(lrdNode)
@@ -256,8 +257,9 @@ Implements MarkdownKit.MKRenderer
 		  Var node As New TreeViewNode("Inline Image")
 		  node.AppendNode(New TreeViewNode("Start: " + image.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Destination: " + image.Destination.Value))
-		  If image.Title <> "" Then
-		    node.AppendNode(New TreeViewNode("Title: " + image.Title))
+		  
+		  If image.HasTitle Then
+		    node.AppendNode(New TreeViewNode("Title: " + image.Title.Value))
 		  End If
 		  node.AppendNode(CreateNodeFromCharacters("Characters", image.Characters))
 		  
@@ -275,8 +277,9 @@ Implements MarkdownKit.MKRenderer
 		  Var node As New TreeViewNode("Inline Link")
 		  node.AppendNode(New TreeViewNode("Start: " + link.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Destination: " + link.Destination.Value))
-		  If link.Title <> "" Then
-		    node.AppendNode(New TreeViewNode("Title: " + link.Title))
+		  
+		  If link.HasTitle Then
+		    node.AppendNode(New TreeViewNode("Title: " + link.Title.Value))
 		  End If
 		  node.AppendNode(CreateNodeFromCharacters("Characters", link.Characters))
 		  

@@ -47,7 +47,7 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 436F6E76656E69656E6365206D6574686F6420666F72206372656174696E672061206E6577204D4B496E6C696E654C696E6B44617461206F626A6563742E
-		Private Shared Function CreateInlineLinkData(linkTextChars() As MKCharacter, destinationData As MarkdownKit.MKLinkDestination, title As String, containerEndPos As Integer, isInlineImage As Boolean, openerChar As MKCharacter, closerChar As MKCharacter) As MKInlineLinkData
+		Private Shared Function CreateInlineLinkData(linkTextChars() As MKCharacter, destinationData As MarkdownKit.MKLinkDestination, titleData As MarkdownKit.MKLinkTitle, containerEndPos As Integer, isInlineImage As Boolean, openerChar As MKCharacter, closerChar As MKCharacter) As MKInlineLinkData
 		  /// Convenience method for creating a new MKInlineLinkData object.
 		  ///
 		  /// [containerEndPos] is the position in the inline link's container's `Characters` array of the closing ")".
@@ -60,7 +60,7 @@ Protected Class MKInlineScanner
 		  
 		  data.EndPosition = containerEndPos
 		  data.Destination = destinationData
-		  data.Title = title
+		  data.Title = titleData
 		  data.Characters = linkTextChars
 		  
 		  data.OpenerCharacter = openerChar
@@ -360,8 +360,10 @@ Protected Class MKInlineScanner
 		    destinationData.StartCharacter = Nil
 		  End If
 		  
+		  Var titleData As MarkdownKit.MKLinkTitle
+		  
 		  If pos >= charsLastIndex Then
-		    Return CreateInlineLinkData(linkTextChars, destinationData, "", pos, isInlineImage, openerChar, closingBracketChar)
+		    Return CreateInlineLinkData(linkTextChars, destinationData, titleData, pos, isInlineImage, openerChar, closingBracketChar)
 		  End If
 		  
 		  Var seenWhiteSpace As Boolean = False
@@ -372,8 +374,19 @@ Protected Class MKInlineScanner
 		  Wend
 		  
 		  // Optional link title?
+		  titleData = New MKLinkTitle(chars(pos))
 		  Var title As String = ScanInlineLinkTitle(chars, pos)
 		  MarkdownKit.Unescape(title)
+		  If title.Length > 0 Then
+		    titleData.Value = title
+		    For i As Integer = pos + 1 To pos - 1
+		      titleData.Characters.Add(chars(i))
+		    Next i
+		    titleData.Length = pos - titleData.OpeningDelimiter.AbsolutePosition - 1
+		    titleData.ClosingDelimiter = chars(pos)
+		  Else
+		    titleData.OpeningDelimiter = Nil
+		  End If
 		  
 		  // Advance past any optional whitespace.
 		  While pos <= charsLastIndex And chars(pos).IsMarkdownWhitespace(True)
@@ -385,7 +398,7 @@ Protected Class MKInlineScanner
 		  If chars(pos).Value <> ")" Then Return Nil
 		  
 		  // We've found a valid inline link.
-		  Return CreateInlineLinkData(linkTextChars, destinationData, title, pos, isInlineImage, openerChar, closingBracketChar)
+		  Return CreateInlineLinkData(linkTextChars, destinationData, titleData, pos, isInlineImage, openerChar, closingBracketChar)
 		  
 		End Function
 	#tag EndMethod

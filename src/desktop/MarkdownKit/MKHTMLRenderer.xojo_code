@@ -363,10 +363,10 @@ Implements MKRenderer
 		  
 		  
 		  // Image title.
-		  If image.Title <> "" Then
+		  If image.HasTitle Then
 		    mOutput.Add(" title=")
 		    mOutput.Add("""")
-		    mOutput.Add(EncodePredefinedEntities(image.Title))
+		    mOutput.Add(EncodePredefinedEntities(image.Title.Value))
 		    mOutput.Add("""")
 		  End If
 		  
@@ -384,10 +384,10 @@ Implements MKRenderer
 		  mOutput.Add(URLEncode(link.Destination.Value))
 		  mOutput.Add("""")
 		  
-		  If link.Title <> "" Then
+		  If link.HasTitle Then
 		    mOutput.Add(" title=")
 		    mOutput.Add("""")
-		    mOutput.Add(EncodePredefinedEntities(link.Title))
+		    mOutput.Add(EncodePredefinedEntities(link.Title.Value))
 		    mOutput.Add("""")
 		    mOutput.Add(">")
 		  Else

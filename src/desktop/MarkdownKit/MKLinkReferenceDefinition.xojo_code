@@ -1,7 +1,7 @@
 #tag Class
 Protected Class MKLinkReferenceDefinition
 	#tag Method, Flags = &h0
-		Sub Constructor(start As Integer, label As String, labelStart As Integer, labelLength As Integer, destination As MarkdownKit.MKLinkDestination, title As String, titleStart As Integer, titleLength As Integer, endPos As Integer)
+		Sub Constructor(start As Integer, label As String, labelStart As Integer, labelLength As Integer, destination As MarkdownKit.MKLinkDestination, title As MarkdownKit.MKLinkTitle, endPos As Integer)
 		  Self.Start = start
 		  Self.LinkLabel = label
 		  Self.LinkLabelStart = labelStart
@@ -13,11 +13,11 @@ Protected Class MKLinkReferenceDefinition
 		  destination.Value = tmpDestination
 		  Self.LinkDestination = destination
 		  
-		  title = MarkdownKit.ReplaceEntities(title)
-		  MarkdownKit.Unescape(title)
+		  title.Value = MarkdownKit.ReplaceEntities(title.Value)
+		  Var tmpTitle As String = title.Value
+		  MarkdownKit.Unescape(tmpTitle)
+		  title.Value = tmpTitle
 		  Self.LinkTitle = title
-		  Self.LinkTitleStart = titleStart
-		  Self.LinkTitleLength = titleLength
 		  
 		  Self.EndPosition = endPos
 		  
@@ -32,7 +32,7 @@ Protected Class MKLinkReferenceDefinition
 	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686572652069732061206C696E6B207265666572656E636520646566696E6974696F6E207469746C652E2049662046616C7365207468656E20604C696E6B5469746C6553746172746020616E6420604C696E6B5469746C654C656E677468602061726520696E76616C69642E
 		#tag Getter
 			Get
-			  Return LinkTitle <> ""
+			  Return LinkTitle.Value <> ""
 			End Get
 		#tag EndGetter
 		HasTitle As Boolean
@@ -54,16 +54,8 @@ Protected Class MKLinkReferenceDefinition
 		LinkLabelStart As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 54686520286F7074696F6E616C29206C696E6B207469746C652E
-		LinkTitle As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 546865206C656E677468206F6620746865206C696E6B207469746C652E
-		LinkTitleLength As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E2074686520736F75726365206F6620746865207374617274206F6620746865206C696E6B207469746C652E
-		LinkTitleStart As Integer = 0
+	#tag Property, Flags = &h0, Description = 546865206C696E6B207469746C652E204D617920626520656D7074792E
+		LinkTitle As MarkdownKit.MKLinkTitle
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 302D6261736520696E64657820696E2074686520736F7572636520746861742074686973206C696E6B207265666572656E636520646566696E6974696F6E207374617274732E
@@ -129,14 +121,6 @@ Protected Class MKLinkReferenceDefinition
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="LinkDestination"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="LinkLabel"
 			Visible=false
 			Group="Behavior"
@@ -167,22 +151,6 @@ Protected Class MKLinkReferenceDefinition
 			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LinkTitleLength"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LinkTitleStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Start"

@@ -44,8 +44,8 @@ Protected Class MKInlineLinkData
 		Start As Integer = -1
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		Title As String
+	#tag Property, Flags = &h0, Description = 4F7074696F6E616C207469746C6520646174612E204D6179206265204E696C2E
+		Title As MarkdownKit.MKLinkTitle
 	#tag EndProperty
 
 

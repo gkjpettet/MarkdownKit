@@ -296,9 +296,10 @@ Protected Class MKBlock
 		  
 		  Var data As Dictionary
 		  Var linkLabel, linkTitle As String
-		  Var labelStart, titleStart, labelLength, titleLength, linkLocalStart As Integer
+		  Var labelStart, labelLength, linkLocalStart As Integer
 		  Var destinationData As MarkdownKit.MKLinkDestination
-		  Var destinationCharactersStart As Integer
+		  Var titleData As MarkdownKit.MKLinkTitle
+		  Var destinationCharactersStart, titleOpeningDelimiterStart As Integer
 		  
 		  If Characters.Count = 0 Then Return
 		  
@@ -309,10 +310,10 @@ Protected Class MKBlock
 		    labelStart = linkLocalStart
 		    labelLength = 0
 		    destinationData = New MKLinkDestination
+		    titleData = New MKLinkTitle
 		    destinationCharactersStart = 0
+		    titleOpeningDelimiterStart = 0
 		    linkTitle = ""
-		    titleStart = 0
-		    titleLength = 0
 		    data = Nil
 		    
 		    // Up to 3 spaces of indentation are permitted.
@@ -370,6 +371,7 @@ Protected Class MKBlock
 		    
 		    // Can we match a link title?
 		    If whitespaceAfterDestination Then
+		      titleOpeningDelimiterStart = i
 		      If MKLinkScanner.ParseLinkTitle(Characters, i, data) Then
 		        If Not data.Value("linkTitleValid") And Not destinationEndsLine Then
 		          // The title is invalid but the reference is OK up until this point. We therefore have a 
@@ -377,32 +379,33 @@ Protected Class MKBlock
 		          Return
 		          
 		        ElseIf data.Value("linkTitleValid") Then
-		          linkTitle = data.Value("linkTitle")
-		          titleStart = data.Value("linkTitleStart") + linkLocalStart
-		          titleLength = data.Value("linkTitleLength")
+		          titleData.OpeningDelimiter = Characters(titleOpeningDelimiterStart)
+		          titleData.Value = data.Value("linkTitle")
+		          'linkTitle = data.Value("linkTitle")
+		          'titleStart = data.Value("linkTitleStart") + linkLocalStart
+		          titleData.Length = data.Value("linkTitleLength")
 		        End If
 		      End If
 		      
 		    Else
 		      If Not destinationEndsLine Then Return
 		    End If
-		    Var hasTitle As Boolean = titleLength > 0
+		    Var hasTitle As Boolean = titleData.Length > 0
 		    
 		    // We've found a definition. Add it to the document only if it's unique.
 		    If Not Self.Document.References.HasKey(linkLabel.Lowercase) Then
 		      Self.Document.References.Value(linkLabel.Lowercase) = _
 		      New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
-		      destinationData, linkTitle, titleStart, titleLength, i)
+		      destinationData, titleData, i)
 		    End If
 		    
-		    If titleLength > 0 Then
+		    If titleData.Length > 0 Then
 		      // Skip past any whitespace to the end of the line.
 		      i = i + MatchWhitespaceCharactersInArray(Characters, i)
 		    End If
 		    
 		    // Remove these characters from the paragraph.
 		    For x As Integer = If(hasTitle, i, i - 1) DownTo linkLocalStart
-		      ' For x As Integer = i DownTo linkLocalStart
 		      Characters.RemoveAt(x)
 		    Next x
 		    

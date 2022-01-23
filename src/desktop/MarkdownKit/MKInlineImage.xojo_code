@@ -33,6 +33,15 @@ Inherits MKBlock
 		HasDestination As Boolean
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0, Description = 54727565206966207468697320696D616765206861732061207469746C6520646566696E656420286D617920626520656D707479206275742064656C696D69746564292E
+		#tag Getter
+			Get
+			  Return Title <> Nil And Title.Length > 0
+			End Get
+		#tag EndGetter
+		HasTitle As Boolean
+	#tag EndComputedProperty
+
 	#tag Property, Flags = &h0, Description = 5468652074797065206F66206C696E6B20746869732069732E
 		LinkType As MarkdownKit.MKLinkTypes
 	#tag EndProperty
@@ -45,8 +54,8 @@ Inherits MKBlock
 		OpenerCharacter As MarkdownKit.MKCharacter
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 5468697320696E6C696E6520696D616765277320286F7074696F6E616C29207469746C652E
-		Title As String
+	#tag Property, Flags = &h0, Description = 5468697320696E6C696E6520696D6167652773206F7074696F6E616C207469746C652E204D6179206265204E696C2E
+		Title As MarkdownKit.MKLinkTitle
 	#tag EndProperty
 
 

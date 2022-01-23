@@ -39,6 +39,10 @@ Protected Class MKLinkTitle
 		Value As String
 	#tag EndProperty
 
+	#tag Property, Flags = &h0
+		ValueBlocks() As MarkdownKit.MKLinkTitleBlock
+	#tag EndProperty
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

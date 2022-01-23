@@ -261,14 +261,34 @@ Implements MarkdownKit.MKRenderer
 		      // +1 since `StartCharacter` is the destination opening delimiter `(`.
 		      Var destStart As MarkdownKit.MKCharacter = link.Destination.StartCharacter
 		      Tokens.Add(New LineToken(destStart.AbsolutePosition + 1, destStart.LocalPosition + 1, _
-		      link.Destination.Length, link.LineNumber))
+		      link.Destination.Length, link.LineNumber, "linkDestination"))
 		    End If
 		    
 		    // `)`
 		    Var destCloser As MarkdownKit.MKCharacter = link.Destination.EndCharacter
 		    Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
 		    destCloser.Line.Number, "linkDestinationDelimiter"))
+		  End If
+		  
+		  // ===============
+		  // TITLE
+		  // ===============
+		  If link.LinkType = MarkdownKit.MKLinkTypes.Standard And link.Title <> Nil Then
+		    // Opening delimiter.
+		    Var titleOpener As MarkdownKit.MKCharacter = link.Title.OpeningDelimiter
+		    Tokens.Add(New LineToken(titleOpener.AbsolutePosition, titleOpener.LocalPosition, 1, _
+		    titleOpener.Line.Number, "linkTitleDelimiter"))
 		    
+		    // Title.
+		    For Each vb As MarkdownKit.MKLinkTitleBlock In link.Title.ValueBlocks
+		      Tokens.Add(New LineToken(vb.AbsoluteStart, vb.LocalStart, vb.Length, _
+		      vb.LineNumber, "linkTitle"))
+		    Next vb
+		    
+		    // Closing delimiter.
+		    Var titleCloser As MarkdownKit.MKCharacter = link.Title.ClosingDelimiter
+		    Tokens.Add(New LineToken(titleCloser.AbsolutePosition, titleCloser.LocalPosition, 1, _
+		    titleCloser.Line.Number, "linkTitleDelimiter"))
 		  End If
 		End Function
 	#tag EndMethod

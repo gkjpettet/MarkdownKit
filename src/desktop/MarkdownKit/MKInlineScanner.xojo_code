@@ -323,7 +323,7 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function InlineLinkData(openerChar As MKCharacter, closingBracketChar As MKCharacter, chars() As MKCharacter, linkTextChars() As MKCharacter, parenthStartPos As Integer, isInlineImage As Boolean) As MKInlineLinkData
+		Private Shared Function InlineLinkData(openerChar As MKCharacter, closingBracketChar As MKCharacter, chars() As MarkdownKit.MKCharacter, linkTextChars() As MKCharacter, parenthStartPos As Integer, isInlineImage As Boolean) As MKInlineLinkData
 		  /// Returns either an inline link or Nil if a valid inline link cannot be constructed.
 		  ///
 		  /// [linkTextChars] are the raw characters representing this link's text. They are to be parsed as inlines.
@@ -375,15 +375,38 @@ Protected Class MKInlineScanner
 		  
 		  // Optional link title?
 		  titleData = New MKLinkTitle(chars(pos))
+		  Var titleValueStartPos As Integer = pos + 1
 		  Var title As String = ScanInlineLinkTitle(chars, pos)
 		  MarkdownKit.Unescape(title)
 		  If title.Length > 0 Then
 		    titleData.Value = title
-		    For i As Integer = pos + 1 To pos - 1
-		      titleData.Characters.Add(chars(i))
+		    Var vb As MarkdownKit.MKLinkTitleBlock
+		    Var createNewBlock As Boolean = True
+		    Var isOpenValueBlock As Boolean = False
+		    
+		    #Pragma Warning "OPTIMISE: This horrible code. Surely I can tidy this up??"
+		    For i As Integer = titleValueStartPos To pos - 2 // -2 as `pos` points to the closing `)`
+		      If chars(i).IsLineEnding Then
+		        If vb <> Nil Then titleData.ValueBlocks.Add(vb)
+		        createNewBlock = True
+		        isOpenValueBlock = False
+		        Continue
+		      End If
+		      If createNewBlock Then
+		        createNewBlock = False
+		        vb = New MKLinkTitleBlock(chars(i).AbsolutePosition, chars(i).LocalPosition, 1, chars(i).Line.Number)
+		        isOpenValueBlock = True
+		      Else
+		        vb.Length = vb.Length + 1
+		      End If
 		    Next i
+		    
+		    If isOpenValueBlock Then
+		      titleData.ValueBlocks.Add(vb)
+		    End If
+		    
 		    titleData.Length = pos - titleData.OpeningDelimiter.AbsolutePosition - 1
-		    titleData.ClosingDelimiter = chars(pos)
+		    titleData.ClosingDelimiter = chars(pos - 1)
 		  Else
 		    titleData.OpeningDelimiter = Nil
 		  End If

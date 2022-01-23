@@ -1,6 +1,72 @@
 #tag Class
 Protected Class ASTTokenArrayRenderer
 Implements MarkdownKit.MKRenderer
+	#tag Method, Flags = &h21, Description = 4164647320746F6B656E7320666F7220616E79207265666572656E6365206C696E6B20646566696E6974696F6E7320696E2074686520646F63756D656E742E
+		Private Sub HandleReferenceLinkDefinitions(doc As MarkdownKit.MKDocument)
+		  /// Adds tokens for any reference link definitions in the document.
+		  
+		  #Pragma Warning "TODO: reference links"
+		  
+		  // ==========================
+		  // LINK REFERENCE DEFINITIONS
+		  // ==========================
+		  If doc.References.KeyCount > 0 Then
+		    For Each entry As DictionaryEntry In doc.References
+		      Var lrd As MarkdownKit.MKLinkReferenceDefinition = MarkdownKit.MKLinkReferenceDefinition(entry.Value)
+		      // ----------
+		      // LINK LABEL
+		      // ----------
+		      // `[`
+		      Tokens.Add(New LineToken(lrd.LinkLabelOpener.AbsolutePosition, lrd.LinkLabelOpener.LocalPosition, _
+		      1, lrd.LinkLabelOpener.Line.Number, "linkLabelDelimiter"))
+		      
+		      // Link label text.
+		      Tokens.Add(New LineToken(lrd.LinkLabelStartChar.AbsolutePosition, lrd.LinkLabelStartChar.LocalPosition, _
+		      lrd.LinkLabelLength - 2, lrd.LinkLabelStartChar.Line.Number, "referenceLinkLabel"))
+		      
+		      // `]`
+		      Tokens.Add(New LineToken(lrd.LinkLabelCloser.AbsolutePosition, lrd.LinkLabelCloser.LocalPosition, _
+		      1, lrd.LinkLabelCloser.Line.Number, "linkLabelDelimiter"))
+		      
+		      // Link label colon.
+		      Tokens.Add(New LineToken(lrd.Colon.AbsolutePosition, lrd.Colon.LocalPosition, 1, _
+		      lrd.Colon.Line.Number, "referenceLinkColon"))
+		      
+		      // ----------------
+		      // LINK DESTINATION
+		      // ----------------
+		      // Destination.
+		      If lrd.HasDestination Then
+		        Var destStart As MarkdownKit.MKCharacter = lrd.LinkDestination.StartCharacter
+		        Tokens.Add(New LineToken(destStart.AbsolutePosition, destStart.LocalPosition, _
+		        lrd.LinkDestination.Length, destStart.Line.Number, "linkDestination"))
+		      End If
+		      
+		      // ----------
+		      // LINK TITLE
+		      // ----------
+		      If lrd.HasTitle Then
+		        // Opening delimiter.
+		        Var titleOpener As MarkdownKit.MKCharacter = lrd.LinkTitle.OpeningDelimiter
+		        Tokens.Add(New LineToken(titleOpener.AbsolutePosition, titleOpener.LocalPosition, 1, _
+		        titleOpener.Line.Number, "referenceLinkTitleDelimiter"))
+		        
+		        // Title.
+		        For Each vb As MarkdownKit.MKLinkTitleBlock In lrd.LinkTitle.ValueBlocks
+		          Tokens.Add(New LineToken(vb.AbsoluteStart, vb.LocalStart, vb.Length, _
+		          vb.LineNumber, "referenceLinkTitle"))
+		        Next vb
+		        
+		        // Closing delimiter.
+		        Var titleCloser As MarkdownKit.MKCharacter = lrd.LinkTitle.ClosingDelimiter
+		        Tokens.Add(New LineToken(titleCloser.AbsolutePosition, titleCloser.LocalPosition, 1, _
+		        titleCloser.Line.Number, "referenceLinkTitleDelimiter"))
+		      End If
+		    Next entry
+		  End If
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 536F72747320616E206172726179206F66204C696E65546F6B656E73206279207468656972206162736F6C75746520706F736974696F6E2E
 		Private Function SortTokensByAbsolutePosition(tok1 As LineToken, tok2 As LineToken) As Integer
 		  /// Sorts an array of LineTokens by their absolute position.
@@ -103,6 +169,8 @@ Implements MarkdownKit.MKRenderer
 		  For Each child As MarkdownKit.MKBlock In doc.Children
 		    Call child.Accept(Self)
 		  Next child
+		  
+		  HandleReferenceLinkDefinitions(doc)
 		  
 		  Tokens.Sort(AddressOf SortTokensByAbsolutePosition)
 		  
@@ -255,7 +323,7 @@ Implements MarkdownKit.MKRenderer
 		      image.Destination.Length, image.LineNumber, "linkDestination"))
 		    End If
 		    
-		    If image.Title = Nil Then
+		    If Not image.HasTitle Then
 		      // `)`
 		      Var destCloser As MarkdownKit.MKCharacter = image.Destination.EndCharacter
 		      Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
@@ -266,7 +334,7 @@ Implements MarkdownKit.MKRenderer
 		  // ===============
 		  // TITLE
 		  // ===============
-		  If image.LinkType = MarkdownKit.MKLinkTypes.Standard And image.Title <> Nil Then
+		  If image.LinkType = MarkdownKit.MKLinkTypes.Standard And image.HasTitle Then
 		    // Opening title delimiter.
 		    Var titleOpener As MarkdownKit.MKCharacter = image.Title.OpeningDelimiter
 		    Tokens.Add(New LineToken(titleOpener.AbsolutePosition, titleOpener.LocalPosition, 1, _
@@ -346,7 +414,7 @@ Implements MarkdownKit.MKRenderer
 		      link.Destination.Length, link.LineNumber, "linkDestination"))
 		    End If
 		    
-		    If link.Title = Nil Then
+		    If Not link.HasTitle Then
 		      // `)`
 		      Var destCloser As MarkdownKit.MKCharacter = link.Destination.EndCharacter
 		      Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
@@ -357,7 +425,7 @@ Implements MarkdownKit.MKRenderer
 		  // ===============
 		  // TITLE
 		  // ===============
-		  If link.LinkType = MarkdownKit.MKLinkTypes.Standard And link.Title <> Nil Then
+		  If link.LinkType = MarkdownKit.MKLinkTypes.Standard And link.HasTitle Then
 		    // Opening delimiter.
 		    Var titleOpener As MarkdownKit.MKCharacter = link.Title.OpeningDelimiter
 		    Tokens.Add(New LineToken(titleOpener.AbsolutePosition, titleOpener.LocalPosition, 1, _

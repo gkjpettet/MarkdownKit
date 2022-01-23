@@ -1144,6 +1144,8 @@ Protected Class MKParser
 		        // It's a closing fence. It will be closed when the next line is processed. 
 		        MKFencedCodeBlock(mContainer).ShouldClose = True
 		        MKFencedCodeBlock(mContainer).ClosingFenceStart = mCurrentLine.Start + mNextNWS
+		        MKFencedCodeBlock(mContainer).ClosingFenceLocalStart = mNextNWS
+		        MKFencedCodeBlock(mContainer).ClosingFenceLineNumber = mCurrentLine.Number
 		      Else
 		        mContainer.AddLine(mCurrentLine, mCurrentOffset, mRemainingSpaces)
 		      End If

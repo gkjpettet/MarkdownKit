@@ -242,9 +242,11 @@ Protected Class MKInlineScanner
 		  Next i
 		  If Not foundClosingBacktickString Then Return Nil
 		  
+		  'If chars(startPos).Line.Number = 5 then Break
+		  
 		  // We've found a code span.
 		  Var cs As New MKCodeSpan(parent, parent.Start + startPos, startPos, _
-		  backtickStringLen, contentEndPos + 1, parentClosingBacktickStringStart, _
+		  chars(startPos).Line.Number, backtickStringLen, contentEndPos + 1, parentClosingBacktickStringStart, _
 		  closingBackstringFirstCharacter.LocalPosition)
 		  cs.Finalise
 		  

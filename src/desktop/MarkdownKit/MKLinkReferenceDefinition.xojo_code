@@ -1,11 +1,16 @@
 #tag Class
 Protected Class MKLinkReferenceDefinition
 	#tag Method, Flags = &h0
-		Sub Constructor(start As Integer, label As String, labelStart As Integer, labelLength As Integer, destination As MarkdownKit.MKLinkDestination, title As MarkdownKit.MKLinkTitle, endPos As Integer)
+		Sub Constructor(start As Integer, linkLabelOpener As MarkdownKit.MKCharacter, linkLabelCloser As MarkdownKit.MKCharacter, label As String, linkLabelStartChar As MarkdownKit.MKCharacter, labelStart As Integer, labelLength As Integer, colon As MarkdownKit.MKCharacter, destination As MarkdownKit.MKLinkDestination, title As MarkdownKit.MKLinkTitle, endPos As Integer)
 		  Self.Start = start
 		  Self.LinkLabel = label
 		  Self.LinkLabelStart = labelStart
 		  Self.LinkLabelLength = labelLength
+		  Self.LinkLabelOpener = linkLabelOpener
+		  Self.LinkLabelCloser = linkLabelCloser
+		  Self.LinkLabelStartChar = linkLabelStartChar
+		  
+		  Self.Colon = colon
 		  
 		  destination.Value = MarkdownKit.ReplaceEntities(destination.Value)
 		  Var tmpDestination As String = destination.Value
@@ -25,9 +30,22 @@ Protected Class MKLinkReferenceDefinition
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h0, Description = 54686520636F6C6F6E206368617261637465722E
+		Colon As MarkdownKit.MKCharacter
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E2074686520736F7572636520746861742074686973206C696E6B207265666572656E636520646566696E6974696F6E20656E64732E
 		EndPosition As Integer = 0
 	#tag EndProperty
+
+	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686973207265666572656E6365206C696E6B2068617320612064657374696E6174696F6E2E
+		#tag Getter
+			Get
+			  Return LinkDestination <> Nil And LinkDestination.Length > 0
+			End Get
+		#tag EndGetter
+		HasDestination As Boolean
+	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686572652069732061206C696E6B207265666572656E636520646566696E6974696F6E207469746C652E2049662046616C7365207468656E20604C696E6B5469746C6553746172746020616E6420604C696E6B5469746C654C656E677468602061726520696E76616C69642E
 		#tag Getter
@@ -46,12 +64,24 @@ Protected Class MKLinkReferenceDefinition
 		LinkLabel As String
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 546865206C656E677468206F6620746865206C696E6B206C6162656C2E
+	#tag Property, Flags = &h0, Description = 54686520636C6F73696E67206C696E6B206C6162656C2064656C696D697465722028605D60292E
+		LinkLabelCloser As MarkdownKit.MKCharacter
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206C656E677468206F6620746865206C696E6B206C6162656C2028696E636C7564696E672074686520666C616E6B696E6720605B5D60292E
 		LinkLabelLength As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 546865206F70656E696E67206C696E6B206C6162656C2064656C696D697465722028605B60292E
+		LinkLabelOpener As MarkdownKit.MKCharacter
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E2074686520736F75726365206F6620746865207374617274206F6620746865206C696E6B206C6162656C2E
 		LinkLabelStart As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520666972737420636861726163746572206F6620746865206C696E6B206C6162656C2E
+		LinkLabelStartChar As MarkdownKit.MKCharacter
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 546865206C696E6B207469746C652E204D617920626520656D7074792E

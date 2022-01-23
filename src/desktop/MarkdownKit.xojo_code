@@ -198,6 +198,7 @@ Protected Module MarkdownKit
 		  Var tmp() As Text = s.ToText.Split
 		  Var chars() As MKCharacter
 		  Var tmpLastIndex As Integer = tmp.LastIndex
+		  
 		  For i As Integer = 0 To tmpLastIndex
 		    chars.Add(New MKCharacter(tmp(i), line, i + localStart))
 		  Next i

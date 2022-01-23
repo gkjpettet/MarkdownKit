@@ -117,6 +117,7 @@ Protected Class MKLinkScanner
 		  /// Sets [data.Value("linkLabel")] to the link label (if found).
 		  /// Sets [data.Value("linkLabelStart")] to the original [pos] value.
 		  /// Sets [data.Value("linkLabelLength")] to the length of the trimmed label before any 
+		  /// Sets [data.Value("linkLabelStartChar")] to the starting character of the label.
 		  /// consecutive internal whitespace is collapsed.
 		  /// Note that [pos] is passed ByRef.
 		  ///
@@ -134,6 +135,7 @@ Protected Class MKLinkScanner
 		  data = New Dictionary
 		  
 		  Var labelStart As Integer = pos
+		  Var linkLabelStartChar As MarkdownKit.MKCharacter = chars(pos + 1)
 		  
 		  Var limit As Integer = Min(chars.LastIndex, MarkdownKit.MAX_REFERENCE_LABEL_LENGTH + 1)
 		  Var seenNonWhitespace As Boolean = False
@@ -158,6 +160,7 @@ Protected Class MKLinkScanner
 		        linkLabel = MarkdownKit.CollapseInternalWhitespace(linkLabel)
 		        data.Value("linkLabel") = linkLabel
 		        data.Value("linkLabelStart") = labelStart
+		        data.Value("linkLabelStartChar") = linkLabelStartChar
 		        pos = i
 		        Return True
 		      Else // No non-whitespace characters in this label.

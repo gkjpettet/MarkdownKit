@@ -301,6 +301,8 @@ Protected Class MKBlock
 		  Var titleData As MarkdownKit.MKLinkTitle
 		  Var destinationCharactersStart, titleOpeningDelimiterStart As Integer
 		  
+		  Var linkLabelOpener, linkLabelCloser, colon, linkLabelStartChar As MarkdownKit.MKCharacter
+		  
 		  If Characters.Count = 0 Then Return
 		  
 		  Var i As Integer = 0
@@ -321,12 +323,15 @@ Protected Class MKBlock
 		    If i > labelStart + 3 Then Return
 		    
 		    // Can we match a link label?
+		    linkLabelOpener = Characters(i)
 		    If Not MKLinkScanner.ParseLinkLabel(Characters, i, data) Then
 		      Return
 		    Else
+		      linkLabelCloser = Characters(i)
 		      linkLabel = data.Value("linkLabel")
 		      labelStart = data.Value("linkLabelStart") + linkLocalStart
 		      labelLength = data.Value("linkLabelLength")
+		      linkLabelStartChar = data.Value("linkLabelStartChar")
 		    End If
 		    
 		    // The next character must be a colon.
@@ -335,6 +340,7 @@ Protected Class MKBlock
 		    If Characters(i).Value <> ":" Then
 		      Return
 		    Else
+		      colon = Characters(i)
 		      i = i + 1
 		    End If
 		    If i > Characters.LastIndex Then Return
@@ -347,6 +353,7 @@ Protected Class MKBlock
 		    
 		    // Can we match a link destination?
 		    destinationCharactersStart = i
+		    
 		    If Not MKLinkScanner.ParseLinkDestination(Characters, i, data) Then
 		      Return
 		    Else
@@ -381,8 +388,6 @@ Protected Class MKBlock
 		        ElseIf data.Value("linkTitleValid") Then
 		          titleData.OpeningDelimiter = Characters(titleOpeningDelimiterStart)
 		          titleData.Value = data.Value("linkTitle")
-		          'linkTitle = data.Value("linkTitle")
-		          'titleStart = data.Value("linkTitleStart") + linkLocalStart
 		          titleData.Length = data.Value("linkTitleLength")
 		        End If
 		      End If
@@ -395,8 +400,9 @@ Protected Class MKBlock
 		    // We've found a definition. Add it to the document only if it's unique.
 		    If Not Self.Document.References.HasKey(linkLabel.Lowercase) Then
 		      Self.Document.References.Value(linkLabel.Lowercase) = _
-		      New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
-		      destinationData, titleData, i)
+		      New MKLinkReferenceDefinition(start, linkLabelOpener, linkLabelCloser, _
+		      linkLabel.Lowercase, linkLabelStartChar, labelStart, labelLength, _
+		      colon, destinationData, titleData, i)
 		    End If
 		    
 		    If titleData.Length > 0 Then

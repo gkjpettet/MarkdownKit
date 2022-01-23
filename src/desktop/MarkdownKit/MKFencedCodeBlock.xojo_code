@@ -24,8 +24,6 @@ Inherits MKBlock
 		    Children.RemoveAt(0)
 		  End If
 		  
-		  ClosingFenceLocalStart = ClosingFenceStart - line.Start
-		  ClosingFenceLineNumber = line.Number
 		  
 		End Sub
 	#tag EndMethod
@@ -216,6 +214,22 @@ Inherits MKBlock
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingFenceLineNumber"
+			Visible=false
+			Group="Behavior"
+			InitialValue="1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="HasInfoString"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

@@ -477,6 +477,31 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1, Description = 52657475726E7320746865205B6D61726B646F776E5D20737472696E672061732061204D61726B646F776E20646F63756D656E74202861736274726163742073796E7461782074726565292E
+		Protected Function ToDocument(markdown As String) As MarkdownKit.MKDocument
+		  /// Returns the [markdown] string as a Markdown document (asbtract syntax tree).
+		  
+		  If mParser = Nil Then mParser = New MarkdownKit.MKParser
+		  
+		  Return mParser.ParseSource(markdown)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1, Description = 52657475726E7320746865205B6D61726B646F776E5D20737472696E672061732048544D4C2E
+		Protected Function ToHTML(markdown As String) As String
+		  /// Returns the [markdown] string as HTML.
+		  
+		  If mParser = Nil Then mParser = New MarkdownKit.MKParser
+		  
+		  Var doc As MarkdownKit.MKDocument = mParser.ParseSource(markdown)
+		  
+		  Var htmlRenderer As New MarkdownKit.MKHTMLRenderer
+		  
+		  Return htmlRenderer.VisitDocument(doc)
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function ToString(Extends type As MKBlockTypes) As String
 		  // Returns a String representation of the passed block type.
@@ -2878,6 +2903,10 @@ Protected Module MarkdownKit
 		#tag EndGetter
 		Protected HTMLTagNames As Dictionary
 	#tag EndComputedProperty
+
+	#tag Property, Flags = &h21, Description = 416E20696E7465726E616C20706172736572207573656420666F7220636F6E76656E69656E6365206D6574686F647320737563682061732060546F48544D4C2829602E
+		Private mParser As MarkdownKit.MKParser
+	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h1, Description = 5468652063757272656E742076657273696F6E20696E2074686520666F726D61743A20224D414A4F522E4D494E4F522E5041544348222E
 		#tag Getter

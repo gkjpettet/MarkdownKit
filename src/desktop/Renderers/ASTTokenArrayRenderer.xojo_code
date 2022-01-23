@@ -211,9 +211,62 @@ Implements MarkdownKit.MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitInlineLink(link As MarkdownKit.MKInlineLink) As Variant
-		  // Part of the MKRenderer interface.
+		  /// Part of the MKRenderer interface.
+		  ///
+		  /// Link types:
+		  /// Shortcut: [foo]
+		  /// Collapsed: [foo][]
+		  /// Full: [foo](foo.com)
+		  
 		  #Pragma Warning  "Needs implementing"
 		  
+		  // ===============
+		  // LINK LABEL
+		  // ===============
+		  // `[`
+		  Tokens.Add(New LineToken(link.OpenerCharacter.AbsolutePosition, link.OpenerCharacter.LocalPosition, _
+		  1, link.OpenerCharacter.Line.Number, "linkLabelDelimiter"))
+		  
+		  // Link label text.
+		  Tokens.Add(New LineToken(link.Characters(0).AbsolutePosition, link.Characters(0).LocalPosition, _
+		  link.Characters.Count, link.LineNumber, "inlineLinkLabel"))
+		  
+		  // `]`
+		  Tokens.Add(New LineToken(link.CloserCharacter.AbsolutePosition, link.CloserCharacter.LocalPosition, _
+		  1, link.CloserCharacter.Line.Number, "linkLabelDelimiter"))
+		  
+		  // ===============
+		  // DESTINATION
+		  // ===============
+		  If link.LinkType = MarkdownKit.MKLinkTypes.ShortcutReference Then
+		    // Nothing else to do.
+		    Return Nil
+		    
+		  ElseIf link.LinkType = MarkdownKit.MKLinkTypes.CollapsedReference Then
+		    // `[]`
+		    Var destOpener As MarkdownKit.MKCharacter = link.DestinationOpenerCharacter
+		    Tokens.Add(New LineToken(destOpener.AbsolutePosition, destOpener.LocalPosition, 1, _
+		    destOpener.Line.Number, "linkDestinationDelimiter"))
+		    
+		    Var destCloser As MarkdownKit.MKCharacter = link.DestinationCloserCharacter
+		    Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
+		    destCloser.Line.Number, "linkDestinationDelimiter"))
+		    
+		  ElseIf link.LinkType = MarkdownKit.MKLinkTypes.Standard Then
+		    // `(`
+		    Var destOpener As MarkdownKit.MKCharacter = link.DestinationOpenerCharacter
+		    Tokens.Add(New LineToken(destOpener.AbsolutePosition, destOpener.LocalPosition, 1, _
+		    destOpener.Line.Number, "linkDestinationDelimiter"))
+		    
+		    // Destination.
+		    #Pragma Warning "TODO"
+		    
+		    // `)`
+		    Var destCloser As MarkdownKit.MKCharacter = link.DestinationCloserCharacter
+		    Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
+		    destCloser.Line.Number, "linkDestinationDelimiter"))
+		    
+		  End If
 		End Function
 	#tag EndMethod
 

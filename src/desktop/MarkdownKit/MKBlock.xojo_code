@@ -300,6 +300,8 @@ Protected Class MKBlock
 		  Var linkLabel, linkDestination, linkTitle As String
 		  Var labelStart, destinationStart, titleStart As Integer
 		  Var labelLength, destinationLength, titleLength, linkLocalStart As Integer
+		  Var destinationData As MarkdownKit.MKLinkDestination
+		  Var destinationCharactersStart As Integer
 		  
 		  If Characters.Count = 0 Then Return
 		  
@@ -309,9 +311,11 @@ Protected Class MKBlock
 		    linkLabel = ""
 		    labelStart = linkLocalStart
 		    labelLength = 0
-		    linkDestination = ""
-		    destinationStart = 0
-		    destinationLength = 0
+		    ' linkDestination = ""
+		    ' destinationStart = 0
+		    ' destinationLength = 0
+		    destinationData = New MKLinkDestination
+		    destinationCharactersStart = 0
 		    linkTitle = ""
 		    titleStart = 0
 		    titleLength = 0
@@ -348,12 +352,16 @@ Protected Class MKBlock
 		    If i < Characters.LastIndex And Characters(i).IsLineEnding Then i = i + 1
 		    
 		    // Can we match a link destination?
+		    destinationCharactersStart = i
 		    If Not MKLinkScanner.ParseLinkDestination(Characters, i, data) Then
 		      Return
 		    Else
-		      linkDestination = data.Value("linkDestination")
-		      destinationStart = data.Value("linkDestinationStart")
-		      destinationLength = data.Value("linkDestinationLength")
+		      destinationData.StartCharacter = Characters(destinationCharactersStart)
+		      destinationData.Value = data.Value("linkDestination")
+		      destinationData.Length = data.Value("linkDestinationLength")
+		      ' linkDestination = data.Value("linkDestination")
+		      'destinationStart = data.Value("linkDestinationStart")
+		      'destinationLength = data.Value("linkDestinationLength")
 		    End If
 		    
 		    // Consume tabs and spaces.
@@ -394,8 +402,10 @@ Protected Class MKBlock
 		    If Not Self.Document.References.HasKey(linkLabel.Lowercase) Then
 		      Self.Document.References.Value(linkLabel.Lowercase) = _
 		      New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
-		      linkDestination, destinationStart, destinationLength, _
-		      linkTitle, titleStart, titleLength, i)
+		      destinationData, linkTitle, titleStart, titleLength, i)
+		      ' New MKLinkReferenceDefinition(start, linkLabel.Lowercase, labelStart, labelLength, _
+		      ' linkDestination, destinationStart, destinationLength, _
+		      ' linkTitle, titleStart, titleLength, i)
 		    End If
 		    
 		    If titleLength > 0 Then
@@ -453,11 +463,11 @@ Protected Class MKBlock
 
 
 	#tag Property, Flags = &h0, Description = 5468652063686172616374657273206F66207468697320626C6F636B2E204F6E6C792076616C696420666F7220696E6C696E6520636F6E7461696E65727320286F7468657220626C6F636B20747970657320757365204D4B54657874426C6F636B73292E
-		Characters() As MKCharacter
+		Characters() As MarkdownKit.MKCharacter
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468697320626C6F636B2773206368696C6472656E2E
-		Children() As MKBlock
+		Children() As MarkdownKit.MKBlock
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0, Description = 54686520646F63756D656E742074686174206F776E73207468697320626C6F636B2E
@@ -471,7 +481,7 @@ Protected Class MKBlock
 			  
 			End Get
 		#tag EndGetter
-		Document As MKDocument
+		Document As MarkdownKit.MKDocument
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0, Description = 302D626173656420706F736974696F6E20696E20746865206F726967696E616C20736F75726365206F662074686520656E64206F66207468697320626C6F636B2E204F6E6C792076616C696420666F7220696E6C696E6520626C6F636B7320616E6420696E6C696E6520636F6E7461696E657220626C6F636B732E
@@ -489,7 +499,7 @@ Protected Class MKBlock
 			  
 			End Get
 		#tag EndGetter
-		FirstChild As MKBlock
+		FirstChild As MarkdownKit.MKBlock
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0, Description = 54727565206966207468697320626C6F636B2069732061206368696C64206F662061206C697374206974656D2E
@@ -539,7 +549,7 @@ Protected Class MKBlock
 			  
 			End Get
 		#tag EndGetter
-		LastChild As MKBlock
+		LastChild As MarkdownKit.MKBlock
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0, Description = 54686520312D6261736564206C696E65206E756D62657220696E20746865204D61726B646F776E20646F776E2074686174207468697320626C6F636B206F6363757273206F6E2E
@@ -575,7 +585,7 @@ Protected Class MKBlock
 			  
 			End Set
 		#tag EndSetter
-		Parent As MKBlock
+		Parent As MarkdownKit.MKBlock
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0, Description = 54686520302D626173656420706F736974696F6E20696E20746865206F726967696E616C204D61726B646F776E20736F757263652074686174207468697320626C6F636B20626567696E732061742E
@@ -583,7 +593,7 @@ Protected Class MKBlock
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468652074797065206F6620626C6F636B2E
-		Type As MKBlockTypes = MKBlockTypes.Block
+		Type As MarkdownKit.MKBlockTypes = MKBlockTypes.Block
 	#tag EndProperty
 
 

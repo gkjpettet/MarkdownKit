@@ -1,18 +1,17 @@
 #tag Class
 Protected Class MKLinkReferenceDefinition
 	#tag Method, Flags = &h0
-		Sub Constructor(start As Integer, label As String, labelStart As Integer, labelLength As Integer, destination As String, destinationStart As Integer, destinationLength As Integer, title As String, titleStart As Integer, titleLength As Integer, endPos As Integer)
+		Sub Constructor(start As Integer, label As String, labelStart As Integer, labelLength As Integer, destination As MarkdownKit.MKLinkDestination, title As String, titleStart As Integer, titleLength As Integer, endPos As Integer)
 		  Self.Start = start
 		  Self.LinkLabel = label
 		  Self.LinkLabelStart = labelStart
 		  Self.LinkLabelLength = labelLength
 		  
-		  
-		  destination = MarkdownKit.ReplaceEntities(destination)
-		  MarkdownKit.Unescape(destination)
+		  destination.Value = MarkdownKit.ReplaceEntities(destination.Value)
+		  Var tmpDestination As String = destination.Value
+		  MarkdownKit.Unescape(tmpDestination)
+		  destination.Value = tmpDestination
 		  Self.LinkDestination = destination
-		  Self.LinkDestinationStart = destinationStart
-		  Self.LinkDestinationLength = destinationLength
 		  
 		  title = MarkdownKit.ReplaceEntities(title)
 		  MarkdownKit.Unescape(title)
@@ -21,6 +20,33 @@ Protected Class MKLinkReferenceDefinition
 		  Self.LinkTitleLength = titleLength
 		  
 		  Self.EndPosition = endPos
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub ConstructorOLD(start As Integer, label As String, labelStart As Integer, labelLength As Integer, destination As String, destinationStart As Integer, destinationLength As Integer, title As String, titleStart As Integer, titleLength As Integer, endPos As Integer)
+		  #Pragma Warning "REMOVE"
+		  
+		  ' Self.Start = start
+		  ' Self.LinkLabel = label
+		  ' Self.LinkLabelStart = labelStart
+		  ' Self.LinkLabelLength = labelLength
+		  ' 
+		  ' 
+		  ' destination = MarkdownKit.ReplaceEntities(destination)
+		  ' MarkdownKit.Unescape(destination)
+		  ' Self.LinkDestination = destination
+		  ' Self.LinkDestinationStart = destinationStart
+		  ' Self.LinkDestinationLength = destinationLength
+		  ' 
+		  ' title = MarkdownKit.ReplaceEntities(title)
+		  ' MarkdownKit.Unescape(title)
+		  ' Self.LinkTitle = title
+		  ' Self.LinkTitleStart = titleStart
+		  ' Self.LinkTitleLength = titleLength
+		  ' 
+		  ' Self.EndPosition = endPos
 		  
 		End Sub
 	#tag EndMethod
@@ -40,15 +66,7 @@ Protected Class MKLinkReferenceDefinition
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0, Description = 546865206C696E6B2064657374696E6174696F6E2E
-		LinkDestination As String
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 546865206C656E677468206F6620746865206C696E6B2064657374696E6174696F6E2E
-		LinkDestinationLength As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 302D626173656420696E64657820696E2074686520736F75726365206F6620746865207374617274206F6620746865206C696E6B2064657374696E6174696F6E2E
-		LinkDestinationStart As Integer = 0
+		LinkDestination As MarkdownKit.MKLinkDestination
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 546865206C696E6B206C6162656C2E
@@ -144,22 +162,6 @@ Protected Class MKLinkReferenceDefinition
 			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LinkDestinationLength"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LinkDestinationStart"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="LinkLabel"

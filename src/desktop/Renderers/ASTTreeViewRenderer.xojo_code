@@ -115,8 +115,9 @@ Implements MarkdownKit.MKRenderer
 		      lrd.LinkLabelLength.ToString + "): " + lrd.LinkLabel))
 		      
 		      // Link destination.
-		      lrdNode.AppendNode(New TreeViewNode("Destination (" + lrd.LinkDestinationStart.ToString + ", " + _
-		      lrd.LinkDestinationLength.ToString + "): " + lrd.LinkDestination))
+		      lrdNode.AppendNode(New TreeViewNode("Destination (" + _
+		      lrd.LinkDestination.StartCharacter.AbsolutePosition.ToString + ", " + _
+		      lrd.LinkDestination.Length.ToString + "): " + lrd.LinkDestination.Value))
 		      
 		      // Optional link title.
 		      If lrd.HasTitle Then

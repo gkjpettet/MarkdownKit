@@ -71,6 +71,7 @@ Class=BetterDictionary;Dependencies/Better Dictionary/BetterDictionary.xojo_code
 Class=BetterDictionaryIterator;Dependencies/Better Dictionary/BetterDictionaryIterator.xojo_code;&h000000007431D7FF;&h00000000694F37FF;false
 Class=MKThematicBreak;MarkdownKit/MKThematicBreak.xojo_code;&h000000002518BFFF;&h000000002F26BFFF;false
 Class=MKAbstractList;MarkdownKit/MKAbstractList.xojo_code;&h00000000623DB7FF;&h000000002F26BFFF;false
+Class=MKLinkDestination;MarkdownKit/MKLinkDestination.xojo_code;&h000000004D7467FF;&h000000002F26BFFF;false
 DefaultWindow=WinUnitTests
 AppMenuBar=MainMenuBar
 MajorVersion=1

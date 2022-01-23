@@ -381,26 +381,22 @@ Protected Class MKInlineScanner
 		  If title.Length > 0 Then
 		    titleData.Value = title
 		    Var vb As MarkdownKit.MKLinkTitleBlock
-		    Var createNewBlock As Boolean = True
 		    Var isOpenValueBlock As Boolean = False
-		    
-		    #Pragma Warning "OPTIMISE: This horrible code. Surely I can tidy this up??"
+		    Var c As MarkdownKit.MKCharacter
 		    For i As Integer = titleValueStartPos To pos - 2 // -2 as `pos` points to the closing `)`
-		      If chars(i).IsLineEnding Then
+		      c = chars(i)
+		      If c.IsLineEnding Then
 		        If vb <> Nil Then titleData.ValueBlocks.Add(vb)
-		        createNewBlock = True
 		        isOpenValueBlock = False
 		        Continue
 		      End If
-		      If createNewBlock Then
-		        createNewBlock = False
-		        vb = New MKLinkTitleBlock(chars(i).AbsolutePosition, chars(i).LocalPosition, 1, chars(i).Line.Number)
+		      If Not isOpenValueBlock Then
+		        vb = New MKLinkTitleBlock(c.AbsolutePosition, c.LocalPosition, 1, c.Line.Number)
 		        isOpenValueBlock = True
 		      Else
 		        vb.Length = vb.Length + 1
 		      End If
 		    Next i
-		    
 		    If isOpenValueBlock Then
 		      titleData.ValueBlocks.Add(vb)
 		    End If
@@ -419,6 +415,8 @@ Protected Class MKInlineScanner
 		  // Need to see the closing ")".
 		  If pos > charsLastIndex Then Return Nil
 		  If chars(pos).Value <> ")" Then Return Nil
+		  
+		  destinationData.EndCharacter = chars(pos)
 		  
 		  // We've found a valid inline link.
 		  Return CreateInlineLinkData(linkTextChars, destinationData, titleData, pos, isInlineImage, openerChar, closingBracketChar)

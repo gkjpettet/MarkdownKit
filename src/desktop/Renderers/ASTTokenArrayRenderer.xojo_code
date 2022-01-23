@@ -202,10 +202,92 @@ Implements MarkdownKit.MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitInlineImage(image As MarkdownKit.MKInlineImage) As Variant
-		  // Part of the MKRenderer interface.
-		  #Pragma Warning  "Needs implementing"
+		  /// Part of the MKRenderer interface.
+		  ///
+		  /// Image types:
+		  /// Shortcut: ![foo]
+		  /// Collapsed: ![foo][]
+		  /// Full: ![foo](foo.com)
 		  
+		  // ===============
+		  // LINK LABEL
+		  // ===============
+		  // `![`
+		  Tokens.Add(New LineToken(image.OpenerCharacter.AbsolutePosition, image.OpenerCharacter.LocalPosition, _
+		  2, image.OpenerCharacter.Line.Number, "linkLabelDelimiter"))
 		  
+		  // Link label text.
+		  Tokens.Add(New LineToken(image.Characters(0).AbsolutePosition, image.Characters(0).LocalPosition, _
+		  image.Characters.Count, image.LineNumber, "inlineLinkLabel"))
+		  
+		  // `]`
+		  Tokens.Add(New LineToken(image.CloserCharacter.AbsolutePosition, image.CloserCharacter.LocalPosition, _
+		  1, image.CloserCharacter.Line.Number, "linkLabelDelimiter"))
+		  
+		  // ===============
+		  // DESTINATION
+		  // ===============
+		  If image.LinkType = MarkdownKit.MKLinkTypes.ShortcutReference Then
+		    // Nothing else to do.
+		    Return Nil
+		    
+		  ElseIf image.LinkType = MarkdownKit.MKLinkTypes.CollapsedReference Then
+		    // `[]`
+		    Var destOpener As MarkdownKit.MKCharacter = image.Destination.StartCharacter
+		    Tokens.Add(New LineToken(destOpener.AbsolutePosition, destOpener.LocalPosition, 1, _
+		    destOpener.Line.Number, "linkDestinationDelimiter"))
+		    
+		    Var destCloser As MarkdownKit.MKCharacter = image.Destination.EndCharacter
+		    Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
+		    destCloser.Line.Number, "linkDestinationDelimiter"))
+		    
+		  ElseIf image.LinkType = MarkdownKit.MKLinkTypes.Standard Then
+		    // `(`
+		    Var destOpener As MarkdownKit.MKCharacter = image.Destination.StartCharacter
+		    Tokens.Add(New LineToken(destOpener.AbsolutePosition, destOpener.LocalPosition, 1, _
+		    destOpener.Line.Number, "linkDestinationDelimiter"))
+		    
+		    // Destination.
+		    If image.HasDestination Then
+		      // +1 since `StartCharacter` is the destination opening delimiter `(`.
+		      Var destStart As MarkdownKit.MKCharacter = image.Destination.StartCharacter
+		      Tokens.Add(New LineToken(destStart.AbsolutePosition + 1, destStart.LocalPosition + 1, _
+		      image.Destination.Length, image.LineNumber, "linkDestination"))
+		    End If
+		    
+		    If image.Title = Nil Then
+		      // `)`
+		      Var destCloser As MarkdownKit.MKCharacter = image.Destination.EndCharacter
+		      Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
+		      destCloser.Line.Number, "linkDestinationDelimiter"))
+		    End If
+		  End If
+		  
+		  // ===============
+		  // TITLE
+		  // ===============
+		  If image.LinkType = MarkdownKit.MKLinkTypes.Standard And image.Title <> Nil Then
+		    // Opening title delimiter.
+		    Var titleOpener As MarkdownKit.MKCharacter = image.Title.OpeningDelimiter
+		    Tokens.Add(New LineToken(titleOpener.AbsolutePosition, titleOpener.LocalPosition, 1, _
+		    titleOpener.Line.Number, "linkTitleDelimiter"))
+		    
+		    // Title.
+		    For Each vb As MarkdownKit.MKLinkTitleBlock In image.Title.ValueBlocks
+		      Tokens.Add(New LineToken(vb.AbsoluteStart, vb.LocalStart, vb.Length, _
+		      vb.LineNumber, "linkTitle"))
+		    Next vb
+		    
+		    // Closing title delimiter.
+		    Var titleCloser As MarkdownKit.MKCharacter = image.Title.ClosingDelimiter
+		    Tokens.Add(New LineToken(titleCloser.AbsolutePosition, titleCloser.LocalPosition, 1, _
+		    titleCloser.Line.Number, "linkTitleDelimiter"))
+		    
+		    // `)`
+		    Var imageCloser As MarkdownKit.MKCharacter = image.Destination.EndCharacter
+		    Tokens.Add(New LineToken(imageCloser.AbsolutePosition, imageCloser.LocalPosition, 1, _
+		    imageCloser.Line.Number, "linkDestinationDelimiter"))
+		  End If
 		End Function
 	#tag EndMethod
 
@@ -264,10 +346,12 @@ Implements MarkdownKit.MKRenderer
 		      link.Destination.Length, link.LineNumber, "linkDestination"))
 		    End If
 		    
-		    // `)`
-		    Var destCloser As MarkdownKit.MKCharacter = link.Destination.EndCharacter
-		    Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
-		    destCloser.Line.Number, "linkDestinationDelimiter"))
+		    If link.Title = Nil Then
+		      // `)`
+		      Var destCloser As MarkdownKit.MKCharacter = link.Destination.EndCharacter
+		      Tokens.Add(New LineToken(destCloser.AbsolutePosition, destCloser.LocalPosition, 1, _
+		      destCloser.Line.Number, "linkDestinationDelimiter"))
+		    End If
 		  End If
 		  
 		  // ===============
@@ -289,6 +373,11 @@ Implements MarkdownKit.MKRenderer
 		    Var titleCloser As MarkdownKit.MKCharacter = link.Title.ClosingDelimiter
 		    Tokens.Add(New LineToken(titleCloser.AbsolutePosition, titleCloser.LocalPosition, 1, _
 		    titleCloser.Line.Number, "linkTitleDelimiter"))
+		    
+		    // `)`
+		    Var linkCloser As MarkdownKit.MKCharacter = link.Destination.EndCharacter
+		    Tokens.Add(New LineToken(linkCloser.AbsolutePosition, linkCloser.LocalPosition, 1, _
+		    linkCloser.Line.Number, "linkDestinationDelimiter"))
 		  End If
 		End Function
 	#tag EndMethod

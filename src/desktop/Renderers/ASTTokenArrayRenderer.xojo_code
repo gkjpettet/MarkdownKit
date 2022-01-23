@@ -5,8 +5,6 @@ Implements MarkdownKit.MKRenderer
 		Private Sub HandleReferenceLinkDefinitions(doc As MarkdownKit.MKDocument)
 		  /// Adds tokens for any reference link definitions in the document.
 		  
-		  #Pragma Warning "TODO: reference links"
-		  
 		  // ==========================
 		  // LINK REFERENCE DEFINITIONS
 		  // ==========================

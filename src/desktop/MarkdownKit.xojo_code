@@ -2879,8 +2879,26 @@ Protected Module MarkdownKit
 		Protected HTMLTagNames As Dictionary
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h1, Description = 5468652063757272656E742076657273696F6E20696E2074686520666F726D61743A20224D414A4F522E4D494E4F522E5041544348222E
+		#tag Getter
+			Get
+			  Return VERSION_MAJOR.ToString + "." + VERSION_MINOR.ToString + "." + VERSION_PATCH.ToString
+			End Get
+		#tag EndGetter
+		Protected Version As String
+	#tag EndComputedProperty
+
 
 	#tag Constant, Name = MAX_REFERENCE_LABEL_LENGTH, Type = Double, Dynamic = False, Default = \"999", Scope = Protected, Description = 546865206D6178696D756D206E756D626572206F662063686172616374657273207065726D69747465642077697468696E207468652073717561726520627261636B657473206F662061206C696E6B206C6162656C2E
+	#tag EndConstant
+
+	#tag Constant, Name = VERSION_MAJOR, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = VERSION_MINOR, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
+	#tag EndConstant
+
+	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
 	#tag EndConstant
 
 

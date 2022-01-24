@@ -147,7 +147,8 @@ Implements MarkdownKit.MKRenderer
 		  IsWithinCodeSpan = False
 		  
 		  // Closing delimiter.
-		  Tokens.Add(New LineToken(cs.ClosingBacktickStringStart, cs.ClosingBacktickStringLocalStart, _
+		  Tokens.Add(New LineToken(cs.FirstClosingBacktickChar.AbsolutePosition, _
+		  cs.FirstClosingBacktickChar.LocalPosition, _
 		  cs.BacktickStringLength, cs.LineNumber, "codespanDelimiter"))
 		  
 		End Function

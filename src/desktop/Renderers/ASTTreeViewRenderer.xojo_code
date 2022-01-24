@@ -84,7 +84,8 @@ Implements MarkdownKit.MKRenderer
 		  Var node As New TreeViewNode("Code Span")
 		  node.AppendNode(New TreeViewNode("Start: " + cs.Start.ToString))
 		  node.AppendNode(New TreeViewNode("Delimiter Length: " + cs.BacktickStringLength.ToString))
-		  node.AppendNode(New TreeViewNode("Closing Delimiter Start: " + cs.ClosingBacktickStringStart.ToString))
+		  node.AppendNode(New TreeViewNode("Closing Delimiter Start: " + _
+		  cs.FirstClosingBacktickChar.AbsolutePosition.ToString))
 		  
 		  // Code spans contain text blocks as their children.
 		  For Each child As MarkdownKit.MKBlock In cs.Children

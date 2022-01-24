@@ -203,6 +203,8 @@ Protected Class MKInlineScanner
 		  // can't be a valid code span.
 		  If startPos > 0 And chars(startPos - 1).Value = "`" Then Return Nil
 		  
+		  Var openingBacktickChar As MKCharacter = chars(startPos)
+		  
 		  Var charsLastIndex As Integer = chars.LastIndex
 		  
 		  // Compute the length of the backtickString and the index of the first character after the 
@@ -242,12 +244,10 @@ Protected Class MKInlineScanner
 		  Next i
 		  If Not foundClosingBacktickString Then Return Nil
 		  
-		  'If chars(startPos).Line.Number = 5 then Break
-		  
 		  // We've found a code span.
 		  Var cs As New MKCodeSpan(parent, parent.Start + startPos, startPos, _
-		  chars(startPos).Line.Number, backtickStringLen, contentEndPos + 1, parentClosingBacktickStringStart, _
-		  closingBackstringFirstCharacter.LocalPosition)
+		  chars(startPos).Line.Number, backtickStringLen, parentClosingBacktickStringStart, _
+		  openingBacktickChar, chars(parentClosingBacktickStringStart))
 		  cs.Finalise
 		  
 		  Return cs
@@ -569,7 +569,7 @@ Protected Class MKInlineScanner
 		      // ============
 		      // CODE SPAN
 		      // ============
-		      Var cs As MKCodeSpan = HandleBackticks(block, chars, pos)
+		      Var cs As MarkdownKit.MKCodeSpan = HandleBackticks(block, chars, pos)
 		      If cs <> Nil Then
 		        // Found a code span.
 		        If buffer <> Nil Then FinaliseBuffer(buffer, block)

@@ -187,7 +187,7 @@ Protected Module MarkdownKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 52657475726E73205B735D20617320616E206172726179206F66204D4B43686172616374657220696E7374616E6365732E
-		Function MKCharacters(Extends s As String, line As TextLine) As MKCharacter()
+		Function MKCharacters(Extends s As String, line As TextLine, localStartOffset As Integer = 0) As MKCharacter()
 		  /// Returns [s] as an array of MKCharacter instances. 
 		  
 		  #Pragma NilObjectChecking False
@@ -199,7 +199,7 @@ Protected Module MarkdownKit
 		  Var tmpLastIndex As Integer = tmp.LastIndex
 		  
 		  For i As Integer = 0 To tmpLastIndex
-		    chars.Add(New MKCharacter(tmp(i), line, i))
+		    chars.Add(New MKCharacter(tmp(i), line, i + localStartOffset))
 		  Next i
 		  
 		  Return chars

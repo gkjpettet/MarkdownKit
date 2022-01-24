@@ -25,7 +25,7 @@ Inherits MKBlock
 		  End If
 		  
 		  // Compute the characters that make up this heading's title. This is required for later inline parsing.
-		  Var tmp() as MKCharacter = s.MKCharacters(line)
+		  Var tmp() as MKCharacter = s.MKCharacters(line, Self.Start - line.Start + OpeningSequenceLength)
 		  For Each character As MKCharacter In tmp
 		    Characters.Add(character)
 		  Next character

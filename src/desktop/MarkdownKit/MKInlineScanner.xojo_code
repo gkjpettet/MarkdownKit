@@ -555,6 +555,8 @@ Protected Class MKInlineScanner
 		  ///
 		  /// Assumes [block] is an inline container block (i.e: a paragraph, ATX heading or setext heading).
 		  
+		  #Pragma Warning "BUG: The source code offsets for ATX titles are wrong. ComputeInlineStart not being used?"
+		  
 		  Var pos As Integer = 0
 		  Var chars() As MKCharacter = block.Characters
 		  Var charsLastIndex As Integer = chars.LastIndex

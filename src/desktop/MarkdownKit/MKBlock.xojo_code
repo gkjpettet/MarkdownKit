@@ -94,7 +94,7 @@ Protected Class MKBlock
 		    If s = "" Then Return
 		    
 		    // Append the characters in the line, skipping leading whitespace.
-		    Var tmp() As MKCharacter = s.MKCharacters(line, startPos)
+		    Var tmp() As MKCharacter = s.MKCharacters(line)
 		    Var seenNWS As Boolean = False
 		    For Each character As MKCharacter In tmp
 		      If Not character.IsMarkdownWhitespace Then

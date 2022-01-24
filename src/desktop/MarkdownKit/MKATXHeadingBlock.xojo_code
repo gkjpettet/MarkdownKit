@@ -25,7 +25,7 @@ Inherits MKBlock
 		  End If
 		  
 		  // Compute the characters that make up this heading's title. This is required for later inline parsing.
-		  Var tmp() as MKCharacter = s.MKCharacters(line, line.Start)
+		  Var tmp() as MKCharacter = s.MKCharacters(line)
 		  For Each character As MKCharacter In tmp
 		    Characters.Add(character)
 		  Next character
@@ -110,6 +110,70 @@ Inherits MKBlock
 			Name="Top"
 			Visible=true
 			Group="Position"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingSequenceAbsoluteStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingSequenceCount"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ClosingSequenceLocalStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="HasClosingSequence"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Level"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningSequenceAbsoluteStart"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningSequenceLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="OpeningSequenceLocalStart"
+			Visible=false
+			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
 			EditorType=""

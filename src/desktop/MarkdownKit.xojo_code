@@ -186,10 +186,9 @@ Protected Module MarkdownKit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, Description = 52657475726E73205B735D20617320616E206172726179206F66204D4B43686172616374657220696E7374616E6365732E205B73746172745D2069732074686520302D6261736564206C6F63616C20706F736974696F6E20696E2074686520636F6E7461696E696E67206C696E65206F66207468652066697273742063686172616374657220696E205B735D2E
-		Function MKCharacters(Extends s As String, line As TextLine, localStart As Integer) As MKCharacter()
+	#tag Method, Flags = &h0, Description = 52657475726E73205B735D20617320616E206172726179206F66204D4B43686172616374657220696E7374616E6365732E
+		Function MKCharacters(Extends s As String, line As TextLine) As MKCharacter()
 		  /// Returns [s] as an array of MKCharacter instances. 
-		  /// [start] is the 0-based local position in the containing line of the first character in [s].
 		  
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
@@ -200,7 +199,7 @@ Protected Module MarkdownKit
 		  Var tmpLastIndex As Integer = tmp.LastIndex
 		  
 		  For i As Integer = 0 To tmpLastIndex
-		    chars.Add(New MKCharacter(tmp(i), line, i + localStart))
+		    chars.Add(New MKCharacter(tmp(i), line, i))
 		  Next i
 		  
 		  Return chars

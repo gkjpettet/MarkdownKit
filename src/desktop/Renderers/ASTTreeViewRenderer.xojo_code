@@ -296,7 +296,7 @@ Implements MarkdownKit.MKRenderer
 		Function VisitInlineText(it As MarkdownKit.MKInlineText) As Variant
 		  Var node As New TreeViewNode("Inline Text")
 		  node.AppendNode(CreateNodeFromCharacters("Contents", it.Characters))
-		  node.AppendNode(New TreeViewNode("Start: " + it.Start.ToString))
+		  node.AppendNode(New TreeViewNode("Start (abs, local): " + it.Start.ToString + ", " + it.LocalStart.ToString))
 		  node.AppendNode(New TreeViewNode("End Position: " + it.EndPosition.ToString))
 		  
 		  Return node

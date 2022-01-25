@@ -499,7 +499,7 @@ Implements MarkdownKit.MKRenderer
 		  /// Part of the MKRenderer interface.
 		  
 		  // List marker.
-		  Tokens.Add(New LineToken(item.Start, item.ListData.LinePosition, item.ListData.MarkerWidth, _
+		  Tokens.Add(New LineToken(item.Start, item.ListData.ListMarkerLocalPosition, item.ListData.MarkerWidth, _
 		  item.LineNumber, "listMarker"))
 		  
 		  // Children.

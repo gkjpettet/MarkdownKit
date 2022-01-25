@@ -969,8 +969,8 @@ Protected Class MKParser
 		    data = New MKListData
 		    data.BulletCharacter = c
 		    data.StartNumber = 1
-		    data.LinePosition = pos - 1
-		    data.BulletCharacterAbsolutionPosition = line.Start + data.LinePosition
+		    data.ListMarkerLocalPosition = pos - 1
+		    data.ListMarkerAbsolutionPosition = line.Start + data.ListMarkerLocalPosition
 		    
 		  ElseIf c.IsDigit Then
 		    Var markerStartPos As Integer = pos
@@ -1009,9 +1009,9 @@ Protected Class MKParser
 		    data = New MKListData
 		    data.ListType = MKListTypes.Ordered
 		    data.BulletCharacter = ""
-		    data.BulletCharacterAbsolutionPosition = line.Start + markerStartPos
+		    data.ListMarkerAbsolutionPosition = line.Start + markerStartPos
 		    data.StartNumber = start
-		    data.LinePosition = markerStartPos
+		    data.ListMarkerLocalPosition = markerStartPos
 		    data.ListDelimiter = If(c = ".", MKListDelimiters.Period, MKListDelimiters.Parenthesis)
 		  Else
 		    Return False

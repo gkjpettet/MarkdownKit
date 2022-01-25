@@ -348,8 +348,8 @@ Implements MarkdownKit.MKRenderer
 		Function VisitListItem(item As MarkdownKit.MKListItemBlock) As Variant
 		  Var node As New TreeViewNode("List Item")
 		  
-		  node.AppendNode(New TreeViewNode("Start: " + item.Start.ToString))
-		  node.AppendNode(New TreeViewNode("Line Position: " + item.ListData.LinePosition.ToString))
+		  node.AppendNode(New TreeViewNode("Absolute Position: " + item.ListData.ListMarkerAbsolutionPosition.ToString))
+		  node.AppendNode(New TreeViewNode("Local Position: " + item.ListData.ListMarkerLocalPosition.ToString))
 		  node.AppendNode(New TreeViewNode("Marker Offset: " + item.ListData.MarkerOffset.ToString))
 		  node.AppendNode(New TreeViewNode("Marker Width: " + item.ListData.MarkerWidth.ToString))
 		  

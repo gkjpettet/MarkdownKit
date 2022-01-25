@@ -265,7 +265,7 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 49662074686520636861726163746572206174205B7374617274506F735D20696E205B63686172735D20626567696E7320612076616C696420696E6C696E652048544D4C207370616E207468656E206F6E65206973206372656174656420616E642072657475726E65642C206F7468657277697365204E696C2069732072657475726E65642E
-		Private Shared Function HandleLeftAngleBracket(parent As MKBlock, chars() As MKCharacter, startPos As Integer) As MKInlineHTML
+		Private Shared Function HandleLeftAngleBracket(parent As MKBlock, chars() As MarkdownKit.MKCharacter, startPos As Integer) As MKInlineHTML
 		  /// If the character at [startPos] in [chars] begins a valid inline HTML span then one is created and 
 		  /// returned, otherwise Nil is returned.
 		  ///
@@ -298,7 +298,8 @@ Protected Class MKInlineScanner
 		    Var uri As String
 		    pos = MKInlineHTMLScanner.ScanAutoLink(chars, startPos + 1, uri)
 		    If pos > 0 Then
-		      html = New MKInlineHTML(parent, parent.Start + startPos, startPos, parent.Start + pos - 1, pos - 1)
+		      html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition, _
+		      parent.Start + pos - 1, pos - 1)
 		      html.IsAutoLink = True
 		      html.Title = ""
 		      html.Destination = uri
@@ -310,7 +311,8 @@ Protected Class MKInlineScanner
 		      // Email link?
 		      pos = MKInlineHTMLScanner.ScanEmailLink(chars, startPos + 1, uri)
 		      If pos > 0 Then
-		        html = New MKInlineHTML(parent, parent.Start + startPos, startPos, parent.Start + pos - 1, pos - 1)
+		        html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition, _
+		        parent.Start + pos - 1, pos - 1)
 		        html.IsAutoLink = True
 		        html.Title = ""
 		        html.Destination = "mailto:" + uri
@@ -327,7 +329,8 @@ Protected Class MKInlineScanner
 		  If pos = 0 Then
 		    Return Nil
 		  Else
-		    html = New MKInlineHTML(parent, parent.Start + startPos, startPos, parent.Start + pos - 1, pos - 1)
+		    html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition, _
+		    parent.Start + pos - 1, pos - 1)
 		    html.Finalise
 		    Return html
 		  End If

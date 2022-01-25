@@ -94,7 +94,7 @@ Protected Class MKBlock
 		    If s = "" Then Return
 		    
 		    // Append the characters in the line, skipping leading whitespace.
-		    Var tmp() As MKCharacter = s.MKCharacters(line)
+		    Var tmp() As MKCharacter = s.MKCharacters(line, startPos)
 		    Var seenNWS As Boolean = False
 		    For Each character As MKCharacter In tmp
 		      If Not character.IsMarkdownWhitespace Then
@@ -639,7 +639,7 @@ Protected Class MKBlock
 			Visible=false
 			Group="Behavior"
 			InitialValue="MKBlockTypes.Block"
-			Type="MKBlockTypes"
+			Type="MarkdownKit.MKBlockTypes"
 			EditorType="Enum"
 			#tag EnumValues
 				"0 - AtxHeading"

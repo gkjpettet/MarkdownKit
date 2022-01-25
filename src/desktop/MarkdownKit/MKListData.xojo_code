@@ -19,6 +19,10 @@ Protected Class MKListData
 		BulletCharacter As String
 	#tag EndProperty
 
+	#tag Property, Flags = &h0, Description = 54686520302D626173656420706F736974696F6E20696E20746865206F726967696E616C20736F75726365206F66207468652066697273742062756C6C6574206368617261637465722E
+		BulletCharacterAbsolutionPosition As Integer = 0
+	#tag EndProperty
+
 	#tag Property, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit)), Description = 5472756520696620746865206C697374206973207469676874202873756368206C697374732077696C6C206E6F742072656E646572206164646974696F6E616C206578706C696369742070617261677261706820656C656D656E7473292E
 		IsTight As Boolean = False
 	#tag EndProperty

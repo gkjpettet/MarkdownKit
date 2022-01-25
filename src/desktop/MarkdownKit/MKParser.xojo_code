@@ -124,7 +124,7 @@ Protected Class MKParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 52656D6F7665732074686520706173736564205B7061726167726170685D2066726F6D2069747320706172656E7420616E64207265706C6163657320697420776974682061206E65772053657465787448656164696E6720626C6F636B2077697468207468652073616D65206368696C6472656E2E2052657475726E73207468652053657465787448656164696E6720626C6F636B2E
-		Private Function ConvertParagraphBlockToSetextHeading(ByRef paragraph As MKBlock, line As TextLine) As MKSetextHeadingBlock
+		Private Function ConvertParagraphBlockToSetextHeading(ByRef paragraph As MarkdownKit.MKBlock, line As TextLine) As MKSetextHeadingBlock
 		  /// Removes the passed [paragraph] from its parent and replaces it with a new SetextHeading block
 		  /// with the same children. Returns the SetextHeading block.
 		  
@@ -935,7 +935,7 @@ Protected Class MKParser
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 52657475726E7320547275652069662061626C6520746F2070617273652061204C6973744974656D206D61726B65722C20706F70756C6174696E67205B646174615D2077697468207468652064657461696C732E
-		Private Function ParseListMarker(indented As Boolean, line As TextLine, pos As Integer, interruptsParagraph As Boolean, ByRef data As MKListData) As Boolean
+		Private Function ParseListMarker(indented As Boolean, line As TextLine, pos As Integer, interruptsParagraph As Boolean, ByRef data As MarkdownKit.MKListData) As Boolean
 		  /// Returns True if able to parse a ListItem marker, populating [data] with the details.
 		  
 		  #Pragma NilObjectChecking False
@@ -970,6 +970,7 @@ Protected Class MKParser
 		    data.BulletCharacter = c
 		    data.StartNumber = 1
 		    data.LinePosition = pos - 1
+		    data.BulletCharacterAbsolutionPosition = line.Start + data.LinePosition
 		    
 		  ElseIf c.IsDigit Then
 		    Var markerStartPos As Integer = pos
@@ -1008,6 +1009,7 @@ Protected Class MKParser
 		    data = New MKListData
 		    data.ListType = MKListTypes.Ordered
 		    data.BulletCharacter = ""
+		    data.BulletCharacterAbsolutionPosition = line.Start + markerStartPos
 		    data.StartNumber = start
 		    data.LinePosition = markerStartPos
 		    data.ListDelimiter = If(c = ".", MKListDelimiters.Period, MKListDelimiters.Parenthesis)

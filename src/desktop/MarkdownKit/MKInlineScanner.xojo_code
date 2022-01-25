@@ -72,7 +72,7 @@ Protected Class MKInlineScanner
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 4765747320746865206461746120666F7220612076616C696461746564207265666572656E6365206C696E6B206E616D6564205B6C696E6B4C6162656C5D2066726F6D2074686520646F63756D656E742773207265666572656E6365206D61702073746F72696E6720746865206C696E6B277320656E6420706F736974696F6E20616E642063686172616374657220646174612E
-		Private Shared Function CreateReferenceLinkData(ByRef container As MKBlock, linkLabel As String, chars() As MKCharacter, containerEndPos As Integer, isInlineImage As Boolean, openerChar As MKCharacter, closerChar As MKCharacter, linkType As MKLinkTypes) As MKInlineLinkData
+		Private Shared Function CreateReferenceLinkData(ByRef container As MKBlock, linkLabel As String, chars() As MKCharacter, containerEndPos As Integer, isInlineImage As Boolean, openerChar As MKCharacter, closerChar As MKCharacter, linkType As MKLinkTypes, optionalDestination As MarkdownKit.MKLinkDestination = Nil) As MKInlineLinkData
 		  /// Gets the data for a validated reference link named [linkLabel] from the document's reference map
 		  /// storing the link's end position and character data.
 		  ///
@@ -91,7 +91,11 @@ Protected Class MKInlineScanner
 		  Var ref As MarkdownKit.MKLinkReferenceDefinition = _
 		  MKLinkReferenceDefinition(container.Document.References.Value(linkLabel.Lowercase))
 		  
-		  data.Destination = ref.LinkDestination
+		  If linkType = MKLinkTypes.FullReference And optionalDestination <> Nil Then
+		    data.Destination = optionalDestination
+		  Else
+		    data.Destination = ref.LinkDestination
+		  End If
 		  data.Title = ref.LinkTitle
 		  data.Characters = chars
 		  data.LinkType = linkType
@@ -182,9 +186,15 @@ Protected Class MKInlineScanner
 		  If Not container.Document.References.HasKey(linkLabel.Lowercase) Then Return Nil
 		  
 		  // Construct this reference link.
-		  Return CreateReferenceLinkData(container, linkLabel, linkTextChars, indexOfClosingBracket, isInlineImage, _
+		  Var data As MarkdownKit.MKInlineLinkData = _
+		  CreateReferenceLinkData(container, linkLabel, linkTextChars, indexOfClosingBracket, isInlineImage, _
 		  openerChar, closerChar, MKLinkTypes.FullReference)
 		  
+		  data.FullReferenceDestinationOpener = chars(charsStartPos)
+		  data.FullReferenceDestinationCloser = chars(indexOfClosingBracket)
+		  data.FullReferenceLabelLength = indexOfClosingBracket - charsStartPos
+		  
+		  Return data
 		End Function
 	#tag EndMethod
 

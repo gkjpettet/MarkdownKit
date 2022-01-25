@@ -12,6 +12,10 @@ Inherits MKBlock
 		  Self.OpenerCharacter = data.OpenerCharacter
 		  Self.CloserCharacter = data.CloserCharacter
 		  Self.LinkType = data.LinkType
+		  
+		  Self.FullReferenceDestinationOpener = data.FullReferenceDestinationOpener
+		  Self.FullReferenceDestinationCloser = data.FullReferenceDestinationCloser
+		  Self.FullReferenceLabelLength = data.FullReferenceLabelLength
 		End Sub
 	#tag EndMethod
 
@@ -22,6 +26,18 @@ Inherits MKBlock
 
 	#tag Property, Flags = &h0, Description = 5468697320696E6C696E65206C696E6B27732064657374696E6174696F6E2E
 		Destination As MarkdownKit.MKLinkDestination
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 4966207468697320697320612066756C6C207265666572656E6365207479706520696E6C696E65206C696E6B2C20746869732069732074686520605D602063686172616374657220616674657220746865207265666572656E6365206C696E6B2773206E616D652E
+		FullReferenceDestinationCloser As MarkdownKit.MKCharacter
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 4966207468697320697320612066756C6C207265666572656E6365207479706520696E6C696E65206C696E6B2C20746869732069732074686520605B6020636861726163746572206265666F726520746865207265666572656E6365206C696E6B2773206E616D652E
+		FullReferenceDestinationOpener As MarkdownKit.MKCharacter
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 4966207468697320697320612066756C6C207265666572656E6365207479706520696E6C696E65206C696E6B2C207468697320697320746865206C656E677468206F6620746865207265666572656E6365206C696E6B206C6162656C2E
+		FullReferenceLabelLength As Integer = 0
 	#tag EndProperty
 
 	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686973206C696E6B2068617320612064657374696E6174696F6E2E
@@ -109,14 +125,6 @@ Inherits MKBlock
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Title"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="LinkType"
 			Visible=false
 			Group="Behavior"
@@ -129,6 +137,22 @@ Inherits MKBlock
 				"2 - ShortcutReference"
 				"3 - Standard"
 			#tag EndEnumValues
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="HasDestination"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="HasTitle"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="Boolean"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

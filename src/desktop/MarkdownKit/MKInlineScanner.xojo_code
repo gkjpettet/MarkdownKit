@@ -362,11 +362,12 @@ Protected Class MKInlineScanner
 		  
 		  // Optional link destination?
 		  Var destinationData As New MarkdownKit.MKLinkDestination(chars(parenthStartPos), "", 0, Nil)
+		  Var destinationStartPos As Integer = pos
 		  Var destination As String = ScanInlineLinkDestination(chars, pos)
 		  MarkdownKit.Unescape(destination)
 		  If destination.Length > 0 Then
 		    destinationData.Value = destination
-		    destinationData.Length = pos - destinationData.StartCharacter.AbsolutePosition - 1
+		    destinationData.Length = pos - destinationStartPos
 		    destinationData.EndCharacter = chars(pos)
 		  Else
 		    destinationData.StartCharacter = Nil
@@ -374,9 +375,7 @@ Protected Class MKInlineScanner
 		  
 		  Var titleData As MarkdownKit.MKLinkTitle
 		  
-		  If pos >= charsLastIndex Then
-		    Return CreateInlineLinkData(linkTextChars, destinationData, titleData, pos, isInlineImage, openerChar, closingBracketChar)
-		  End If
+		  If pos > charsLastIndex Then Return Nil
 		  
 		  Var seenWhiteSpace As Boolean = False
 		  // Advance past any optional whitespace.
@@ -412,8 +411,7 @@ Protected Class MKInlineScanner
 		    If isOpenValueBlock Then
 		      titleData.ValueBlocks.Add(vb)
 		    End If
-		    
-		    titleData.Length = pos - titleData.OpeningDelimiter.AbsolutePosition - 1
+		    titleData.Length = pos - titleValueStartPos - 2 // -2 as `pos` points to the closing `)`
 		    titleData.ClosingDelimiter = chars(pos - 1)
 		  Else
 		    titleData.OpeningDelimiter = Nil

@@ -387,8 +387,33 @@ Protected Class MKBlock
 		          
 		        ElseIf data.Value("linkTitleValid") Then
 		          titleData.OpeningDelimiter = Characters(titleOpeningDelimiterStart)
+		          titleData.ClosingDelimiter = Characters(i)
 		          titleData.Value = data.Value("linkTitle")
 		          titleData.Length = data.Value("linkTitleLength")
+		          
+		          // Since titles can span multiple lines we need to store them in line blocks so 
+		          // they can be used by source code renderers.
+		          Var vb As MarkdownKit.MKLinkTitleBlock
+		          Var isOpenValueBlock As Boolean = False
+		          Var c As MarkdownKit.MKCharacter
+		          For j As Integer = titleOpeningDelimiterStart + 1 To i - 1 // -1 as `` points to the closing delimiter
+		            c = Characters(j)
+		            If c.IsLineEnding Then
+		              If vb <> Nil Then titleData.ValueBlocks.Add(vb)
+		              isOpenValueBlock = False
+		              Continue
+		            End If
+		            If Not isOpenValueBlock Then
+		              vb = New MKLinkTitleBlock(c.AbsolutePosition, c.LocalPosition, 1, c.Line.Number)
+		              isOpenValueBlock = True
+		            Else
+		              vb.Length = vb.Length + 1
+		            End If
+		          Next j
+		          If isOpenValueBlock Then
+		            titleData.ValueBlocks.Add(vb)
+		          End If
+		          
 		        End If
 		      End If
 		      

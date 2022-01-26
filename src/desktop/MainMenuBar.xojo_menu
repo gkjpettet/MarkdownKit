@@ -180,34 +180,12 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
-      Begin DesktopMenuItem WindowAST
-         SpecialMenu = 0
-         Index = -2147483648
-         Text = "AST"
-         ShortcutKey = "2"
-         Shortcut = "Cmd+2"
-         MenuModifier = True
-         AutoEnabled = True
-         AutoEnable = True
-         Visible = True
-      End
       Begin DesktopMenuItem WindowHTML
          SpecialMenu = 0
          Index = -2147483648
          Text = "HTML"
-         ShortcutKey = "3"
-         Shortcut = "Cmd+3"
-         MenuModifier = True
-         AutoEnabled = True
-         AutoEnable = True
-         Visible = True
-      End
-      Begin DesktopMenuItem WindowASTTokens
-         SpecialMenu = 0
-         Index = -2147483648
-         Text = "AST Tokens"
-         ShortcutKey = "4"
-         Shortcut = "Cmd+4"
+         ShortcutKey = "2"
+         Shortcut = "Cmd+2"
          MenuModifier = True
          AutoEnabled = True
          AutoEnable = True

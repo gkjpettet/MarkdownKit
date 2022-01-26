@@ -1,6 +1,0 @@
-<document>
-<paragraph>
-<text>foo </text>
-<html_inline>&lt;?php echo $a; ?&gt;</html_inline>
-</paragraph>
-</document>

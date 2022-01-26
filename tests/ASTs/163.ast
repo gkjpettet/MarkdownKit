@@ -1,9 +1,0 @@
-<document>
-<paragraph>
-<link destination="my_(url)" title="title (with parens)">
-<text>Foo</text>
-<text>*</text>
-<text>bar]</text>
-</link>
-</paragraph>
-</document>

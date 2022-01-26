@@ -1,9 +1,0 @@
-<document>
-<paragraph>
-<text>Foo</text>
-<softbreak />
-<html_inline>&lt;a href=&quot;bar&quot;&gt;</html_inline>
-<softbreak />
-<text>baz</text>
-</paragraph>
-</document>

@@ -1,7 +1,0 @@
-<document>
-<paragraph>
-<link destination="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean" title="">
-<text>http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</text>
-</link>
-</paragraph>
-</document>

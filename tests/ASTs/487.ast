@@ -1,9 +1,0 @@
-<document>
-<paragraph>
-<text>[</text>
-<text>link</text>
-<text>](foo</text>
-<softbreak />
-<text>bar)</text>
-</paragraph>
-</document>

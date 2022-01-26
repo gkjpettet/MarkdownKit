@@ -1,9 +1,0 @@
-<document>
-<heading•level="1">
-<text>foo </text>
-<emph>
-<text>bar</text>
-</emph>
-<text> *baz*</text>
-</heading>
-</document>

@@ -1,7 +1,0 @@
-<document>
-<paragraph>
-<link destination="/url\bar*baz" title="foo&quot;bar\baz">
-<text>foo</text>
-</link>
-</paragraph>
-</document>

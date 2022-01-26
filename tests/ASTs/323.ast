@@ -1,9 +1,0 @@
-<document>
-<paragraph>
-<text>*foo*</text>
-<softbreak />
-<emph>
-<text>foo</text>
-</emph>
-</paragraph>
-</document>

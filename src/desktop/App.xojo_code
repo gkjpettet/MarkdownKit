@@ -2,24 +2,6 @@
 Protected Class App
 Inherits DesktopApplication
 	#tag MenuHandler
-		Function WindowAST() As Boolean Handles WindowAST.Action
-			WinASTTreeView.Show
-			
-			Return True
-			
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
-		Function WindowASTTokens() As Boolean Handles WindowASTTokens.Action
-			WinASTTokens.Show
-			
-			Return True
-			
-		End Function
-	#tag EndMenuHandler
-
-	#tag MenuHandler
 		Function WindowHTML() As Boolean Handles WindowHTML.Action
 			WinHTML.Show
 			

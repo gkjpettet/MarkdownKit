@@ -8,7 +8,7 @@ Inherits TestController
 		  Var group As TestGroup
 		  
 		  group = New AdditionalTests(Self, "Additional")
-		  group = New HTMLTests(Self, "HTML")
+		  group = New CommonMarkTests(Self, "CommonMark")
 		  
 		End Sub
 	#tag EndEvent

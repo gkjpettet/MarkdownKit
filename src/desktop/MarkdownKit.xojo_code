@@ -2920,7 +2920,7 @@ Protected Module MarkdownKit
 	#tag Constant, Name = MAX_REFERENCE_LABEL_LENGTH, Type = Double, Dynamic = False, Default = \"999", Scope = Protected, Description = 546865206D6178696D756D206E756D626572206F662063686172616374657273207065726D69747465642077697468696E207468652073717561726520627261636B657473206F662061206C696E6B206C6162656C2E
 	#tag EndConstant
 
-	#tag Constant, Name = VERSION_MAJOR, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
+	#tag Constant, Name = VERSION_MAJOR, Type = Double, Dynamic = False, Default = \"2", Scope = Protected
 	#tag EndConstant
 
 	#tag Constant, Name = VERSION_MINOR, Type = Double, Dynamic = False, Default = \"0", Scope = Protected

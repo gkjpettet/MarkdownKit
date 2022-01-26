@@ -388,8 +388,6 @@ Protected Class MKInlineScanner
 		    destinationData.Value = destination
 		    destinationData.Length = pos - destinationStartPos
 		    destinationData.EndCharacter = chars(pos)
-		  Else
-		    destinationData.StartCharacter = Nil
 		  End If
 		  
 		  Var titleData As MarkdownKit.MKLinkTitle

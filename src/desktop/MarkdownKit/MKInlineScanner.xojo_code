@@ -95,6 +95,13 @@ Protected Class MKInlineScanner
 		  Var data As New MarkdownKit.MKInlineLinkData(isInlineImage, linkType)
 		  data.EndPosition = containerEndPos
 		  
+		  Var linkTextData As New MarkdownKit.MKLinkLabel
+		  linkTextData.Length = chars.Count
+		  linkTextData.Value = chars.ToString
+		  
+		  #Pragma Warning "TODO: We should make these MKValueBlocks instead of characters"
+		  linkTextData.Characters = chars
+		  
 		  // Get the reference destination and title from the document's reference map.
 		  Var ref As MarkdownKit.MKLinkReferenceDefinition = _
 		  MKLinkReferenceDefinition(container.Document.References.Value(linkLabel.Lowercase))
@@ -104,6 +111,7 @@ Protected Class MKInlineScanner
 		  Else
 		    data.Destination = ref.LinkDestination
 		  End If
+		  data.Label = linkTextData
 		  data.Title = ref.LinkTitle
 		  data.Characters = chars
 		  data.LinkType = linkType

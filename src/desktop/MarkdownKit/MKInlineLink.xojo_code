@@ -5,6 +5,7 @@ Inherits MKBlock
 		Sub Constructor(parent As MKBlock, absoluteStart As Integer, data As MarkdownKit.MKInlineLinkData)
 		  Super.Constructor(MKBlockTypes.InlineLink, parent, absoluteStart)
 		  
+		  Self.Label = data.Label
 		  Self.Title = data.Title
 		  Self.Destination = data.Destination
 		  Self.Characters = data.Characters
@@ -16,6 +17,7 @@ Inherits MKBlock
 		  Self.FullReferenceDestinationOpener = data.FullReferenceDestinationOpener
 		  Self.FullReferenceDestinationCloser = data.FullReferenceDestinationCloser
 		  Self.FullReferenceLabelLength = data.FullReferenceLabelLength
+		  
 		End Sub
 	#tag EndMethod
 
@@ -57,6 +59,10 @@ Inherits MKBlock
 		#tag EndGetter
 		HasTitle As Boolean
 	#tag EndComputedProperty
+
+	#tag Property, Flags = &h0, Description = 5468697320696E6C696E65206C696E6B2773206C6162656C2E204D6179206265204E696C2E
+		Label As MarkdownKit.MKLinkLabel
+	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468652074797065206F66206C696E6B20746869732069732E
 		LinkType As MarkdownKit.MKLinkTypes

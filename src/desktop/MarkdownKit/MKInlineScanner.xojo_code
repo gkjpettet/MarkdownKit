@@ -56,9 +56,17 @@ Protected Class MKInlineScanner
 		  /// [openerChar] is the opening `[` character (for links) or `!` character (for images).
 		  /// [closerChar] is the closing `]` character.
 		  
-		  Var data As New MKInlineLinkData(isInlineImage, MKLinkTypes.Standard)
+		  Var data As New MarkdownKit.MKInlineLinkData(isInlineImage, MKLinkTypes.Standard)
+		  
+		  Var labelData As New MarkdownKit.MKLinkLabel
+		  labelData.Length = linkTextChars.Count
+		  labelData.Value = linkTextChars.ToString
+		  
+		  #Pragma Warning "TODO: We should make these MKValueBlocks instead of characters"
+		  labelData.Characters = linkTextChars
 		  
 		  data.EndPosition = containerEndPos
+		  data.Label = labelData
 		  data.Destination = destinationData
 		  data.Title = titleData
 		  data.Characters = linkTextChars

@@ -70,6 +70,7 @@ Class=BetterDictionaryIterator;Dependencies/Better Dictionary/BetterDictionaryIt
 Class=MKThematicBreak;MarkdownKit/MKThematicBreak.xojo_code;&h000000002518BFFF;&h000000002F26BFFF;false
 Class=MKAbstractList;MarkdownKit/MKAbstractList.xojo_code;&h00000000623DB7FF;&h000000002F26BFFF;false
 Class=MKLinkDestination;MarkdownKit/MKLinkDestination.xojo_code;&h000000004D7467FF;&h000000002F26BFFF;false
+Class=MKLinkLabel;MarkdownKit/MKLinkLabel.xojo_code;&h00000000475BD7FF;&h000000002F26BFFF;false
 Class=MKLinkTitle;MarkdownKit/MKLinkTitle.xojo_code;&h0000000073FE9FFF;&h000000002F26BFFF;false
 Class=MKLinkTitleBlock;MarkdownKit/MKLinkTitleBlock.xojo_code;&h000000004AEF6FFF;&h000000002F26BFFF;false
 Class=LineToken;LineToken.xojo_code;&h0000000063D017FF;&h0000000000000000;false

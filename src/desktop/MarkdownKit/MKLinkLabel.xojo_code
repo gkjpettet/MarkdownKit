@@ -1,5 +1,5 @@
 #tag Class
-Protected Class MKLinkDestination
+Protected Class MKLinkLabel
 	#tag Method, Flags = &h0
 		Sub Constructor()
 		  
@@ -7,34 +7,29 @@ Protected Class MKLinkDestination
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(startChar As MKCharacter, value As String, length As Integer, endChar As MKCharacter)
-		  Self.StartCharacter = startChar
+		Sub Constructor(length As Integer, value As String, characters() As MarkdownKit.MKCharacter)
+		  Self.Characters = characters
 		  Self.Value = value
 		  Self.Length = length
-		  Self.EndCharacter = endChar
 		End Sub
 	#tag EndMethod
 
 
 	#tag Note, Name = About
-		
-		Holds data about a link destination required for rendering into source code tokens.
+		label
+		Hn required for rendering into source code tokens.
 	#tag EndNote
 
 
-	#tag Property, Flags = &h0, Description = 546865206C61737420636861726163746572206F662074686973206C696E6B2064657374696E6174696F6E2E
-		EndCharacter As MarkdownKit.MKCharacter
+	#tag Property, Flags = &h0, Description = 546865206C6162656C277320636861726163746572732E204D617920626520656D7074792E
+		Characters() As MarkdownKit.MKCharacter
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 546865206C656E677468206F66207468652064657374696E6174696F6E2E
+	#tag Property, Flags = &h0, Description = 546865206C656E677468206F6620746865206C696E6B206C6162656C20286578636C7564696E672064656C696D6974657273292E
 		Length As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h0, Description = 54686520666972737420636861726163746572206F662074686973206C696E6B2064657374696E6174696F6E2E
-		StartCharacter As MarkdownKit.MKCharacter
-	#tag EndProperty
-
-	#tag Property, Flags = &h0, Description = 54686520756E65736361706564206C696E6B2064657374696E6174696F6E2E
+	#tag Property, Flags = &h0, Description = 546865206C696E6B206C6162656C2076616C75652E
 		Value As String
 	#tag EndProperty
 

@@ -41,7 +41,7 @@ Protected Class MKInlineLinkData
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Label As String
+		Label As MarkdownKit.MKLinkLabel
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 5468652074797065206F66206C696E6B20746869732069732E

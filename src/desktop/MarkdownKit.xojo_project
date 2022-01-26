@@ -59,6 +59,7 @@ Module=StringKit;../../../StringKit/StringKit.xojo_xml_code;&h0000000057735FFF;&
 Class=ASTTreeViewRenderer;Renderers/ASTTreeViewRenderer.xojo_code;&h0000000017159FFF;&h00000000078CCFFF;false
 Folder=Tests;Unit Testing/Tests;&h0000000044C729E7;&h000000002516B04D;false
 Class=HTMLTests;Unit Testing/Tests/HTMLTests.xojo_code;&h000000005E5CAFFF;&h0000000044C729E7;false
+Class=AdditionalTests;Unit Testing/Tests/AdditionalTests.xojo_code;&h000000007187D7FF;&h0000000044C729E7;false
 Folder=TestFramework;Unit Testing/TestFramework;&h000000003E1A9B41;&h000000002516B04D;false
 Class=TestGroup;Unit Testing/TestFramework/TestGroup.xojo_code;&h000000006F90619D;&h000000003E1A9B41;false
 Class=TestController;Unit Testing/TestFramework/TestController.xojo_code;&h000000006FF90549;&h000000003E1A9B41;false

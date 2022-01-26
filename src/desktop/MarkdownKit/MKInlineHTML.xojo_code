@@ -2,13 +2,14 @@
 Protected Class MKInlineHTML
 Inherits MKBlock
 	#tag Method, Flags = &h0
-		Sub Constructor(parent As MKBlock, absoluteStartPos As Integer, parentLocalStart As Integer, localStartPos As Integer, absoluteRightAnglePos As Integer, localRightAnglePos As Integer)
+		Sub Constructor(parent As MKBlock, absoluteStartPos As Integer, parentLocalStart As Integer, localStartPos As Integer, absoluteRightAngleChar As MKCharacter, parentLocalRightAnglePos As Integer)
 		  Super.Constructor(MKBlockTypes.InlineHTML, parent, absoluteStartPos)
 		  
 		  Self.ParentLocalStart = parentLocalStart
 		  Self.LocalStart = localStartPos
-		  Self.EndPosition = absoluteRightAnglePos
-		  Self.LocalRightAnglePos = localRightAnglePos
+		  Self.EndPosition = absoluteRightAngleChar.AbsolutePosition
+		  Self.EndCharacter = absoluteRightAngleChar
+		  Self.LocalRightAnglePos = parentLocalRightAnglePos
 		End Sub
 	#tag EndMethod
 
@@ -21,11 +22,12 @@ Inherits MKBlock
 		  Var contentsBuffer() As String
 		  Var c As MKCharacter
 		  For i As Integer = ParentLocalStart To LocalRightAnglePos
-		    If contentsBuffer.Count = 0 Then textBlockStart = Parent.Characters(i).LocalPosition
+		    If contentsBuffer.Count = 0 Then textBlockStart = i
 		    c = Parent.Characters(i)
 		    If c.IsLineEnding Then
 		      Var s As String = String.FromArray(contentsBuffer, "")
-		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, textBlockStart, _
+		      Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, _
+		      Parent.Characters(textBlockStart).LocalPosition, _
 		      s, 0, c.Line))
 		      contentsBuffer.RemoveAll
 		    Else
@@ -35,7 +37,8 @@ Inherits MKBlock
 		  
 		  If contentsBuffer.Count > 0 Then
 		    Var s As String = String.FromArray(contentsBuffer, "")
-		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, textBlockStart, _
+		    Children.Add(New MKTextBlock(Self, Parent.Characters(textBlockStart).AbsolutePosition, _
+		    Parent.Characters(textBlockStart).LocalPosition, _
 		    s, 0, c.Line))
 		  End If
 		  
@@ -45,6 +48,10 @@ Inherits MKBlock
 
 	#tag Property, Flags = &h0, Description = 4966207468697320696E6C696E652048544D4C206861732061206C696E6B2C2074686973206973207468652064657374696E6174696F6E2E
 		Destination As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0, Description = 54686520656E64696E6720603E60206368617261637465722E
+		EndCharacter As MarkdownKit.MKCharacter
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 54727565206966207468697320696E6C696E652048544D4C20697320616E206175746F6C696E6B2E

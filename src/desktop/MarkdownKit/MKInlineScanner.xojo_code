@@ -306,8 +306,8 @@ Protected Class MKInlineScanner
 		    Var uri As String
 		    pos = MKInlineHTMLScanner.ScanAutoLink(chars, startPos + 1, uri)
 		    If pos > 0 Then
-		      html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition, _
-		      parent.Start + pos - 1, pos - 1)
+		      html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition,_
+		      chars(pos - 1), pos - 1)
 		      html.IsAutoLink = True
 		      html.Title = ""
 		      html.Destination = uri
@@ -319,8 +319,8 @@ Protected Class MKInlineScanner
 		      // Email link?
 		      pos = MKInlineHTMLScanner.ScanEmailLink(chars, startPos + 1, uri)
 		      If pos > 0 Then
-		        html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition, _
-		        parent.Start + pos - 1, pos - 1)
+		        html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition,_
+		        chars(pos - 1), pos - 1)
 		        html.IsAutoLink = True
 		        html.Title = ""
 		        html.Destination = "mailto:" + uri
@@ -338,7 +338,7 @@ Protected Class MKInlineScanner
 		    Return Nil
 		  Else
 		    html = New MKInlineHTML(parent, parent.Start + startPos, startPos, chars(startPos).LocalPosition, _
-		    parent.Start + pos - 1, pos - 1)
+		    chars(pos - 1), pos - 1)
 		    html.Finalise
 		    Return html
 		  End If
@@ -614,14 +614,14 @@ Protected Class MKInlineScanner
 		      // ============
 		      // INLINE HTML
 		      // ============
-		      Var html As MKInlineHTML = HandleLeftAngleBracket(block, chars, pos)
+		      Var html As MarkdownKit.MKInlineHTML = HandleLeftAngleBracket(block, chars, pos)
 		      If html <> Nil Then
 		        // Found inline HTML.
 		        If buffer <> Nil Then FinaliseBuffer(buffer, block)
 		        // Add the inline HTML.
 		        block.Children.Add(html)
 		        // Advance the position.
-		        pos = html.EndPosition + 1
+		        pos = html.LocalRightAnglePos + 1
 		      Else
 		        If buffer <> Nil Then
 		          buffer.EndPosition = pos + block.Start

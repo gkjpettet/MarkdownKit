@@ -7,6 +7,7 @@ Inherits TestController
 		  
 		  Var group As TestGroup
 		  
+		  group = New AdditionalTests(Self, "Additional")
 		  group = New HTMLTests(Self, "HTML")
 		  
 		End Sub

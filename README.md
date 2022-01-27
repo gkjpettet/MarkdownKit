@@ -48,6 +48,10 @@ To use MarkdownKit in your own projects just follow these steps:
 Var html As String = MarkdownKit.ToHTML("Some **bold** text")
 ```
 
+## Improvements Over Version 1
+
+Version 2 is a complete rewrite. The main advantage it offers is that it tracks the exact source code positions of every block and inline component of the AST during parsing. This means that the AST contains all the information you need to implement a source code highlighter for Markdown (the whole reason I did the rewrite in the first place).
+
 ## Advanced Use
 
 I imagine that most people will only ever need to use the simple `MarkdownKit.ToHTML()` method. However, if you want access to the abstract syntax tree created by `MarkdownKit` during parsing then you can, like so:

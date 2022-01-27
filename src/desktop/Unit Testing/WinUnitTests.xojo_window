@@ -931,6 +931,7 @@ Begin DesktopWindow WinUnitTests
    Begin MarkdownTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
+      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648

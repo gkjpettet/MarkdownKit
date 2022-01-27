@@ -2,6 +2,15 @@
 Protected Class App
 Inherits DesktopApplication
 	#tag MenuHandler
+		Function HelpAboutMarkdownKit() As Boolean Handles HelpAboutMarkdownKit.Action
+			WinAbout.Show
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
 		Function WindowHTML() As Boolean Handles WindowHTML.Action
 			WinHTML.Show
 			

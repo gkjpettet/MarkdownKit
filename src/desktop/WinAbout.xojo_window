@@ -20,10 +20,10 @@ Begin DesktopWindow WinAbout
    MinimumHeight   =   64
    MinimumWidth    =   64
    Resizeable      =   False
-   Title           =   "About XojoUnit"
+   Title           =   "About MarkdownKit"
    Type            =   0
    Visible         =   True
-   Width           =   301
+   Width           =   353
    Begin DesktopLabel AppNameLabel
       AllowAutoDeactivate=   True
       Bold            =   True
@@ -47,15 +47,15 @@ Begin DesktopWindow WinAbout
       TabIndex        =   2
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "XojoUnit"
-      TextAlignment   =   0
+      Text            =   "https://github.com/gkjpettet/MarkdownKit"
+      TextAlignment   =   2
       TextColor       =   &c00000000
       Tooltip         =   ""
       Top             =   20
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   261
+      Width           =   313
    End
    Begin DesktopLabel VersionLabel
       AllowAutoDeactivate=   True
@@ -81,14 +81,78 @@ Begin DesktopWindow WinAbout
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "Version"
-      TextAlignment   =   0
+      TextAlignment   =   2
       TextColor       =   &c00000000
       Tooltip         =   ""
-      Top             =   40
+      Top             =   48
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   261
+      Width           =   313
+   End
+   Begin DesktopLabel Label1
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   22
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   61
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Made with ♥️ by"
+      TextAlignment   =   2
+      TextColor       =   &c000000
+      Tooltip         =   ""
+      Top             =   150
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   125
+   End
+   Begin DesktopLabel Label2
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   22
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   166
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Multiline       =   False
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   5
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Dr Garry Pettet"
+      TextAlignment   =   2
+      TextColor       =   &c0096FF00
+      Tooltip         =   ""
+      Top             =   150
+      Transparent     =   False
+      Underline       =   True
+      Visible         =   True
+      Width           =   125
    End
 End
 #tag EndDesktopWindow
@@ -99,9 +163,27 @@ End
 #tag Events VersionLabel
 	#tag Event
 		Sub Opening()
-		  Me.Text = "Version " + TestController.XojoUnitVersion
+		  Me.Text = "Version " + MarkdownKit.Version
 		  
 		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events Label2
+	#tag Event
+		Sub MouseUp(x As Integer, y As Integer)
+		  #Pragma Unused x
+		  #Pragma Unused y
+		  
+		  ShowURL("https://garrypettet.com")
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Function MouseDown(x As Integer, y As Integer) As Boolean
+		  #Pragma Unused x
+		  #Pragma Unused y
+		  
+		  Return True
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior

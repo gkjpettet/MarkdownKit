@@ -23,117 +23,7 @@ Begin DesktopWindow WinHTML
    Title           =   "Markdown -> HTML"
    Type            =   0
    Visible         =   True
-   Width           =   1060
-   Begin BetterTextArea Source
-      AllowAutoDeactivate=   True
-      AllowFocusRing  =   True
-      AllowSpellChecking=   True
-      AllowStyledText =   True
-      AllowTabs       =   False
-      BackgroundColor =   &cFFFFFF
-      Bold            =   False
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Format          =   ""
-      HasBorder       =   True
-      HasHorizontalScrollbar=   False
-      HasVerticalScrollbar=   True
-      Height          =   544
-      HideSelection   =   True
-      Index           =   -2147483648
-      Italic          =   False
-      Left            =   20
-      LineHeight      =   0.0
-      LineSpacing     =   1.0
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      MaximumCharactersAllowed=   0
-      Multiline       =   True
-      ReadOnly        =   False
-      Scope           =   2
-      TabIndex        =   0
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Text            =   ""
-      TextAlignment   =   0
-      TextColor       =   &c000000
-      Tooltip         =   ""
-      Top             =   20
-      Transparent     =   False
-      Underline       =   False
-      UnicodeMode     =   0
-      ValidationMask  =   ""
-      Visible         =   True
-      Width           =   570
-   End
-   Begin DesktopButton ButtonRender
-      AllowAutoDeactivate=   True
-      Bold            =   False
-      Cancel          =   False
-      Caption         =   "Render"
-      Default         =   False
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      Italic          =   False
-      Left            =   960
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockLeft        =   False
-      LockRight       =   True
-      LockTop         =   False
-      MacButtonStyle  =   0
-      Scope           =   2
-      TabIndex        =   1
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Tooltip         =   ""
-      Top             =   576
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   80
-   End
-   Begin DesktopLabel Info
-      AllowAutoDeactivate=   True
-      Bold            =   False
-      Enabled         =   True
-      FontName        =   "System"
-      FontSize        =   0.0
-      FontUnit        =   0
-      Height          =   20
-      Index           =   -2147483648
-      Italic          =   False
-      Left            =   20
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   False
-      Multiline       =   False
-      Scope           =   0
-      Selectable      =   False
-      TabIndex        =   3
-      TabPanelIndex   =   0
-      TabStop         =   True
-      Text            =   ""
-      TextAlignment   =   0
-      TextColor       =   &c000000
-      Tooltip         =   ""
-      Top             =   576
-      Transparent     =   False
-      Underline       =   False
-      Visible         =   True
-      Width           =   570
-   End
+   Width           =   1130
    Begin Timer InfoTimer
       Enabled         =   True
       Index           =   -2147483648
@@ -153,10 +43,10 @@ Begin DesktopWindow WinHTML
       Height          =   20
       Index           =   -2147483648
       Italic          =   False
-      Left            =   719
+      Left            =   602
       LockBottom      =   True
       LockedInPosition=   False
-      LockLeft        =   False
+      LockLeft        =   True
       LockRight       =   True
       LockTop         =   False
       Multiline       =   False
@@ -165,17 +55,80 @@ Begin DesktopWindow WinHTML
       TabIndex        =   4
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   ""
-      TextAlignment   =   0
+      Text            =   "Render Time"
+      TextAlignment   =   1
       TextColor       =   &c000000
       Tooltip         =   ""
       Top             =   576
       Transparent     =   False
       Underline       =   False
       Visible         =   True
-      Width           =   229
+      Width           =   318
    End
-   Begin DesktopTextArea Output
+   Begin DesktopButton ButtonRender
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Cancel          =   False
+      Caption         =   "Render"
+      Default         =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      MacButtonStyle  =   0
+      Scope           =   0
+      TabIndex        =   6
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   576
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   80
+   End
+   Begin DesktopLabel Info
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   20
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   1007
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   False
+      Multiline       =   False
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   7
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Info"
+      TextAlignment   =   3
+      TextColor       =   &c000000
+      Tooltip         =   ""
+      Top             =   576
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
+      Width           =   103
+   End
+   Begin DesktopTextArea Source
       AllowAutoDeactivate=   True
       AllowFocusRing  =   True
       AllowSpellChecking=   True
@@ -195,19 +148,19 @@ Begin DesktopWindow WinHTML
       HideSelection   =   True
       Index           =   -2147483648
       Italic          =   False
-      Left            =   607
+      Left            =   20
       LineHeight      =   0.0
       LineSpacing     =   1.0
       LockBottom      =   True
       LockedInPosition=   False
-      LockLeft        =   False
-      LockRight       =   True
+      LockLeft        =   True
+      LockRight       =   False
       LockTop         =   True
       MaximumCharactersAllowed=   0
       Multiline       =   True
       ReadOnly        =   False
-      Scope           =   2
-      TabIndex        =   5
+      Scope           =   0
+      TabIndex        =   8
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   ""
@@ -220,7 +173,108 @@ Begin DesktopWindow WinHTML
       UnicodeMode     =   1
       ValidationMask  =   ""
       Visible         =   True
-      Width           =   433
+      Width           =   561
+   End
+   Begin DesktopTabPanel TabPanel1
+      AllowAutoDeactivate=   True
+      Bold            =   False
+      Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
+      Height          =   544
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   593
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      Panels          =   ""
+      Scope           =   0
+      SmallTabs       =   False
+      TabDefinition   =   "HTML\rPreview"
+      TabIndex        =   10
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Tooltip         =   ""
+      Top             =   20
+      Transparent     =   False
+      Underline       =   False
+      Value           =   1
+      Visible         =   True
+      Width           =   517
+      Begin DesktopTextArea HTMLOutput
+         AllowAutoDeactivate=   True
+         AllowFocusRing  =   True
+         AllowSpellChecking=   True
+         AllowStyledText =   True
+         AllowTabs       =   False
+         BackgroundColor =   &cFFFFFF
+         Bold            =   False
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   0.0
+         FontUnit        =   0
+         Format          =   ""
+         HasBorder       =   True
+         HasHorizontalScrollbar=   False
+         HasVerticalScrollbar=   True
+         Height          =   477
+         HideSelection   =   True
+         Index           =   -2147483648
+         InitialParent   =   "TabPanel1"
+         Italic          =   False
+         Left            =   613
+         LineHeight      =   0.0
+         LineSpacing     =   1.0
+         LockBottom      =   True
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         MaximumCharactersAllowed=   0
+         Multiline       =   True
+         ReadOnly        =   False
+         Scope           =   2
+         TabIndex        =   0
+         TabPanelIndex   =   1
+         TabStop         =   True
+         Text            =   ""
+         TextAlignment   =   0
+         TextColor       =   &c000000
+         Tooltip         =   ""
+         Top             =   67
+         Transparent     =   False
+         Underline       =   False
+         UnicodeMode     =   1
+         ValidationMask  =   ""
+         Visible         =   True
+         Width           =   477
+      End
+      Begin DesktopHTMLViewer HTMLViewer1
+         AutoDeactivate  =   True
+         Enabled         =   True
+         Height          =   486
+         Index           =   -2147483648
+         InitialParent   =   "TabPanel1"
+         Left            =   613
+         LockBottom      =   True
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         Renderer        =   0
+         Scope           =   0
+         TabIndex        =   0
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   58
+         Visible         =   True
+         Width           =   477
+      End
    End
 End
 #tag EndDesktopWindow
@@ -243,37 +297,43 @@ End
 
 #tag EndWindowCode
 
+#tag Events InfoTimer
+	#tag Event
+		Sub Action()
+		  Info.Text = "Pos: " + Source.SelectionStart.ToString
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events ButtonRender
 	#tag Event
 		Sub Pressed()
+		  // We could do this more easily with `MarkdownKit.ToHTML()` but I'm breaking it down into its
+		  // constituent parts primarily so we can get the time taken to do each indiviudal step.
+		  
 		  Using MarkdownKit
 		  
+		  // Parse the source into an AST.
 		  Var parser As New MKParser
-		  
 		  Var watch As New StopWatch(True)
 		  Var doc As MKDocument = parser.ParseSource(Source.Text)
 		  watch.stop
 		  Var parseTime As Integer = watch.ElapsedMilliseconds
 		  
+		  // Render the AST to HTML
 		  Var renderer As New MKHTMLRenderer
-		  
 		  watch.Start
 		  Var html As String = renderer.VisitDocument(doc)
 		  html = html.Trim
 		  watch.Stop
 		  Var renderTime As Integer = watch.ElapsedMilliseconds
 		  
-		  Output.Text = html
+		  // Display the results.
+		  HTMLOutput.Text = html
+		  HTMLViewer1.LoadPage(html, Nil)
 		  
+		  // Show the processing time.
 		  Time.Text = "Parsed in " + parseTime.ToString + " ms, rendered in " + renderTime.ToString + " ms" 
 		  
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events InfoTimer
-	#tag Event
-		Sub Action()
-		  Info.Text = "Pos: " + Source.SelectionStart.ToString
 		End Sub
 	#tag EndEvent
 #tag EndEvents

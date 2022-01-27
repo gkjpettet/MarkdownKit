@@ -119,14 +119,6 @@ Protected Class MKInlineLinkData
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Label"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="String"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="IsInlineImage"
 			Visible=false
 			Group="Behavior"
@@ -147,6 +139,14 @@ Protected Class MKInlineLinkData
 				"2 - ShortcutReference"
 				"3 - Standard"
 			#tag EndEnumValues
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="FullReferenceLabelLength"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

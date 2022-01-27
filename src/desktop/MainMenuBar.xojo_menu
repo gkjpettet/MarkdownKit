@@ -153,10 +153,11 @@ Begin Menu MainMenuBar
       AutoEnabled = True
       AutoEnable = True
       Visible = True
-      Begin DesktopApplicationMenuItem HelpAboutXojoUnit
+      Begin DesktopApplicationMenuItem HelpAboutMarkdownKit
          SpecialMenu = 0
          Index = -2147483648
          Text = "&About XojoUnit"
+         MenuModifier = True
          AutoEnabled = True
          AutoEnable = True
          Visible = True
@@ -169,10 +170,10 @@ Begin Menu MainMenuBar
       AutoEnabled = True
       AutoEnable = True
       Visible = True
-      Begin DesktopMenuItem WindowUnitTests
+      Begin DesktopMenuItem WindowHTML
          SpecialMenu = 0
          Index = -2147483648
-         Text = "Unit Tests"
+         Text = "HTML"
          ShortcutKey = "1"
          Shortcut = "Cmd+1"
          MenuModifier = True
@@ -180,10 +181,10 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
-      Begin DesktopMenuItem WindowHTML
+      Begin DesktopMenuItem WindowUnitTests
          SpecialMenu = 0
          Index = -2147483648
-         Text = "HTML"
+         Text = "Unit Tests"
          ShortcutKey = "2"
          Shortcut = "Cmd+2"
          MenuModifier = True

@@ -1,33 +1,48 @@
 ## About MarkdownKit
 
-MarkdownKit is a 100% CommonMark compliant Markdown parser for Xojo written in pure Xojo code. I needed a fast and robust parser that not only would reliably generate the correct output but would also run on iOS. After looking around I realised that there was no other solution available for Xojo and so I decided to write one myself. MarkdownKit is a labour love, taking months of hard work and containing over 6000 lines of code.
+MarkdownKit is a 100% CommonMark compliant Markdown parser for Xojo written in pure Xojo code. I needed a fast and robust parser that not only would reliably generate the correct output but would also run on iOS. After looking around I realised that there was no other solution available for Xojo and so I decided to write one myself. MarkdownKit is a labour love, taking months of hard work and containing over 8500 lines of code.
 
-MarkdownKit takes Markdown as input and generates an _abstract syntax tree_ (AST). From the AST, it is then able to render the input as HTML.
+MarkdownKit takes Markdown as input and generates a Markdown `MKDocument` which is essentially an _abstract syntax tree_ (AST). From the AST, it is then able to render the input as HTML.
 
 This repo contains the following components:
 
 1. The `MarkdownKit` module.
-2. Demo application
-3. Test suites
+2. Test suites
+3. A simple HTML rendering demo
 
-### The Demo Application
+### Simple HTML Rendering Demonstration
 
-The demo app is a fully functioning Markdown editor with a live preview. It has light and dark themes (user-selectable) and will even highlight syntax within code blocks in the provided Markdown input. I have deliberately kept it light on features as its purpose is really just to demonstrate what can be achieved with MarkdownKit.
+The demo has two windows and by default opens the HTML rendering window. Simply type Markdown in the left hand text area and click the `Render` button. This will display the generated HTML and the rendered HTML in the tab panel on the right. I've deliberately kept the demo light on features as its purpose is really just to demonstrate what can be achieved with MarkdownKit.
 
 ### The Desktop Test Suite
 
-This application contains three windows: one for running the HTML tests, one for the AST tests and a third as a simple editor. Clicking the "Run" button on the toolbar for test windows will run all 649 tests from the [CommonMark 0.29 specification][cm spec], proving the compliance of the parser. Feel free to click on an individual test to see the provided input, the expected output and the generated output.
+The demo application a test suite window. Clicking the "Run" button on the toolbar for test windows will run all 649 tests from the [CommonMark 0.29 specification][cm spec], as well as additional edge case tests I came across whilst developing the parser. These tests prove the compliance of the parser. Feel free to click on an individual test to see the provided input, the expected output and the generated output.
 
 ## A word about API 2.0
 
-Xojo 2019 Release 2 introduced the new Xojo framework, known as _API 2.0_. API 2.0 is an attempt by Xojo to unify code between their platforms and make method naming more consistent as well as move everything to 0-based offsets. The master branch is API 2.0 compliant. Use either the API 1.0 branch if you need to support Xojo 2019 release 1.1 or earlier or the iOS branch if you need to support iOS. You can continue to use the API 1.0 branch in projects created from Xojo 2019 Release 2 onwards but you will get deprecation warnings in the analyse project pane. 
+Xojo 2019 Release 2 introduced the new Xojo framework, known as _API 2.0_. API 2.0 is an attempt by Xojo to unify code between their platforms and make method naming more consistent as well as move everything to 0-based offsets. The master branch is fully API 2.0 compliant. 
 
-Going forwards, I will no longer support API 1.0, only API 2.0. 
+## Dependencies
+
+MarkdownKit is 100% Xojo code and is self contained in its own module. It does not depend on any third party plugins but it does required three open source components I authored:
+
+1. [`StringKit`][stringkit]
+2. `TextLine`
+3. `LineToken`
+
+`TextLine` and `LineToken` are provided in this repo. I use MarkdownKit in other internal projects and they share these two classes.
+
+`StringKit` is a module that provides a bunch of `String` manipulation methods. You will need to download it from its [GitHub repo][stringkit]. The Xojo IDE will ask you to locate it when it loads the Markdown project.
 
 ## Quick Start
 
-1. Open the `MarkdownKit.xojo_project` file in the IDE (in `src/`). Copy the `MarkdownKit` module from the navigator and paste it into your own project.
-2. Convert Markdown source to HTML with the `MarkdownKit.ToHTML()` method:
+To use MarkdownKit in your own projects just follow these steps:
+
+1. Open the `MarkdownKit.xojo_project` file in the IDE (in `src/destkop`).
+2. Copy the `MarkdownKit` module from the navigator and paste it into your own project.
+3. Copy the `StringKit` module into your project (having downloaded it from its [repo][stringkit]).
+4. Copy the `LineToken` and `TextLine` classes to your project.
+5. Convert Markdown source to HTML with the `MarkdownKit.ToHTML()` method:
 
 ```xojo
 Var html As String = MarkdownKit.ToHTML("Some **bold** text")
@@ -38,7 +53,7 @@ Var html As String = MarkdownKit.ToHTML("Some **bold** text")
 I imagine that most people will only ever need to use the simple `MarkdownKit.ToHTML()` method. However, if you want access to the abstract syntax tree created by `MarkdownKit` during parsing then you can, like so:
 
 ```xojo
-Var ast As New MarkdownKit.Document("Some **bold** text")
+Var ast As MarkdownKit.MKDocument = MarkdownKit.ToDocument("Some **bold** text")
 
 // Parsing Markdown is done in two phases. First the block structure is 
 // determined and then inlines are parsed.
@@ -46,9 +61,10 @@ ast.ParseBlockStructure
 ast.ParseInlines
 ```
 
-Why might you want access to the AST? Well, maybe you want to do something as simple as render every soft linebreak in a document as a hard linebreak. Perhaps you want to output the Markdown source as something other than HTML.
+Why might you want access to the AST? Well, maybe you want to do something as simple as render every soft line break in a document as a hard line break. Perhaps you want to output the Markdown source as something other than HTML.
 
-`MarkdownKit` provides a class interface called `IRenderer` which must be implemented by any custom renderer you write. The built-in `MarkdownKit.HTMLRenderer` and `MarkdownKit.ASTRenderer` classes are examples of renderers which implement this interface. Take a look at their well-documented methods to learn how to write your own renderer.
+`MarkdownKit` provides a class interface called `MKRenderer` which must be implemented by any custom renderer you write. The built-in `MarkdownKit.MKHTMLRenderer` is an example of a renderer which implements this interface. Take a look at its well-documented methods to learn how to write your own renderer.
 
 [forums]: https://forum.xojo.com
 [cm spec]: https://spec.commonmark.org/0.29/
+[stringkit]: https://github.com/gkjpettet/StringKit

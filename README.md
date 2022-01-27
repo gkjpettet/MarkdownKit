@@ -55,10 +55,9 @@ I imagine that most people will only ever need to use the simple `MarkdownKit.To
 ```xojo
 Var ast As MarkdownKit.MKDocument = MarkdownKit.ToDocument("Some **bold** text")
 
-// Parsing Markdown is done in two phases. First the block structure is 
-// determined and then inlines are parsed.
-ast.ParseBlockStructure
-ast.ParseInlines
+// You can now visit the AST to render it using a class that implements `MKRenderer`:
+Var htmlRenderer As New MKHTMLRenderer // Or your own class.
+Call htmlRenderer.VisitDocument(ast)
 ```
 
 Why might you want access to the AST? Well, maybe you want to do something as simple as render every soft line break in a document as a hard line break. Perhaps you want to output the Markdown source as something other than HTML.

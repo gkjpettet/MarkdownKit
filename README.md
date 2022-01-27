@@ -62,7 +62,7 @@ Call htmlRenderer.VisitDocument(ast)
 
 Why might you want access to the AST? Well, maybe you want to do something as simple as render every soft line break in a document as a hard line break. Perhaps you want to output the Markdown source as something other than HTML.
 
-`MarkdownKit` provides a class interface called `MKRenderer` which must be implemented by any custom renderer you write. The built-in `MarkdownKit.MKHTMLRenderer` is an example of a renderer which implements this interface. Take a look at its well-documented methods to learn how to write your own renderer.
+`MarkdownKit` provides a class interface called `MKRenderer` which must be implemented by any custom renderer you write. I use the AST in a custom Markdown code editor I'm writing to colour the components of the source code. The built-in `MarkdownKit.MKHTMLRenderer` is an example of a renderer which implements this interface. Take a look at its well-documented methods to learn how to write your own renderer.
 
 [forums]: https://forum.xojo.com
 [cm spec]: https://spec.commonmark.org/0.29/

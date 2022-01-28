@@ -337,6 +337,30 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events Source
+	#tag Event
+		Sub Opening()
+		  // Disable annoying smart quotes on macOS.
+		  // Thanks to Martin Tripensee:
+		  // https://forum.xojo.com/t/disabling-smart-quotes-in-desktoptextarea/68200/2?u=garrypettet
+		  
+		  #If TargetCocoa Then
+		    Declare Function NSClassFromString Lib "AppKit" (aClassName As CFStringRef) As Ptr
+		    
+		    Var myHandle As Ptr
+		    Declare Function documentView Lib "AppKit" Selector "documentView" _
+		    (obj_id As Ptr) As Ptr
+		    
+		    myHandle = documentView(Me.Handle)
+		    
+		    Declare Sub setAutomaticQuoteSubstitutionEnabled Lib "AppKit" Selector "setAutomaticQuoteSubstitutionEnabled:" _
+		    (Id As Ptr, value As Boolean)
+		    
+		    setAutomaticQuoteSubstitutionEnabled (myHandle, False)
+		  #EndIf
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Name"

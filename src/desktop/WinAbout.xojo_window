@@ -174,7 +174,7 @@ End
 		  #Pragma Unused x
 		  #Pragma Unused y
 		  
-		  ShowURL("https://garrypettet.com")
+		  System.GotoURL("https://garrypettet.com")
 		End Sub
 	#tag EndEvent
 	#tag Event

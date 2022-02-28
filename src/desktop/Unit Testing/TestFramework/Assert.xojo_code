@@ -119,16 +119,6 @@ Protected Class Assert
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
-		Attributes( Deprecated )  Sub AreEqual(expected As Global.Date, actual As Global.Date, message As String = "")
-		  If expected Is actual Or expected.TotalSeconds = actual.TotalSeconds Then
-		    Pass()
-		  Else
-		    Fail(FailEqualMessage(expected.ShortDate + " " + expected.LongTime, actual.ShortDate + " " + actual.LongTime), message)
-		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
 		Sub AreEqual(expected As Global.MemoryBlock, actual As Global.MemoryBlock, message As String = "")
 		  If expected = actual Then
 		    Pass()
@@ -296,18 +286,6 @@ Protected Class Assert
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Attributes( Deprecated )  Sub AreEqual(expected As Text, actual As Text, message As String = "")
-		  // This is a case-insensitive comparison
-		  
-		  If expected.Compare(actual) = 0 Then
-		    Pass()
-		  Else
-		    Fail(FailEqualMessage(expected, actual), message )
-		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub AreEqual(expected As UInt16, actual As UInt16, message As String = "")
 		  If expected = actual Then
 		    Pass()
@@ -343,43 +321,6 @@ Protected Class Assert
 		    Pass()
 		  Else
 		    Fail(FailEqualMessage(expected.ToString, actual.ToString), message)
-		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI) or  (TargetIOS)
-		Attributes( Deprecated )  Sub AreEqual(expected As Xojo.Core.Date, actual As Xojo.Core.Date, message As String = "")
-		  If expected Is Nil Xor actual Is Nil Then
-		    Fail("One given Date is Nil", message)
-		  ElseIf expected Is actual Or expected.SecondsFrom1970 = actual.SecondsFrom1970 Then
-		    Pass()
-		  Else
-		    Fail(FailEqualMessage(expected.ToText , actual.ToText), message)
-		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI) or  (TargetIOS)
-		Attributes( Deprecated )  Sub AreEqual(expected As Xojo.Core.MemoryBlock, actual As Xojo.Core.MemoryBlock, message As String = "")
-		  If expected = actual Then
-		    Pass()
-		    Return
-		  End If
-		  
-		  If expected Is Nil Xor actual Is Nil Then
-		    Fail("One given MemoryBlock is Nil", message)
-		    Return
-		  End If
-		  
-		  Var expectedSize As Integer = expected.Size
-		  Var actualSize As Integer = actual.Size
-		  
-		  If expectedSize <> actualSize Then
-		    Fail( "Expected MemoryBlock Size [" + expectedSize.ToString + _
-		    "] but was [" + actualSize.ToString + "].", _
-		    message)
-		  Else
-		    Fail(FailEqualMessage(EncodeHexNewMB(expected), EncodeHexNewMB(actual)), message )
 		  End If
 		End Sub
 	#tag EndMethod
@@ -455,21 +396,6 @@ Protected Class Assert
 		  
 		  AreNotEqual(expected, actual, tolerance, message)
 		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI)
-		Attributes( Deprecated )  Sub AreNotEqual(expected As Global.Date, actual As Global.Date, message As String = "")
-		  //NCM-written
-		  If expected Is Nil Xor actual Is Nil Then
-		    Pass()
-		  ElseIf expected Is Nil And actual Is Nil Then
-		    Fail("Both Dates are Nil", message)
-		  ElseIf expected = actual Or expected.TotalSeconds = actual.TotalSeconds Then
-		    Fail("Both Dates are the same", message)
-		  Else
-		    Pass()
-		  End If
 		End Sub
 	#tag EndMethod
 
@@ -559,16 +485,6 @@ Protected Class Assert
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Attributes( Deprecated )  Sub AreNotEqual(expected As Text, actual As Text, message As String = "")
-		  If expected.Compare(actual) <> 0 Then
-		    Pass()
-		  Else
-		    Fail("The Texts '" + actual + "' are equal but shouldn't be", message)
-		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub AreNotEqual(expected As UInt16, actual As UInt16, message As String = "")
 		  If expected <> actual Then
 		    Pass()
@@ -606,35 +522,6 @@ Protected Class Assert
 		  Else
 		    Fail(FailEqualMessage(expected.ToString, actual.ToString), message)
 		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI) or  (TargetIOS)
-		Attributes( Deprecated )  Sub AreNotEqual(expected As Xojo.Core.Date, actual As Xojo.Core.Date, message As String = "")
-		  If expected Is Nil Xor actual Is Nil Then
-		    Pass()
-		  ElseIf expected Is Nil And actual Is Nil Then
-		    Fail("Both Dates are Nil", message)
-		  ElseIf expected = actual Or expected.SecondsFrom1970 = actual.SecondsFrom1970 Then
-		    Fail("Both Dates are the same", message)
-		  Else
-		    Pass()
-		  End If
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (not TargetHasGUI and not TargetWeb and not TargetIOS) or  (TargetWeb) or  (TargetHasGUI) or  (TargetIOS)
-		Attributes( Deprecated )  Sub AreNotEqual(expected As Xojo.Core.MemoryBlock, actual As Xojo.Core.MemoryBlock, message As String = "")
-		  If expected Is Nil And actual Is Nil Then
-		    Fail("The given MemoryBlocks are both Nil", message)
-		  ElseIf expected Is Nil Xor actual Is Nil Then
-		    Pass()
-		  ElseIf expected = actual Then
-		    Fail("The MemoryBlocks are the same: " + EncodeHexNewMB(expected), message)
-		  Else
-		    Pass()
-		  End If
-		  
 		End Sub
 	#tag EndMethod
 
@@ -776,19 +663,6 @@ Protected Class Assert
 		    Fail("[" + actual + "]  matches the pattern /" + regExPattern + "/", message)
 		  End If
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Function EncodeHexNewMB(mb As Xojo.Core.MemoryBlock) As String
-		  Var r() As String
-		  
-		  Var lastByteIndex As Integer = mb.Size - 1
-		  For byteIndex As Integer = 0 To lastByteIndex
-		    r.Add mb.Data.Byte(byteIndex).ToHex
-		  Next
-		  
-		  Return String.FromArray(r, " " )
-		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0

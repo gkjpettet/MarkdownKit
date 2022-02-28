@@ -13,7 +13,6 @@ DesktopToolbar=UnitTestingToolbar;Unit Testing/UnitTestingToolbar.xojo_toolbar;&
 Class=MarkdownTestController;Unit Testing/MarkdownTestController.xojo_code;&h000000004291DFFF;&h000000002516B04D;false
 Folder=Dependencies;Dependencies;&h00000000331FAFFF;&h0000000000000000;false
 Folder=Better Dictionary;Dependencies/Better Dictionary;&h00000000694F37FF;&h00000000331FAFFF;false
-Class=LineToken;Dependencies/LineToken.xojo_code;&h0000000063D017FF;&h00000000331FAFFF;false
 Module=StringKit;../../../StringKit/StringKit.xojo_xml_code;&h0000000057735FFF;&h00000000331FAFFF;false
 Class=TextLine;Dependencies/TextLine.xojo_code;&h000000007F00C7FF;&h00000000331FAFFF;false
 Module=MarkdownKit;MarkdownKit.xojo_code;&h000000002F26BFFF;&h0000000000000000;false

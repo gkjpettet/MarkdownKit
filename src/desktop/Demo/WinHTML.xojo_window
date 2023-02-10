@@ -282,11 +282,11 @@ End
 #tag WindowCode
 	#tag MenuHandler
 		Function EditSelectAll() As Boolean Handles EditSelectAll.Action
-			Source.SelectionStart = 0
-			Source.SelectionLength = Source.Text.Length
-			
-			Return True
-			
+		  Source.SelectionStart = 0
+		  Source.SelectionLength = Source.Text.Length
+		  
+		  Return True
+		  
 		End Function
 	#tag EndMenuHandler
 

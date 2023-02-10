@@ -647,7 +647,7 @@ Protected Module MarkdownKit
 			  /// A dictionary containing the HTML entity references and their corresponding unicode codepoints.
 			  /// Key = entity, Value = codepoint.
 			  
-			  Static d As New BetterDictionary( True, _
+			  Static d As New CaseSensitiveDictionary( True, _
 			  "AElig" : 198, _
 			  "AMP" : 38, _
 			  "Aacute" : 193, _
@@ -2778,7 +2778,7 @@ Protected Module MarkdownKit
 			      
 			End Get
 		#tag EndGetter
-		Protected CharacterReferences As BetterDictionary
+		Protected CharacterReferences As CaseSensitiveDictionary
 	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h21, Description = 412064696374696F6E61727920636F6E7461696E696E67206368617261637465727320746861742063616E20626520657363617065642077697468206120707265636564696E67206261636B736C6173682E

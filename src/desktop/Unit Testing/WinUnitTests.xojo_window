@@ -931,7 +931,6 @@ Begin DesktopWindow WinUnitTests
    Begin MarkdownTestController Controller
       AllTestCount    =   0
       Duration        =   0.0
-      Enabled         =   True
       FailedCount     =   0
       GroupCount      =   0
       Index           =   -2147483648
@@ -963,7 +962,6 @@ Begin DesktopWindow WinUnitTests
       Scope           =   0
       TabIndex        =   6
       TabPanelIndex   =   0
-      TabStop         =   True
       Tooltip         =   ""
       Top             =   7
       Transparent     =   False
@@ -1049,37 +1047,37 @@ End
 
 	#tag MenuHandler
 		Function EditSelectAllGroups() As Boolean Handles EditSelectAllGroups.Action
-			SelectAllGroups(True, False)
-			
-			Return True
-			
+		  SelectAllGroups(True, False)
+		  
+		  Return True
+		  
 		End Function
 	#tag EndMenuHandler
 
 	#tag MenuHandler
 		Function EditUnselectAllGroups() As Boolean Handles EditUnselectAllGroups.Action
-			SelectAllGroups(False, False)
-			
-			Return True
-			
+		  SelectAllGroups(False, False)
+		  
+		  Return True
+		  
 		End Function
 	#tag EndMenuHandler
 
 	#tag MenuHandler
 		Function FileRunTests() As Boolean Handles FileRunTests.Action
-			RunTests
-			
-			Return True
-			
+		  RunTests
+		  
+		  Return True
+		  
 		End Function
 	#tag EndMenuHandler
 
 	#tag MenuHandler
 		Function HelpAboutXojoUnit() As Boolean Handles HelpAboutXojoUnit.Action
-			WinAbout.Show
-			
-			Return True
-			
+		  WinAbout.Show
+		  
+		  Return True
+		  
 		End Function
 	#tag EndMenuHandler
 
@@ -1654,24 +1652,6 @@ End
 		End Sub
 	#tag EndEvent
 	#tag Event
-		Function PaintCellBackground(g As Graphics, row As Integer, column As Integer) As Boolean
-		  #Pragma Unused column
-		  
-		  #If TargetMacOS Then
-		    If row Mod 2 = 0 And Not Me.RowSelectedAt(row) Then
-		      g.DrawingColor = Color.RGB(237, 243, 254) '&cD0D4FF
-		      g.FillRectangle(0, 0, g.Width, g.Height)
-		    End If
-		    
-		    Return True
-		  #Else
-		    #Pragma Unused g
-		    #Pragma Unused row
-		  #Endif
-		  
-		End Function
-	#tag EndEvent
-	#tag Event
 		Function ContextualMenuItemSelected(selectedItem As DesktopMenuItem) As Boolean
 		  Select Case selectedItem.Text
 		  Case kCMSelectAllGroups
@@ -1794,8 +1774,8 @@ End
 		  #Pragma Unused y
 		  
 		  Const kRedColor As Color = &cFF000000
-		  Const kBlackColor As Color = &c00000000
 		  Static kGreyColor As Color = Color.DisabledTextColor // Pseudo-constant
+		  Var normalColor As Color = If(Color.IsDarkMode, Color.White, Color.Black)
 		  
 		  If Me.RowTagAt(row) IsA TestResult Then
 		    
@@ -1809,7 +1789,7 @@ End
 		      If tr.Result = TestResult.NotImplemented Then
 		        g.DrawingColor = kGreyColor
 		      Else
-		        g.DrawingColor = kBlackColor
+		        g.DrawingColor = normalColor
 		      End If
 		      g.Bold = Not tr.Message.IsEmpty
 		      

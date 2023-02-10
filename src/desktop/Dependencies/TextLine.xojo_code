@@ -172,22 +172,6 @@ Protected Class TextLine
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="IsEmpty"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="IsBlank"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="Value"
 			Visible=false
 			Group="Behavior"
@@ -196,10 +180,10 @@ Protected Class TextLine
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="IsDirty"
+			Name="IsEmpty"
 			Visible=false
 			Group="Behavior"
-			InitialValue="True"
+			InitialValue=""
 			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty

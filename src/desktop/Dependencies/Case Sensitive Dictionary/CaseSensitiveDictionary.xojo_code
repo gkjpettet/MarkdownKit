@@ -1,5 +1,5 @@
 #tag Class
-Protected Class BetterDictionary
+Protected Class CaseSensitiveDictionary
 Inherits Dictionary
 	#tag Method, Flags = &h1, Description = 52657475726E73205B735D206173206120605465787460206F626A6563742E
 		Protected Function AsText(s As String) As Text
@@ -11,14 +11,14 @@ Inherits Dictionary
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 52657475726E732061207368616C6C6F7720636C6F6E65206F6620746869732064696374696F6E617279
-		Function Clone() As BetterDictionary
+		Function Clone() As CaseSensitiveDictionary
 		  /// Returns a shallow clone of this dictionary
 		  ///
-		  /// Results in a new BetterDictionary that can be manipulated independently.
+		  /// Results in a new CaseSensitiveDictionary that can be manipulated independently.
 		  /// A shallow clone means that if a value or key refers to a class instance, 
 		  /// its contents are not also cloned.
 		  
-		  Var bd As New BetterDictionary(mCaseSensitive)
+		  Var bd As New CaseSensitiveDictionary(mCaseSensitive)
 		  
 		  For Each entry As DictionaryEntry In Self
 		    bd.Value(entry.Key) = entry.Value
@@ -104,7 +104,7 @@ Inherits Dictionary
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 5472756520696620746869732064696374696F6E6172792773206B65797320616E642076616C75657320617265206571756976616C656E7420746F205B6F746865725D2E
-		Function EquivalentTo(other As BetterDictionary) As Boolean
+		Function EquivalentTo(other As CaseSensitiveDictionary) As Boolean
 		  /// True if this dictionary's keys and values are equivalent to [other].
 		  
 		  If other = Nil Then Return False
@@ -143,7 +143,7 @@ Inherits Dictionary
 
 	#tag Method, Flags = &h0
 		Function Iterator() As Iterator
-		  Return New BetterDictionaryIterator(Self)
+		  Return New CaseSensitiveDictionaryIterator(Self)
 		End Function
 	#tag EndMethod
 

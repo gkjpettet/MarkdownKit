@@ -1,5 +1,5 @@
 #tag Class
-Protected Class BetterDictionaryIterator
+Protected Class CaseSensitiveDictionaryIterator
 Implements Iterator
 	#tag Method, Flags = &h0
 		Sub Constructor(owner As Dictionary)

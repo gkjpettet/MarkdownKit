@@ -194,13 +194,13 @@ Protected Module MarkdownKit
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
 		  
-		  Var tmp() As Text = s.ToText.Split
 		  Var chars() As MKCharacter
-		  Var tmpLastIndex As Integer = tmp.LastIndex
 		  
-		  For i As Integer = 0 To tmpLastIndex
-		    chars.Add(New MKCharacter(tmp(i), line, i + localStartOffset))
-		  Next i
+		  Var i As Integer = 0
+		  For Each char As String In s.Characters
+		    chars.Add(New MKCharacter(char, line, i + localStartOffset))
+		    i = i + 1
+		  Next char
 		  
 		  Return chars
 		  
@@ -2926,7 +2926,7 @@ Protected Module MarkdownKit
 	#tag Constant, Name = VERSION_MINOR, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
 	#tag EndConstant
 
-	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
+	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
 	#tag EndConstant
 
 

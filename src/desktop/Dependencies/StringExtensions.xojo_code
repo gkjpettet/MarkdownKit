@@ -1,13 +1,13 @@
 #tag Module
-Protected Module StringKit
+Protected Module StringExtensions
 	#tag Method, Flags = &h21, Description = 52657475726E732074686520556E69636F64652063617465676F727920666F722061206C6174696E31206368617261637465722E
-		Private Function CategoryForLatin1(codePoint As Integer) As StringKit.UnicodeCategories
+		Private Function CategoryForLatin1(codePoint As Integer) As StringExtensions.UnicodeCategories
 		  /// Returns the Unicode category for a latin1 character.
 		  ///
 		  ///
 		  /// Assumes that `codePoint` is within the range &u0000 and &u00FF.
 		  
-		  Static latin1Categories() As StringKit.UnicodeCategories = Array(_
+		  Static latin1Categories() As StringExtensions.UnicodeCategories = Array(_
 		  UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, _
 		  UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, _
 		  UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, UnicodeCategories.Control, _
@@ -53,16 +53,12 @@ Protected Module StringKit
 		  ///
 		  /// It's at least 4x faster to use `Text` to split into characters and then iterate over that array
 		  /// than to use the native `String.Characters()` method that returns an `Iterable`.
+		  /// However, `ToText()` is deprecated.
 		  
-		  // Get the characters as a Text array.
-		  Var tmp() As Text = s.ToText.Split
-		  
-		  // Now convert each character to a string and add it to our return array.
 		  Var chars() As String
-		  chars.ResizeTo(tmp.LastIndex)
-		  For i As Integer = 0 To tmp.LastIndex
-		    chars(i) = tmp(i)
-		  Next i
+		  For Each char As String In s.Characters
+		    chars.Add(char)
+		  Next char
 		  
 		  Return chars
 		  
@@ -72,15 +68,21 @@ Protected Module StringKit
 	#tag Method, Flags = &h0, Description = 52657475726E7320746865206E756D626572206F66206368617261637465727320696E207468652070617373656420737472696E672028696E636C7564696E67206D756C7469627974652063686172616374657273292E
 		Function CharacterCount(Extends s As String) As Integer
 		  /// Returns the number of characters in the passed string (including multibyte characters).
+		  ///
+		  /// It would be faster to do this:
+		  /// ```
+		  /// Var t As Text = s.ToText
+		  /// Return t.Length
+		  /// ```
+		  ///
+		  /// but `ToText()` is deprecated.
 		  
-		  Var t As Text = s.ToText
-		  Return t.Length
-		  
+		  Return s.CharacterArray.Count
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 436865636B7320696620607563602062656C6F6E677320746F20746865206C65747465722063617465676F72792E
-		Private Function CheckLetter(uc As StringKit.UnicodeCategories) As Boolean
+		Private Function CheckLetter(uc As StringExtensions.UnicodeCategories) As Boolean
 		  /// Checks if `uc` belongs to the letter category.
 		  
 		  Select Case uc
@@ -96,7 +98,7 @@ Protected Module StringKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 436865636B7320696620607563602062656C6F6E677320746F20746865206C6574746572206F722064696769742063617465676F726965732E
-		Private Function CheckLetterOrDigit(uc As StringKit.UnicodeCategories) As Boolean
+		Private Function CheckLetterOrDigit(uc As StringExtensions.UnicodeCategories) As Boolean
 		  /// Checks if `uc` belongs to the letter or digit categories.
 		  
 		  Select Case uc
@@ -194,7 +196,7 @@ Protected Module StringKit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21, Description = 52657475726E732074686520556E69636F64652063617465676F727920666F7220556E69636F64652063686172616374657273203C3D202668303066662E
-		Private Function GetLatin1UnicodeCharacter(character As String) As StringKit.UnicodeCategories
+		Private Function GetLatin1UnicodeCharacter(character As String) As StringExtensions.UnicodeCategories
 		  /// Returns the Unicode category for Unicode characters <= &h00ff.
 		  ///
 		  /// Assumes that `character` is one character long.
@@ -204,13 +206,13 @@ Protected Module StringKit
 		    "character should be <= &h007F")
 		  End If
 		  
-		  Return CategoryForLatin1(Asc(character))
+		  Return CategoryForLatin1(character.Asc)
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1, Description = 52657475726E732074686520556E69636F64652063617465676F72792074686174206073602062656C6F6E677320746F2E
-		Protected Function GetUnicodeCategory(s As String) As StringKit.UnicodeCategories
+		Protected Function GetUnicodeCategory(s As String) As StringExtensions.UnicodeCategories
 		  /// Returns the Unicode category that `s` belongs to.
 		  ///
 		  /// If `s` is empty or is more than one character in length then 
@@ -330,7 +332,7 @@ Protected Module StringKit
 		  ///
 		  /// Assumes that `character` is one character in length.
 		  
-		  Return Asc(character) <= &h007F
+		  Return character.Asc <= &h007F
 		  
 		End Function
 	#tag EndMethod
@@ -498,7 +500,7 @@ Protected Module StringKit
 		  ///
 		  /// Assumes that `character` is one character in length.
 		  
-		  Return Asc(character) <= &h00FF
+		  Return character.Asc <= &h00FF
 		  
 		End Function
 	#tag EndMethod
@@ -549,7 +551,7 @@ Protected Module StringKit
 		  
 		  If IsLatin1(character) Then
 		    If character.IsASCII Then
-		      Return Asc(character) >= 97 And Asc(character) <= 122
+		      Return character.Asc >= 97 And character.Asc <= 122
 		    End If
 		    Return GetLatin1UnicodeCharacter(character) = UnicodeCategories.LowercaseLetter
 		  End If
@@ -776,9 +778,22 @@ Protected Module StringKit
 	#tag Method, Flags = &h0, Description = 52657475726E732060636F756E7460206C6566742D6D6F737420636861726163746572732066726F6D206073602E
 		Function LeftCharacters(Extends s As String, count As Integer) As String
 		  /// Returns `count` left-most characters from `s`.
+		  ///
+		  /// It would be faster to do this:
+		  /// ```
+		  /// Var t As Text = s.ToText
+		  /// Return t.Left(count)
+		  /// ```
+		  ///
+		  /// but `ToText()` is deprecated.
 		  
-		  Var t As Text = s.ToText
-		  Return t.Left(count)
+		  Var chars() As String = s.CharacterArray
+		  Var tmp() As String
+		  For i As Integer = 0 To count - 1
+		    tmp.Add(chars(i))
+		  Next i
+		  
+		  Return String.FromArray(tmp, "")
 		End Function
 	#tag EndMethod
 
@@ -801,18 +816,46 @@ Protected Module StringKit
 	#tag Method, Flags = &h0, Description = 52657475726E7320616C6C206F662074686520636861726163746572732066726F6D206073746172746020746F2074686520656E64206F66206073602E2054686520737461727420706F736974696F6E2069732061207A65726F2D62617365642E
 		Function MiddleCharacters(Extends s As String, start As Integer) As String
 		  /// Returns all of the characters from `start` to the end of `s`. The start position is a zero-based.
+		  ///
+		  /// It would be faster to do this:
+		  /// ```
+		  /// Var t As Text = s.ToText
+		  /// Return t.Mid(start)
+		  /// ```
+		  ///
+		  /// but `ToText()` is deprecated.
 		  
-		  Var t As Text = s.ToText
-		  Return t.Mid(start)
+		  Var chars() As String = s.CharacterArray
+		  Var tmp() As String
+		  For i As Integer = start To chars.LastIndex
+		    tmp.Add(chars(i))
+		  Next i
+		  
+		  Return String.FromArray(tmp, "")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, Description = 52657475726E732060636F756E746020636861726163746572732066726F6D206073602E2048616E646C6573206D756C7469627974652063686172616374657273206C696B6520656D6F6A692E
 		Function MiddleCharacters(Extends s As String, start As Integer, count As Integer) As String
 		  /// Returns `count` characters from `s`. Handles multibyte characters like emoji.
+		  ///
+		  /// It would be faster to do this:
+		  /// ```
+		  /// Var t As Text = s.ToText
+		  /// Return t.Mid(start, count)
+		  /// ```
+		  ///
+		  /// but `ToText()` is deprecated.
 		  
-		  Var t As Text = s.ToText
-		  Return t.Mid(start, count)
+		  Var chars() As String = s.CharacterArray
+		  Var tmp() As String
+		  Var finish As Integer = Min(start + count - 1, chars.LastIndex)
+		  For i As Integer = start to finish
+		    tmp.Add(chars(i))
+		  Next i
+		  
+		  Return String.FromArray(tmp, "")
+		  
 		End Function
 	#tag EndMethod
 
@@ -832,9 +875,86 @@ Protected Module StringKit
 	#tag Method, Flags = &h0, Description = 52657475726E732060636F756E74602072696768742D6D6F737420636861726163746572732066726F6D206073602E
 		Function RightCharacters(Extends s As String, count As Integer) As String
 		  /// Returns `count` right-most characters from `s`.
+		  ///
+		  /// It would be faster to do this:
+		  /// ```
+		  /// Var t As Text = s.ToText
+		  /// Return t.Right(count)
+		  /// ```
+		  ///
+		  /// but `ToText()` is deprecated.
 		  
-		  Var t As Text = s.ToText
-		  Return t.Right(count)
+		  Var chars() As String = s.CharacterArray
+		  Var tmp() As String
+		  Var start As Integer = chars.LastIndex - count + 1
+		  For i As Integer = start To chars.LastIndex
+		    tmp.Add(chars(i))
+		  Next i
+		  
+		  Return String.FromArray(tmp, "")
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, Description = 52657475726E73206120586F6A6F20436F6C6F7220637265617465642066726F6D20616E20524742412068657820737472696E67206073602E2052616973657320616E2060496E76616C6964417267756D656E74457863657074696F6E6020696620607360206973206E6F742076616C69642E
+		Function ToColorFromRGBA(Extends s As String) As Color
+		  /// Returns a Xojo Color created from an RGBA hex string `s`.
+		  /// Raises an `InvalidArgumentException` if `s` is not valid.
+		  ///
+		  /// Valid string formats are: `"RGB"`, `"RGBA"`, `"RRGGBB"` and `"RRGGBBAA"`
+		  
+		  // Correct number of characters?
+		  Select Case s.CharacterCount
+		  Case Is < 3, 5, 7, Is > 8
+		    Raise New InvalidArgumentException("Cannot create a Color from `" + s + "`. It is not a valid hex RGBA string.")
+		  End Select
+		  
+		  // Assert that we only have hex digits in the string.
+		  Var chars() As String = s.CharacterArray
+		  For Each char As String In chars
+		    If Not char.IsHexDigit Then
+		      Raise New InvalidArgumentException("`" + char + "` is not a hexadecimal digit.")
+		    End If
+		  Next char
+		  
+		  #Pragma BreakOnExceptions False
+		  Var red, green, blue, alpha As Integer
+		  Try
+		    Select Case s.CharacterCount
+		    Case 3 // RGB
+		      red = Integer.FromHex(s.Left(1) + s.Left(1))
+		      green = Integer.FromHex(s.Middle(1, 1) + s.Middle(1, 1))
+		      blue = Integer.FromHex(s.Middle(2, 1) + s.Middle(2, 1))
+		      alpha = 0
+		      
+		    Case 4 // RGBA
+		      red = Integer.FromHex(s.Left(1) + s.Left(1))
+		      green = Integer.FromHex(s.Middle(1, 1) + s.Middle(1, 1))
+		      blue = Integer.FromHex(s.Middle(2, 1) + s.Middle(2, 1))
+		      alpha = Integer.FromHex(s.Middle(3, 1) + s.Middle(3, 1))
+		      
+		    Case 6 // RRRGGBB
+		      red = Integer.FromHex(s.Middle(0, 1) + s.Middle(1, 1))
+		      green = Integer.FromHex(s.Middle(2, 1) + s.Middle(3, 1))
+		      blue = Integer.FromHex(s.Middle(4, 1) + s.Middle(5, 1))
+		      alpha = 0
+		      
+		    Case 8 // RRGGBBAA
+		      red = Integer.FromHex(s.Middle(0, 1) + s.Middle(1, 1))
+		      green = Integer.FromHex(s.Middle(2, 1) + s.Middle(3, 1))
+		      blue = Integer.FromHex(s.Middle(4, 1) + s.Middle(5, 1))
+		      alpha = Integer.FromHex(s.Middle(6, 1) + s.Middle(7, 1))
+		    End Select
+		  Catch e
+		    Raise New InvalidArgumentException("Cannot create a Color from `" + s + "`. It is not a valid hex RGBA string.")
+		  End Try
+		  
+		  Try
+		    Return Color.RGB(red, green, blue, alpha)
+		  Catch e
+		    Raise New InvalidArgumentException("Cannot create a Color from `" + s + "`. It is not a valid hex RGBA string.")
+		  End Try
+		  
 		End Function
 	#tag EndMethod
 

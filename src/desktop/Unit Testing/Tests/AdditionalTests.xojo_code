@@ -76,8 +76,8 @@ Inherits TestGroup
 		  Var testNumber As Integer = Integer.FromString(methodName.Replace("AdditionalTests.Example", "").Replace("Test", ""))
 		  
 		  // Get the names of the files containing the input Markdown and the expected HTML output.
-		  Var inputFileName As String = testNumber.ToText + ".md"
-		  Var expectedOutputName As String = testNumber.ToText + ".html"
+		  Var inputFileName As String = testNumber.ToString + ".md"
+		  Var expectedOutputName As String = testNumber.ToString + ".html"
 		  
 		  // Get the input Markdown file.
 		  Var input As String

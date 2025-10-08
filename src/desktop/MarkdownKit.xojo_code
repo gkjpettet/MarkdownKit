@@ -298,7 +298,7 @@ Protected Module MarkdownKit
 		          For x As Integer = 1 To tmp.LastIndex + 5
 		            chars.RemoveAt(start)
 		          Next x
-		          chars.AddAt(start, Text.FromUnicodeCodepoint(Integer.FromHex(String.FromArray(tmp, ""))))
+		          chars.AddAt(start, Chr(Integer.FromHex(String.FromArray(tmp, ""))))
 		          // Any other potential references?
 		          i = start + 1
 		          If i > chars.LastIndex Then Return
@@ -365,7 +365,7 @@ Protected Module MarkdownKit
 		          codePoint = Integer.FromString(String.FromArray(tmp, ""))
 		          // For security reasons, the code point U+0000 is replaced by U+FFFD.
 		          If codePoint = 0 Then codePoint = &hFFFD
-		          chars.AddAt(start, Text.FromUnicodeCodepoint(codePoint))
+		          chars.AddAt(start, Chr(codePoint))
 		          // Any other potential references?
 		          i = start + 1
 		          If i > chars.LastIndex Then Return
@@ -433,7 +433,7 @@ Protected Module MarkdownKit
 		        For x As Integer = 1 To tmp.LastIndex + 3
 		          chars.RemoveAt(start)
 		        Next x
-		        chars.AddAt(start, Text.FromUnicodeCodepoint(CharacterReferences.Value(entityName)))
+		        chars.AddAt(start, Chr(CharacterReferences.Value(entityName)))
 		      End If
 		      
 		      // Any other potential references?

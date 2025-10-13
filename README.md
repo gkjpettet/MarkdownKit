@@ -28,9 +28,8 @@ MarkdownKit is 100% Xojo code and is self contained in its own module. It does n
 
 1. [`StringKit`][stringkit]
 2. `TextLine`
-3. `LineToken`
 
-`TextLine` and `LineToken` are provided in this repo. I use MarkdownKit in other internal projects and they share these two classes.
+`TextLine` is provided in this repo. I use MarkdownKit in other internal projects and they share this class.
 
 `StringKit` is a module that provides a bunch of `String` manipulation methods. You will need to download it from its [GitHub repo][stringkit]. The Xojo IDE will ask you to locate it when it loads the Markdown project.
 
@@ -41,7 +40,7 @@ To use MarkdownKit in your own projects just follow these steps:
 1. Open the `MarkdownKit.xojo_project` file in the IDE (in `src/destkop`).
 2. Copy the `MarkdownKit` module from the navigator and paste it into your own project.
 3. Copy the `StringKit` module into your project (having downloaded it from its [repo][stringkit]).
-4. Copy the `LineToken` and `TextLine` classes to your project.
+4. Copy the `TextLine` classes to your project.
 5. Convert Markdown source to HTML with the `MarkdownKit.ToHTML()` method:
 
 ```xojo

@@ -24,7 +24,7 @@ Xojo 2019 Release 2 introduced the new Xojo framework, known as _API 2.0_. API 2
 
 ## Dependencies
 
-MarkdownKit is 100% Xojo code and is self contained in its own module. It does not depend on any third party plugins but it does require three open source components I authored:
+MarkdownKit is 100% Xojo code and is self contained in its own module. It does not depend on any third party plugins but it does require two open source components I authored:
 
 1. [`StringKit`][stringkit]
 2. `TextLine`

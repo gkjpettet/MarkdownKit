@@ -32,17 +32,35 @@ Protected Class TextLine
 	#tag ComputedProperty, Flags = &h0, Description = 547275652069662074686973206C696E6520697320636F6E7369646572656420626C616E6B2028656D707479206F7220636F6E7461696E73206F6E6C7920737061636573206F7220686F72697A6F6E74616C2074616273292E
 		#tag Getter
 			Get
-			  If IsEmpty Then Return True
-			  
+			  #Pragma NilObjectChecking False
+			  #Pragma StackOverflowChecking False
+			  #Pragma DisableBoundsChecking
+
+			  // Return cached value if available
+			  If mIsBlankCached Then Return mIsBlank
+
+			  If IsEmpty Then
+			    mIsBlank = True
+			    mIsBlankCached = True
+			    Return True
+			  End If
+
 			  Var iLimit As Integer = Characters.LastIndex
+			  Var c As String
 			  For i As Integer = 0 To iLimit
-			    If Characters(i) <> &u0020 Or Characters(i) <> &u0009 Then
+			    c = Characters(i)
+			    // Fix: Use And instead of Or - a line is only blank if ALL chars are whitespace
+			    If c <> &u0020 And c <> &u0009 Then
+			      mIsBlank = False
+			      mIsBlankCached = True
 			      Return False
 			    End If
 			  Next i
-			  
+
+			  mIsBlank = True
+			  mIsBlankCached = True
 			  Return True
-			  
+
 			End Get
 		#tag EndGetter
 		IsBlank As Boolean
@@ -72,6 +90,14 @@ Protected Class TextLine
 
 	#tag Property, Flags = &h1, Description = 4261636B696E67206669656C64207768696368206973206120737472696E6720636F6E636174656E6174696F6E206F6620746865206043686172616374657273602061727261792E
 		Protected mContents As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h1, Description = 4361636865642076616C756520666F72204973426C616E6B20636F6D707574656420706F70657274792E
+		Protected mIsBlank As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h1, Description = 5472756520696620746865204973426C616E6B2076616C756520686173206265656E20636163686564
+		Protected mIsBlankCached As Boolean = False
 	#tag EndProperty
 
 	#tag Property, Flags = &h0, Description = 54686520312D6261736564206C696E65206E756D6265722E

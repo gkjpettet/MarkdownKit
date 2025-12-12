@@ -188,19 +188,27 @@ Protected Module MarkdownKit
 
 	#tag Method, Flags = &h0, Description = 52657475726E73205B735D20617320616E206172726179206F66204D4B43686172616374657220696E7374616E6365732E
 		Function MKCharacters(Extends s As String, line As TextLine, localStartOffset As Integer = 0) As MKCharacter()
-		  /// Returns [s] as an array of MKCharacter instances. 
+		  /// Returns [s] as an array of MKCharacter instances.
 		  
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
 		  
-		  Var chars() As MKCharacter
+		  Var strChars() As String = s.CharacterArray
+		  Var charCount As Integer = strChars.LastIndex
 		  
-		  Var i As Integer = 0
-		  For Each char As String In s.Characters
-		    chars.Add(New MKCharacter(char, line, i + localStartOffset))
-		    i = i + 1
-		  Next char
+		  If charCount < 0 Then
+		    Var empty() As MKCharacter
+		    Return empty
+		  End If
+		  
+		  // Pre-size the array for better performance
+		  Var chars() As MKCharacter
+		  chars.ResizeTo(charCount)
+		  
+		  For i As Integer = 0 To charCount
+		    chars(i) = New MKCharacter(strChars(i), line, i + localStartOffset)
+		  Next i
 		  
 		  Return chars
 		  
@@ -568,14 +576,24 @@ Protected Module MarkdownKit
 		Function ToString(Extends chars() As MKCharacter) As String
 		  /// Convert an array of MKCharacter instances to a string.
 		  
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+		  
+		  Var charsLastIndex As Integer = chars.LastIndex
+		  If charsLastIndex < 0 Then Return ""
+		  
+		  // Pre-size the array for better performance
 		  Var tmp() As String
-		  For Each c As MKCharacter In chars
-		    If c.IsLineEnding Then
-		      tmp.Add(&u0A)
+		  tmp.ResizeTo(charsLastIndex)
+		  
+		  For i As Integer = 0 To charsLastIndex
+		    If chars(i).IsLineEnding Then
+		      tmp(i) = &u0A
 		    Else
-		      tmp.Add(c.Value)
+		      tmp(i) = chars(i).Value
 		    End If
-		  Next c
+		  Next i
 		  
 		  Return String.FromArray(tmp, "")
 		  
@@ -584,14 +602,18 @@ Protected Module MarkdownKit
 
 	#tag Method, Flags = &h0, Description = 52657475726E73206120737472696E672066726F6D205B63686172735D20626567696E6E696E6720617420696E646578205B73746172745D20666F72205B6C656E6774685D20636861726163746572732E
 		Function ToString(Extends chars() As MKCharacter, start As Integer, length As Integer) As String
-		  /// Returns a string from [chars] beginning at index [start] for [length] characters. 
+		  /// Returns a string from [chars] beginning at index [start] for [length] characters.
 		  ///
 		  /// If `start + length` > the number of remaining characters then all characters from [start] to the
 		  /// end of [chars] are returned.
 		  /// If [length] = `-1` then all characters from [start] to the end of [chars] are returned.
 		  
-		  Var tmp() As String
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+		  
 		  Var charsLastIndex As Integer = chars.LastIndex
+		  If charsLastIndex < 0 Then Return ""
 		  
 		  Var finish As Integer
 		  If start + length > charsLastIndex Or length = -1 Then
@@ -600,12 +622,21 @@ Protected Module MarkdownKit
 		    finish = start + length - 1
 		  End If
 		  
+		  // Pre-size the array for better performance
+		  Var arraySize As Integer = finish - start
+		  If arraySize < 0 Then Return ""
+		  
+		  Var tmp() As String
+		  tmp.ResizeTo(arraySize)
+		  
+		  Var idx As Integer = 0
 		  For i As Integer = start To finish
 		    If chars(i).IsLineEnding Then
-		      tmp.Add(&u0A)
+		      tmp(idx) = &u0A
 		    Else
-		      tmp.Add(chars(i).Value)
+		      tmp(idx) = chars(i).Value
 		    End If
+		    idx = idx + 1
 		  Next i
 		  
 		  Return String.FromArray(tmp, "")
@@ -2941,7 +2972,7 @@ Protected Module MarkdownKit
 	#tag Constant, Name = VERSION_MINOR, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
 	#tag EndConstant
 
-	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
+	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
 	#tag EndConstant
 
 

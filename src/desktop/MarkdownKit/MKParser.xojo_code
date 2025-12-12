@@ -1350,23 +1350,28 @@ Protected Class MKParser
 	#tag Method, Flags = &h0, Description = 506172736573205B6C696E65735D20696E746F2061204D61726B646F776E20646F63756D656E742E
 		Function ParseSource(markdown As String) As MKDocument
 		  /// Parses [markdown] into a Markdown document.
-		  
+
 		  #Pragma NilObjectChecking False
 		  #Pragma StackOverflowChecking False
 		  #Pragma DisableBoundsChecking
-		  
+
 		  Var tmp() As String = markdown.ReplaceLineEndings(&u0A).Split(&u0A)
-		  
-		  Var lines() As TextLine
-		  
+
 		  Var iLimit As Integer = tmp.LastIndex
+
+		  // Pre-size the lines array for better performance
+		  Var lines() As TextLine
+		  If iLimit >= 0 Then
+		    lines.ResizeTo(iLimit)
+		  End If
+
 		  Var start As Integer = 0
 		  For i As Integer = 0 To iLimit
 		    Var line As New TextLine(i + 1, start, tmp(i))
-		    lines.Add(line)
+		    lines(i) = line
 		    start = line.Finish + 1
 		  Next i
-		  
+
 		  Return ParseLines(lines)
 		End Function
 	#tag EndMethod

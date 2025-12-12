@@ -6,14 +6,18 @@ Implements MKRenderer
 		  /// Encodes the 4 predefined entities to make them XML-safe.
 		  ///
 		  /// https://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  s = s.ReplaceAll("&", "&amp;")
 		  s = s.ReplaceAll("""", "&quot;")
 		  s = s.ReplaceAll("<", "&lt;")
 		  s = s.ReplaceAll(">", "&gt;")
-		  
+
 		  Return s
-		  
+
 		End Function
 	#tag EndMethod
 
@@ -59,7 +63,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitATXHeading(atx As MKATXHeadingBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<h")
 		  mOutput.Add(atx.Level.ToString)
 		  mOutput.Add(">")
@@ -122,7 +130,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitBlockQuote(bq As MKBlockQuote) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<blockquote>")
 		  mOutput.Add(&u0A)
 		  
@@ -138,7 +150,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitCodeSpan(cs As MKCodeSpan) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<code>")
 		  
 		  // Track where the code span's contents begins in `mOutput`.
@@ -175,7 +191,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitDocument(doc As MKDocument) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.RemoveAll
 		  ShouldTrimLeadingWhitespace = False
 		  ShouldTrimTrailingWhitespace = False
@@ -192,7 +212,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitEmphasis(e As MKEmphasis) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<em>")
 		  
 		  For Each child As MKBlock In e.Children
@@ -206,7 +230,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitFencedCode(fc As MKFencedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<pre>")
 		  
 		  // Handle the optional info string.
@@ -248,7 +276,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitHTMLBlock(html As MKHTMLBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  Var childrenLastIndex As Integer = html.Children.LastIndex
 		  For i As Integer = 0 To childrenLastIndex
 		    Call html.Children(i).Accept(Self)
@@ -264,7 +296,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitIndentedCode(ic As MKIndentedCodeBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<pre><code>")
 		  
 		  Var childrenLastIndex As Integer = ic.Children.LastIndex
@@ -283,7 +319,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitInlineHTML(html As MKInlineHTML) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  If html.IsAutoLink Then
 		    
 		    mOutput.Add("<a href=")
@@ -322,7 +362,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitInlineImage(image As MarkdownKit.MKInlineImage) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<img src=")
 		  mOutput.Add("""")
 		  mOutput.Add(URLEncode(image.Destination.Value))
@@ -378,7 +422,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitInlineLink(link As MarkdownKit.MKInlineLink) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<a href=")
 		  mOutput.Add("""")
 		  mOutput.Add(URLEncode(link.Destination.Value))
@@ -406,7 +454,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitInlineText(it As MKInlineText) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  Var s As String = it.Characters.ToString
 		  
 		  If s.Length = 0 Then Return Nil
@@ -442,7 +494,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitList(list As MKListBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  Var listTag As String
 		  If list.ListData.ListType = MKListTypes.Ordered Then
 		    listTag = "ol"
@@ -475,7 +531,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitListItem(item As MKListItemBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<li>")
 		  
 		  Var i As Integer
@@ -495,7 +555,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitParagraph(p As MKParagraphBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  If Not p.IsChildOfTightList Then mOutput.Add("<p>")
 		  
 		  For Each child As MKBlock In p.Children
@@ -511,7 +575,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitSetextHeading(stx As MKSetextHeadingBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<h")
 		  mOutput.Add(stx.Level.ToString)
 		  mOutput.Add(">")
@@ -554,7 +622,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitSoftBreak(sb As MKSoftBreak) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  Var mOutputLastIndex As Integer = mOutput.LastIndex
 		  
 		  If sb.Parent.Type = MKBlockTypes.CodeSpan Then
@@ -580,7 +652,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitStrongEmphasis(se As MKStrongEmphasis) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<strong>")
 		  
 		  For Each child As MKBlock In se.Children
@@ -594,7 +670,11 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitTextBlock(tb As MKTextBlock) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  Var s As String = SpacesString(tb.PhantomSpaces) + tb.Contents
 		  
 		  If ShouldTrimLeadingWhitespace Then s = s.TrimLeft
@@ -623,6 +703,10 @@ Implements MKRenderer
 		Function VisitTable(table As MKTableBlock) As Variant
 		  /// Part of the MKRenderer interface.
 
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<table>")
 		  mOutput.Add(&u0A)
 
@@ -638,6 +722,10 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitTableHead(thead As MKTableHeadBlock) As Variant
 		  /// Part of the MKRenderer interface.
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 
 		  mOutput.Add("<thead>")
 		  mOutput.Add(&u0A)
@@ -655,6 +743,10 @@ Implements MKRenderer
 		Function VisitTableBody(tbody As MKTableBodyBlock) As Variant
 		  /// Part of the MKRenderer interface.
 
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<tbody>")
 		  mOutput.Add(&u0A)
 
@@ -671,6 +763,10 @@ Implements MKRenderer
 		Function VisitTableRow(tr As MKTableRowBlock) As Variant
 		  /// Part of the MKRenderer interface.
 
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
+
 		  mOutput.Add("<tr>")
 		  mOutput.Add(&u0A)
 
@@ -686,6 +782,10 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitTableCell(cell As MKTableCellBlock) As Variant
 		  /// Part of the MKRenderer interface.
+
+		  #Pragma NilObjectChecking False
+		  #Pragma StackOverflowChecking False
+		  #Pragma DisableBoundsChecking
 
 		  Var tag As String
 		  If cell.IsHeader Then

@@ -101,8 +101,10 @@ Protected Class MKInlineScanner
 		  linkTextData.Characters = chars
 		  
 		  // Get the reference destination and title from the document's reference map.
+		  // Cache the lowercase label to avoid redundant string creation
+		  Var linkLabelLower As String = linkLabel.Lowercase
 		  Var ref As MarkdownKit.MKLinkReferenceDefinition = _
-		  MKLinkReferenceDefinition(container.Document.References.Value(linkLabel.Lowercase))
+		  MKLinkReferenceDefinition(container.Document.References.Value(linkLabelLower))
 		  
 		  If linkType = MKLinkTypes.FullReference And optionalDestination <> Nil Then
 		    data.Destination = optionalDestination
@@ -197,7 +199,9 @@ Protected Class MKInlineScanner
 		  
 		  // Does the document's reference map contain a reference with the same label?
 		  Var linkLabel As String = String.FromArray(linkLabelChars, "")
-		  If Not container.Document.References.HasKey(linkLabel.Lowercase) Then Return Nil
+		  // Cache the lowercase label to avoid redundant string creation
+		  Var linkLabelLower As String = linkLabel.Lowercase
+		  If Not container.Document.References.HasKey(linkLabelLower) Then Return Nil
 		  
 		  // Construct this reference link.
 		  Var data As MarkdownKit.MKInlineLinkData = _
@@ -1101,10 +1105,13 @@ Protected Class MKInlineScanner
 		  
 		  // Valid link label?
 		  Var linkLabel As String
+		  Var linkLabelLower As String
 		  Var validLinkLabel As Boolean = False
 		  If tmpCharacters.Count > 0 Then
 		    linkLabel = tmpCharacters.ToString
-		    If container.Document.References.HasKey(linkLabel.Lowercase) Then
+		    // Cache the lowercase label to avoid redundant string creation
+		    linkLabelLower = linkLabel.Lowercase
+		    If container.Document.References.HasKey(linkLabelLower) Then
 		      validLinkLabel = True
 		    End If
 		  End If
@@ -1218,15 +1225,18 @@ Protected Class MKInlineScanner
 		  
 		  // Valid link label?
 		  Var linkLabel As String
+		  Var linkLabelLower As String
 		  Var validLinkLabel As Boolean = False
 		  If linkTextChars.Count > 0 Then
 		    // Consecutive internal whitespace is treated as one space for purposes of determining matching
 		    linkLabel = linkTextChars.ToString
-		    If container.Document.References.HasKey(linkLabel.Lowercase) Then
+		    // Cache the lowercase label to avoid redundant string creation
+		    linkLabelLower = linkLabel.Lowercase
+		    If container.Document.References.HasKey(linkLabelLower) Then
 		      validLinkLabel = True
 		    End If
 		  End If
-		  
+
 		  // Move past the closing square bracket.
 		  pos = indexOfLastClosingSquareBracket + 1
 		  

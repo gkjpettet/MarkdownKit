@@ -439,10 +439,12 @@ Protected Class MKBlock
 		    Var hasTitle As Boolean = titleData.Length > 0
 		    
 		    // We've found a definition. Add it to the document only if it's unique.
-		    If Not Self.Document.References.HasKey(linkLabel.Lowercase) Then
-		      Self.Document.References.Value(linkLabel.Lowercase) = _
+		    // Cache the lowercase label to avoid redundant string creation
+		    Var linkLabelLower As String = linkLabel.Lowercase
+		    If Not Self.Document.References.HasKey(linkLabelLower) Then
+		      Self.Document.References.Value(linkLabelLower) = _
 		      New MKLinkReferenceDefinition(start, linkLabelOpener, linkLabelCloser, _
-		      linkLabel.Lowercase, linkLabelStartChar, labelStart, labelLength, _
+		      linkLabelLower, linkLabelStartChar, labelStart, labelLength, _
 		      colon, destinationData, titleData, i)
 		    End If
 		    

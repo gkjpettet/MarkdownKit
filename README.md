@@ -1,6 +1,6 @@
 ## About MarkdownKit
 
-MarkdownKit is a 100% CommonMark compliant Markdown parser for Xojo written in pure Xojo code. I needed a fast and robust parser that not only would reliably generate the correct output but would also run on iOS. After looking around I realised that there was no other solution available for Xojo and so I decided to write one myself. MarkdownKit is a labour love, taking months of hard work and containing over 8500 lines of code.
+MarkdownKit is a full-featured Markdown parser for Xojo written in pure Xojo code. I needed a fast and robust parser that not only would reliably generate the correct output but would also run on iOS. After looking around I realised that there was no other solution available for Xojo and so I decided to write one myself. MarkdownKit is a labour love, taking months of hard work and containing over 8500 lines of code.
 
 MarkdownKit takes Markdown as input and generates a Markdown `MKDocument` which is essentially an _abstract syntax tree_ (AST). From the AST, it is then able to render the input as HTML.
 
@@ -16,7 +16,7 @@ The demo has two windows and by default opens the HTML rendering window. Simply 
 
 ### The Desktop Test Suite
 
-The demo application a test suite window. Clicking the "Run" button on the toolbar for test windows will run all 649 tests from the [CommonMark 0.29 specification][cm spec], as well as additional edge case tests I came across whilst developing the parser. These tests prove the compliance of the parser. Feel free to click on an individual test to see the provided input, the expected output and the generated output.
+The demo application a test suite window. Clicking the "Run" button on the toolbar for test windows will run all 649 tests from the [CommonMark 0.29 specification][cm spec], as well as additional edge case tests I came across whilst developing the parser. Since version 3.0.0 the parser has deviated from the CommonMark specification with support for tables. The tests prove the compliance of the parser. Feel free to click on an individual test to see the provided input, the expected output and the generated output.
 
 ## A word about API 2.0
 
@@ -47,10 +47,21 @@ To use MarkdownKit in your own projects just follow these steps:
 ```xojo
 Var html As String = MarkdownKit.ToHTML("Some **bold** text")
 ```
+## Additions Since Version 2
+
+Version 3 added support for GFM-style pipe tables:
+
+```nohighlight
+Column alignment via :--- (left), :---: (center), ---: (right)
+Tables with or without leading/trailing pipes
+Inline formatting within cells (bold, italic, links, code spans)
+Escaped pipes within cells (\|)
+Tables with fewer/more cells than columns (empty cells or truncation)
+```
 
 ## Improvements Over Version 1
 
-Version 2 is a complete rewrite. The main advantage it offers is that it tracks the exact source code positions of every block and inline component of the AST during parsing. This means that the AST contains all the information you need to implement a source code highlighter for Markdown (the whole reason I did the rewrite in the first place).
+Version 2 was a complete rewrite. The main advantage it offers is that it tracks the exact source code positions of every block and inline component of the AST during parsing. This means that the AST contains all the information you need to implement a source code highlighter for Markdown (the whole reason I did the rewrite in the first place).
 
 ## Advanced Use
 

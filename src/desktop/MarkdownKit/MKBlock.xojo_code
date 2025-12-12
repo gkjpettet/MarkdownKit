@@ -67,7 +67,22 @@ Protected Class MKBlock
 		    
 		  Case MKBlockTypes.ThematicBreak
 		    Return visitor.VisitThematicBreak(MKThematicBreak(Self))
-		    
+
+		  Case MKBlockTypes.Table
+		    Return visitor.VisitTable(MKTableBlock(Self))
+
+		  Case MKBlockTypes.TableHead
+		    Return visitor.VisitTableHead(MKTableHeadBlock(Self))
+
+		  Case MKBlockTypes.TableBody
+		    Return visitor.VisitTableBody(MKTableBodyBlock(Self))
+
+		  Case MKBlockTypes.TableRow
+		    Return visitor.VisitTableRow(MKTableRowBlock(Self))
+
+		  Case MKBlockTypes.TableCell
+		    Return visitor.VisitTableCell(MKTableCellBlock(Self))
+
 		  Else
 		    Raise New MKException("Unknown block type.")
 		  End Select
@@ -219,8 +234,9 @@ Protected Class MKBlock
 	#tag Method, Flags = &h0, Description = 54727565206966207468697320626C6F636B2063616E20636F6E7461696E20696E6C696E6520626C6F636B732E
 		Function IsInlineContainer() As Boolean
 		  /// True if this block can contain inline blocks.
-		  
-		  Return Type = MKBlockTypes.Paragraph Or Type = MKBlockTypes.AtxHeading Or Type = MKBlockTypes.SetextHeading
+
+		  Return Type = MKBlockTypes.Paragraph Or Type = MKBlockTypes.AtxHeading Or _
+		    Type = MKBlockTypes.SetextHeading Or Type = MKBlockTypes.TableCell
 		End Function
 	#tag EndMethod
 

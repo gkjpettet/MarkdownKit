@@ -15,6 +15,305 @@ Protected Class MKParser
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21, Description = 52657475726E73205472756520696620746865206C696E65206973206120746162206C6520646C696D69746572726F772E
+		Private Function IsTableDelimiterRow(line As TextLine, ByRef columnAlignments() As MKTableColumnAlignments) As Boolean
+		  /// Returns True if the line is a valid table delimiter row.
+		  /// A delimiter row consists of cells containing only hyphens (-), and optionally,
+		  /// a leading or trailing colon (:), to indicate left, right, or center alignment.
+		  /// Populates [columnAlignments] with the alignment for each column.
+
+		  Var chars() As String = line.Value.CharacterArray
+		  If chars.Count = 0 Then Return False
+
+		  // Must contain at least one pipe or be a delimiter row without leading/trailing pipe
+		  Var foundPipe As Boolean = False
+		  Var foundHyphen As Boolean = False
+		  For Each c As String In chars
+		    If c = "|" Then foundPipe = True
+		    If c = "-" Then foundHyphen = True
+		  Next c
+
+		  If Not foundHyphen Then Return False
+
+		  // Split by pipe to get cells
+		  Var cellContents() As String = line.Value.Split("|")
+
+		  // Remove leading empty cell if line starts with pipe
+		  If cellContents.Count > 0 And cellContents(0).Trim = "" Then
+		    cellContents.RemoveAt(0)
+		  End If
+
+		  // Remove trailing empty cell if line ends with pipe
+		  If cellContents.Count > 0 And cellContents(cellContents.LastIndex).Trim = "" Then
+		    cellContents.RemoveAt(cellContents.LastIndex)
+		  End If
+
+		  If cellContents.Count = 0 Then Return False
+
+		  // Validate each cell and determine alignment
+		  Var alignments() As MKTableColumnAlignments
+
+		  For Each cell As String In cellContents
+		    cell = cell.Trim
+
+		    If cell.Length = 0 Then Return False
+
+		    Var leftColon As Boolean = cell.Left(1) = ":"
+		    Var rightColon As Boolean = cell.Right(1) = ":"
+
+		    // Remove colons for validation
+		    Var middle As String = cell
+		    If leftColon Then middle = middle.Mid(2) // Xojo Mid is 1-based, so Mid(2) skips first char
+		    If rightColon And middle.Length > 0 Then middle = middle.Left(middle.Length - 1)
+
+		    // Remaining must be all hyphens (at least one)
+		    If middle.Length = 0 And Not (leftColon Or rightColon) Then Return False
+
+		    For i As Integer = 0 To middle.CharacterCount - 1
+		      If middle.MiddleCharacters(i, 1) <> "-" Then Return False
+		    Next i
+
+		    // Determine alignment
+		    If leftColon And rightColon Then
+		      alignments.Add(MKTableColumnAlignments.Center)
+		    ElseIf leftColon Then
+		      alignments.Add(MKTableColumnAlignments.Left)
+		    ElseIf rightColon Then
+		      alignments.Add(MKTableColumnAlignments.Right)
+		    Else
+		      alignments.Add(MKTableColumnAlignments.None)
+		    End If
+		  Next cell
+
+		  columnAlignments = alignments
+		  Return True
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 506172736573206120746162652072772066726F6D20746865206C696E65206E6420726574756E73207468652063656C6C20636F6E74656E74732E
+		Private Function ParseTableRowCells(line As TextLine) As String()
+		  /// Parses a table row from the line and returns the cell contents.
+		  /// Handles escaped pipes within cells.
+
+		  Var cells() As String
+		  Var lineValue As String = line.Value
+
+		  // Split by unescaped pipes
+		  Var currentCell As String = ""
+		  Var i As Integer = 0
+		  Var length As Integer = lineValue.CharacterCount
+
+		  While i < length
+		    Var c As String = lineValue.MiddleCharacters(i, 1)
+
+		    If c = "\" And i + 1 < length Then
+		      // Check for escaped pipe
+		      Var nextChar As String = lineValue.MiddleCharacters(i + 1, 1)
+		      If nextChar = "|" Then
+		        currentCell = currentCell + "|"
+		        i = i + 2
+		        Continue
+		      End If
+		    End If
+
+		    If c = "|" Then
+		      cells.Add(currentCell.Trim)
+		      currentCell = ""
+		    Else
+		      currentCell = currentCell + c
+		    End If
+
+		    i = i + 1
+		  Wend
+
+		  // Add the last cell
+		  cells.Add(currentCell.Trim)
+
+		  // Remove leading empty cell if line starts with pipe
+		  If cells.Count > 0 And cells(0) = "" Then
+		    cells.RemoveAt(0)
+		  End If
+
+		  // Remove trailing empty cell if line ends with pipe
+		  If cells.Count > 0 And cells(cells.LastIndex) = "" Then
+		    cells.RemoveAt(cells.LastIndex)
+		  End If
+
+		  Return cells
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 436F6E766572747320612070617261677261706820626C6F636B20746F2061207461626C6520626C6F636B2E
+		Private Function ConvertParagraphToTable(paragraph As MKParagraphBlock, headerLine As TextLine, delimiterLine As TextLine, columnAlignments() As MKTableColumnAlignments) As MKTableBlock
+		  /// Converts a paragraph block to a table block.
+		  /// The paragraph contains the header row content, and delimiterLine contains the delimiter row.
+
+		  // Get reference to parent
+		  Var paraParent As MKBlock = paragraph.Parent
+
+		  // Get index of paragraph in parent's children
+		  Var index As Integer = paraParent.Children.IndexOf(paragraph)
+		  If index = -1 Then Return Nil
+
+		  // Create the table block
+		  Var table As New MKTableBlock(paraParent, 0)
+		  table.LineNumber = paragraph.LineNumber
+		  table.Start = paragraph.Start
+		  table.ColumnCount = columnAlignments.Count
+		  table.ColumnAlignments = columnAlignments
+		  table.DelimiterLineNumber = delimiterLine.Number
+
+		  // Create thead
+		  Var thead As New MKTableHeadBlock(table, 0)
+		  thead.LineNumber = paragraph.LineNumber
+		  thead.Start = paragraph.Start
+		  table.Children.Add(thead)
+
+		  // Create header row
+		  Var headerRow As New MKTableRowBlock(thead, 0)
+		  headerRow.LineNumber = headerLine.Number
+		  headerRow.Start = headerLine.Start
+		  thead.Children.Add(headerRow)
+
+		  // Parse header cells
+		  Var headerCells() As String = ParseTableRowCells(headerLine)
+
+		  // Create header cells
+		  For i As Integer = 0 To columnAlignments.LastIndex
+		    Var cell As New MKTableCellBlock(headerRow, 0)
+		    cell.LineNumber = headerLine.Number
+		    cell.Start = headerLine.Start
+		    cell.IsHeader = True
+		    cell.ColumnIndex = i
+		    If i < columnAlignments.Count Then
+		      cell.Alignment = columnAlignments(i)
+		    End If
+
+		    // Add the cell content as characters
+		    If i < headerCells.Count Then
+		      Var cellContent As String = headerCells(i)
+		      Var chars() As MKCharacter = cellContent.MKCharacters(headerLine, 0)
+		      For Each c As MKCharacter In chars
+		        cell.Characters.Add(c)
+		      Next c
+		    End If
+
+		    headerRow.Children.Add(cell)
+		  Next i
+
+		  // Create tbody (will be populated with subsequent rows)
+		  Var tbody As New MKTableBodyBlock(table, 0)
+		  tbody.LineNumber = delimiterLine.Number
+		  tbody.Start = delimiterLine.Start
+		  table.Children.Add(tbody)
+
+		  // Remove paragraph from parent
+		  paraParent.Children.RemoveAt(index)
+
+		  // Insert table at the same position
+		  If index = 0 Then
+		    paraParent.Children.AddAt(0, table)
+		  Else
+		    paraParent.Children.AddAt(index, table)
+		  End If
+
+		  table.Parent = paraParent
+
+		  Return table
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 547269657320746F20636F6E76657274207468652063757272656E742070617261677261706820746F2061207461626C652E2052657475726E732054727565206966207375636365737366756C2E
+		Private Function TryConvertParagraphToTable() As Boolean
+		  /// Tries to convert the current paragraph to a table.
+		  /// Returns True if successful, False otherwise.
+		  /// This is used as a condition in the ElseIf chain to ensure we only match when conversion succeeds.
+
+		  Var columnAlignments() As MKTableColumnAlignments
+		  If Not IsTableDelimiterRow(mCurrentLine, columnAlignments) Then Return False
+
+		  // Check that the paragraph contains exactly one line (no line endings in Characters except at end)
+		  Var lineEndingCount As Integer = 0
+		  For Each c As MKCharacter In mContainer.Characters
+		    If c.IsLineEnding Then lineEndingCount = lineEndingCount + 1
+		  Next c
+
+		  // Should have exactly 1 line ending (at the end of the header row)
+		  If lineEndingCount > 1 Then Return False
+
+		  // Get the header line (the line that the paragraph started on)
+		  Var headerLineIndex As Integer = mContainer.LineNumber - 1
+		  If headerLineIndex < 0 Or headerLineIndex > mLines.LastIndex Then Return False
+
+		  Var headerLine As TextLine = mLines(headerLineIndex)
+
+		  // Verify header has same number of cells as delimiter
+		  Var headerCells() As String = ParseTableRowCells(headerLine)
+		  If headerCells.Count < columnAlignments.Count Then Return False
+
+		  // Convert paragraph to table
+		  Var table As MKTableBlock = ConvertParagraphToTable(MKParagraphBlock(mContainer), _
+		    headerLine, mCurrentLine, columnAlignments)
+
+		  If table = Nil Then Return False
+
+		  mContainer = table
+		  // Important: Update mCurrentBlock and mLastMatchedContainer as well since the paragraph was replaced
+		  // This prevents the finalization loop in ProcessRemainderOfLine from failing
+		  mCurrentBlock = table
+		  mLastMatchedContainer = table
+
+		  Return True
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, Description = 4164647320612064617461726F7720746F20616E206578697374696E67207461626C6527732074626F64792E
+		Private Sub AddTableDataRow(table As MKTableBlock, line As TextLine)
+		  /// Adds a data row to an existing table's tbody.
+
+		  // Get the tbody (second child of table)
+		  If table.Children.Count < 2 Then Return
+		  Var tbody As MKTableBodyBlock = MKTableBodyBlock(table.Children(1))
+
+		  // Create row
+		  Var row As New MKTableRowBlock(tbody, 0)
+		  row.LineNumber = line.Number
+		  row.Start = line.Start
+		  tbody.Children.Add(row)
+
+		  // Parse cells
+		  Var cellContents() As String = ParseTableRowCells(line)
+
+		  // Create cells (up to column count)
+		  For i As Integer = 0 To table.ColumnCount - 1
+		    Var cell As New MKTableCellBlock(row, 0)
+		    cell.LineNumber = line.Number
+		    cell.Start = line.Start
+		    cell.IsHeader = False
+		    cell.ColumnIndex = i
+		    If i < table.ColumnAlignments.Count Then
+		      cell.Alignment = table.ColumnAlignments(i)
+		    End If
+
+		    // Add cell content
+		    If i < cellContents.Count Then
+		      Var cellContent As String = cellContents(i)
+		      Var chars() As MKCharacter = cellContent.MKCharacters(line, 0)
+		      For Each c As MKCharacter In chars
+		        cell.Characters.Add(c)
+		      Next c
+		    End If
+
+		    row.Children.Add(cell)
+		  Next i
+
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, Description = 416476616E636573207468652063757272656E74206F6666736574206279205B636F756E745D20706C616365732E
 		Private Sub AdvanceOffset(count As Integer, columns As Boolean)
 		  /// Advances the current offset by [count] places.
@@ -114,12 +413,16 @@ Protected Class MKParser
 	#tag Method, Flags = &h0
 		Shared Function CanContain(parentType As MKBlockTypes, childType As MKBlockTypes) As Boolean
 		  // Returns True if a [parentType] can contain [childType].
-		  
+
 		  Return parentType = MKBlockTypes.Document Or _
 		  parentType = MKBlockTypes.BlockQuote Or _
 		  parentType = MKBlockTypes.ListItem Or _
-		  (parentType = MKBlockTypes.List And childType = MKBlockTypes.ListItem)
-		  
+		  (parentType = MKBlockTypes.List And childType = MKBlockTypes.ListItem) Or _
+		  (parentType = MKBlockTypes.Table And (childType = MKBlockTypes.TableHead Or childType = MKBlockTypes.TableBody)) Or _
+		  (parentType = MKBlockTypes.TableHead And childType = MKBlockTypes.TableRow) Or _
+		  (parentType = MKBlockTypes.TableBody And childType = MKBlockTypes.TableRow) Or _
+		  (parentType = MKBlockTypes.TableRow And childType = MKBlockTypes.TableCell)
+
 		End Function
 	#tag EndMethod
 
@@ -226,7 +529,22 @@ Protected Class MKParser
 		    
 		  Case MKBlockTypes.ThematicBreak
 		    child = New MKThematicBreak(parent, blockStartOffset)
-		    
+
+		  Case MKBlockTypes.Table
+		    child = New MKTableBlock(parent, blockStartOffset)
+
+		  Case MKBlockTypes.TableHead
+		    child = New MKTableHeadBlock(parent, blockStartOffset)
+
+		  Case MKBlockTypes.TableBody
+		    child = New MKTableBodyBlock(parent, blockStartOffset)
+
+		  Case MKBlockTypes.TableRow
+		    child = New MKTableRowBlock(parent, blockStartOffset)
+
+		  Case MKBlockTypes.TableCell
+		    child = New MKTableCellBlock(parent, blockStartOffset)
+
 		  Else
 		    child = New MKBlock(type, parent, blockStartOffset)
 		  End Select
@@ -897,7 +1215,7 @@ Protected Class MKParser
 		  
 		  While block <> Nil
 		    Select Case block.Type
-		    Case MKBlockTypes.AtxHeading, MKBlockTypes.Paragraph, MKBlockTypes.SetextHeading
+		    Case MKBlockTypes.AtxHeading, MKBlockTypes.Paragraph, MKBlockTypes.SetextHeading, MKBlockTypes.TableCell
 		      MKInlineScanner.ParseInlines(block, delimiterStack)
 		    End Select
 		    
@@ -1162,16 +1480,22 @@ Protected Class MKParser
 		    ElseIf mContainer.Type = MKBlockTypes.AtxHeading Then
 		      mContainer.Finalise(mCurrentLine)
 		      mContainer = mContainer.Parent
-		      
+
+		    ElseIf mContainer.Type = MKBlockTypes.Table Then
+		      // Add a data row to the table (but skip the delimiter line)
+		      If mCurrentLine.Number <> MKTableBlock(mContainer).DelimiterLineNumber Then
+		        AddTableDataRow(MKTableBlock(mContainer), mCurrentLine)
+		      End If
+
 		    ElseIf AcceptsLines(mContainer) Then
 		      mContainer.AddLine(mCurrentLine, mNextNWS, mRemainingSpaces)
-		      
-		    ElseIf mContainer.Type <> MKBlockTypes.ThematicBreak And _ 
+
+		    ElseIf mContainer.Type <> MKBlockTypes.ThematicBreak And _
 		      mContainer.Type <> MKBlockTypes.SetextHeading And Not blank Then
 		      // Create a paragraph container for this line.
 		      mContainer = CreateChildBlock(mContainer, mCurrentLine, MKBlockTypes.Paragraph, 0)
 		      mContainer.AddLine(mCurrentLine, mNextNWS, mRemainingSpaces)
-		      
+
 		    End If
 		    
 		    mCurrentBlock = mContainer
@@ -1301,14 +1625,24 @@ Protected Class MKParser
 		        MKSetextHeadingBlock(mContainer).UnderlineLength = mCurrentLine.Length - mCurrentOffset
 		        MKSetextHeadingBlock(mContainer).UnderlineLocalStart = mNextNWS
 		        MKSetextHeadingBlock(mContainer).UnderlineLineNumber = mCurrentLine.Number
-		        
+
 		      Catch e As MKEdgeCase
-		        // Happens when the entire contents of the setext heading is a reference link definition. 
-		        // In this scenario, `mContainer` remains a paragraph with the setext heading line having been 
+		        // Happens when the entire contents of the setext heading is a reference link definition.
+		        // In this scenario, `mContainer` remains a paragraph with the setext heading line having been
 		        // added to the paragraph's contents.
 		      End Try
 		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
-		      
+
+		    ElseIf Not indented And mContainer.Type = MKBlockTypes.Paragraph And _
+		      (mCurrentChar = "|" Or mCurrentChar = "-" Or mCurrentChar = ":") And _
+		      mContainer.Children.Count = 0 And mContainer.Characters.Count > 0 And _
+		      TryConvertParagraphToTable Then
+		      // ======================
+		      // TABLE (GFM extension)
+		      // ======================
+		      // Table was successfully created by TryConvertParagraphToTable
+		      AdvanceOffset(mCurrentLine.Characters.LastIndex + 1 - mCurrentOffset, False)
+
 		    ElseIf Not indented And Not (mContainer.Type = MKBlockTypes.Paragraph And Not mAllMatched) And _
 		      IsThematicBreak(mCurrentLine.Characters, mNextNWS) Then
 		      // ======================
@@ -1396,15 +1730,22 @@ Protected Class MKParser
 		  #Pragma DisableBoundsChecking
 		  
 		  mAllMatched = True
-		  
+
 		  While mContainer.LastChild <> Nil And mContainer.LastChild.IsOpen
-		    
+
+		    // Skip table internal blocks - table continuation is handled at the Table level
+		    Var childType As MKBlockTypes = mContainer.LastChild.Type
+		    If childType = MKBlockTypes.TableHead Or childType = MKBlockTypes.TableBody Or _
+		      childType = MKBlockTypes.TableRow Or childType = MKBlockTypes.TableCell Then
+		      Exit
+		    End If
+
 		    mContainer = mContainer.LastChild
-		    
+
 		    FindNextNonWhitespace
-		    
+
 		    Var blank As Boolean = If(mCurrentChar = "", True, False)
-		    
+
 		    Select Case mContainer.Type
 		    Case MKBlockTypes.BlockQuote
 		      // ======================
@@ -1489,6 +1830,16 @@ Protected Class MKParser
 		      If blank Then
 		        mContainer.IsLastLineBlank = True
 		        mAllMatched = False
+		      End If
+
+		    Case MKBlockTypes.Table
+		      // ======================
+		      // TABLE
+		      // ======================
+		      // Tables end on blank lines or lines without pipes
+		      If blank Or mCurrentLine.Value.IndexOf("|") = -1 Then
+		        mAllMatched = False
+		        If blank Then mContainer.IsLastLineBlank = True
 		      End If
 		    End Select
 		    

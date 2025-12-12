@@ -611,10 +611,111 @@ Implements MKRenderer
 	#tag Method, Flags = &h0
 		Function VisitThematicBreak(tb As MKThematicBreak) As Variant
 		  /// Part of the MKRenderer interface.
-		  
+
 		  #Pragma Unused tb
-		  
+
 		  mOutput.Add("<hr />")
+		  mOutput.Add(&u0A)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTable(table As MKTableBlock) As Variant
+		  /// Part of the MKRenderer interface.
+
+		  mOutput.Add("<table>")
+		  mOutput.Add(&u0A)
+
+		  For Each child As MKBlock In table.Children
+		    Call child.Accept(Self)
+		  Next child
+
+		  mOutput.Add("</table>")
+		  mOutput.Add(&u0A)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableHead(thead As MKTableHeadBlock) As Variant
+		  /// Part of the MKRenderer interface.
+
+		  mOutput.Add("<thead>")
+		  mOutput.Add(&u0A)
+
+		  For Each child As MKBlock In thead.Children
+		    Call child.Accept(Self)
+		  Next child
+
+		  mOutput.Add("</thead>")
+		  mOutput.Add(&u0A)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableBody(tbody As MKTableBodyBlock) As Variant
+		  /// Part of the MKRenderer interface.
+
+		  mOutput.Add("<tbody>")
+		  mOutput.Add(&u0A)
+
+		  For Each child As MKBlock In tbody.Children
+		    Call child.Accept(Self)
+		  Next child
+
+		  mOutput.Add("</tbody>")
+		  mOutput.Add(&u0A)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableRow(tr As MKTableRowBlock) As Variant
+		  /// Part of the MKRenderer interface.
+
+		  mOutput.Add("<tr>")
+		  mOutput.Add(&u0A)
+
+		  For Each child As MKBlock In tr.Children
+		    Call child.Accept(Self)
+		  Next child
+
+		  mOutput.Add("</tr>")
+		  mOutput.Add(&u0A)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableCell(cell As MKTableCellBlock) As Variant
+		  /// Part of the MKRenderer interface.
+
+		  Var tag As String
+		  If cell.IsHeader Then
+		    tag = "th"
+		  Else
+		    tag = "td"
+		  End If
+
+		  mOutput.Add("<")
+		  mOutput.Add(tag)
+
+		  // Add alignment style if specified.
+		  Select Case cell.Alignment
+		  Case MKTableColumnAlignments.Left
+		    mOutput.Add(" style=""text-align: left;""")
+		  Case MKTableColumnAlignments.Center
+		    mOutput.Add(" style=""text-align: center;""")
+		  Case MKTableColumnAlignments.Right
+		    mOutput.Add(" style=""text-align: right;""")
+		  End Select
+
+		  mOutput.Add(">")
+
+		  For Each child As MKBlock In cell.Children
+		    Call child.Accept(Self)
+		  Next child
+
+		  mOutput.Add("</")
+		  mOutput.Add(tag)
+		  mOutput.Add(">")
 		  mOutput.Add(&u0A)
 		End Function
 	#tag EndMethod

@@ -542,6 +542,21 @@ Protected Module MarkdownKit
 		  Case MKBlockTypes.ThematicBreak
 		    Return "Thematic Break"
 		    
+		  Case MKBlockTypes.Table
+		    Return "Table"
+		    
+		  Case MKBlockTypes.TableHead
+		    Return "Table Head"
+		    
+		  Case MKBlockTypes.TableBody
+		    Return "Table Body"
+		    
+		  Case MKBlockTypes.TableRow
+		    Return "Table Row"
+		    
+		  Case MKBlockTypes.TableCell
+		    Return "Table Cell"
+		    
 		  Else
 		    Return "Unknown block type"
 		  End Select
@@ -2920,13 +2935,13 @@ Protected Module MarkdownKit
 	#tag Constant, Name = MAX_REFERENCE_LABEL_LENGTH, Type = Double, Dynamic = False, Default = \"999", Scope = Protected, Description = 546865206D6178696D756D206E756D626572206F662063686172616374657273207065726D69747465642077697468696E207468652073717561726520627261636B657473206F662061206C696E6B206C6162656C2E
 	#tag EndConstant
 
-	#tag Constant, Name = VERSION_MAJOR, Type = Double, Dynamic = False, Default = \"2", Scope = Protected
+	#tag Constant, Name = VERSION_MAJOR, Type = Double, Dynamic = False, Default = \"3", Scope = Protected
 	#tag EndConstant
 
 	#tag Constant, Name = VERSION_MINOR, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
 	#tag EndConstant
 
-	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
+	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
 	#tag EndConstant
 
 
@@ -2951,6 +2966,11 @@ Protected Module MarkdownKit
 		  SetextHeading
 		  SoftBreak
 		  StrongEmphasis
+		  Table
+		  TableBody
+		  TableCell
+		  TableHead
+		  TableRow
 		  TextBlock
 		ThematicBreak
 	#tag EndEnum
@@ -2981,6 +3001,13 @@ Protected Module MarkdownKit
 	#tag Enum, Name = MKListTypes, Type = Integer, Flags = &h0, Description = 446566696E6573207468652074797065206F662061206C69737420626C6F636B20656C656D656E742E
 		Bullet=0
 		Ordered=1
+	#tag EndEnum
+
+	#tag Enum, Name = MKTableColumnAlignments, Type = Integer, Flags = &h0, Description = 446566696E65732074686520616C69676E6D656E74206F662061207461626C6520636F6C756D6E2E
+		None=0
+		  Left=1
+		  Center=2
+		Right=3
 	#tag EndEnum
 
 

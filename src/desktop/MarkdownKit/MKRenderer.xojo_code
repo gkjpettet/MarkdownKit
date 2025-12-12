@@ -122,7 +122,37 @@ Protected Interface MKRenderer
 
 	#tag Method, Flags = &h0
 		Function VisitThematicBreak(tb As MarkdownKit.MKThematicBreak) As Variant
-		  
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTable(table As MarkdownKit.MKTableBlock) As Variant
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableHead(thead As MarkdownKit.MKTableHeadBlock) As Variant
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableBody(tbody As MarkdownKit.MKTableBodyBlock) As Variant
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableRow(tr As MarkdownKit.MKTableRowBlock) As Variant
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function VisitTableCell(cell As MarkdownKit.MKTableCellBlock) As Variant
+
 		End Function
 	#tag EndMethod
 

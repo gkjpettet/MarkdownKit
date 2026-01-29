@@ -2972,7 +2972,7 @@ Protected Module MarkdownKit
 	#tag Constant, Name = VERSION_MINOR, Type = Double, Dynamic = False, Default = \"0", Scope = Protected
 	#tag EndConstant
 
-	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"1", Scope = Protected
+	#tag Constant, Name = VERSION_PATCH, Type = Double, Dynamic = False, Default = \"2", Scope = Protected
 	#tag EndConstant
 
 

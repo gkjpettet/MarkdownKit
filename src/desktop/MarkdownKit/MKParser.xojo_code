@@ -63,7 +63,7 @@ Protected Class MKParser
 
 		    // Remove colons for validation
 		    Var middle As String = cell
-		    If leftColon Then middle = middle.Mid(2) // Xojo Mid is 1-based, so Mid(2) skips first char
+		    If leftColon Then middle = middle.Middle(1) // Skip first char (0-based index)
 		    If rightColon And middle.Length > 0 Then middle = middle.Left(middle.Length - 1)
 
 		    // Remaining must be all hyphens (at least one)
